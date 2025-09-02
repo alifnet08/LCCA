@@ -1,0 +1,267 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+		<style>
+			.ui-inputfield{
+				width: 100%;
+				-webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.ui-selectonemenu{
+				width: 100%;
+			}
+			.ui-commandlink:hover {
+			    color: orange;
+			}
+			.ui-corner-bottom{
+				border: 0 !important;
+				margin-bottom: -20px;
+			}
+			.wo-dialog {
+				width: 400px;
+    			height: 130px;
+			}
+			.ui-dialog .ui-dialog-content {
+			    width: 400px;
+			    height: 130px !important;
+			}
+		</style>
+		
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+				<div class=" navbar-collapse " id="collapsibleNavbar">
+					 <ul class="navbar-nav">
+					 	<li class="nav-item">
+					 		<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+					 		<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+					 		<a class="nav-link disabled" href="#">Konsultasi</a>
+					 	</li>
+					 </ul>
+				</div>
+			</nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">#{qaFEEditBean.qa.ticketNo}-#{qaFEEditBean.qa.qTitle}</div>
+			<div class="sidebar-title" style="font-size: 14px;">
+				<span>Kategori : #{qaFEEditBean.categoryType}</span>
+			</div>
+			<h:form styleClass="wo-search-form" id="form">
+				<p:growl id="messages" severity="error"/>
+				
+				<h:panelGroup rendered="#{qaFEEditBean.showQna1}">
+					<div class="form-row">
+						<div class="">
+							<p:graphicImage value="/resources/images/icon-tanya.svg" />
+							<div class="ft-12 mt-1 mr-2">						
+								<span>Tanggal : #{qaFEEditBean.qDateStr}</span>
+							</div>						
+						</div>
+						<div class="col mt-3 talk-bubble tri-right left-top">
+							<p:outputLabel value="#{qaFEEditBean.qa.question}" readonly="true" escape="false"/>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="ft-12 mt-1 mr-2">
+							<span>Oleh : #{qaFEEditBean.qa.qUser.name}</span> <br/> 
+							<span>Unit Kerja : #{qaFEEditBean.qa.qUser.divisionName}</span><br/>
+							<span>Publish Lampiran : </span>
+							&#160;&#160;
+							<ui:repeat id="dataQnaAttachmentList" value="#{qaFEEditBean.qa.qaAttachmentList}" var="data"
+								varStatus="status">
+								<p:commandLink title="#{data.fileSizeKB} KB" 
+									ajax="false" 
+									actionListener="#{qaFEEditBean.downloadFile(data.fileId, data.attachmentFile,null)}" 
+									target="_blank">
+									<span>#{data.attachmentFile}</span>
+								</p:commandLink>
+								&#160;&#160;
+							</ui:repeat>
+						</div>
+					</div>
+				
+					<div class="form-row">
+						<div class="col">
+							<p:dataList value="#{qaFEEditBean.qaFEAnswerLists}" var="vo" emptyMessage=""
+								rowIndexVar="statIndex" style="text-align:left;">
+								<p:column style="list-style-type: none;">
+									<div class="form-row">
+										<div class="col mt-3 talk-bubble tri-right right-top">
+											<h:outputLabel value="#{vo.answer}" escape="false"/>
+										</div>
+										<div style="text-align:right;">
+										<p:graphicImage value="/resources/images/icon-jawab.svg"/>
+											<div class="ft-12 mt-1 ml-2">										
+											    <span>Tanggal : #{vo.answerDateStr}</span><br/>
+											    <span>Oleh : #{vo.answerBy}</span><br/>
+											    <span>Unit Kerja : #{vo.answerDivisionName}</span><br/>
+											</div>
+										</div>
+									</div>
+								</p:column>
+							</p:dataList>
+						</div>
+					</div>
+				</h:panelGroup>
+				
+				<div class="form-row" style="#{qaFEEditBean.qaFEQuestionLists.size()>0?'':'display:none'}">
+					<div class="col">
+						<p:dataList value="#{qaFEEditBean.qaFEQuestionLists}" var="vo" emptyMessage=""
+							rowIndexVar="statIndex" >
+							<p:column style="list-style-type: none;">
+								<div class="form-row" style="text-align:left;">									
+									<div>
+										<p:graphicImage value="/resources/images/icon-tanya.svg"/>
+										<div class="ft-12 mt-1 mr-2">										
+										     <span>Tanggal : #{vo.qDate!=null?qaFEEditBean.sdf.format(vo.qDate):null}</span><br/>
+										</div>
+									</div>
+									<div class="col mt-3 talk-bubble tri-right left-top">
+										<h:outputLabel value="#{vo.question}" escape="false"/>
+									</div>
+								</div>
+								<div class="form-row" style="text-align:left;">									
+									<div class="ft-12 mt-1 mr-2">
+									 	<span>Oleh : #{vo.qUser!=null?vo.qUser.name:null}</span><br/>
+								     	<span>Unit Kerja : #{vo.qUser!=null?vo.qUser.divisionName:null}</span><br/>
+								     	<span>Publish Lampiran : </span>
+										&#160;&#160;
+										<ui:repeat id="dataQnaAttachmentList" value="#{vo.qaAttachmentList}" var="data"
+											varStatus="status">
+											<p:commandLink title="#{data.fileSizeKB} KB" 
+												ajax="false" 
+												actionListener="#{qaFEEditBean.downloadFile(data.fileId, data.attachmentFile,null)}" 
+												target="_blank">
+												<span>#{data.attachmentFile}</span>
+											</p:commandLink>
+											&#160;&#160;
+										</ui:repeat>
+								     </div>
+							     </div>
+										     
+								<div class="form-row" style="text-align:left; #{vo.aDate!=null?'':'display:none'}">
+									
+									<div class="col mt-3 talk-bubble tri-right right-top">
+										<h:outputLabel value="#{vo.answer}" escape="false"/>
+									</div>
+									<div style="text-align:right;">
+									<p:graphicImage value="/resources/images/icon-jawab.svg"/>
+									<div class="ft-12 mt-1 ml-2">										
+										<span>Tanggal : #{vo.aDate!=null?qaFEEditBean.sdf.format(vo.aDate):null}</span><br/>
+										<span>Oleh : #{vo.aUser!=null?vo.aUser.name:null}</span><br/>
+										<span>Unit Kerja : #{vo.aUser!=null?vo.aUser.divisionName:null}</span><br/>
+									</div>
+									</div>
+								</div>
+								<div class="form-row" style="text-align:left; #{vo.aDate2!=null?'':'display:none'}">
+									
+									<div class="col mt-3 talk-bubble tri-right right-top">
+										<h:outputLabel value="#{vo.answer2}" escape="false"/>
+									</div>
+									<div style="text-align:right;">
+										<p:graphicImage value="/resources/images/icon-jawab.svg"/>
+										<div class="ft-12 mt-1 ml-2">											
+											<span>Tanggal : #{vo.aDate2!=null?qaFEEditBean.sdf.format(vo.aDate2):null}</span><br/>
+											<span>Oleh : #{vo.aUser2!=null?vo.aUser2.name:null}</span><br/>
+											<span>Unit Kerja : #{vo.aUser2!=null?vo.aUser2.divisionName:null}</span><br/>
+										</div>
+									</div>
+								</div>
+								<div class="form-row" style="text-align:left; #{vo.aDate3!=null?'':'display:none'}">
+									
+									<div class="col mt-3 talk-bubble tri-right right-top">
+										<h:outputLabel value="#{vo.answer3}" escape="false"/>
+									</div>
+									<div style="text-align:right;">
+										 <p:graphicImage value="/resources/images/icon-jawab.svg"/>
+										 <div class="ft-12 mt-1 ml-2">
+											<span>Tanggal : #{vo.aDate3!=null?qaFEEditBean.sdf.format(vo.aDate3):null}</span><br/>
+											<span>Oleh : #{vo.aUser3!=null?vo.aUser3.name:null}</span><br/>
+											<span>Unit Kerja : #{vo.aUser3!=null?vo.aUser3.divisionName:null}</span><br/>
+										 </div>
+									</div>									
+								</div>
+							</p:column>
+						</p:dataList>
+					</div>
+				</div>
+				<br/>
+				<div style="margin-top:5px" class="form-row">
+					<div class="col">
+					    <p:remoteCommand name="onSave"  action="#{qaFEEditBean.save()}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide();"/>
+					    <p:remoteCommand action="#{qaFEEditBean.cancel}"
+							name="cancel" immediate="true"/>
+						<h:panelGroup rendered="#{qaFEEditBean.canQuestion}">
+							<p:commandButton id="btnKomentar" value="Tanya Kembali" onclick="onSave([{name: 'QUESTION', value:PF('logEditor').getEditorValue()}])" rendered="#{qaFEEditBean.qa.qStatus eq 'QNA_STATUS_ANSWERED' and qaFEEditBean.qa.qStatus != 'QNA_STATUS_CLOSE'}"
+							styleClass="btn btn-mb-secondary"/>
+						</h:panelGroup>
+						<button type="button" class="btn btn-outline-secondary"
+							onclick="cancel()">Batal</button>
+					</div>
+				</div>
+				<h:panelGroup rendered="#{qaFEEditBean.canQuestion}">
+					<div class="form-row" style="#{qaFEEditBean.qa.qStatus eq 'QNA_STATUS_ANSWERED' and qaFEEditBean.qa.qStatus != 'QNA_STATUS_CLOSE' ?'':'display:none'}">
+						<div class="col">
+							<p:textEditor id="logEditor"  widgetVar="logEditor"   height="150"   style="margin-bottom:10px" />							
+						</div>
+					</div>
+				
+					<div class="form-row div-class-upload" style="#{qaFEEditBean.qa.qStatus eq 'QNA_STATUS_ANSWERED' and qaFEEditBean.qa.qStatus != 'QNA_STATUS_CLOSE' ?'':'display:none'}">
+						<div class="col">
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="label-form"><h:outputText
+									value="#{msg.formDBComplianceAttachment}" /> <br /> <h:outputText
+									style="color: #dd4b39"
+									value="#{qaFEEditBean.textWarningUpload}" /> </label>
+							<p:fileUpload style="test"
+								fileUploadListener="#{qaFEEditBean.handleFileUpload}"
+								oncomplete="onCompleteUpload()"
+								value="qaFEEditBean.uploadFiles" mode="advanced" auto="true"
+								dragDropSupport="false" multiple="true"
+								sizeLimit="#{qaFEEditBean.standardAttachmentSize}"
+								update="messages" />
+							<p:dataList value="#{qaFEEditBean.uploadFiles}"
+								emptyMessage="" var="vo" id="attachment" rowIndexVar="index">
+								<table class="ui-panelgrid">
+									<tr>
+										<td style="width: 80%"><p:commandLink
+												style="color:#F3750B;" title="#{vo.fileSizeKB} KB"
+												ajax="false" immediate="true"
+												actionListener="#{qaFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td>&#160;&#160;<p:commandLink immediate="true" style="color:#F3750B;"
+												actionListener="#{qaFEEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}"
+												update="attachment">#{msg.buttonDelete}</p:commandLink></td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+				</h:panelGroup>
+				
+				<div class="form-row">
+					<div class="col">
+					<p:commandButton id="btnSubmit" value="Submit" type="submit"
+							styleClass="btn btn-mb-secondary" style="display:none;"/>
+						<button type="button" class="btn btn-outline-secondary" style="display: none;"
+							onclick="window.location=document.referrer;">Batal</button>
+					</div>
+				</div>
+				
+			</h:form>
+		</div>
+		<p:dialog id="dialogSuccess" widgetVar="dlg1" modal="true" position="center" styleClass="wo-dialog">
+			<h:panelGrid columns="1" >
+		    <h:outputText value="Data Berhasil disimpan dengan nomor tiket : #{qaFEEditBean.qa.ticketNo}" />
+		    <p:commandButton value="OK" onclick="cancel()" style="text-align:center"></p:commandButton>
+		    </h:panelGrid>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

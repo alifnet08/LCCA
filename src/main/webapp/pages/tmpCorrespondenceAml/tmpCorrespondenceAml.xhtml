@@ -1,0 +1,414 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+	
+	<ui:define name="head">
+		<style>
+			.ui-calendar input {
+				display: block !important;
+				width: 100% !important;
+				padding: 10px 12px !important;
+				background-color: #F7F8F8 !important;
+				background-image: none !important;
+				border-radius: 5px !important;
+				box-shadow: none;
+				transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+					!important;
+				border: 0 !important;
+				height: inherit;
+			}
+			
+			.ui-inputfield.ui-state-focus {
+				box-shadow: none;
+			}
+			/* .ui-widget {
+			    font-size: inherit;
+			} */
+		</style>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTmpCorrespondenceAmlTitle}" />
+	</ui:define>
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{tmpCorrespondenceAmlBean.getNavigateEdit()}" type="submit"
+					process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="deletedMessage" globalOnly="true" />
+		<div class="box box-solid">
+			<div class="box-body">
+
+					<h:panelGroup id="panelSearch">
+					<div class="row">
+						<div class="col-lg-3">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlSender}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{tmpCorrespondenceAmlBean.searchPengirim}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpCorrespondenceAmlBean.selectSender}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-9">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlLetterReceiveDate}" /></label>
+								<div class="input-group">
+									<p:calendar id="tglTerimaSuratFrom" autocomplete="off" maxlength="11"
+										placeholder="#{msg.from}" styleClass="form-control-datepicker-wrap"
+										value="#{tmpCorrespondenceAmlBean.searchTanggalTerimaSuratFrom}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+									<span class="input-group-addon plain">-</span>
+									<p:calendar id="tglTerimaSuratTo" autocomplete="off" maxlength="11"
+										placeholder="#{msg.to}" styleClass="form-control-datepicker-wrap"
+										value="#{tmpCorrespondenceAmlBean.searchTanggalTerimaSuratTo}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+								</div>
+							</div>
+						</div>
+						</div>
+						
+						<div class="row">
+						<div class="col-lg-3">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlLetterNo}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{tmpCorrespondenceAmlBean.searchNoSurat}" />
+							</div>
+						</div>
+						<div class="col-lg-9">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlLetterDate}" /></label>
+								<div class="input-group">
+									<p:calendar id="tglSuratFrom" autocomplete="off" maxlength="11"
+										placeholder="#{msg.from}" styleClass="form-control-datepicker-wrap"
+										value="#{tmpCorrespondenceAmlBean.searchTanggalSuratFrom}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+									<span class="input-group-addon plain">-</span>
+									<p:calendar id="tglSuratTo" autocomplete="off" placeholder="#{msg.to}"
+										styleClass="form-control-datepicker-wrap" maxlength="11"
+										value="#{tmpCorrespondenceAmlBean.searchTanggalSuratTo}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+								</div>
+							</div>
+						</div>
+						</div>
+						
+						<div class="row">
+						<div class="col-lg-3">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlAbout}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{tmpCorrespondenceAmlBean.searchPerihal}" />
+							</div>
+						</div>
+						<div class="col-lg-7">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlTargetDate}" /></label>
+								<div class="input-group">
+									<p:calendar id="targetDateFrom" autocomplete="off" maxlength="11"
+										placeholder="#{msg.from}" styleClass="form-control-datepicker-wrap"
+										value="#{tmpCorrespondenceAmlBean.searchTargetDateFrom}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+									<span class="input-group-addon plain">-</span>
+									<p:calendar id="targetDateTo" autocomplete="off" maxlength="11"
+										placeholder="#{msg.to}" styleClass="form-control-datepicker-wrap"
+										value="#{tmpCorrespondenceAmlBean.searchTargetDateTo}"
+										pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+										locale="#{tmpCorrespondenceAmlBean.inputDateLocale}" />
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceAmlSearchStatus}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{tmpCorrespondenceAmlBean.searchStatus}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpCorrespondenceAmlBean.statusList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						</div>
+					</h:panelGroup>
+					<div class="row">
+					<div class="col-lg-12">
+						<div class="col-lg-12">
+							<div class="filter-tools">
+								<ul class="no-margin no-padding">
+									<li><p:commandButton value="#{msg.buttonSearch}"
+											ajax="true" update="Correspondence"
+											styleClass="btn btn-success tl-label"
+											actionListener="#{tmpCorrespondenceAmlBean.search}"></p:commandButton></li>
+									<li><p:commandButton value="#{msg.buttonReset}"
+											ajax="true"
+											update="Correspondence panelSearch"
+											styleClass="btn btn-default btn-flat tl-label"
+											actionListener="#{tmpCorrespondenceAmlBean.reset}"></p:commandButton></li>
+								</ul>
+								<ul class="no-margin no-padding pull-right">
+									<p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+									<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload(); PF('statusDialog').hide();">
+										<i class="fa fa-table"></i> &nbsp;
+		        							<h:outputText
+											value="#{msg.formTmpCorrespondenceAmlExportExcel}" />
+
+										<p:dataExporter type="xls" target="Correspondence"
+											fileName="Correspondence" pageOnly="true"
+											postProcessor="#{tmpCorrespondenceAmlBean.postProcessXLS}" />
+									</h:commandLink></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="filter-tools" style="text-align: right;">
+								<ul class="no-margin no-padding" style="float: right;">
+									<li></li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="Correspondence" paginator="true" var="vo"
+								value="#{tmpCorrespondenceAmlBean.tableCorrespondence}"
+								dynamic="true" lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{tmpCorrespondenceAmlBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;" exportable="false" width="120"
+									headerText="#{msg.formAction}">
+
+									<h:outputLabel value="#{msg.formWaitingForApproval}"
+										rendered="#{vo.statusCode eq 'DATA_NEW'}" />								
+									
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										rendered="#{vo.statusCode ne 'DATA_NEW'}"
+										action="#{tmpCorrespondenceAmlBean.getNavigateEdit()}"
+										type="submit" ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.correspondenceId}" />
+									</p:commandLink>
+
+									<h:outputText style=" padding-left:4px; color:grey;'"
+										value=" | "
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}" />
+									<h:outputLabel value="&#160;"
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}"
+										styleClass="tl-label" update="Correspondence form:deletedMessage"
+										action="#{tmpCorrespondenceAmlBean.delete(vo.correspondenceId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceAmlLetterNo}" width="250">
+									<h:outputLabel value="#{vo.letterNo}" title="#{vo.letterNo}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceAmlSenderLetter}" width="200">
+									<h:outputLabel value="#{vo.senderName}"  title="#{vo.senderName}"/>
+								</p:column>
+
+								<p:column width="140"
+									headerText="#{msg.formTmpCorrespondenceAmlLetterReceivedDate}">
+									<h:outputText value="#{vo.letterReceivedDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								
+								<p:column width="140"
+									headerText="#{msg.formTmpCorrespondenceAmlLetterDate}">
+									<h:outputText value="#{vo.letterDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								
+								<!-- <p:column headerText="#{msg.formTmpCorrespondenceAmlAbout}">
+									<h:outputLabel value="#{vo.perihalName}" />
+								</p:column> -->
+								
+								<p:column headerText="#{msg.formTmpCorrespondenceAmlSearchStatus}"
+									style="text-align:center;" width="100">
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_ACTIVE'}">
+										<span class="label label-success"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_INACTIVE'}">
+										<span class="label label-danger"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_NEW'}">
+										<span class="label label-info"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_REVISE'}">
+										<span class="label label-warning"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</p:outputLabel>
+								</p:column>
+								
+								<p:column width="140"
+									headerText="#{msg.formTmpCorrespondenceAmlTargetDate}">
+									<h:outputText value="#{vo.targetDateStr}">
+									</h:outputText>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formTmpCorrespondenceAmlFollowupStatusOfPIC}"
+									style="text-align:center" width="100">
+									<h:outputText value="#{vo.followupStatusName}"/>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formTmpCorrespondenceAmlPICName}" width="150">
+									<h:outputText value="#{vo.picConfirmationName}" title="#{vo.picConfirmationName}"/>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formTmpCorrespondenceAmlConfirmationDate}" width="140">
+									<h:outputText value="#{vo.confirmationDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceAmlFollowupDate}" width="140">
+									<h:outputText value="#{vo.followupDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceAmlInformation}" width="150">
+									<h:outputText value="#{vo.followupNote}" title="#{vo.followupNote}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formTmpCorrespondenceAmlFollowupFulfillmentDate}" width="140">
+									<h:outputText value="#{vo.fulfillmentFollowupDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formTmpCorrespondenceAmlComplianceCheckStatus}" width="100"
+									style="text-align:center;">
+									<h:outputText value="#{vo.complianceCheckerStatus}" />
+								</p:column>
+								
+								<p:column width="140"
+									headerText="#{msg.formTmpCorrespondencePICAttendance}">
+									<p:dataList value="#{vo.statusList}" emptyMessage=""
+										var="dtl">
+											<h:outputLabel value="#{dtl.picNameHadir != null ? dtl.picNameHadir : '' }" 
+											rendered="#{dtl.picNameHadir ne null and dtl.picNameHadir != '' }"/>
+									</p:dataList>
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formTmpCorrespondenceAmlConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formTmpCorrespondenceAmlDelete}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formTmpCorrespondenceAmlConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+</ui:composition>

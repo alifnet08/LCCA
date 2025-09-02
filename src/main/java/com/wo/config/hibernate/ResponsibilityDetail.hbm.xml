@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.responsibility.model">
+	<class name="ResponsibilityDetail" table="wo_mst_responsibility_dtl">
+		<id name="responsibilityDtlId" column="RESPONSIBILITY_DTL_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_responsibility_dtl_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="responsibility" column="RESPONSIBILITY_ID"
+			class="com.wo.module.responsibility.model.Responsibility" fetch="join" />
+
+		<many-to-one name="menu" column="MENU_ID"
+			class="com.wo.module.menu.model.Menu" fetch="join" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

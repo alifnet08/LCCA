@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.litigation.model">
+	<class name="LitigationPutusanPengadilan" table="WO_MST_LITI_PTUSAN_PNGADILAN">
+		<id name="litiPutusanPengadilanId" column="LITI_PUTUSAN_PNGADILAN_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_MST_LITI_PUTUSAN_PNGDLN_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="litigation" column="LITIGATION_ID" fetch="join" 
+				class="com.wo.module.litigation.model.LitigationNew" />
+				
+		<property name="hearingDate" column="HEARING_DATE" type="date" />
+		
+		<many-to-one name="judgementWarning" property-ref="parameterDtlCode"
+			column="JUDGEMENT_WARNING" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

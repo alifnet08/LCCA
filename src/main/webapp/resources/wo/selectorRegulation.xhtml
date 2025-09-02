@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<composite:interface>
+		<composite:attribute name="bean"
+                        required="true"
+			displayName="Caller bean which implement SelectorListener"/>
+        <composite:attribute name="updateOnSelected"
+			displayName="Comp updated when selected"/>                
+        <composite:attribute name="widgetVar"
+                displayName="Widget var accessible by JS"/>
+        <composite:attribute name="title"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="width"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="height"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="selectorInfo"
+                displayName="selector info, columns, properties and db query"/>
+        <composite:attribute name="selectorInfoWithCriteria"
+                displayName="selector info, columns, properties and db query"/>
+                
+                        
+
+	</composite:interface>
+
+	<composite:implementation>
+        <p:dialog id="selectorDialog#{cc.attrs.id}"  position="center" appendToBody="true"  fitViewport="true"
+                      header="#{cc.attrs.title}" widgetVar="#{cc.attrs.widgetVar}" responsive="true"
+                      height="#{cc.attrs.height}" width="#{cc.attrs.width}" onShow="$(PF('btnSearch#{cc.attrs.id}').jqId).click()"
+                      >  
+            <h:form id="selectorForm#{cc.attrs.id}" onsubmit="return false;">
+                 <p:remoteCommand 
+                    name="reset#{cc.attrs.id}AndShow"
+                    actionListener="#{mbLovCommon.reset(cc.attrs.id)}" 
+                    oncomplete="$(txtSearch#{cc.attrs.id}.jqId).val('');PF('#{cc.attrs.widgetVar}').show();"
+                    update="selectorTable#{cc.attrs.id}"/>
+               
+                <p:remoteCommand 
+                    name="doSearch#{cc.attrs.id}"
+                    actionListener="#{mbLovCommon.search(cc.attrs.id)}" 
+                    update="selectorTable#{cc.attrs.id}"
+                    process="@form"
+                                 /> 
+                <table>
+                    <tr>
+                        
+                        <td>
+                            
+                            <input type="hidden" name="hdnParam#{cc.attrs.id}" class="hdnParam#{cc.attrs.id}"/>
+                            <table>
+							<tr>
+							<td style="width:80%"><input type="text" class="form-control" id="txtSearch#{cc.attrs.id}" name="txtSearch#{cc.attrs.id}"></input></td>
+                            <td> <h:outputText value="-" style="color:white"/> </td>
+                            <td style="width:20%"><p:commandButton  id="btnSearch#{cc.attrs.id}" styleClass="btn btn-primary pull-left tl-label" process="@form" widgetVar="btnSearch#{cc.attrs.id}" value="Search" action="#{mbLovCommon.search(cc.attrs.id)}" update="selectorTable#{cc.attrs.id}"></p:commandButton></td>
+                            </tr>
+                            </table>
+                                       
+
+                        </td>
+                    </tr>
+                </table>
+                
+                
+                <p:dataTable var="item" value="#{mbLovCommon.getDataModel(cc.attrs.id, cc.attrs.selectorInfo)}" rows="10"
+                            lazy="true" paginator="true" paginatorPosition="top"
+                            rowIndexVar="rowIndex" reflow="true"
+                            styleClass="table-needs-hover-marker"
+                            id="selectorTable#{cc.attrs.id}"
+                            >  
+                    <p:column headerText="#{msg.formRegulationSocializationDocNo}" width="150"  >
+                    	#{item.documentNo} 
+                    </p:column>
+                    <p:column headerText="#{msg.formRegulationSocializationRegTitle}" width="150"  >
+                    	#{item.name} 
+                    </p:column>
+                    <p:column headerText="#{msg.formRegulationSocializationAttachment}" width="250"  >
+                    	<p:dataList value="#{item.regulationAttachments}" var="dtl" >
+										<p:commandButton styleClass="buttonToLink"  ajax="false" immediate="true" onclick="this.form.target='_blank'" value="#{dtl.attachmentFile!=null?dtl.attachmentFile:''}"
+											actionListener="#{cc.attrs.bean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+										></p:commandButton>
+				         </p:dataList>
+                    </p:column>
+                    
+                   
+
+                     <p:column headerText="Action" width="80"  >
+                        <p:commandLink id="btnSelect#{cc.attrs.id}" value="Choose" 
+                            actionListener="#{mbLovCommon.select(cc.attrs.id, cc.attrs.widgetVar, cc.attrs.bean, item, cc.attrs.selectorInfo)}" 
+                            update="#{cc.attrs.updateOnSelected} " 
+                            onsuccess="PF('#{cc.attrs.widgetVar}').hide();" 
+                            process="@this" >
+                        </p:commandLink>
+                                        
+
+                    </p:column>   
+
+                </p:dataTable>
+                
+            </h:form>
+
+        </p:dialog>              
+            
+            
+	</composite:implementation>
+</html>

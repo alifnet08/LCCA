@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formQACategoryTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="messages" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-document-type">
+					<h:outputText value="#{msg.formQACategoryAddTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="">
+								<p:outputLabel
+									for="qaCategoryMenu"
+									value="Category" />
+							</label>
+							<h:selectOneMenu id="qaCategoryMenu"
+								required="true"
+								requiredMessage="#{msg.formQACategoryCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{qaCategoryEditBean.qaCategory.qnaCategoryCode.parameterDtlCode}"
+								disabled="#{qaCategoryEditBean.actionMode eq 'EDIT'}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{qaCategoryEditBean.categoryList}" />
+							</h:selectOneMenu>
+							<p:message for="qaCategoryMenu" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			&nbsp;
+			<h3>
+				<h:outputText
+					value="Assigned To" />
+			</h3>
+			<div class="col-lg-12">
+				<div id="mp-rekam-jejak">
+					<h4 class="sub-header">
+						&nbsp;
+						<div class="box-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandLink onclick="onAddNewAssigned()">
+										<i class="fa fa-plus"></i>
+									</p:commandLink></li>
+								<li><p:commandLink onclick="onDeleteRowAssigned()">
+										<i class="fa fa-trash"></i>
+									</p:commandLink></li>
+							</ul>
+						</div>
+					</h4>
+					<div class="table-wrapper table-responsive">
+						<p:dataTable id="dataTableAssigned" var="data"
+							value="#{qaCategoryEditBean.assignedTableModel}"
+							selection="#{qaCategoryEditBean.selectedAssigned}"
+							rowKey="#{data.sequence}" rowIndexVar="statIndex"
+							rowSelectMode="checkbox">
+
+							<p:ajax event="rowSelectCheckbox" process="@this" />
+							<p:ajax event="rowUnselectCheckbox" process="@this" />
+							<p:ajax event="toggleSelect" process="@this" />
+
+							<p:column selectionMode="multiple"
+								style="text-align:center; width:40px;" />
+
+							<p:column headerText="#{msg.formRegulationSocializationNIK}"
+								width="150">
+								<table>
+									<tr>
+										<td style="width: 80%"><h:inputText
+												styleClass="form-control temp-no-peraturan"
+												value="#{data.user.nik}" readonly="true" /></td>
+										<td style="width: 20%"><p:commandLink
+												onclick="personAssignedDialog.show()" process="@this">
+												<i class="fa fa-search ico-lg"></i>
+												<f:setPropertyActionListener
+													target="#{qaCategoryEditBean.indexDtlAssigned}"
+													value="#{statIndex}" />
+
+											</p:commandLink></td>
+									</tr>
+								</table>
+
+							</p:column>
+
+							<p:column headerText="#{msg.formRegulationSocializationName}"
+								width="200">
+								<h:inputText styleClass="form-control" value="#{data.user.name}"
+									readonly="true" />
+							</p:column>
+
+							<p:column headerText="#{msg.formRegulationSocializationEmail}"
+								width="150">
+								<h:inputText styleClass="form-control"
+									value="#{data.user.email}" readonly="true" />
+							</p:column>
+
+
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSubmit}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{qaCategoryEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{qaCategoryEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+				<p:remoteCommand
+					action="#{qaCategoryEditBean.onAddNewAssigned}"
+					process="@this" immediate="true" name="onAddNewAssigned"
+					update="dataTableAssigned"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{qaCategoryEditBean.onDeleteRowAssigned}" process="@this"
+					immediate="true" name="onDeleteRowAssigned"
+					update="dataTableAssigned"></p:remoteCommand>
+			</div>
+		</div>
+		
+		<wo:selector id="dummy" height="450" width="550"
+			title="LOV Assigned"
+			widgetVar="dummy"
+			selectorInfo="#{qaCategoryEditBean.selectorAssigned}"
+			bean="#{qaCategoryEditBean}"
+			updateOnSelected="form:dataTableAssigned" />
+			
+		<wo:selector id="Assigned" height="450" width="550"
+			title="LOV Assigned"
+			widgetVar="personAssignedDialog"
+			selectorInfo="#{qaCategoryEditBean.selectorAssigned}"
+			bean="#{qaCategoryEditBean}"
+			updateOnSelected="form:dataTableAssigned" />
+		
+	</ui:define>
+</ui:composition>

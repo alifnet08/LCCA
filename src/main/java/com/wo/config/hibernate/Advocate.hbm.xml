@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.advocate.model">
+	<class name="Advocate" table="wo_mst_advocate">
+		<id name="advocateId" column="ADVOCATE_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_advocate_seq</param>
+			</generator>
+		</id>
+
+		
+			
+		<property name="region" column="REGION" type="string" />
+		<property name="branch" column="BRANCH" type="string" />
+		<property name="no" column="NO" type="string" />
+		<property name="advocateName" column="ADVOCATE_NAME" type="string" />
+		<property name="partners" column="PARTNERS" type="string" />
+		<property name="website" column="WEBSITE" type="string" />
+		<property name="clasification" column="CLASIFICATION" type="string" />
+		<property name="note" column="NOTE" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="advocateInfos" inverse="true"
+			cascade="save-update, delete-orphan" order-by="advocate_info_id asc">
+			<key column="advocate_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.advocate.model.AdvocateInfo" />
+		</bag>
+		
+		<bag name="advocatePartners" inverse="true"
+			cascade="save-update, delete-orphan" order-by="advocate_partners_id asc">
+			<key column="advocate_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.advocate.model.AdvocatePartners" />
+		</bag>
+		
+		
+
+	</class>
+</hibernate-mapping>

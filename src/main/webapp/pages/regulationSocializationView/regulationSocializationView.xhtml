@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+.ui-state-default.form-control {
+	background: #F7F8F8;
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationSocializationViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formRegulationSocializationProvType}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{regulationSocializationViewBean.provTypeCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{regulationSocializationViewBean.provTypes}" />
+									<p:ajax event="change"
+										update="form:panelDocType form:panelDocCategory form:panelDocTopic"
+										listener="#{regulationSocializationViewBean.onChangeProvType}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<h:panelGroup id="panelDocType">
+								<div class="form-group">
+									<label class="tl-label size-font" tl="document-type"><h:outputText
+											value="#{msg.formRegulationSocializationRegulationType}" /></label>
+									<h:selectOneMenu id="docType" styleClass="form-control s2"
+										value="#{regulationSocializationViewBean.documentTypeId}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems
+											value="#{regulationSocializationViewBean.docTypes}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>
+						<div class="col-lg-4">
+							<h:panelGroup id="panelDocCategory">
+								<div class="form-group">
+									<label class="tl-label size-font" tl=""><h:outputText
+											value="#{msg.formRegulationSocializationRegulationCategory}" /></label>
+									<h:selectOneMenu id="docCategory" styleClass="form-control s2"
+										value="#{regulationSocializationViewBean.documentCategoryId}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems
+											value="#{regulationSocializationViewBean.docCategories}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>
+						<div class="col-lg-3">
+							<h:panelGroup id="panelDocTopic">
+								<div class="form-group">
+									<label class="tl-label size-font" tl=""><h:outputText
+											value="#{msg.formRegulationSocializationRegulationTopic}" /></label>
+									<h:selectOneMenu id="docTopic" styleClass="form-control s2"
+										value="#{regulationSocializationViewBean.documentTopicId}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems
+											value="#{regulationSocializationViewBean.docTopics}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>
+						<div class="col-lg-3">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formRegulationSocializationDocNo}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{regulationSocializationViewBean.documentNo}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formRegulationSocializationRegTitle}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{regulationSocializationViewBean.judulPeraturan}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-2">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formRegulationSocializationStatus}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{regulationSocializationViewBean.statusCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{regulationSocializationViewBean.status}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formRegulationSocializationPublishedDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.from}" maxlength="11"
+										id="publishedStartDate"
+										value="#{regulationSocializationViewBean.publishedStartDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									<span class="input-group-addon plain">-</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.to}" maxlength="11"
+										id="publishedEndDate"
+										value="#{regulationSocializationViewBean.publishedEndDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formRegulationSocializationEffectiveDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.from}" maxlength="11"
+										id="effectiveStartDate"
+										value="#{regulationSocializationViewBean.effectiveStartDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									<span class="input-group-addon plain">-</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.to}" maxlength="11"
+										id="effectiveEndDate"
+										value="#{regulationSocializationViewBean.effectiveEndDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formRegulationSocializationTargetDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.from}" maxlength="11"
+										id="targetStartDate"
+										value="#{regulationSocializationViewBean.targetStartDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									<span class="input-group-addon plain">-</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.to}" maxlength="11"
+										id="targetEndDate"
+										value="#{regulationSocializationViewBean.targetEndDate}"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><h:commandButton value="#{msg.buttonSearch}"
+										styleClass="btn btn-success tl-label"
+										onclick="searchOnClick([{name: 'START_DATE', value:$('#startDate').val()},{name: 'END_DATE', value:$('#endDate').val()}])"></h:commandButton>
+									<p:remoteCommand update="tableSearch"
+										actionListener="#{regulationSocializationViewBean.search}"
+										name="searchOnClick"></p:remoteCommand></li>
+								<li><h:commandLink value="#{msg.buttonReset}"
+										update="tableSearch panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{regulationSocializationViewBean.reset}"></h:commandLink></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{regulationSocializationViewBean.tableModel}"
+								dynamic="true" lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{regulationSocializationViewBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column width="100" headerText="#{msg.formAction}"
+									style="text-align:center;">
+									<p:commandLink id="viewId" value="#{msg.buttonView}"
+										action="#{regulationSocializationViewBean.getNavigateView()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.socializationId}" />
+										<f:param name="viewId" value="#{vo.socializationId}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationProvType}"
+									width="100">
+									<h:outputLabel value="#{vo.jenisKetentuan}" title="#{vo.jenisKetentuan}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationRegNo}"
+									width="150">
+									<h:outputLabel value="#{vo.noDokumen}" title="#{vo.noDokumen}"/>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationRegTitle}"
+									width="150">
+									<h:outputLabel value="#{vo.jdlPeraturan}" title="#{vo.jdlPeraturan}"/>
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationRegulationType}"
+									width="100">
+									<h:outputLabel value="#{vo.tipeDokumen}" title="#{vo.tipeDokumen}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationPublishedDate}"
+									width="150">
+									<h:outputLabel value="#{vo.publishedDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationEffectiveDate}"
+									width="150">
+									<h:outputLabel value="#{vo.effectiveDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationPICName}"
+									width="200">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.pic1} <br /> #{dtl.pic2} <br /> #{dtl.pic3}</p:dataList>
+								</p:column>
+
+								<p:column headerText="#{msg.formRegulationSocializationStatus}"
+									width="150" style="text-align:center">
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_ACTIVE'}">
+										<span class="label label-success"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_INACTIVE'}">
+										<span class="label label-danger"> <h:outputLabel
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_NEW'}">
+										<span class="label label-info"> <h:outputLabel
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_REVISE'}">
+										<span class="label label-warning"> <h:outputLabel
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationTargetDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.targetDate}</p:dataList>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationFollowupStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.followupStatus}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationPICConfirmation}"
+									width="150">
+
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.followupBy}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationConfirmationDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.confirmationDate}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationFollowupDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl">#{dtl.followupDate}</p:dataList>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationComplianceCheckStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.complianceStatus}</p:dataList>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationRegulationCategory}"
+									width="150">
+									<h:outputLabel value="#{vo.kategori}" title="#{vo.kategori}"/>
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationSocializationRegulationTopic}"
+									width="150">
+									<h:outputLabel value="#{vo.topik}" title="#{vo.topik}"/>
+								</p:column>
+								
+							</p:dataTable>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

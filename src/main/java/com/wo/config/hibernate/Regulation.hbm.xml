@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.externalRegulation.model">
+	<class name="Regulation" table="wo_tmp_regulation">
+		<id name="regulationId" column="regulation_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_regulation_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="jenisKetentuan" property-ref="parameterDtlCode"
+			column="jenis_ketentuan" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="documentType" column="document_type_id"
+			class="com.wo.module.documentType.model.DocumentType" fetch="join" />
+
+		<many-to-one name="documentCategory" column="document_category_id"
+			class="com.wo.module.documentCategory.model.DocumentCategory" fetch="join" />
+
+		<many-to-one name="documentTopic" column="document_topic_id"
+			class="com.wo.module.documentTopic.model.DocumentTopic" fetch="join" />
+
+		<property name="documentNo" column="document_no" type="string" />
+
+		<property name="nameIn" column="name_in" type="string" />
+
+		<property name="nameEn" column="name_en" type="string" />
+
+		<property name="publishedDate" column="published_date" type="date" />
+
+		<property name="expiredDate" column="expired_date" type="date" />
+
+		<property name="effectiveDate" column="effective_date" type="date" />
+
+		<!-- <property name="publisherUnit" column="publisher_unit" type="string" /> -->
+
+		<property name="status" column="status" type="string" />
+		
+		<property name="descriptionIn" column="DESCRIPTION_IN" type="string" lazy="true"/>
+		
+		<property name="descriptionEn" column="DESCRIPTION_EN" type="string" lazy="true"/>
+		
+		<property name="directorate" column="DIRECTORATE" type="string" />
+		
+		<property name="publisherUnit" column="PUBLISHER_UNIT" type="string" />
+		
+		<property name="receiver" column="RECEIVER" type="string" />
+		
+		<!-- <many-to-one name="directorate" property-ref="parameterDtlCode"
+			column="DIRECTORATE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="publisherUnit" property-ref="parameterDtlCode"
+			column="PUBLISHER_UNIT" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" /> -->
+		
+		<many-to-one name="pic" column="PIC_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+		
+		<many-to-one name="puk" column="PUK_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+		
+		<many-to-one name="counterType" column="COUNTER_TYPE_ID"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+			
+		<many-to-one name="typeReviewDate" column="TYPE_REVIEW_DATE" property-ref="parameterDtlCode"
+			class="com.wo.module.parameter.model.ParameterDetail" fetch="join"/>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+		<bag name="regulationTrackRecords" inverse="true"
+			cascade="save-update, delete-orphan" order-by="REGULATION_TRACK_RECORD_ID asc">
+			<key column="regulation_id" />
+			<one-to-many
+				class="com.wo.module.externalRegulation.model.RegulationTrackRecord" />
+		</bag>
+
+		<bag name="regulationAttachments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="regulation_attachment_id asc">
+			<key column="regulation_id" />
+			<one-to-many
+				class="com.wo.module.externalRegulation.model.RegulationAttachment" />
+		</bag>
+
+		<bag name="regulationApprovals" inverse="true"
+			cascade="save-update, delete-orphan" order-by="regulation_approval_id asc">
+			<key column="regulation_id" />
+			<one-to-many
+				class="com.wo.module.externalRegulationApproval.model.RegulationApproval" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

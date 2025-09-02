@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcComplianceReview.model">
+	<class name="TrcComplianceReview" table="wo_trc_compliance_review">
+		<id name="complianceReviewId" column="compliance_review_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_compliance_review_seq</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="reviewCategory" property-ref="parameterDtlCode"
+			column="review_category" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="reviewedBranch" column="reviewed_branch"
+			type="string" />
+
+		<property name="documentNo" column="document_no" type="string" />
+		<property name="documentDate" column="document_date" type="date" />
+		<property name="perihalIn" column="perihal_in" type="string" />
+		<property name="perihalEn" column="perihal_en" type="string" />
+		<property name="notes" column="notes" type="string" />
+		<property name="followUp" column="follow_up" type="string" />
+		
+		<many-to-one name="counterType" column="counter_type_id"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+		
+		<many-to-one name="reminderStatus" property-ref="parameterDtlCode"
+			column="reminder_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="status" property-ref="parameterDtlCode"
+			column="status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<bag name="trcComplianceReviewDocuments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="compliance_review_atch_id asc">
+			<key column="compliance_review_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcComplianceReview.model.TrcComplianceReviewDocument" />
+		</bag>
+
+		<bag name="trcComplianceReviewPicCompliances" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_review_pic_cmplc_id asc">
+			<key column="compliance_review_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcComplianceReview.model.TrcComplianceReviewPicCompliance" />
+		</bag>
+
+		<bag name="trcComplianceReviewPicFollowupPoints" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_review_pic_followup_id asc">
+			<key column="compliance_review_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcComplianceReview.model.TrcComplianceReviewPicFollowup" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

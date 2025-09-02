@@ -1,0 +1,233 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		<style>
+.ui-datalist-data {
+	list-style-type: none;
+}
+
+.ui-widget-content {
+	border: none;
+}
+
+.ui-widget .ui-widget {
+	color: lightseagreen;
+}
+
+.ui-button-text-icon-left .ui-button-text {
+	color: #4f4f4f;
+}
+</style>
+
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+				<div class=" navbar-collapse " id="collapsibleNavbar">
+					<ul class="navbar-nav">
+						<li class="nav-item"><a class="nav-link"
+							href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+							<a class="nav-link"><i
+								class="fa fa-sm fa-bold fa-chevron-right"
+								style="margin-top: -5px; color: #FFC600;"></i></a> <a
+							class="nav-link disabled" href="#">TINDAK LANJUT - DENDA</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">TINDAK LANJUT -
+				Denda</div>
+			<h:form class="internal-form" style="margin-top:20px;" id="form">
+				<p:growl id="messages" severity="error" />
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Pengirim</div>
+						<div class="value-form">#{fineFEEditBean.pengirim}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Terima Surat</div>
+						<div class="value-form">#{fineFEEditBean.tanggalTerimaSurat}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Perihal</div>
+						<div class="value-form">#{fineFEEditBean.perihal}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Surat</div>
+						<div class="value-form">#{fineFEEditBean.tanggalSurat}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Tipe Surat</div>
+						<div class="value-form">#{fineFEEditBean.tipeSurat}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Catatan Compliance</div>
+						<div class="value-form">#{fineFEEditBean.catatanComplinace}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Debitted/Booked</div>
+						<input type="text" class="form-control upload-form" id="debitted"
+							value="#{fineFEEditBean.trcFinePicFollowup.fineDebitted}"
+							disabled="true" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Nominal</div>
+						<input type="text" class="form-control upload-form"
+							id="fineAmount"
+							value="#{fineFEEditBean.trcFinePicFollowup.fineAmount}"
+							disabled="true" />
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">RC</div>
+						<!-- <input type="text" class="form-control upload-form" id="debitted" value="#{fineFEEditBean.trcFinePicFollowup.fineDebitted}" disabled="true"/> -->
+						<h:selectOneMenu styleClass="form-control s2"
+							value="#{fineFEEditBean.trcFinePicFollowup.rc.rcId}">
+							<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+							<f:selectItems value="#{fineFEEditBean.rcList}" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Root Cause</div>
+						<p:inputTextarea styleClass="form-control"
+							value="#{fineFEEditBean.trcFinePicFollowup.rootCause}"
+							maxlength="5000"></p:inputTextarea>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Kategori</div>
+						<!-- <input type="text" class="form-control upload-form" id="debitted" value="#{fineFEEditBean.trcFinePicFollowup.fineDebitted}" disabled="true"/> -->
+						<h:selectOneMenu styleClass="form-control s2"
+							value="#{fineFEEditBean.trcFinePicFollowup.category}">
+							<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+							<f:selectItems value="#{fineFEEditBean.categoryList}" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Action Plan</div>
+						<p:inputTextarea styleClass="form-control"
+							value="#{fineFEEditBean.trcFinePicFollowup.breaches}"
+							maxlength="5000"></p:inputTextarea>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Target Waktu</div>
+
+						<p:calendar id="searchTargetDate" autocomplete="off"
+							disabled="#{!(fineFEEditBean.trcFinePicFollowup.followupStatus == null || fineFEEditBean.trcFinePicFollowup.followupStatus.parameterDtlCode ne 'PIC_DONE')}"
+							maxlength="11"
+							styleClass="form-control-datepicker-wrap form-control-wrap"
+							value="#{fineFEEditBean.trcFinePicFollowup.targetDate}"
+							pattern="#{fineFEEditBean.inputDateFormat}"
+							locale="#{fineFEEditBean.inputDateLocale}" />
+					</div>
+				</div>
+
+				<h:panelGroup rendered="#{fineFEEditBean.isExtended == 'Y'}">
+					<div class="form-row">
+						<div class="col">
+							<div class="label-form">
+								Bukti Konfirmasi PIC <br />
+								<h:outputText style="color: #dd4b39"
+									value="#{fineFEEditBean.textWarningUpload}" />
+							</div>
+							<p:fileUpload styleClass="wo-fileupload-wrap"
+								fileUploadListener="#{fineFEEditBean.handleFileUpload}"
+								mode="advanced" dragDropSupport="false" multiple="true"
+								update="evidenceList"
+								sizeLimit="#{fineFEEditBean.maxAttachmentSize}" auto="true">
+							</p:fileUpload>
+							<p:dataList styleClass="uploaded-data-wrap"
+								value="#{fineFEEditBean.uploadedFiles}"
+								style="#{fineFEEditBean.uploadedFiles !=null ?'':'display:none'}"
+								emptyMessage="" var="vo" id="evidenceList" rowIndexVar="index">
+								<table>
+									<tr>
+										<td style="width: 90%"><i class="far fa-file-alt"></i> <p:spacer />
+											<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false"
+												immediate="true"
+												actionListener="#{fineFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td><p:commandLink
+												rendered="#{fineFEEditBean.trcFinePicFollowup.followupStatus == null || fineFEEditBean.trcFinePicFollowup.followupStatus.parameterDtlCode ne 'PIC_DONE'}"
+												immediate="true"
+												actionListener="#{fineFEEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}"
+												update="evidenceList" style="color:#4F4F4C;">#{msg.buttonDelete}</p:commandLink>
+										</td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{fineFEEditBean.save}" name="onSave"
+							update="form:messages" />
+						<p:remoteCommand action="#{fineFEEditBean.cancel}" name="cancel"
+							immediate="true" />
+						<p:commandButton value="Simpan" type="submit"
+							rendered="#{fineFEEditBean.trcFinePicFollowup.followupStatus == null || fineFEEditBean.trcFinePicFollowup.followupStatus.parameterDtlCode ne 'PIC_DONE'}"
+							styleClass="btn btn-mb-secondary"
+							onclick="onSave([{name:'keterangan', value:$('#keterangan').val()}]);" />
+						<button type="button" class="btn btn-outline-secondary"
+							onclick="cancel()">Batal</button>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form"
+							style="#{fineFEEditBean.trcFinePicFollowup.complianceStatus eq null ?'display:none':''}">Status
+							Pengecekan</div>
+						<div class="value-form">#{fineFEEditBean.trcFinePicFollowup!=null?fineFEEditBean.trcFinePicFollowup.complianceStatus.nameIn:''}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form"
+							style="#{fineFEEditBean.trcFinePicFollowup.complianceNote eq null ?'display:none':''}">Catatan
+							Pengecekan</div>
+						<div class="value-form">#{fineFEEditBean.trcFinePicFollowup.complianceNote}</div>
+					</div>
+				</div>
+
+			</h:form>
+		</div>
+
+	</ui:define>
+</ui:composition>

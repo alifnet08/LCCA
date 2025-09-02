@@ -1,0 +1,251 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/templateFrontEnd.xhtml">
+
+	<ui:define name="content">
+
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+			<div class=" navbar-collapse " id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+						<a class="nav-link"><i
+							class="fa fa-sm fa-bold fa-chevron-right"
+							style="margin-top: -5px; color: #FFC600;"></i></a> <a
+						class="nav-link disabled" href="#">Konsultasi</a></li>
+				</ul>
+			</div>
+			</nav>
+		</div>
+
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">Konsultasi</div>
+			<h:panelGroup rendered="#{qaFEBean.isAdmin eq '0' }">
+				<div class="sidebar-title" style="font-size: 14px;">
+					<span>Tidak menemukan jawaban? Tanya kami di</span>
+					<p:link id="sini"
+						outcome="#{qaFEBean.getNavigateBertanya()}"
+						type="submit" ajax="true" styleClass="text-mb-g5">
+						<span class="td-header text-mb-secondary">sini</span>
+					</p:link>
+					<p:commandLink styleClass="confirmation" style="display:none">
+						<span class="td-header text-mb-secondary">sini</span>
+					</p:commandLink>
+				</div> 
+			</h:panelGroup>
+			<div style="font-size: 14px; color: #7D7D7D;"></div>
+			<h:form styleClass="wo-search-form" onkeypress="if (event.keyCode == 13){return false;}">
+				<p:remoteCommand name="onSearch" process="@this dataList"
+					update="dataList" action="#{qaFEBean.search()}"
+					onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide();" />
+				<p:remoteCommand name="onClickPage" process="@this dataList"
+					update="dataList" action="#{qaFEBean.searchDataPrevNext()}"
+					onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide();" />
+				<p:remoteCommand name="onPrev" process="@this dataList"
+					update="dataList" action="#{qaFEBean.prev()}"
+					onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide();" />
+				<p:remoteCommand name="onNext" process="@this dataList"
+					update="dataList" action="#{qaFEBean.next()}"
+					onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide();" />
+				<h:inputHidden id="pageSelected" value="#{qaFEBean.first}" />
+				<h:inputHidden id="totalPage" value="#{qaFEBean.totalPage}" />
+
+					<div class="form-row">
+					<div class="col-lg-6 form-group">
+					<div class="label-form">Kategori</div>
+						<p:selectOneMenu id="searchCategory" widgetVar="selectCategory"
+						    onchange="onSearch([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'PAGE_SELECTED', value:'0'},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}])"
+							styleClass="form-control" value="#{qaFEBean.searchCategory}">
+							<f:selectItem itemLabel="Pilih" itemValue="" />
+							<f:selectItems value="#{qaFEBean.categoryTypeLists}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="col-md-6 form-group">
+		            <div class="label-form">Status</div>
+								<p:selectOneMenu styleClass="form-control s2" id="searchStatus" widgetVar="selectStatus"
+								onchange="onSearch([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'PAGE_SELECTED', value:'0'},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}])"
+							       value="#{qaFEBean.searchStatus}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{qaFEBean.statusLists}" />
+								</p:selectOneMenu>
+					</div>
+					</div>
+					<div class="form-row">
+					<div class="col-12 has-search form-group">
+						<input id="searchVal" class="form-control cari-input" type="search"
+							placeholder="CARI KONSULTASI . . ." aria-label="Search" 
+							onkeypress="keyPressQAInput(event)"/>
+						<div class="input-group-append">
+							<i
+								class=" fa fa-lg fa-search input-group-text d-flex align-items-center"
+								onclick="onSearch([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'PAGE_SELECTED', value:'0'},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}])" />
+						</div>
+					</div>
+					</div>
+				
+			</h:form>
+
+			<h:panelGroup id="dataList">
+				<h:form>
+				<div class="table-responsive">
+					<table class="table table-hover table-bordered wo-table" style="min-width: 500px;">
+						<thead>
+							<tr>
+								<th>No Tiket</th>
+								<th>Judul</th>
+								<th>Pertanyaan</th>
+								<th>Kategori</th>
+								<th>Status</th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<ui:repeat value="#{qaFEBean.listData}" var="vo">
+								<tr>
+									<td>
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}" 
+											rendered="#{qaFEBean.categoryAdmin == null || qaFEBean.categoryAdmin ne vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="td-header text-mb-secondary">#{vo.ticketNo}</span>
+										</p:link> <p:link 
+											outcome="/pages/qaFE/qaFEAnswer.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}" 
+											rendered="#{qaFEBean.categoryAdmin eq vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="td-header text-mb-secondary">#{vo.ticketNo}</span>
+										</p:link>
+									</td>
+									<td>
+									<p:link outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin == null || qaFEBean.categoryAdmin ne vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											  <span class="td-header text-mb-secondary">#{vo.qTitle}</span>
+											  <br />
+											  <span class="td-detail text-mb-g4" style="font-size: 10px;">Pengirim #{vo.sender} (#{vo.divisionName}),#{vo.qDateStr}</span>
+									</p:link> 
+									<p:link
+												outcome="/pages/qaFE/qaFEAnswer.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+												rendered="#{qaFEBean.categoryAdmin eq vo.categoryTypeCode}">
+												<f:param name="first" value="#{qaFEBean.firstTemp}" />
+												<span class="td-header text-mb-secondary">#{vo.qTitle}</span>
+												<br />
+												<span class="td-detail text-mb-g4" style="font-size: 10px;">Pengirim
+													#{vo.sender} (#{vo.divisionName}),#{vo.qDateStr}</span>
+												<br />
+												<span class="td-detail text-mb-g4" style="font-size: 10px;">Update
+													Terakhir oleh #{vo.lastUpdateBy},<h:outputLabel
+														value="#{vo.lastUpdateDate}">
+														<f:convertDateTime locale="id" pattern="dd-MMM-yyyy HH:mm" />
+													</h:outputLabel>
+												</span>
+											</p:link>
+
+										</td>
+									<td><p:link id="edit"
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin == null || qaFEBean.categoryAdmin ne vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="td-header text-mb-secondary"><p:outputLabel value="#{vo.question}" escape="false"/></span>
+										</p:link> <p:link id="jawab"
+											outcome="/pages/qaFE/qaFEAnswer.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin eq vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="td-header text-mb-secondary"><p:outputLabel value="#{vo.question}" escape="false"/></span>
+										</p:link>
+									</td>
+									<td>
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin == null || qaFEBean.categoryAdmin ne vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span
+										class="td-header text-mb-secondary">#{vo.categoryTypeIn}</span>
+										</p:link> <p:link 
+											outcome="/pages/qaFE/qaFEAnswer.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin eq vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+										<span
+										class="td-header text-mb-secondary">#{vo.categoryTypeIn}</span>
+										</p:link>
+									
+									</td>										
+									<td>
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin == null || qaFEBean.categoryAdmin ne vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="">#{vo.statusIn}</span>
+										</p:link> <p:link 
+											outcome="/pages/qaFE/qaFEAnswer.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{qaFEBean.categoryAdmin eq vo.categoryTypeCode}">
+											<f:param name="first" value="#{qaFEBean.firstTemp}" />
+											<span class="">#{vo.statusIn}</span>
+										</p:link>
+									
+									</td>
+									
+								</tr>
+							</ui:repeat>
+							<tr style="#{(qaFEBean.rowCount eq 0)? '' : 'display:none'}">
+								<td colspan="5">#{msg.textNodata}</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				</h:form>
+				<nav aria-label="Page navigation" style="#{(qaFEBean.rowCount gt 0)? '' : 'display:none'}">
+				<ul class="pagination justify-content-center">
+					<li class="page-item"><a class="page-link" href="#"
+						aria-label="Previous"> <i class="fa fa-chevron-left"
+							onclick="onPrev([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}])" />
+							<span class="sr-only">Previous</span>
+					</a></li>
+					<ui:repeat value="#{qaFEBean.totalPageList}" var="row">
+						<li class="page-item row-#{row}"><a class="page-link"
+							onclick="onClickPage([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'PAGE_SELECTED', value:'#{row-1}'},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}]);">#{row}</a>
+						</li>
+					</ui:repeat>
+
+					<li class="page-item"><a class="page-link" href="#"
+						aria-label="Next"> <i class="fa fa-chevron-right"
+							onclick="onNext([{name: 'SEARCH_VAL', value:$('#searchVal').val()},{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}])"></i>
+							<span class="sr-only">Next</span>
+					</a></li>
+				</ul>
+				</nav>
+			</h:panelGroup>
+		</div>
+		<p:dialog id="dialogConfirm2" widgetVar="dlg1" modal="true" styleClass="wo-dialog" style="text-align:center;">
+			<h:panelGrid columns="1" >
+		    <!-- <h:outputText value="Mohon pastikan pertanyaan tidak mengandung informasi sensitif  (contoh: Nama Debitur, No. CIF, dsb) " /> -->
+		    <h:outputText value="#{qaFEBean.qnaWarning}" escape="false"/>
+		    <p:commandButton value="OK" onclick="document.getElementById('sini').click();PF('dlg1').hide();" 
+		                     style="text-align:center"></p:commandButton>
+		    </h:panelGrid>
+		</p:dialog> 
+		<script>
+		  $('.confirmation').on('click', function () {
+			  PF('dlg1').show();
+		  });
+		  
+		  function keyPressQAInput(event){
+				if(event.keyCode == 13){
+					onSearch([
+						{name: 'SEARCH_VAL', value:$('#searchVal').val()},
+						{name: 'PAGE_SELECTED', value:'0'},
+						{name: 'SEARCH_STATUS', value:PF('selectStatus').getSelectedValue()},
+						{name: 'SEARCH_CATEGORY', value:PF('selectCategory').getSelectedValue()}
+					]);
+				}
+			}
+		</script>
+	</ui:define>
+</ui:composition>

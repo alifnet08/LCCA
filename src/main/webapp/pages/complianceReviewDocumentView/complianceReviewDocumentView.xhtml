@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formComplianceReviewDocumentViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				
+				<h:panelGroup id="panelSearch">
+					<p:growl id="deletedMessage" globalOnly="true" />
+					<div class="row">
+	
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formComplianceReviewDocumentType}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{complianceReviewDocumentViewBean.documentTypeCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{complianceReviewDocumentViewBean.documentTypes}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formComplianceReviewHUKNo}" /></label>
+								<p:inputText id="complianceReviewHUKNo" styleClass="form-control"
+									value="#{complianceReviewDocumentViewBean.hukNo}" autocomplete="off"
+									></p:inputText>
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formComplianceReviewRemarks}" /></label>
+								<p:inputText id="complianceReviewRemark" styleClass="form-control"
+									value="#{complianceReviewDocumentViewBean.remarks}" autocomplete="off"
+									></p:inputText>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formComplianceReviewReceivedDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.from}" maxlength="11"
+										autocomplete="off"
+										value="#{complianceReviewDocumentViewBean.receivedDateFrom}"
+										pattern="#{complianceReviewDocumentViewBean.inputDateFormat}"
+										locale="#{complianceReviewDocumentViewBean.inputDateLocale}"></p:calendar>
+									<span class="input-group-addon plain">-</span>
+		
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.to}" maxlength="11"
+										autocomplete="off"
+										value="#{complianceReviewDocumentViewBean.receivedDateTo}"
+										pattern="#{complianceReviewDocumentViewBean.inputDateFormat}"
+										locale="#{complianceReviewDocumentViewBean.inputDateLocale}"></p:calendar>
+		
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formComplianceReviewCompleteDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.from}" maxlength="11"
+										autocomplete="off"
+										value="#{complianceReviewDocumentViewBean.completeDateFrom}"
+										pattern="#{complianceReviewDocumentViewBean.inputDateFormat}"
+										locale="#{complianceReviewDocumentViewBean.inputDateLocale}"></p:calendar>
+									<span class="input-group-addon plain">-</span>
+		
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										placeholder="#{msg.to}" maxlength="11"
+										autocomplete="off"
+										value="#{complianceReviewDocumentBean.completeDateTo}"
+										pattern="#{complianceReviewDocumentBean.inputDateFormat}"
+										locale="#{complianceReviewDocumentBean.inputDateLocale}"></p:calendar>
+		
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formComplianceReviewDocumentSubmitter}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{complianceReviewDocumentViewBean.documentSubmitterCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{complianceReviewDocumentViewBean.documentSubmitter}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="ComplianceReviewDocumentView"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{complianceReviewDocumentViewBean.search}"
+										></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="ComplianceReviewDocumentView panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{complianceReviewDocumentViewBean.reset}"
+										></p:commandButton></li>
+							</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="ComplianceReviewDocumentView" paginator="true" var="vo"
+								value="#{complianceReviewDocumentViewBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{complianceReviewDocumentViewBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								>
+
+								<p:column style="text-align:center;" width="100"
+									headerText="#{msg.formAction}">
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="view" value="#{msg.buttonView}"
+										action="#{complianceReviewDocumentViewBean.getNavigateEdit()}"
+										type="submit" ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.complianceReviewDocumentId}" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formComplianceReviewDocumentType}"
+									width="100">
+									<h:outputLabel value="#{vo.documentTypeName}" title="#{vo.documentTypeName}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column
+									headerText="#{msg.formComplianceReviewReceivedDate}"
+									width="100">
+									<h:outputLabel value="#{vo.receivedDateStr}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column
+									headerText="#{msg.formComplianceReviewCompleteDate}"
+									width="100">
+									<h:outputLabel value="#{vo.completeDateStr}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column
+									headerText="#{msg.formComplianceReviewHUKNo}"
+									width="100">
+									<h:outputLabel value="#{vo.documentNo}" title="#{vo.documentNo}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column
+									headerText="#{msg.formComplianceReviewMateri}"
+									width="100">
+									<h:outputLabel value="#{vo.materi}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column headerText="#{msg.formComplianceReviewProposerWorkUnit}"
+									width="250">
+									<h:outputLabel value="#{vo.divisionName}" title="#{vo.divisionName}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column headerText="#{msg.formComplianceReviewDocumentPic}"
+									width="250">
+									<p:dataList value="#{vo.complianceReviewDocumentPicComplianceViews}" emptyMessage=""
+										var="dtl">#{dtl.user.name}
+									</p:dataList>
+								</p:column>
+								<p:column headerText="#{msg.formComplianceReviewDocumentAttachment}"
+									width="250">
+									<p:dataList value="#{vo.complianceReviewDocumentAttachmentViews}" emptyMessage=""
+										var="dtl">
+										<p:commandLink title="#{dtl.fileSize} KB" ajax="false"
+											actionListener="#{complianceReviewDocumentViewBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+											target="_blank">#{dtl.attachmentFile}</p:commandLink>
+									</p:dataList>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formCounterTypeConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formCounterTypeDeleteCounterType}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formCounterTypeConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>
+</ui:composition>

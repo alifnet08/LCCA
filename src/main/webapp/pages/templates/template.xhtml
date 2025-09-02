@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta content="charset=UTF-8" />
+	<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+	<title>Maybank Internal Menu</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="9NuNF06Wn3EYFc9zjfLcnWwobLGK3uZPBPTLClZX"
+		name="csrf-token" />
+	<!-- CSRF Token -->
+	<meta
+		content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+		name="viewport" />
+
+	<link
+		href="#{request.contextPath}/resources/css/front.css?id=fbdaaa72a3039579bebe"
+		rel="stylesheet" />
+	<ui:insert name="head" />
+	<script type="text/javascript">
+		//<![CDATA[
+		//var gIsFormSubmitShowLoadingModal = false;
+
+		function cForm_onSubmit() {
+			//if (gIsFormSubmitShowLoadingModal) {
+				PF('statusDialog').show();
+			//}
+
+			//gIsFormSubmitShowLoadingModal = true;
+		}
+		//]]>
+		
+	</script>
+	<style>
+	.buttonToLink {
+     background:none!important;
+     border:none!important; 
+     padding:0!important;
+    
+    /*optional*/
+     font-family:Montserrat!important; /*input has OS specific font-family*/
+     font-weight: normal!important;
+     color: #F3750B!important;
+     cursor:pointer;
+	}
+	.wr { 
+            word-wrap: break-word; 
+        }
+    .ui-chkbox-icon{
+			background-color: #bebebe;
+			}
+	</style>
+</h:head>
+
+<h:body styleClass="hold-transition skin-blue sidebar-mini #{headerBean.menu}">
+	<div id="app" class="wrapper">
+
+		<!-- Main Header -->
+		<header class="main-header">
+
+			<!-- Logo -->
+			<a href="/compliance/pages/dashboard/dashboardFrontEnd.faces" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
+				<span class="logo-mini"><img width="50"
+					src="#{request.contextPath}/resources/images/maybank-logo-horizontal-preview.png" /></span>
+				<!-- logo for regular state and mobile devices --> <span
+				class="logo-lg"><img height="50"
+					src="#{request.contextPath}/resources/images/maybank-logo-horizontal-preview.png" /></span>
+			</a>
+
+			<!-- Header Navbar -->
+			<nav class="navbar navbar-static-top">
+				<!-- Sidebar toggle button-->
+				<a href="#" class="sidebar-toggle" data-toggle="push-menu"
+					role="button"> <span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+				</a>
+
+				<!-- Navbar Right Menu -->
+				<div class="navbar-custom-menu">
+					<h:form id="logout-form-id">
+						<p:remoteCommand name="hideButton" process="@this"
+							actionListener="#{headerBean.hideMenu}" />
+						<p:remoteCommand name="showButton" process="@this"
+							actionListener="#{headerBean.showMenu}" />
+						<ul class="nav navbar-nav">
+
+							<!-- Messages: style can be found in dropdown.less-->
+							<li class="lang-menu">
+								<ul class="lang-options">
+									
+									<li>
+										<h:outputLabel value="LCCA Site - Internal Menu"/>
+									</li>
+								</ul>
+							</li>
+							<!-- /.messages-menu -->
+							<!-- User Account Menu -->
+							<li class="dropdown user user-menu">
+								<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle">
+									<span class="hidden-xs">#{headerBean.username}</span>
+							</a>
+
+							</li>
+
+							<li><h:commandLink
+									actionListener="#{headerBean.doHandleLogout()}">
+									<i class="fa fa-sign-out"></i>
+									<span class="tl-label">Logout</span>
+								</h:commandLink></li>
+
+						</ul>
+					</h:form>
+				</div>
+			</nav>
+		</header>
+		<!-- Left side column. contains the logo and sidebar -->
+		
+		<aside class="main-sidebar">
+
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+
+				<!-- Sidebar user panel (optional) -->
+				<!-- Sidebar Menu -->
+
+				<ul class="sidebar-menu" data-widget="tree">
+					<ui:repeat id="repeatMenuHeader" var="tabMenu"
+						value="#{menuSessionBean.menuList}" varStatus="stat">
+						<li class="treeview " style="#{tabMenu.detail != null ?'':'display:none'}"><a href="#"> <i
+								class="fa #{tabMenu.fontawesome}"></i> <span class="tl-label">#{tabMenu.menuName}</span>
+								<span class="pull-right-container"> <i
+									class="fa fa-angle-left pull-right"></i></span></a>
+
+							<ul class="treeview-menu">
+								<ui:repeat id="repeatMenuDtl" var="tabMenuDtl"
+									value="#{tabMenu.detail}" varStatus="stat">
+									 <li><a href="#{request.contextPath}#{tabMenuDtl.menuAction}" class="tl-label">#{tabMenuDtl.menuName}</a></li> 
+								</ui:repeat>
+							</ul></li>
+						<li class="active" style="#{tabMenu.detail != null ?'display:none':''}"><a href="#{request.contextPath}#{tabMenu.menuAction}">
+								<i class="fa #{tabMenu.fontawesome}"></i> <span class="tl-label">#{tabMenu.menuName}</span>
+						</a></li>
+					</ui:repeat>
+				</ul>
+				<!-- /.sidebar-menu -->
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+		
+
+		<!-- Content Wrapper. Contains page content -->
+		<h:form id="form"  >
+			<div class="content-wrapper">
+				<img class="content-wrapper-bg"
+					src="#{request.contextPath}/resources/images/btpn-pattern.png" />
+				<!-- Content Header (Page header) -->
+				<section class="content-header">
+					<h1>
+						<ui:insert name="menuName"></ui:insert>
+						<small></small>
+						<ui:insert name="buttonAdd"></ui:insert>
+					</h1>
+					<ol class="breadcrumb">
+						<li class="active tl-label"><i class="fa fa-th-large"></i>
+							&#160;<ui:insert name="menuName"></ui:insert></li>
+					</ol>
+				</section>
+
+				<!-- Main content -->
+				<section class="content">
+					<ui:insert name="ajaxLoading">
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide();" />
+						
+					</ui:insert>
+						<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+							closable="false" resizable="false" showHeader="false"
+							responsive="true" style="background: none; box-shadow: none; border: none;">
+							<h:graphicImage library="icons" name="Wedges-3s-80px.gif" />
+						</p:dialog>
+					<ui:insert name="content" />
+
+				</section>
+				<!-- /.content -->
+			</div>
+		</h:form>
+		<!-- /.content-wrapper -->
+
+		<!-- Main Footer -->
+		<footer class="main-footer">
+			<!-- To the right -->
+			<div class="pull-right hidden-xs"></div>
+			<!-- Default to the left -->
+			<strong>Copyright &#169; 2023.</strong> All rights reserved.
+		</footer>
+
+		<!-- Control Sidebar -->
+
+	</div>
+
+	<script
+		src="#{request.contextPath}/resources/js/manifest.js?id=2f14240c70fe0f88d8db"
+		charset="utf-8"></script>
+	<script
+		src="#{request.contextPath}/resources/js/vendor.js?id=72dd4b5294cee68800cb"
+		charset="utf-8"></script>
+	<script src="#{request.contextPath}/resources/js/lang.js"></script>
+	<script src="#{request.contextPath}/resources/js/chart.js"></script>
+	<script
+		src="#{request.contextPath}/resources/js/front.js?id=3a051caeb9d1390e2d9a"
+		charset="utf-8"></script>
+	<ui:insert name="footerScript" />
+</h:body>
+
+</html>

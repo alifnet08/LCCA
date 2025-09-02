@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpRmd.model">
+	<class name="TmpRmdPicFollowupReschedule" table="wo_tmp_rmd_pic_followup_reschdule">
+		<id name="rmdPicFollowupRescheduleId" column="RMD_PIC_FOLLOWUP_RESCHDULE_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_RMD_PIC_FP_RSCHDL_SQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpRmd" column="RMD_ID"
+			class="com.wo.module.tmpRmd.model.TmpRmd" fetch="join" />
+
+		<property name="oldTargetDate" column="OLD_TARGET_DATE" type="date" />
+		<property name="newTargetDate" column="NEW_TARGET_DATE" type="date" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

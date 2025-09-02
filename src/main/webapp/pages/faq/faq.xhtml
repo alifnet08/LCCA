@@ -1,0 +1,235 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+
+	<ui:define name="head">
+	<style>
+		.form-control, .form-control-datepicker-wrap input.hasDatepicker {
+		    border: 0;
+		    height: inherit;
+		    padding: 9px 12px;
+		    border-radius: 5px !important;
+		    -webkit-border-radius: 5px !important;
+		    -moz-border-radius: 5px !important;
+		    background-color: #F7F8F8;
+		    -webkit-box-shadow: none;
+		    box-shadow: none;
+		}
+	</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formFaqTitle}" />
+	</ui:define>
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink action="#{faqBean.getNavigateEdit()}"
+					type="submit" process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+
+	<ui:define name="content">
+		 <div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formFaqKeyword}" /></label>
+							<p:inputText id="searchVal" styleClass="form-control"
+								autocomplete="off" value="#{faqBean.keyword}"></p:inputText>
+						</div>
+					</div>
+					
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formFaqCategory}" /></label>
+							<h:selectOneMenu id="category" 
+								styleClass="form-control s2"
+								value="#{faqBean.category}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{faqBean.categoryList}"/>
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					
+					
+					<div class="col-lg-6">
+					<div class="form-group">
+					<label class="tl-label"><h:outputText
+									value="#{msg.formFaqCreatedDate}" /></label>
+			          <div class="input-group">
+			           
+							<p:calendar id="dateFrom" 
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{faqBean.startDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar> 
+							<span class="input-group-addon plain">-</span>
+							<p:calendar id="dateTo" 
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{faqBean.endDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+			            </div>
+			            </div>
+			          </div>
+			          
+			          <div class="col-lg-6">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formFaqStatus}" /></label>
+							 
+							<h:selectOneMenu id="status" 
+								styleClass="form-control s2"
+								value="#{faqBean.status}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{faqBean.statusList}"/>
+							</h:selectOneMenu>
+							
+						</div>
+					</div>
+			          
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{faqBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="tableSearch form:searchVal"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{faqBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{faqBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{faqBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;width:20%;"
+									headerText="#{msg.formAction}">
+									
+									<h:outputLabel value="#{msg.formWaitingForApproval}"
+										rendered="#{vo.status eq 'DATA_NEW'}"/>
+
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{faqBean.getNavigateEdit()}" type="submit"
+										rendered="#{vo.status ne 'DATA_NEW'}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.faqId}" />
+									</p:commandLink>
+
+									<h:outputText style=" padding-left:4px; color:grey;'"
+										value=" | " rendered="#{vo.status ne 'DATA_NEW'}"/>
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+										styleClass="tl-label" update="tableSearch form:deletedMessage"
+										rendered="#{vo.status ne 'DATA_NEW'}"
+										action="#{faqBean.delete(vo.faqId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column headerText="No">
+									<h:outputLabel value="#{statIndex+1}" />
+								</p:column>
+								<p:column headerText="#{msg.formFaqSubject}">
+									<h:outputLabel value="#{vo.tmpFaqKeywords.get(0).keyword}" />
+								</p:column>
+								<p:column headerText="#{msg.formFaqCategory}">
+									<h:outputLabel value="#{vo.faqCategory.nameIn}" />
+								</p:column>
+								<p:column headerText="#{msg.formFaqQuestion}">
+									<h:outputLabel value="#{vo.questionIn}" />
+								</p:column>
+								<p:column headerText="#{msg.formFaqUploadDate}">
+								<h:outputLabel value="#{vo.creationDate}" style="text-align:center" >
+										<f:convertDateTime
+											pattern="dd-MMM-yyyy" locale="en" >
+										</f:convertDateTime>
+									</h:outputLabel>		
+								</p:column>
+								<p:column headerText="#{msg.formFaqAttachment}">
+									<p:dataList value="#{vo.tmpFaqDocuments}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.attachmentFile}</p:dataList>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> 
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formRCConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formRCDeleteRC}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formRCConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,253 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+	<ui:define name="head">
+		<style>
+			.ui-calendar input {
+				display: block!important;
+			    width: 100%!important;
+			    padding: 10px 12px!important;
+			    background-color: #F7F8F8 !important;
+			    background-image: none!important;
+			    border-radius: 5px!important;
+			    box-shadow: none;
+			    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s!important;
+			    border: 0 !important;
+		        height: inherit;
+			}
+			
+			.ui-inputfield.ui-state-focus {
+				box-shadow: none;
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTrcCorrespondenceApprovalTitle}" />
+	</ui:define>
+	
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<!-- 
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceSender}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{trcCorrespondenceApprovalAmlBean.searchPengirim}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{trcCorrespondenceApprovalAmlBean.selectSender}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-9">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterReceiveDate}" /></label>
+							<div class="input-group">
+								<p:calendar id="tglTerimaSuratFrom" 
+									navigator="true" 
+									placeholder="from"
+									value="#{trcCorrespondenceApprovalAmlBean.searchTanggalTerimaSuratFrom}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+								<span class="input-group-addon plain">-</span>
+								<p:calendar id="tglTerimaSuratTo" 
+									navigator="true" 
+									placeholder="to"
+									value="#{trcCorrespondenceApprovalAmlBean.searchTanggalTerimaSuratTo}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterNo}" /></label>
+							<h:inputText styleClass="form-control" value="#{trcCorrespondenceApprovalAmlBean.searchNoSurat}"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-9">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterDate}" /></label>
+							<div class="input-group">
+								<p:calendar id="tglSuratFrom" 
+									navigator="true" 
+									value="#{trcCorrespondenceApprovalAmlBean.searchTanggalSuratFrom}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+								<span class="input-group-addon plain">-</span>
+								<p:calendar id="tglSuratTo" 
+									navigator="true" 
+									value="#{trcCorrespondenceApprovalAmlBean.searchTanggalSuratTo}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceAbout}" /></label>
+							<h:inputText styleClass="form-control" value="#{trcCorrespondenceApprovalAmlBean.searchPerihal}"/>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
+							<div class="input-group">
+								<p:calendar id="targetDateFrom" 
+									navigator="true" 
+									value="#{trcCorrespondenceApprovalAmlBean.searchTargetDateFrom}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+								<span class="input-group-addon plain">-</span>
+								<p:calendar id="targetDateTo" 
+									navigator="true" 
+									value="#{trcCorrespondenceApprovalAmlBean.searchTargetDateTo}" 
+									pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+									locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}"
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceStatus}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{trcCorrespondenceApprovalAmlBean.searchStatus}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{trcCorrespondenceApprovalAmlBean.statusList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					 -->
+					
+					
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{trcCorrespondenceApprovalAmlBean.tableCorrespondence}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{trcCorrespondenceApprovalAmlBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;" width="100"
+									headerText="#{msg.formAction}">
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{trcCorrespondenceApprovalAmlBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.correspondenceId}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceLetterNo}" width="300">
+									<h:outputLabel value="#{vo.letterNo}" title="#{vo.letterNo}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceSenderLetter}" style="text-align:center;" width="150">
+									<h:outputLabel value="#{vo.senderName}" title="#{vo.senderName}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceLetterReceivedDate}" style="text-align:center;" width="140">
+									<h:outputText value="#{vo.letterReceivedDate}">
+										<f:convertDateTime pattern="#{trcCorrespondenceApprovalAmlBean.inputDateFormat}"
+											locale="#{trcCorrespondenceApprovalAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>									
+								</p:column>
+								
+								<p:column headerText="#{msg.formTmpCorrespondenceSubmissionConfPic}" width="150">
+									<h:outputText value="#{vo.picName1}" title="#{vo.picName1}"/>
+									<h:outputText value="#{vo.picName2}" title="#{vo.picName2}"/>
+									<h:outputText value="#{vo.picName3}" title="#{vo.picName3}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceTargetDate}" style="text-align:center;" width="140">
+									<h:outputText value="#{vo.targetDate}">
+										<f:convertDateTime pattern="#{trcCorrespondenceBean.inputDateFormat}"
+											locale="#{trcCorrespondenceBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>		
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceFollowupStatus}" width="100"
+									style="text-align:center;">
+									
+									<h:outputText styleClass="label label-success" value="#{vo.followupStatusName}"/>									
+									
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputLabel value="#{msg.formTrcCorrespondenceApprovalConfirmDelete}"/>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p> <h:outputLabel value="#{msg.formTrcCorrespondenceApprovalDelete}"/> </p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}"/>
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputLabel value="#{msg.formTrcCorrespondenceApprovalConfirmDelete}"/>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+</ui:composition>

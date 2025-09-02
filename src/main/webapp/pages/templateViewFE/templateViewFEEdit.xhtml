@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+		<style>
+			.ui-datalist-data{
+				list-style-type: none;
+			}
+			.ui-widget-content{
+				border: none;
+			}
+			.ui-widget .ui-widget{
+				color: lightseagreen;
+			}
+			.ui-inputtextarea-resizable{
+				width: 100%;
+			}
+			.ui-inputfield{
+				-webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.ui-inputfield.ui-state-focus {
+				-webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+		</style>
+		
+		<div class="row brdcrumb">
+			 <nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+			 	<div class=" navbar-collapse " id="collapsibleNavbar">
+			 		<ul class="navbar-nav">
+			 			<li class="nav-item">
+			 				<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+			 				<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+			 				<a class="nav-link" href="#">TEMPLATE</a>
+			 				<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+			 				<a class="nav-link disabled" href="#">#{templateViewFEEditBean.template.perihalIn}</a>
+			 			</li>
+			 		</ul>
+			 	</div>
+			 </nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">#{templateViewFEEditBean.template.perihalIn}</div>
+			<h:form class="internal-form" style="margin-top:20px;" id="form">
+				<p:growl id="messages" severity="error"/>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Kategori</div>
+						<div class="value-form">#{templateViewFEEditBean.template.templateCategory.nameIn}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">SubKategori</div>
+						<div class="value-form">#{templateViewFEEditBean.template.templateSubCategory.nameIn}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Keterangan</div>
+						<div class="value-form"><p:inputTextarea value="#{templateViewFEEditBean.template.note}" readonly="true"/></div>
+					</div>
+				</div>
+				
+				<div class="label-form" style="font-size: 15.8px;font-weight: 400;color: black;font-family: Lato;">Lampiran</div>
+				<div class="form-row">
+					<div class="col">
+						<p:dataList value="#{templateViewFEEditBean.uploadedFilesDoc}"
+							rendered="#{templateViewFEEditBean.docFileCode eq 'TEMPLATE_DOC_IN' }"
+							style="#{templateViewFEEditBean.uploadedFilesDoc !=null ?'':'display:none'}"
+							emptyMessage="" var="vo" id="attachListDoc" rowIndexVar="index">
+							<table>
+								<tr>
+									<td style="width: 80%">
+										<i class="far fa-file-alt"></i> <p:spacer/> 
+										<p:commandLink
+											title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+											actionListener="#{templateViewFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+											target="_blank">#{vo.fileName}
+										</p:commandLink>
+									</td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+					<div class="col">
+						<p:dataList value="#{templateViewFEEditBean.uploadedFilesFill}"
+							rendered="#{templateViewFEEditBean.fillFileCode eq 'FILL_INSTRUCTION_IN' }"
+							style="#{templateViewFEEditBean.uploadedFilesFill !=null ?'':'display:none'}"
+							emptyMessage="" var="vo" id="attachListFill" rowIndexVar="index">
+							<table>
+								<tr>
+									<td style="width: 80%">
+										<i class="far fa-file-alt"></i> <p:spacer/> 
+										<p:commandLink
+											title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+											actionListener="#{templateViewFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+											target="_blank">#{vo.fileName}
+										</p:commandLink>
+									</td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{templateViewFEEditBean.cancel}"
+							name="cancel" immediate="true"></p:remoteCommand>
+						<button type="button" class="btn btn-outline-secondary"
+							onclick="cancel()">Kembali</button>
+					</div>
+				</div>
+
+			</h:form>
+		</div>
+		
+	</ui:define>
+</ui:composition>

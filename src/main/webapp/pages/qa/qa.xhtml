@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formQATitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{qaBean.getNavigateEdit()}" type="submit"
+					process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="box box-solid">
+
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ui-widget ui-corner-all ui-message-info">
+						    <span class="ui-message-info-icon"/>
+						    <span class="ui-message-info-detail"><h:outputText escape="false" value="#{msg.formQAcheckFAQ}" /></span>
+						</div>
+					</div>
+					<br />
+					<br />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formQAQuestion}" /></label>
+							<p:inputText id="searchVal" styleClass="form-control" autocomplete="off"
+								value="#{qaBean.searchVal}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{qaBean.search}"></p:commandButton>
+								</li>
+								<li><p:commandButton value="#{msg.buttonReset}"
+										ajax="true" update="tableSearch form:searchVal"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{qaBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{qaBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{qaBean.paging}" rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;width:20%;"
+									headerText="#{msg.formAction}">
+
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}" rendered="#{vo.qStatus eq 'QNA_STATUS_NEW' and qaBean.userIdLogin eq vo.qUserId}"
+										action="#{qaBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.qnaId}" />
+										<f:param name="viewId" value="false" />
+									</p:commandLink>
+									
+									<p:commandLink id="view" value="#{msg.buttonView}" rendered="#{vo.qStatus ne 'QNA_STATUS_NEW' or (vo.qStatus eq 'QNA_STATUS_NEW' and qaBean.userIdLogin ne vo.qUserId)}"
+										action="#{qaBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.qnaId}" />
+										<f:param name="viewId" value="true" />
+									</p:commandLink>
+									
+									<h:outputText style=" padding-left:4px; color:grey;'" rendered="#{vo.qStatus eq 'QNA_STATUS_NEW' and qaBean.userIdLogin eq vo.qUserId}"
+										value=" | " />
+									<h:outputLabel value="&#160;" rendered="#{vo.qStatus eq 'QNA_STATUS_NEW' and qaBean.userIdLogin eq vo.qUserId}" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}" rendered="#{vo.qStatus eq 'QNA_STATUS_NEW' and qaBean.userIdLogin eq vo.qUserId}"
+										styleClass="tl-label" update="tableSearch form:deletedMessage"
+										action="#{qaBean.delete(vo.qnaId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+									
+
+								</p:column>
+
+								<p:column headerText="#{msg.formQAQuestionedBy}">
+									<h:outputLabel value="#{vo.qUserName}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formQAQuestionedDate}">
+									<h:outputLabel value="#{vo.qDateStr}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formQAQuestion}">
+									<h:outputLabel value="#{vo.question}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAnswer}">
+									<h:outputLabel value="#{vo.answer}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAnsweredBy}">
+									<h:outputLabel value="#{vo.aUserName}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formQAAnsweredDate}">
+									<h:outputLabel value="#{vo.aDateStr}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade" widgetVar="wvDeleteConfirm"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formQAConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formQADelete}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formQADelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

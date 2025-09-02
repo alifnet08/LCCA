@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.complianceReviewDocument.model">
+	<class name="ComplianceReviewDocument" table="wo_mst_cmplc_rvw_doc">
+		<id name="complianceReviewDocumentId" column="COMPLIANCE_REVIEW_DOCUMENT_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_cmplc_rvw_doc_seq</param>
+			</generator>
+			
+		</id>
+		
+		<many-to-one name="documentType" property-ref="parameterDtlCode"
+			column="document_type" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<property name="documentNo" column="DOCUMENT_NO" type="string" />
+		<property name="receivedDate" column="RECEIVED_DATE" type="timestamp" />
+		<property name="completeDate" column="COMPLETE_DATE" type="timestamp" />
+		<property name="remarks" column="REMARKS" type="string" />
+		<property name="materi" column="MATERI" type="string" />
+		<property name="divisionMultiId" column="DIVISION_MULTI_ID" type="string" />
+		
+		<many-to-one name="documentSubmitter" property-ref="parameterDtlCode"
+			column="document_submitter" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="divisionId" column="DIVISION_ID" type="long" />
+		
+		<bag name="complianceReviewDocumentPicCompliance" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_pic_cmplc_id asc">
+			<key column="compliance_review_document_id" />
+			<one-to-many not-found="ignore" 
+				class="com.wo.module.complianceReviewDocument.model.ComplianceReviewDocumentPicCompliance" />
+		</bag>
+		
+		<bag name="complianceReviewDocumentAttachments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_doc_attach_id asc">
+			<key column="compliance_review_document_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.complianceReviewDocument.model.ComplianceReviewDocumentAttachment" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

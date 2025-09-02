@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formDocumentCategoryRegulationTitle}" />
+	</ui:define>
+	
+	<ui:define name="content">
+	<p:growl id="messages" rendered="true"/>
+	<div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title tl-label" ><h:outputText value="#{msg.formDocumentCategoryAddRegulationTitle}" /></h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+              <div class="form-group required">
+                <label for="jenis_ketentuan" class="control-label tl-label" >
+                	<p:outputLabel value="#{msg.formDocumentCategoryProvCategory}" for="docCategory"/>
+                </label>
+                <h:selectOneMenu id="docCategory" required="true" requiredMessage="#{msg.formDocumentCategoryProvCategory} #{msg.validateRequired}" 
+                	disabled="#{(documentCategoryEditBean.actionMode eq 'EDIT') == true}"
+                	styleClass="form-control s2" value="#{documentCategoryEditBean.documentCategory.parameterDetail.parameterDtlCode}">
+                	<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+			    	<f:selectItems name="docCategory" value="#{documentCategoryEditBean.provTypes}" />
+                </h:selectOneMenu>
+              	<p:message for="docCategory"/>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" >
+                	<p:outputLabel value="#{msg.formDocumentCategoryRegulation}" for="docTypeIn" />
+                </label>
+                <p:inputText id="docTypeIn" maxlength="150" required="true" requiredMessage="#{msg.formDocumentCategoryRegulation} #{msg.validateRequired}"
+                	autocomplete="off" styleClass="form-control form-required" value="#{documentCategoryEditBean.documentCategory.documentCategoryIn}"></p:inputText>
+              	<p:message for="docTypeIn"/>
+              </div>
+            </div>
+            <!-- <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><p:outputLabel value="#{msg.formDocumentCategoryTitle}" for="docTypeEn" />&#160;&#160;<span class="label label-warning">
+                	<h:outputLabel value="#{msg.english}"/>
+                </span></label>
+                <p:inputText id="docTypeEn" maxlength="150" required="true" requiredMessage="#{msg.formDocumentCategoryTitle} #{msg.english} #{msg.validateRequired}"
+                	autocomplete="off" styleClass="form-control form-required" value="#{documentCategoryEditBean.documentCategory.documentCategoryEn}"></p:inputText>
+                <p:message for="docTypeEn"/>
+              </div>
+            </div> -->
+            
+          </div>
+      </div>
+      <div class="box-footer">
+        <h:commandButton value="#{msg.buttonSave}" type="submit"
+							styleClass="btn btn-primary pull-left"
+							actionListener="#{documentCategoryEditBean.save()}"></h:commandButton>
+        <h:commandLink value="#{msg.buttonCancel}" actionListener="#{documentCategoryEditBean.cancel()}" immediate="true"
+							styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+      </div>
+    </div>
+	</ui:define>
+</ui:composition>

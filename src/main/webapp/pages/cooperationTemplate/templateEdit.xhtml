@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTemplateTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-template">
+					<h:outputText value="#{msg.formTemplateTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="category"><p:outputLabel
+									value="#{msg.formTemplateCategory}" for="category" /></label>								
+							<h:selectOneMenu id="category" required="true" requiredMessage="#{msg.formTemplateCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{templateEditBean.template.templateCategory.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{templateEditBean.categoryList}"/>
+							</h:selectOneMenu>
+							<p:message for="category"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="subCategory"><p:outputLabel
+									value="#{msg.formTemplateSubCategory}" for="subCategory" /></label>								
+							<h:selectOneMenu id="subCategory" required="true" requiredMessage="#{msg.formTemplateSubCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{templateEditBean.template.templateSubCategory.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{templateEditBean.subCategoryList}"/>
+							</h:selectOneMenu>
+							<p:message for="subCategory"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="subject"><p:outputLabel
+									value="#{msg.formTemplateSubject}" for="subject" /></label>								
+							<p:inputText id="subject" styleClass="form-control" required="true" requiredMessage="#{msg.formTemplateSubject} #{msg.validateRequired}" 
+							value="#{templateEditBean.template.perihalIn}" />
+							<p:message for="subject"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><p:outputLabel
+									value="#{msg.formTemplateNote}" for="note" /></label>								
+							<p:inputTextarea id="note" styleClass="form-control"  
+							value="#{templateEditBean.template.note}" />
+							<p:message for="note"/>
+						</div>
+					</div>
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label"> <h:outputText
+									value="#{msg.formTemplateUploadAttachment}" />
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{templateEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload fileUploadListener="#{templateEditBean.handleFileUpload}"
+									oncomplete="onCompleteUpload()"
+									value="templateEditBean.uploadFiles"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{templateEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{templateEditBean.uploadFiles}" 
+									emptyMessage=""
+									var="vo" id="attachment" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{templateEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+									        <td>
+									        	<p:commandLink  immediate="true" actionListener="#{templateEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="attachment">#{msg.buttonDelete}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUploadCooperation" update="attachmentCooperation"></p:remoteCommand>
+							<label class="tl-label"> <h:outputText
+									value="#{msg.formTemplateChargingInstruction}" />
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{templateEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload fileUploadListener="#{templateEditBean.handleFileUploadCooperation}"
+									oncomplete="onCompleteUploadCooperation()"
+									value="templateEditBean.uploadCooperationFiles"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{templateEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{templateEditBean.uploadCooperationFiles}" 
+									emptyMessage=""
+									var="vo" id="attachmentCooperation" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{templateEditBean.downloadFileCooperation(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+									        <td>
+									        	<p:commandLink  immediate="true" actionListener="#{templateEditBean.deleteAttachmentCooperation(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="attachmentCooperation">#{msg.buttonDelete}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{templateEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{templateEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

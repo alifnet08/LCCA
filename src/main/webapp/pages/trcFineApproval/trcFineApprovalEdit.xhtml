@@ -1,0 +1,632 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}
+			.form-control[disabled]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield {
+				box-shadow: none;
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTrcFineApprovalTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="messages" rendered="true"></p:growl>
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpFineSender}" for="trcFineSender"/></label>
+							<h:selectOneMenu id="trcFineSender" disabled="true"
+								styleClass="form-control s2"
+								value="#{trcFineApprovalEditBean.trcFine.senderCode.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcFineApprovalEditBean.senderCodeList}"/>
+							</h:selectOneMenu>
+							<p:message for="trcFineSender"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="trcFineLetterReceiveDate"
+									value="#{msg.formTmpFineLetterReceiveDate}" /></label>
+							<p:calendar id="trcFineLetterReceiveDate" disabled="true"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{trcFineApprovalEditBean.trcFine.letterReceivedDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="trcFineLetterNo"
+									value="#{msg.formTmpFineLetterNo}" /></label>
+							<p:inputText id="trcFineLetterNo" disabled="true"
+								styleClass="form-control" maxlength="100" autocomplete="off"
+								value="#{trcFineApprovalEditBean.trcFine.letterNo}"></p:inputText>
+							<p:message for="trcFineLetterNo"/>
+						</div>
+					</div>
+					<h:panelGroup id="panelUpdatePPATKAndKPK">
+					<div class="col-lg-12">
+							<div class="form-group required">
+							<label for="role" class="control-label tl-label"><p:outputLabel
+									for="tmpCorrespondeceLetterDate"
+									value="#{msg.formTmpFineLetterDate}" /></label>
+							<p:calendar id="tmpCorrespondeceLetterDate"
+								disabled="true"
+								styleClass="form-control-datepicker-wrap"
+								value="#{trcFineApprovalEditBean.trcFine.letterDate}"
+								autocomplete="off" maxlength="11"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="tmpCorrespondeceLetterDate"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label">
+								<p:outputLabel for="tmpCorrespondecePerihalIn"
+									value="#{msg.formTmpFinePerihal}" />
+							</label>
+							<p:inputText id="tmpCorrespondecePerihalIn" 
+								disabled="true"
+								styleClass="form-control" autocomplete="off" maxlength="5000"
+								value="#{trcFineApprovalEditBean.trcFine.perihalIn}"></p:inputText>
+							<p:message for="tmpCorrespondecePerihalIn"/>
+						</div>
+					</div>
+					<!-- <div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="tmpCorrespondecePerihalEn"
+									value="#{msg.formTmpFinePerihal}" />&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span></label>
+							<p:inputText id="tmpCorrespondecePerihalEn" 
+								required="true" 
+								requiredMessage="#{msg.formTmpFinePerihal} #{msg.english} #{msg.validateRequired}"
+								styleClass="form-control" autocomplete="off" maxlength="5000"
+								value="#{trcFineApprovalEditBean.trcFine.perihalEn}"></p:inputText>
+							<p:message for="tmpCorrespondecePerihalEn"/>
+						</div>
+					</div> -->
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpFineLetterSummary}" /></label>
+							<p:inputText id="formTmpFineLetterSummary" styleClass="form-control" autocomplete="off" maxlength="5000" 
+								disabled="true"
+								value="#{trcFineApprovalEditBean.trcFine.letterSummary}"></p:inputText>
+						</div>
+						<p:message for="formTmpFineLetterSummary"/>
+					</div>
+						</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpFineReportName}" for="trcFineReportName"/></label>
+							<h:selectOneMenu id="trcFineReportName"
+								styleClass="form-control s2"
+								value="#{trcFineApprovalEditBean.trcFine.reportName.parameterDtlCode}"
+								disabled="true">
+								<f:selectItems
+									value="#{trcFineApprovalEditBean.reportNameList}"/>
+							</h:selectOneMenu>
+							<p:message for="trcFineReportName"/>
+						</div>
+					</div>
+					
+					<h:panelGroup id="otherReportNamePanel">
+						<div class="col-lg-12">
+							<h:panelGroup
+								rendered="#{trcFineApprovalEditBean.isOtherReportNameChosen}">
+								<div class="form-group required">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formTmpFineOtherReportName}"
+											for="trcFineOtherReportName" /></label>
+									<p:inputText id="trcFineOtherReportName"
+										styleClass="form-control" autocomplete="off" maxlength="5000"
+										required="true" readonly="true"
+										requiredMessage="#{msg.formTmpFineOtherReportName} #{msg.validateRequired}"
+										value="#{trcFineApprovalEditBean.trcFine.otherReportName}"></p:inputText>
+								</div>
+								<p:message for="trcFineOtherReportName" />
+							</h:panelGroup>
+						</div>
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpFineFineType}" for="trcFineType"/></label>
+							<h:selectOneMenu id="trcFineType" disabled="true"
+								styleClass="form-control s2"
+								value="#{trcFineApprovalEditBean.trcFine.fineCode.parameterDtlCode}">
+								<f:selectItems
+									value="#{trcFineApprovalEditBean.fineTypeCodeList}"/>
+							</h:selectOneMenu>
+							<p:message for="trcFineType"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="trcFineTargetSettlement"
+									value="#{msg.formTmpFineTargetSettlement}" /></label>
+							<p:calendar id="trcFineTargetSettlement"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{trcFineApprovalEditBean.trcFine.targetSettlement}"
+								autocomplete="off" readonly="true"
+								pattern="dd-MMM-yyyy" locale="en" 
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tablePicFollowupDetail" var="vo"
+									value="#{trcFineApprovalEditBean.tablePicFollowupModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									
+									
+									<p:column headerText="#{msg.formTmpFineDebitted}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%">
+												<p:calendar id="debitted" 
+												styleClass="form-control-datepicker-wrap" maxlength="11"
+												value="#{vo.fineDebitted}"
+												autocomplete="off"
+												disabled="true"
+												pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+												</td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpFineNominal}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.fineAmount}" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									
+									<p:column headerText="#{msg.formTmpFinePIC}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.userId1.name}" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.userId2.name}" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.userId3.name}" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpFineDocumentLetterTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:remoteCommand name="onCompleteUpload" update="documentList"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpFineDocumentLetterSubTitle}" /></label>
+					
+							<p:dataList value="#{trcFineApprovalEditBean.uploadedFilesDocument}" 
+								emptyMessage=""
+								var="vo" id="documentList" rowIndexVar="index">
+								<table>
+							    	<tr>
+							    	<td style="width:80%">
+							        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{trcFineApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+							        </td>
+							        
+						        	</tr>
+						        </table>
+							</p:dataList>
+						</div>
+					</div>
+					
+	
+					<h3>
+						<h:outputText value="#{msg.formTmpFinePICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tablePicComplianceDetail" var="vo"
+									value="#{trcFineApprovalEditBean.tablePicComplianceModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{trcFineApprovalEditBean.selectedPicComplianceData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="#{msg.formTmpFineNIK}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														id="picCompliance#{statIndex}" styleClass="form-control"
+														value="#{vo.nikTemp}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpFineName}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.nameTemp}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpFineEmail}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.emailTemp}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:panelGroup id="panelChangeFollowUp">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label"><p:outputLabel for="trcFineFollowup" style="margin-top:15px;"
+										value="#{msg.formTmpFineFollowup}" /></label>
+								<h:selectOneMenu id="trcFineFollowup" disabled="true"
+									styleClass="form-control s2"
+									value="#{trcFineApprovalEditBean.trcFine.followUp}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{trcFineApprovalEditBean.yesNoList}" />
+								</h:selectOneMenu>
+								<p:message for="trcFineFollowup"/>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label" ><h:outputText
+										value="#{msg.formTmpFineNote}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" maxlength="5000" disabled="true"
+									value="#{trcFineApprovalEditBean.trcFine.notes}"></p:inputText>
+							</div>
+						</div>
+					</h:panelGroup>
+
+
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+					
+					<h:panelGroup id="panelReminder">
+					 
+					<div class="col-lg-12">
+						<div class="form-group #{'Y' eq trcFineApprovalEditBean.trcFine.followUp? 'required':''}">
+							<label id="labelFineReminderType" class="control-label tl-label"><p:outputLabel
+									for="trcFineReminderType"
+									value="#{msg.formTmpFineReminderType}" /></label>
+							<h:selectOneMenu id="trcFineReminderType" 
+								disabled="#{'Y' ne trcFineApprovalEditBean.trcFine.followUp}"
+								required="#{'Y' eq trcFineApprovalEditBean.trcFine.followUp}" 
+								requiredMessage="#{msg.formTmpFineReminderType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{trcFineApprovalEditBean.trcFine.counterType.counterTypeId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcFineApprovalEditBean.counterTypeList}" />
+							</h:selectOneMenu>
+							<p:message for="trcFineReminderType"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpCorrespondenceFollowupStatus}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<div class="top-scroller">
+							    <div class="div-wrapper">
+							    </div>
+							</div>
+							<div class="table-wrapper table-responsive linked-to-top-scroller">
+							
+								<p:dataTable id="dataTableStatus" var="vo"
+									value="#{trcFineApprovalEditBean.trcFineFollowups}"
+									rowIndexVar="statIndex">
+									
+									
+									<p:column headerText="#{msg.formTmpFineRC}" width="150">
+										<div class="form-group" style="margin-top:15px;">
+											<h:selectOneMenu
+												styleClass="form-control s2 #{statIndex}" disabled="true"
+												style="margin-top:15px;height:38px;"
+												value="#{vo.rc.rcId}">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems
+													value="#{trcFineApprovalEditBean.rcList}" />
+											</h:selectOneMenu>
+										</div>
+									</p:column>
+									<!-- <p:column headerText="#{msg.formTmpFineRootCause}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.rootCause}" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column> -->
+									
+									<p:column
+										headerText="#{msg.formTmpFineRootCause}"
+										width="200">
+										<h:outputLabel value="#{vo.rootCause}" title="#{vo.rootCause}" />
+									</p:column>
+									
+									<p:column headerText="#{msg.formTmpFineCategories}"
+										style="width:150px;">
+										<div class="form-group" style="margin-top:15px;">
+											<h:selectOneMenu disabled="true"
+												styleClass="form-control s2 #{statIndex}" 
+												style="margin-top:15px;height:38px;"
+												value="#{vo.category}">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems
+													value="#{trcFineApprovalEditBean.categoryList}" />
+											</h:selectOneMenu>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpFineTargetDate}"
+										style="width:150px;">
+										<table>
+											<tr>
+												<td style="width: 100%">
+												<p:calendar id="targetDate" disabled="true"
+												styleClass="form-control-datepicker-wrap" maxlength="11"
+												value="#{vo.targetDate}"
+												autocomplete="off"
+												pattern="dd-MMM-yyyy" locale="en" />
+												</td>
+												
+											</tr>
+										</table>
+									</p:column>
+
+									<p:column
+										headerText="Bukti Perpanjangan"
+										style="width:250px;" styleClass="wr">
+										<p:dataList
+											value="#{vo.trcFinePicExtendeds}"
+											emptyMessage=""
+											var="dtl">
+											<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false"
+												actionListener="#{trcFineApprovalEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+												target="_blank">#{dtl.attachmentFile}</p:commandLink>
+										</p:dataList>
+									</p:column>
+									
+
+									<p:column
+										headerText="#{msg.formTmpFineEvidence}"
+										style="width:250px;" styleClass="wr">
+										<p:dataList
+											value="#{vo.trcFinePicFollowups}"
+											emptyMessage=""
+											var="dtl">
+											<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false"
+												actionListener="#{trcFineApprovalEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+												target="_blank">#{dtl.attachmentFile}</p:commandLink>
+										</p:dataList>
+									</p:column>
+									
+									<p:column
+										headerText="#{msg.formTmpFineFollowupStatus}"
+										width="150">
+										<h:outputLabel value="#{vo.followupStatus.name}" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formTmpFinePICConfirmation}"
+										width="150">
+										<h:outputLabel value="#{vo.followupBy.name}" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formTmpFineConfirmationDate}"
+										width="150">
+										<h:outputLabel value="#{vo.confirmationDate}" >
+											<f:convertDateTime
+												pattern="#{trcFineApprovalEditBean.inputDateFormat}"
+												locale="#{trcFineApprovalEditBean.inputDateLocale}">
+											</f:convertDateTime>
+										</h:outputLabel>
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formTmpFineFollowupDate}"
+										width="150">
+										<h:outputLabel value="#{vo.followupDate}">
+											<f:convertDateTime
+												pattern="#{trcFineApprovalEditBean.inputDateFormat}"
+												locale="#{trcFineApprovalEditBean.inputDateLocale}">
+											</f:convertDateTime>
+										</h:outputLabel>
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formTmpFineFollowupNote}"
+										width="200">
+										<h:outputLabel value="#{vo.followupNote}" title="#{vo.followupNote}" />
+									</p:column>
+
+									
+									<p:column
+										headerText="#{msg.formTmpFineComplianceStatus}"
+										style="width:100px;" >
+										<div class="form-group">
+												<h:selectOneMenu styleClass="form-control s2"
+													value="#{vo.complianceStatus.parameterDtlCode}"
+													rendered="#{vo.followupDate != null}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{trcFineApprovalEditBean.complianceStatusList}" />
+												</h:selectOneMenu>
+												
+												<h:selectOneMenu styleClass="form-control s2"
+													value="#{vo.targetDateStatus.parameterDtlCode}"
+													rendered="#{vo.followupDate == null}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{trcFineApprovalEditBean.approvalStatusList}" />
+												</h:selectOneMenu>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpFineComplianceNote}"
+										style="width:250px;">
+										<div class="form-group">
+											<div class="input-group">
+												<p:inputTextarea styleClass="form-control" value="#{vo.complianceNote}" />
+											</div>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpFineStatus}" /></label>
+							<h:selectOneRadio disabled="true"
+								value="#{trcFineApprovalEditBean.trcFine.reminderStatus.parameterDtlCode}">
+								<f:selectItems
+									value="#{trcFineApprovalEditBean.reminderStatusList}" />
+							</h:selectOneRadio>
+
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpFineProofOfPaymentTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpFineProofOfPaymentSubTitle}" />
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{trcFineApprovalEditBean.textWarningUpload}"/>
+							</label>
+							<p:remoteCommand name="onCompleteUploadPayment" 
+								update="form:proofOfPaymentList"></p:remoteCommand>
+							<p:fileUpload
+								fileUploadListener="#{trcFineApprovalEditBean.handleFileUploadProofOfPayment}"
+								oncomplete="onCompleteUploadPayment()"
+								sizeLimit="#{trcFineApprovalEditBean.standardAttachmentSize}"
+								mode="advanced" dragDropSupport="false" multiple="true"
+								auto="true" update="messages" />
+							<p:dataList
+								value="#{trcFineApprovalEditBean.uploadedFilesProofOfPayment}"
+								emptyMessage=""
+								var="vo" id="proofOfPaymentList" rowIndexVar="index">
+								<table>
+									<tr>
+										<td style="width: 80%"><p:commandLink title="#{vo.fileSizeKB} KB" ajax="false"
+												immediate="true"
+												actionListener="#{trcFineApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td><p:commandLink immediate="true"
+												actionListener="#{trcFineApprovalEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_PROOF_OF_PAYMENT')}"
+												update="proofOfPaymentList">#{msg.buttonDelete}</p:commandLink>
+										</td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{trcFineApprovalEditBean.save()}"></h:commandButton>
+
+				<h:commandLink value="#{msg.buttonCancel}" immediate="true"
+					actionListener="#{trcFineApprovalEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+
+					
+		 
+
+	</ui:define>
+</ui:composition>

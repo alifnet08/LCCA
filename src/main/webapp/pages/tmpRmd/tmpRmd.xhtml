@@ -1,0 +1,331 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-widget {
+			    font-size: inherit;
+			}
+			.ui-state-default.form-control {
+				background: #F7F8F8;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationReportingTitle}" />
+	</ui:define>
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink action="#{tmpRmdBean.getNavigateEdit()}"
+					type="submit" process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdReportType}" /></label>
+								<h:selectOneMenu id="reportType" styleClass="form-control s2"
+									value="#{tmpRmdBean.searchReportType}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpRmdBean.reportTypeList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdReportName}" /></label>
+								<p:inputText id="reportName" styleClass="form-control" autocomplete="off"
+									value="#{tmpRmdBean.searchReportName}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdSearchStatus}" /></label>
+								<h:selectOneMenu id="status" styleClass="form-control s2"
+									value="#{tmpRmdBean.searchStatus}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpRmdBean.statusList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
+					<div class="col-lg-12">
+						<div class="col-lg-6">
+							<div class="filter-tools">
+								<ul class="no-margin no-padding">
+									<li><p:commandButton value="#{msg.buttonSearch}"
+											ajax="true"
+											update="ReportMatrixDiary"
+											styleClass="btn btn-success tl-label"
+											actionListener="#{tmpRmdBean.search}"></p:commandButton></li>
+									<li><p:commandButton value="#{msg.buttonReset}"
+											ajax="true" 
+											update="ReportMatrixDiary panelSearch"
+											styleClass="btn btn-default btn-flat tl-label"
+											actionListener="#{tmpRmdBean.reset}"></p:commandButton></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="filter-tools" style="text-align: right;">
+								<ul class="no-margin no-padding" style="float: right;">
+								    <p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+									<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload(); PF('statusDialog').hide();">
+											<i class="fa fa-table"></i> &nbsp;
+												<h:outputText value="#{msg.formTmpRmdExportToExcel}" />
+											<p:dataExporter type="xls" target="ReportMatrixDiary"
+												fileName="ReportMatrixDiary" pageOnly="true"
+												postProcessor="#{tmpRmdBean.postProcessXLS}" />
+										</h:commandLink></li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="ReportMatrixDiary" paginator="true" var="vo" 
+								value="#{tmpRmdBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{tmpRmdBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;" exportable="false" width="150"
+									headerText="#{msg.formAction}">
+									
+									<h:outputLabel value="#{msg.formWaitingForApproval}"
+										rendered="#{vo.statusCode eq 'DATA_NEW'}"/>
+									
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										rendered="#{vo.statusCode ne 'DATA_NEW'}"
+										action="#{tmpRmdBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.rmdId}" />
+									</p:commandLink>
+
+									<h:outputText style=" padding-left:4px; color:grey;'"
+										value=" | " 
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}" />
+									<h:outputLabel value="&#160;" 
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+										rendered="#{vo.followupStatusCode eq null and vo.statusCode ne 'DATA_NEW'}"
+										styleClass="tl-label" update="ReportMatrixDiary form:deletedMessage"
+										action="#{tmpRmdBean.delete(vo.rmdId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+									
+									
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpRmdReportName}" width="200">
+									<h:outputLabel value="#{vo.reportNameIn}" title="#{vo.reportName}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpRmdReportType}" width="200">
+									<h:outputLabel value="#{vo.reportTypeName}" title="#{vo.reportTypeName}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formTmpRmdPicName}" width="200">
+									<h:outputLabel value="#{vo.pic1}" title="#{vo.reportName}"/>
+								</p:column>
+								
+								<!-- <p:column headerText="#{msg.formTmpRmdPic1}" width="150">
+									<h:outputLabel value="#{vo.pic1}" title="#{vo.pic1}" />
+								</p:column> -->
+
+								<p:column headerText="#{msg.formTmpRmdStatus}" width="100"
+									style="text-align:center;">
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_ACTIVE'}">
+										<span class="label label-success"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_INACTIVE'}">
+										<span class="label label-danger"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_NEW'}">
+										<span class="label label-info"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCode eq 'DATA_REVISE'}">
+										<span class="label label-warning"> <h:outputText
+												value="#{vo.statusName}" />
+										</span>
+									</h:outputLabel>
+								</p:column>
+								
+								<p:column headerText="Detail" width="150">
+									
+									<p:commandLink  value="Detail" update="form:dialogBoxInquiry"
+										action="#{tmpRmdBean.onViewInquiryData(vo.rmdId)}" oncomplete="dialogBoxInquiry.show()">
+									</p:commandLink>
+
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formTmpRmdConfirmationDate}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formTmpRmdDelete}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formTmpRmdConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Inquiry Detail -->
+			<p:dialog id="dialogBoxInquiry"
+					  widgetVar="dialogBoxInquiry"   
+					  styleClass="dialogBoxStyleReview"
+					  showEffect="fade"
+					  resizable="false"
+					  draggable="true"
+					  closable="true"
+					  position="right"
+					  modal="false">
+					
+					<div class="table-responsive">
+						<p:dataTable id="tableConfirmation" var="vo"
+									value="#{tmpRmdBean.listInquiryData}" rowIndexVar="statIndex"
+									tableStyle="table-layout: auto;">
+							<p:column headerText="#{msg.formTmpRmdPicConfirmationEvidence}"
+										style="width:150px;">
+										<div class="form-group">
+											<p:dataList value="#{vo.picFollowupAttachmentDetails}" 
+												emptyMessage=""
+												var="dtl">
+												<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" immediate="true"
+													actionListener="#{tmpRmdBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+													target="_blank">#{dtl.attachmentFile}</p:commandLink>
+											</p:dataList>
+										</div>
+							</p:column>
+						 	<p:column headerText="#{msg.formTmpRmdPicFollowupStatus}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputLabel value="#{vo.followupStatus.name}" />
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdPicConfirmation}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupBy.name}" />
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdTargetDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.targetDate}">
+													<f:convertDateTime
+														pattern="#{tmpRmdEditBean.inputDateFormat}"
+														locale="#{tmpRmdEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdFollowupDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupDate}">
+													<f:convertDateTime
+														pattern="#{tmpRmdEditBean.inputDateFormat}"
+														locale="#{tmpRmdEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									
+									<p:column headerText="#{msg.formTmpRmdInformation}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupNote}" />
+											</div>
+										</div>
+									</p:column>
+						</p:dataTable>
+					</div>
+					
+			</p:dialog>
+			<!-- Inquiry Detail -->
+
+	</ui:define>
+</ui:composition>

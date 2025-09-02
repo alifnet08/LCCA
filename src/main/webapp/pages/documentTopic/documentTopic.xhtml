@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formDocumentTopicRegTitle}" />
+	</ui:define>
+
+
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{documentTopicBean.getNavigateEdit()}" type="submit"
+					process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="box box-solid">
+
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formDocumentTopicRegulationTopicName}" /></label>
+							<p:inputText id="searchVal" styleClass="form-control" autocomplete="off"
+								value="#{documentTopicBean.searchVal}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{documentTopicBean.search}"></p:commandButton>
+								</li>
+								<li><p:commandButton value="#{msg.buttonReset}"
+										ajax="true" update="tableSearch form:searchVal"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{documentTopicBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{documentTopicBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{documentTopicBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;width:20%;"
+									headerText="#{msg.formAction}">
+
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{documentTopicBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.documentTopicId}" />
+									</p:commandLink>
+									<h:outputText style=" padding-left:4px; color:grey;'"
+										value=" | " />
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+										styleClass="tl-label" update="tableSearch form:deletedMessage"
+										action="#{documentTopicBean.delete(vo.documentTopicId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column headerText="#{msg.formDocumentTopicProvTopic}">
+									<h:outputLabel value="#{vo.parameterDtlName}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formDocumentTopicRegTopicCat}" rendered="false">
+									<h:outputLabel value="#{vo.documentCategoryStr}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formDocumentTopicRegulationTopicName}">
+									<h:outputLabel value="#{vo.documentTopicIn}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formDocumentTopicDeleteRegulationTopic}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formDocumentTopicDeleteUser}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formDocumentTopicDeleteUser}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

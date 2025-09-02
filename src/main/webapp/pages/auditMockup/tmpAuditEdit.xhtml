@@ -1,0 +1,1287 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			 td.optionDisabled .ui-chkbox{
+				display: none;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.bsPanelAuditFindings{
+				padding: 5px 5px 5px 5px;
+			}
+			.ui-spinner-input {
+				width:60px;
+			}
+		</style>
+	</ui:define>
+	
+	<ui:define name="ajaxLoading">
+	</ui:define>
+	
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formAuditTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		
+		<!-- required to enable selectbooleanchekcbox -->
+		<p:remoteCommand autoRun="true" oncomplete="initSelect2()"
+			update="form:listAuditPicFollowup" immediate="true">
+		
+		</p:remoteCommand>
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formAuditTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="templateAudit" class="control-label tl-label">
+								<p:outputLabel for="templateAudit"
+									value="#{msg.formAuditTemplateName}" />
+							</label>
+							<h:selectOneMenu id="templateAudit" styleClass="form-control s2"
+								value="#{tmpAuditMockupEditBean.audit.mstAudit.mstAuditId}"
+								required="true"
+								requiredMessage="#{msg.formAuditTemplateName} #{msg.validateRequired}"
+								disabled="#{tmpAuditMockupEditBean.disableMstAudit}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpAuditMockupEditBean.templateAuditList}" />
+								<p:ajax event="change" update="form:panelAuditTemplate form:panelAuditAuditor"
+									listener="#{tmpAuditMockupEditBean.onChangeAuditMaster()}" />
+							</h:selectOneMenu>
+							<p:message for="templateAudit" />
+						</div>
+					</div>
+
+					<h:panelGroup id="panelAuditAuditor">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label for="auditFollowUp" class="control-label tl-label">
+									<p:outputLabel for="auditFollowUp"
+										value="#{msg.formAuditType}" />
+								</label>
+								<h:selectOneMenu id="auditFollowUp" required="true" disabled="true"
+									requiredMessage="#{msg.formAuditType} #{msg.validateRequired}"
+									styleClass="form-control s2 regulationSocializationProv"
+									value="#{tmpAuditMockupEditBean.audit.auditor}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpAuditMockupEditBean.selectAuditFollowUp}" />
+								</h:selectOneMenu>
+								<p:message for="auditFollowUp" />
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup id="panelTglKHP">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label for="auditFollowUp" class="control-label tl-label">
+									<p:outputLabel for="auditFollowUp"
+										value="Tanggal KHP" />
+								</label>
+								<p:calendar styleClass="form-control-datepicker-wrap"
+										required="true"
+										value="#{tmpAuditMockupEditBean.audit.khpDate}"
+										autocomplete="off" 
+										pattern="dd-MMM-yyyy" locale="en" >
+								</p:calendar>
+								
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<h:panelGroup id="panelAuditTemplate">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formAuditPeriode}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										required="true"
+										requiredMessage="#{msg.formAuditPeriodeFrom} #{msg.validateRequired}"
+										value="#{tmpAuditMockupEditBean.audit.auditDateFrom}"
+										autocomplete="off" placeholder="#{msg.from}" disabled="true"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+									<span class="input-group-addon plain"
+										style="margin-left: 10px; margin-right: 10px;"> <h:outputText
+											value=" - " />
+									</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="dateTo" required="true"
+										requiredMessage="#{msg.formAuditPeriodeTo} #{msg.validateRequired}"
+										value="#{tmpAuditMockupEditBean.audit.auditDateTo}" disabled="true"
+										 autocomplete="off" placeholder="#{msg.to}"
+										pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label for="auditScope" class="control-label tl-label" tl=""><h:outputText
+										value="#{msg.formAuditScope}" /></label>
+								<p:inputTextarea styleClass="form-control" required="true"
+									requiredMessage="#{msg.formAuditScope} #{msg.validateRequired}"
+									disabled="true" value="#{tmpAuditMockupEditBean.audit.scope}"
+									maxlength="6000"></p:inputTextarea>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<p:focus for="auditFindingIn"/>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="auditFindingIn" class="control-label tl-label" tl="">
+								<h:outputText
+									value="#{msg.formAuditFindingName}" />
+							</label>
+							<p:inputText id="auditFindingIn" styleClass="form-control"
+								autocomplete="off"
+								value="#{tmpAuditMockupEditBean.audit.findingNameIn}"
+								maxlength="1000"></p:inputText>
+						</div>
+						<p:message for="auditFindingIn" />
+					</div>
+
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label for="auditFindingEn" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formAuditFindingName}" />&#160;&#160;<span
+								class="label label-warning"> <h:outputLabel
+										value="#{msg.english}" />
+							</span></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{tmpAuditMockupEditBean.audit.findingNameEn}"
+								maxlength="1000"></p:inputText>
+						</div>
+					</div> -->
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="auditObject" class="control-label tl-label">
+								<p:outputLabel for="auditObject" value="#{msg.formAuditObject}" />
+							</label>
+							<h:selectOneMenu id="auditObject"
+								styleClass="form-control s2 regulationSocializationProv"
+								value="#{tmpAuditMockupEditBean.audit.auditObject}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpAuditMockupEditBean.selectAuditObject}" />
+							</h:selectOneMenu>
+							<p:message for="auditObject" />
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="auditCategory" class="control-label tl-label">
+								<p:outputLabel for="auditCategory"
+									value="#{msg.formAuditCategory}" />
+							</label>
+							<h:selectOneMenu id="auditCategory"
+								styleClass="form-control s2 regulationSocializationProv"
+								value="#{tmpAuditMockupEditBean.audit.auditCategory}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpAuditMockupEditBean.selectAuditCategory}" />
+							</h:selectOneMenu>
+							<p:message for="auditCategory" />
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText
+							value="#{msg.formRegulationSocializationPICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink onclick="onAddNewCompliance()">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink onclick="onDeleteRowCompliance()">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{tmpAuditMockupEditBean.tableModelCompliance}"
+									selection="#{tmpAuditMockupEditBean.selectedDataCompliance}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex"
+									rowSelectMode="checkbox">
+
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+
+									<p:column headerText="#{msg.formAuditPicComplianceNIK}"
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control temp-no-peraturan"
+														value="#{data.user.nik}" readonly="true" /></td>
+												<td style="width: 20%"><p:commandLink
+														onclick="picComplianceDialog.show()" process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpAuditMockupEditBean.indexDtlCompliance}"
+															value="#{statIndex}" />
+
+													</p:commandLink></td>
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column headerText="#{msg.formAuditPicComplianceName}"
+										width="200">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formAuditPicComplianceEmail}"
+										width="150">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.email}" readonly="true" />
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="followUp" class="control-label tl-label" tl=""><p:outputLabel
+									for="tmpAuditFollow"
+									value="#{msg.formRegulationSocializationFollowup}" /></label>
+							<h:selectOneMenu id="tmpAuditFollow" required="true"
+								requiredMessage="#{msg.formAuditPICFollowup} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								disabled="#{tmpAuditMockupEditBean.disabledFollowUpStatus}"
+								value="#{tmpAuditMockupEditBean.audit.followUp}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpAuditMockupEditBean.followUps}" />
+								<p:ajax event="change" update="form:panelReminder"
+									listener="#{tmpAuditMockupEditBean.onChangeFollowupStatus}" />
+							</h:selectOneMenu>
+							<p:message for="tmpAuditFollow" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label  class="control-label tl-label" tl=""><p:outputLabel
+									for="tmpAuditRisk"
+									value="#{msg.formAuditPICFollowupRisk}" /></label>
+							<p:inputTextarea id="tmpAuditRisk" styleClass="form-control" value="#{tmpAuditMockupEditBean.audit.risk}" >
+							</p:inputTextarea>
+							<p:message for="tmpAuditRisk" />
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText value="#{msg.formAuditPoints}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-audit-points">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												actionListener="#{tmpAuditMockupEditBean.onAddAuditPoints}"
+												process="@this form:listAuditPicFollowup" 
+												update="form:listAuditPicFollowup">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												actionListener="#{tmpAuditMockupEditBean.onDeleteAuditPoints}"
+												process="@this form:listAuditPicFollowup" 
+												update="form:listAuditPicFollowup">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4> 
+							<h:panelGroup id="auditPoints">
+								<p:dataList id="listAuditPicFollowup"
+									value="#{tmpAuditMockupEditBean.audit.poinPemeriksaan}"
+									var="picFollowup" type="definition"
+									rowIndexVar="rivPoinPemeriksaan">
+									<div class="col-md-1">
+										<p:selectBooleanCheckbox value="#{picFollowup.checked}"
+											rendered="#{picFollowup.disableEdit eq false}">
+											<p:ajax event="change" process="@this" />
+										</p:selectBooleanCheckbox>
+									</div>
+									<div class="col-md-11">
+										<div class="panel panel-default bsPanelAuditFindings">
+											<h:panelGroup id="panelAuditFindings">
+												<h5 class="sub-header">
+													&nbsp;
+													<div class="box-tools">
+														<ul class="no-margin no-padding">
+															<li><p:commandLink
+																	actionListener="#{tmpAuditMockupEditBean.onAddAuditFindings(rivPoinPemeriksaan)}"
+																	rendered="false"
+																	process="@this :form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listAuditFindings">
+																	<i class="fa fa-plus"></i>
+																</p:commandLink></li>
+															<li><p:commandLink
+																	actionListener="#{tmpAuditMockupEditBean.onDeleteAuditFindings(rivPoinPemeriksaan)}"
+																	rendered="false"
+																	process="@this :form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listAuditFindings">
+																	<i class="fa fa-trash"></i>
+																</p:commandLink></li>
+															<li><label class="control-label tl-label"> <p:outputLabel
+																		value="#{msg.formAuditFindings}" /></label></li>
+														</ul>
+													</div>
+												</h5>
+												<p:dataList id="listAuditFindings"
+													value="#{picFollowup.auditFindings}"
+													var="af" type="definition" rowIndexVar="rivAuditFindings">
+													<div class="panel panel-default bsPanelAuditFindings">
+														<div class="row" style="text-align: center;">
+															<div class="col-md-1">
+																<p:selectBooleanCheckbox value="#{af.checked}"
+																	rendered="#{picFollowup.disableEdit eq false}">
+																	<p:ajax event="change" process="@this" />
+																</p:selectBooleanCheckbox>
+															</div>
+															<div class="col-md-11">
+																<div class="form-group">
+																	<pe:ckEditor id="inputAuditFindings"
+																		styleClass="form-control" value="#{af.auditFindings}">
+																	</pe:ckEditor>
+																	<p:message for="inputAuditFindings" />
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-lg-12">
+																<h5 class="sub-header">
+																	&nbsp;
+																	<div class="box-tools">
+																		<ul class="no-margin no-padding" style="width: auto">
+																			<li><p:commandLink
+																					actionListener="#{tmpAuditMockupEditBean.onAddAuditFindingsTable(rivPoinPemeriksaan, rivAuditFindings)}"
+																					process="@this"
+																					update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listAuditFindings:#{rivAuditFindings}:dataTableAuditFindingsTable"
+																					rendered="#{picFollowup.disableEdit eq false}">
+																					<i class="fa fa-plus"></i>
+																				</p:commandLink></li>
+																			<li><p:commandLink
+																					actionListener="#{tmpAuditMockupEditBean.onDeleteAuditFindingsTable(rivPoinPemeriksaan, rivAuditFindings)}"
+																					process="@this"
+																					update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listAuditFindings:#{rivAuditFindings}:dataTableAuditFindingsTable"
+																					rendered="#{picFollowup.disableEdit eq false}">
+																					<i class="fa fa-trash"></i>
+																				</p:commandLink></li>
+																			<li style="padding-right: 5px;"><label
+																				for="column" class="control-label tl-label" tl=""><h:outputText
+																						value="#{msg.formAuditPICFollowupColumn}" /></label></li>
+																			<li style="padding-right: 5px;"><p:spinner
+																					min="0" max="50" id="spinnerAuditFindingsColumn"
+																					value="#{af.column}" onkeypress="return false"
+																					disabled="#{picFollowup.disableEdit eq true}">
+																					<p:ajax event="change"
+																						listener="#{tmpAuditMockupEditBean.onChangeColumn(rivPoinPemeriksaan, rivAuditFindings)}"
+																						update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listAuditFindings:#{rivAuditFindings}:dataTableAuditFindingsTable">
+																					</p:ajax>
+																				</p:spinner></li>
+																			<li style="padding-right: 5px;"><label
+																				for="header" class="control-label tl-label" tl=""><h:outputText
+																						value="#{msg.formAuditPICFollowupHeader}" /></label></li>
+																			<li style="display: -webkit-inline-box;"><h:selectOneMenu
+																					value="#{af.hasHeader}"
+																					styleClass="form-control s2"
+																					disabled="#{picFollowup.disableEdit eq true}">
+																					<f:selectItems value="#{tmpAuditMockupEditBean.yesNo}"></f:selectItems>
+																				</h:selectOneMenu></li>
+																		</ul>
+																	</div>
+																</h5>
+																&nbsp;
+																<p:dataTable id="dataTableAuditFindingsTable"
+																	value="#{af.tmpAuditPicFollowupAuditFindingsTables}"
+																	var="auditFindingsTables"
+																	rowIndexVar="rivAuditFindingsTables" scrollable="true"
+																	scrollWidth="100%">
+																	<p:column width="50">
+																		<p:selectBooleanCheckbox
+																			value="#{auditFindingsTables.checked}"
+																			disabled="false"
+																			rendered="#{picFollowup.disableEdit eq false}">
+																			<p:ajax event="change" process="@this" />
+																		</p:selectBooleanCheckbox>
+																	</p:column>
+																	<p:columns width="150"
+																		value="#{af.columnModel.columnModels}" var="tes"
+																		columnIndexVar="civCol">
+
+																		<p:inputText
+																			value="#{auditFindingsTables[tes.property]}"
+																			styleClass="form-control">
+																			<p:ajax event="blur" process="@this">
+																			</p:ajax>
+																		</p:inputText>
+																	</p:columns>
+																</p:dataTable>
+															</div>
+														</div>
+													</div>
+												</p:dataList>
+											</h:panelGroup>
+											<h:panelGroup id="panelBankResponse">
+												<h5 class="sub-header">
+													&nbsp;
+													<div class="box-tools">
+														<ul class="no-margin no-padding">
+															<li><p:commandLink
+																	actionListener="#{tmpAuditMockupEditBean.onAddBankResponse(rivPoinPemeriksaan)}"
+																	process="@this :form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse"
+																	rendered="false">
+																	<i class="fa fa-plus"></i>
+																</p:commandLink></li>
+															<li><p:commandLink
+																	actionListener="#{tmpAuditMockupEditBean.onDeleteBankResponse(rivPoinPemeriksaan)}"
+																	rendered="false"
+																	process="@this :form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse">
+																	<i class="fa fa-trash"></i>
+																</p:commandLink></li>
+															<li><label class="control-label tl-label"> <p:outputLabel
+																		value="#{msg.formAuditBankResponse}" /></label></li>
+														</ul>
+													</div>
+												</h5>
+												<p:dataList id="listBankResponse"
+													value="#{picFollowup.bankResponses}"
+													var="bankResponse" rowIndexVar="rivBankResponse" type="definition">
+													
+													<div class="row" style="text-align: center;">
+														<div class="col-md-1">
+															<p:selectBooleanCheckbox value="#{bankResponse.checked}"
+																rendered="#{picFollowup.disableEdit eq false}">
+																<p:ajax event="change" process="@this" />
+															</p:selectBooleanCheckbox>
+														</div>
+														<div class="col-md-11">
+															<h5 class="sub-header">
+																		&nbsp;
+																		<div class="box-tools">
+																			<label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditBankResponse}" /></label>
+																		</div>
+															</h5>
+															<div class="form-group">
+																<pe:ckEditor id="inputBankResponse"
+																	styleClass="form-control"
+																	value="#{bankResponse.bankResponse}">
+																</pe:ckEditor>
+																<p:message for="inputBankResponse" />
+															</div>
+														</div>
+														<div class="col-md-1">
+														</div>
+														<div class="col-md-11">
+															<div class="form-group">
+														<h:panelGroup id="panelBankCommitment">
+															<h6 class="sub-header">
+																&nbsp;
+																<div class="box-tools">
+																<p:remoteCommand
+																	action="#{tmpAuditMockupEditBean.onAddBankCommitment(rivPoinPemeriksaan,rivBankResponse)}" process="@this"
+																	immediate="true" name="onAddBankCommitment"
+																	></p:remoteCommand>
+																<p:remoteCommand
+																	action="#{tmpAuditMockupEditBean.onDeleteBankCommitment(rivPoinPemeriksaan,rivBankResponse)}" process="@this"
+																	immediate="true" name="onDeleteBankCommitment"
+																	></p:remoteCommand>
+																	<ul class="no-margin no-padding">
+																		<li><p:commandLink onclick="onAddBankCommitment()"
+																				>
+																				<i class="fa fa-plus"></i>
+																			</p:commandLink></li>
+																		<li><p:commandLink onclick="onDeleteBankCommitment()">
+																				<i class="fa fa-trash"></i>
+																			</p:commandLink></li>
+																		<li><label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditBankCommitment}" /></label></li>
+																	</ul>
+																</div>
+															</h6>
+															<p:dataList id="listBankCommitment"
+																value="#{bankResponse.bankCommitments}"
+																var="bankCommitment" rowIndexVar="rivBankCommitment" type="definition">
+																
+																<div class="row" style="text-align: center;">
+																	<div class="col-md-1">
+																		<p:selectBooleanCheckbox
+																			value="#{bankCommitment.checked}"
+																			rendered="#{picFollowup.disableEdit eq false}">
+																			<p:ajax event="change" process="@this" />
+																		</p:selectBooleanCheckbox>
+																	</div>
+																	<div class="col-md-11">
+																	<h5 class="sub-header">
+																		&nbsp;
+																		<div class="box-tools">
+																			<label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditBankCommitment}" /></label>
+																		</div>
+																	</h5>
+																		<div class="form-group">
+																			<pe:ckEditor id="inputBankCommitment"
+																				styleClass="form-control"
+																				value="#{bankCommitment.bankCommitment}">
+																			</pe:ckEditor>
+																			<p:message for="inputBankCommitment" />
+																		</div>
+																	</div>
+																	<div class="col-md-1">
+																	</div>
+																	<div class="col-md-11">
+																	
+																	<div class="form-group">
+																		
+																		
+																		<div class="form-row col-md-2">
+																				<div class="col">
+																					<div class="label-form" style="text-align:left">Recurring</div>
+																					<h:selectOneMenu
+																						style="font-size:13px;font-weight:normal;"
+																						styleClass="form-control s2 divisionCc#{rivPoinPemeriksaan}"
+																						value="#{bankCommitment.isRecurr}">
+																						<f:selectItem itemLabel="Pilih" itemValue="" />
+																						<f:selectItem itemLabel="Yes" itemValue="true" />
+																						<f:selectItem itemLabel="No" itemValue="false" />
+																						<p:ajax event="change"  update="form:listAuditPicFollowup:${rivPoinPemeriksaan}:listBankResponse:${rivBankResponse}:listBankCommitment"
+																								listener="#{tmpAuditMockupEditBean.onSelectRecurr(rivPoinPemeriksaan,rivBankResponse,rivBankCommitment)}" />
+																					</h:selectOneMenu>
+																				</div>
+																			</div>
+																			
+																			<h:panelGroup id="panelRecurr" rendered="#{bankCommitment.isRecurr eq true}">
+																			<div class="form-row col-md-4">
+																				<div class="col">
+																					<div class="label-form" style="text-align:left">Tipe Recurring</div>
+																					<h:selectOneMenu
+																						style="font-size:13px;font-weight:normal;"
+																						styleClass="form-control s2"
+																						value="#{bankCommitment.recurringType}">
+																						<f:selectItem itemLabel="1 Bulan" itemValue="1" />
+																						<f:selectItem itemLabel="3 Bulan" itemValue="3" />
+																						<f:selectItem itemLabel="6 Bulan" itemValue="6" />
+																						<f:selectItem itemLabel="9 Bulan" itemValue="9" />
+																						<f:selectItem itemLabel="12 Bulan" itemValue="12" />
+																					</h:selectOneMenu>
+																				</div>
+																			</div>
+																			<div class="form-row col-md-4">
+																				<div class="col">
+																					<div class="label-form" style="text-align:left">Recurring End Date</div>
+																					<p:calendar styleClass="form-control-datepicker-wrap"
+																							required="true"
+																							value="#{bankCommitment.recurringEndDate}"
+																							autocomplete="off" 
+																							pattern="dd-MMM-yyyy" locale="en" >
+																					</p:calendar>
+																				</div>
+																			</div>
+																		</h:panelGroup>
+																		
+																	</div>
+																	</div>
+																	<div class="col-md-1">
+																	</div>
+																	<div class="col-md-11">
+																	<h5 class="sub-header">
+																		&nbsp;
+																		<div class="box-tools">
+																			<label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditPICFollowup}" /></label>
+																		</div>
+																	</h5>
+																	<div class="row">
+																		<h:panelGroup id="panelPicFollowup">
+																			<div class="col-md-3"
+																				style="font-size: 13px; font-weight: normal;">
+																				<h:selectOneMenu
+																					style="font-size:13px;font-weight:normal;"
+																					styleClass="form-control s2 divisionCc#{rivPoinPemeriksaan}"
+																					value="#{bankCommitment.picFollowup.divisionId}">
+																					<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+																					<f:selectItems value="#{tmpAuditMockupEditBean.divisions}" />
+																					<p:ajax event="change" update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse:#{rivBankResponse}:listBankCommitment:#{rivBankCommitment}:panelPicFollowup"
+																						listener="#{tmpAuditMockupEditBean.onChangeDivision(rivPoinPemeriksaan)}" />
+																				</h:selectOneMenu>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="col-md-10"
+																					style="font-size: 13px; font-weight: normal;">
+																					<h:inputText
+																						styleClass="form-control user1#{rivPoinPemeriksaan}"
+																						value="#{bankCommitment.picFollowup.user1.name}"
+																						id="userName1#{rivPoinPemeriksaan}" readonly="true" />
+																				</div>
+																				<div class="col-md-2">
+																					<p:commandLink
+																						onstart="$('.hdnParamEmailCc1Option').val($('.divisionCc#{rivPoinPemeriksaan}').val());pic1Dialog.show();"
+																						process="@this">
+																						<i style="margin-top: 10px;" class="fa fa-search ico-lg"></i>
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																							value="#{rivPoinPemeriksaan}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankResponse}"
+																							value="#{rivBankResponse}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankCommitment}"
+																							value="#{rivBankCommitment}" />
+																					</p:commandLink>
+																				</div>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="col-md-10"
+																					style="font-size: 13px; font-weight: normal;">
+																					<h:inputText value="#{bankCommitment.picFollowup.user2.name}"
+																						styleClass="form-control user2" readonly="true" />
+																				</div>
+																				<div class="col-md-1">
+																					<p:commandLink
+																						onstart="$('.hdnParamEmailCc2Option').val($('.divisionCc#{rivPoinPemeriksaan}').val());pic2Dialog.show();"
+																						process="@this form:auditPoints">
+																						<i style="margin-top: 10px;" class="fa fa-search ico-lg"></i>
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																							value="#{rivPoinPemeriksaan}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankResponse}"
+																							value="#{rivBankResponse}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankCommitment}"
+																							value="#{rivBankCommitment}" />
+																					</p:commandLink>
+																				</div>
+																				<div class="col-md-1">
+																					<p:commandLink immediate="true"
+																						style="float:left;margin-left:-10px;margin-top: 3px;"
+																						actionListener="#{tmpAuditMockupEditBean.clearPicDetail2(rivPoinPemeriksaan)}"
+																						>
+																						<span class="input-group-btn fa fa-trash btn btn-link"></span>
+																					</p:commandLink>
+																				</div>
+																			</div>
+																			<div class="col-md-3">
+																				<div class="col-md-10"
+																					style="font-size: 13px; font-weight: normal;">
+																					<h:inputText value="#{bankCommitment.picFollowup.user3.name}"
+																						styleClass="form-control user3" readonly="true" />
+																				</div>
+																				<div class="col-md-1">
+																					<p:commandLink
+																						onstart="$('.hdnParamEmailCc3Option').val($('.divisionCc#{rivPoinPemeriksaan}').val());pic3Dialog.show();"
+																						process="@this form:auditPoints">
+																						<i style="margin-top: 10px;" class="fa fa-search ico-lg"></i>
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																							value="#{rivPoinPemeriksaan}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankResponse}"
+																							value="#{rivBankResponse}" />
+																						<f:setPropertyActionListener
+																							target="#{tmpAuditMockupEditBean.indexDtlBankCommitment}"
+																							value="#{rivBankCommitment}" />
+																					</p:commandLink>
+																				</div>
+																				<div class="col-md-1">
+																					<p:commandLink immediate="true"
+																						style="float:left;margin-left:-10px;margin-top: 3px;"
+																						actionListener="#{tmpAuditMockupEditBean.clearPicDetail3(rivPoinPemeriksaan)}"
+																						>
+																						<span class="input-group-btn fa fa-trash btn btn-link"></span>
+																					</p:commandLink>
+																				</div>
+																			</div>
+																		</h:panelGroup>
+																	</div>
+																</div>
+																
+																<div class="col-md-1">
+																</div>
+																<div class="col-md-11">
+																	<div class="row">
+																		<h:panelGroup id="panelSupportingUnit">
+																			<h:outputText value="&#160;" />
+						
+																			<!-- <h3>
+																			<h:outputText value="#{msg.formAuditPICFollowupSupportingUnit}" />
+																		</h3>-->
+																			<div class="col-lg-12">
+																				<div id="mp-supporting-unit">
+																					<h5 class="sub-header">
+																						&nbsp;
+																						<div class="box-tools">
+																						<p:remoteCommand
+																						action="#{tmpAuditMockupEditBean.onAddSupportingUnit(rivPoinPemeriksaan,rivBankResponse,rivBankCommitment)}" process="@this"
+																						immediate="true" name="onAddSupportingUnit"
+																						></p:remoteCommand>
+																					<p:remoteCommand
+																						action="#{tmpAuditMockupEditBean.onDeleteSupportingUnit(rivPoinPemeriksaan,rivBankResponse,rivBankCommitment)}" process="@this"
+																						immediate="true" name="onDeleteSupportingUnit"
+																						></p:remoteCommand>
+																							<ul class="no-margin no-padding">
+																								<li><p:commandLink
+																										onclick="onAddSupportingUnit()"
+																										>
+																										<i class="fa fa-plus"></i>
+																									</p:commandLink></li>
+																								<li><p:commandLink
+																										onclick="onDeleteSupportingUnit()"
+																										>
+																										<i class="fa fa-trash"></i>
+																									</p:commandLink></li>
+																								<li><label class="control-label tl-label">
+																										<p:outputLabel
+																											value="#{msg.formAuditPICFollowupSupportingUnit}" />
+																								</label></li>
+																							</ul>
+																						</div>
+																					</h5>
+																					<div class="table-wrapper table-responsive">
+																						<p:dataTable id="tableSupportingUnitDetail" var="vo"
+																							value="#{bankCommitment.picFollowup.tmpAuditPicFollowupSupportingUnits}"
+																							rowIndexVar="statIndex" style="width:100%;">
+						
+																							<p:column width="50">
+																								<p:selectBooleanCheckbox value="#{vo.checked}"
+																									rendered="#{picFollowup.disableEdit eq false}">
+																									<p:ajax event="change" process="@this" />
+																								</p:selectBooleanCheckbox>
+																							</p:column>
+						
+																							<p:column
+																								headerText="#{msg.formTmpCorrespondenceDivision}"
+																								style="width:200px;">
+																								<div class="form-group" style="margin-top: 15px;">
+																									<h:selectOneMenu
+																										styleClass="form-control s2 divisionCc#{rivPoinPemeriksaan}#{statIndex}"
+																										style="margin-top:15px;height:38px;"
+																										value="#{vo.divisionId}">
+																										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+																										<f:selectItems value="#{tmpAuditMockupEditBean.divisions}" />
+																										<p:ajax event="change"
+																											update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse:#{rivBankResponse}:listBankCommitment:#{rivBankCommitment}:tableSupportingUnitDetail"
+																											listener="#{tmpAuditMockupEditBean.onChangeSuppUnitDivision(rivPoinPemeriksaan, statIndex)}" />
+																									</h:selectOneMenu>
+																								</div>
+																							</p:column>
+																							<p:column
+																								headerText="#{msg.formTmpCorrespondenceEmailCc1}"
+																								style="width:200px;">
+																								<table>
+																									<tr>
+																										<td style="width: 80%"><h:inputText
+																												id="emailCc1#{statIndex}"
+																												styleClass="form-control"
+																												value="#{vo.emailCcTemp1}" disabled="true" /></td>
+																										<td style="width: 20%"><p:commandLink
+																												process="@this"
+																												onstart="$('.hdnParamEmailCcSu1Option').val($('.divisionCc#{rivPoinPemeriksaan}#{statIndex}').val());emailCc1Dialog.show();">
+																												<span><i class="fa fa-search ico-lg"></i></span>
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																													value="#{rivPoinPemeriksaan}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlBankResponse}"
+																													value="#{rivBankResponse}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlBankCommitment}"
+																													value="#{rivBankCommitment}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlSuppUnit}"
+																													value="#{statIndex}" />
+																											</p:commandLink></td>
+																									</tr>
+																								</table>
+																							</p:column>
+																							<p:column
+																								headerText="#{msg.formTmpCorrespondenceEmailCc2}"
+																								style="width:200px;">
+																								<table>
+																									<tr>
+																										<td style="width: 70%"><h:inputText
+																												id="emailCc2#{statIndex}"
+																												styleClass="form-control"
+																												value="#{vo.emailCcTemp2}" disabled="true" /></td>
+																										<td style="width: 15%"><p:commandLink
+																												process="@this"
+																												onstart="$('.hdnParamEmailCcSu2Option').val($('.divisionCc#{rivPoinPemeriksaan}#{statIndex}').val());emailCc2Dialog.show();">
+																												<span><i class="fa fa-search ico-lg"></i></span>
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																													value="#{rivPoinPemeriksaan}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlBankResponse}"
+																													value="#{rivBankResponse}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlBankCommitment}"
+																													value="#{rivBankCommitment}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlSuppUnit}"
+																													value="#{statIndex}" />
+																											</p:commandLink></td>
+																										<td style="width: 15%"><p:commandLink
+																												immediate="true"
+																												style="float:left;margin-left:-10px;"
+																												actionListener="#{tmpAuditMockupEditBean.clearPicSuppUnitDetail2(rivPoinPemeriksaan, statIndex)}"
+																												update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse:#{rivBankResponse}:listBankCommitment:#{rivBankCommitment}:panelSupportingUnit"
+																											    >
+																												<span
+																													class="input-group-btn fa fa-trash btn btn-link"></span>
+																											</p:commandLink></td>
+																									</tr>
+																								</table>
+																							</p:column>
+																							<p:column
+																								headerText="#{msg.formTmpCorrespondenceEmailCc3}"
+																								style="width:200px;">
+																								<table>
+																									<tr>
+																										<td style="width: 70%"><h:inputText
+																												id="emailCc3#{statIndex}"
+																												styleClass="form-control"
+																												value="#{vo.emailCcTemp3}" disabled="true" /></td>
+																										<td style="width: 15%"><p:commandLink
+																												process="@this"
+																												onstart="$('.hdnParamEmailCcSu3Option').val($('.divisionCc#{rivPoinPemeriksaan}#{statIndex}').val());emailCc3Dialog.show();">
+																												<span><i class="fa fa-search ico-lg"></i></span>
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlFollowup}"
+																													value="#{rivPoinPemeriksaan}" />
+																												<f:setPropertyActionListener
+																													target="#{tmpAuditMockupEditBean.indexDtlSuppUnit}"
+																													value="#{statIndex}" />
+																											</p:commandLink></td>
+																										<td style="width: 15%"><p:commandLink
+																												immediate="true"
+																												style="float:left;margin-left:-10px;"
+																												actionListener="#{tmpAuditMockupEditBean.clearPicSuppUnitDetail3(rivPoinPemeriksaan, statIndex)}"
+																												update="form:listAuditPicFollowup:#{rivPoinPemeriksaan}:listBankResponse:#{rivBankResponse}:listBankCommitment:#{rivBankCommitment}:panelSupportingUnit">
+																												<span
+																													class="input-group-btn fa fa-trash btn btn-link"></span>
+																											</p:commandLink></td>
+																									</tr>
+																								</table>
+																							</p:column>
+																						</p:dataTable>
+																					</div>
+																				</div>
+																			</div>
+																		</h:panelGroup>
+																	</div>
+																	
+																	<h5 class="sub-header">
+																		&nbsp;
+																		<div class="box-tools">
+																			<label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditPICAndWorkUnitTargetDate}" /></label>
+																		</div>
+																	</h5>
+																	
+																	<div class="row">
+																		<div class="col-lg-12">
+																			<div class="form-group">
+																				<p:calendar id="auditFollowupTargetDate"
+																					styleClass="form-control-datepicker-wrap"
+																					value="#{bankCommitment.picFollowup.targetDate}" autocomplete="off"
+																					pattern="dd-MMM-yyyy" locale="en">
+																					<p:ajax event="dateSelect"
+																						listener="#{tmpAuditMockupEditBean.onTargetDateChange(rivPoinPemeriksaan)}"
+																						 />
+																				</p:calendar>
+																			</div>
+																		</div>
+																	</div>
+						
+																	<h:panelGroup
+																		rendered="#{tmpAuditMockupEditBean.audit.lastUpdateBy ne null
+																			and tmpAuditMockupEditBean.audit.lastUpdateBy ne ''}">
+																		<div class="row">
+																			<div class="col-lg-12">
+																				<div class="form-group">
+																					<label for="auditFollowupRescheduleReason"
+																						style="font-size: 13px;" class="control-label tl-label"
+																						tl=""> <h:outputLabel
+																							value="#{msg.formAuditPICFollowupRescheduleReason}" />
+																					</label>
+																					<p:inputTextarea id="auditFollowupRescheduleReason"
+																						styleClass="form-control"
+																						value="#{bankCommitment.picFollowup.rescheduleReason}" maxlength="6000"></p:inputTextarea>
+																				</div>
+																			</div>
+																		</div>
+																	</h:panelGroup>
+																	
+																	<h5 class="sub-header">
+																		&nbsp;
+																		<div class="box-tools">
+																			<label class="control-label tl-label"> <p:outputLabel
+																					value="#{msg.formAuditPICAndWorkUnitEmailDate}" /></label>
+																		</div>
+																	</h5>
+																	<div class="row">
+																		<div class="col-lg-12">
+																			<div class="form-group">
+																				<p:dataList
+																					value="#{bankCommitment.picFollowup.tmpAuditPicFollowupEmails}"
+																					emptyMessage="" var="dtl">#{dtl.emailDate!=null?tmpAuditMockupEditBean.sdf.format(dtl.emailDate):''}</p:dataList>
+																			</div>
+																		</div>
+																	</div>
+																	
+																</div>
+																</div>
+																
+															</p:dataList>
+														</h:panelGroup>
+														</div>
+														</div>
+											
+													</div>
+													
+												
+											
+												</p:dataList>
+											</h:panelGroup>
+											
+
+											
+
+											
+										</div>
+									</div>
+								</p:dataList>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText value="#{msg.formAuditAttachment}" />
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label">
+								<h:outputText value="#{msg.formAuditAttachment}" />
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{tmpAuditMockupEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload
+								fileUploadListener="#{tmpAuditMockupEditBean.handleFileUploadAuditAttachment}"
+								requiredMessage="#{msg.formAuditAttachment} #{msg.validateRequired}"
+								value="#{tmpAuditMockupEditBean.uploadedFilesAuditBankAttachment}"
+								mode="advanced" auto="true" adragDropSupport="false"
+								multiple="true" update="msgs auditAttachmentList"
+								sizeLimit="#{tmpAuditMockupEditBean.standardAttachmentSize}" />
+							<p:dataList
+								value="#{tmpAuditMockupEditBean.uploadedFilesAuditBankAttachment}"
+								emptyMessage="" var="vo" id="auditAttachmentList"
+								rowIndexVar="index">
+								<table>
+									<tr>
+										<td style="width: 80%"><p:commandLink
+												title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+												actionListener="#{tmpAuditMockupEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td><p:commandLink immediate="true"
+												actionListener="#{tmpAuditMockupEditBean.deleteAuditAttachment(vo.fileId,index)}"
+												update="auditAttachmentList">#{msg.buttonDelete}</p:commandLink>
+										</td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+
+					<h:panelGroup id="panelReminder">
+						<div class="col-lg-12" style="margin-top: 15px;">
+							<div
+								class="form-group #{'Y' eq tmpAuditMockupEditBean.audit.followUp? 'required':''}">
+								<label class="control-label tl-label" tl=""><p:outputLabel
+										value="#{msg.formAuditPICReminderType}" /></label>
+								<h:selectOneMenu id="tmpAuditReminder"
+									styleClass="form-control s2 regulationSocializationProv"
+									disabled="#{'Y' ne tmpAuditMockupEditBean.audit.followUp}"
+									required="#{'Y' eq tmpAuditMockupEditBean.audit.followUp}"
+									requiredMessage="#{msg.formAuditPICReminderType} #{msg.validateRequired}"
+									value="#{tmpAuditMockupEditBean.counterTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{tmpAuditMockupEditBean.counterTypes}" />
+								</h:selectOneMenu>
+								<p:message for="tmpAuditReminder" />
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<h3>
+						<h:outputText value="#{msg.formAuditPICStatusConfirmation}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<div class="top-scroller">
+								<div class="div-wrapper"></div>
+							</div>
+							<div
+								class="table-wrapper table-responsive linked-to-top-scroller">
+								<p:dataTable id="dataTableStatus" var="vo"
+									value="#{tmpAuditMockupEditBean.tableStatus}" rowIndexVar="statIndex">
+
+									<p:column
+										headerText="Bukti Tindak Lanjut"
+										width="150">
+										<p:dataList value="#{vo.attachments}"
+											emptyMessage="" var="dtlAttach" >
+											<p:commandLink title="#{dtlAttach.size} KB" ajax="false"
+												actionListener="#{complianceTestingMockupEditBean.downloadFile(dtlAttach.id,dtlAttach.name,null)}"
+												target="_blank">#{dtlAttach.name}</p:commandLink>
+										</p:dataList>
+									</p:column>
+
+
+									<p:column headerText="Status Tindak Lanjut"
+										width="150">
+										<h:outputLabel value="#{vo.followupStatus}" />
+									</p:column>
+
+									<p:column headerText="PIC Tindak Lanjut"
+										width="150">
+										<h:outputLabel value="#{vo.followupBy}" />
+									</p:column>
+									
+									<p:column headerText="Tanggal Perpanjangan"
+										width="150">
+										<h:outputLabel value="#{vo.newTargetDate}" />
+									</p:column>
+
+									<p:column headerText="Alasan Perpanjangan"
+										width="150">
+										<h:outputLabel value="#{vo.perpanjanganNote}" />
+									</p:column>
+									
+									<p:column
+										headerText="Lampiran Perpanjangan"
+										width="150">
+										<p:dataList value="#{vo.attachmentsPerpanjangan}"
+											emptyMessage="" var="dtlAttach" >
+											<p:commandLink title="#{dtlAttach.size} KB" ajax="false"
+												actionListener="#{complianceTestingMockupEditBean.downloadFile(dtlAttach.id,dtlAttach.name,null)}"
+												target="_blank">#{dtlAttach.name}</p:commandLink>
+										</p:dataList>
+									</p:column>
+									
+									<p:column headerText="Tanggal Pemenuhan"
+										width="150">
+										<h:outputLabel value="#{vo.followupDate}" />
+									</p:column>
+
+									<p:column headerText="Keterangan"
+										width="150">
+										<h:outputLabel value="#{vo.followupNote}" />
+									</p:column>
+
+									<p:column headerText="Status Pengecekan"
+										width="150">
+										<h:selectOneMenu  styleClass="form-control s2 division" rendered="#{vo.followupDate != null}"
+															value="#{vo.complianceStatus}">
+															<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+															<f:selectItem itemLabel="Open" itemValue="" />
+															<f:selectItem itemLabel="Close" itemValue="" />
+															
+							  			</h:selectOneMenu>
+							  			<h:selectOneMenu  styleClass="form-control s2 division" rendered="#{vo.followupDate == null}"
+															value="#{vo.complianceStatus}">
+															<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+															<f:selectItem itemLabel="Belum Sesuai" itemValue="" />
+															<f:selectItem itemLabel="Sesuai" itemValue="" />
+															
+							  			</h:selectOneMenu>
+									</p:column>
+
+									<p:column headerText="Catatan Pengecekan"
+										width="150">
+										<p:inputTextarea  styleClass="form-control" value="#{vo.complianceNote}" >
+										</p:inputTextarea>
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top: 15px;">
+							<label class="tl-label" tl=""><h:outputText
+									value="#{msg.formAuditPICReminderStatus}" /></label>
+							<h:selectOneRadio
+								value="#{tmpAuditMockupEditBean.audit.reminderStatus}">
+								<f:selectItems value="#{tmpAuditMockupEditBean.reminderStatusList}" />
+							</h:selectOneRadio>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<p:commandButton value="#{msg.buttonSave}"
+					actionListener="#{tmpAuditMockupEditBean.save()}"
+					styleClass="btn btn-primary pull-left tl-label" update="msgs" onclick="statusDialog.show()" oncomplete="statusDialog.hide();"></p:commandButton>
+
+				<p:remoteCommand
+					action="#{tmpAuditMockupEditBean.onAddNewCompliance}" process="@this"
+					immediate="true" name="onAddNewCompliance"
+					update="dataTableCompliance"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpAuditMockupEditBean.onDeleteRowCompliance}" process="@this"
+					immediate="true" name="onDeleteRowCompliance"
+					update="dataTableCompliance"></p:remoteCommand>
+				<h:commandLink value="#{msg.buttonCancel}" immediate="true"
+					actionListener="#{tmpAuditMockupEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl=""> <h:outputText value="#{msg.formAuditPICApprovalHistory}"/></h3>
+			</div>
+			<div class="box-body">
+				<div class="col-lg-12">
+					<p:dataTable id="dataTableApproval" var="data"
+						value="#{tmpAuditMockupEditBean.tableApproval}"
+						rowIndexVar="statIndex">
+
+
+						<p:column
+							headerText="#{msg.formAuditPICApprovalBy}"
+							width="150">
+							<h:outputLabel value="#{data.approvalBy}" />
+						</p:column>
+						<p:column
+							headerText="#{msg.formAuditPICApprovalStatus}"
+							style="text-align:center;"
+							width="150">
+							<h:outputLabel value="#{data.approvalStatus}" />
+						</p:column>
+						<p:column
+							headerText="#{msg.formAuditPICApprovalDate}"
+							style="text-align:center;"
+							width="150">
+							<h:outputLabel value="#{data.approvalDate}" />
+						</p:column>
+						<p:column
+							headerText="#{msg.formAuditPICApprovalNote}"
+							width="150">
+							<h:outputLabel value="#{data.approvalNote}" />
+						</p:column>
+					</p:dataTable>
+
+				</div>
+			</div>
+		</div>
+
+		<wo:selector id="ComplianceDummy" height="450" width="550"
+			title="LOV #{msg.formRegulationSocializationPICCompliance}"
+			widgetVar="picComplianceDialogDummy"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorCompliance}"
+			bean="#{tmpAuditMockupEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+			
+		<wo:selector id="Compliance" height="450" width="550"
+			title="LOV #{msg.formRegulationSocializationPICCompliance}"
+			widgetVar="picComplianceDialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorCompliance}"
+			bean="#{tmpAuditMockupEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+
+		<wo:selector id="Division" height="450" width="550"
+			title="LOV #{msg.formRegulationSocializationPICCompliance}"
+			widgetVar="divisionDialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorFollowup}"
+			bean="#{tmpAuditMockupEditBean}"
+			 />
+
+		<wo:selector id="EmailCc1Option" height="450" width="550" title="LOV #{msg.formRegulationSocializationPIC1}"
+			widgetVar="pic1Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorPic1}"
+			bean="#{tmpAuditMockupEditBean}"
+			 />
+
+		<wo:selector id="EmailCc2Option" height="450" width="550" title="LOV #{msg.formRegulationSocializationPIC2}"
+			widgetVar="pic2Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorPic2}"
+			bean="#{tmpAuditMockupEditBean}" />
+
+		<wo:selector id="EmailCc3Option" height="450" width="550" title="LOV #{msg.formRegulationSocializationPIC3}"
+			widgetVar="pic3Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorPic3}"
+			bean="#{tmpAuditMockupEditBean}"/>
+			
+		<wo:selector id="EmailCcSu1Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser1}" widgetVar="emailCc1Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorUserCc1}"
+			bean="#{tmpAuditMockupEditBean}"/>
+
+		<wo:selector id="EmailCcSu2Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser2}" widgetVar="emailCc2Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorUserCc2}"
+			bean="#{tmpAuditMockupEditBean}"/>
+
+		<wo:selector id="EmailCcSu3Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser3}" widgetVar="emailCc3Dialog"
+			selectorInfo="#{tmpAuditMockupEditBean.selectorUserCc3}"
+			bean="#{tmpAuditMockupEditBean}"/>
+
+	</ui:define>
+
+
+</ui:composition>

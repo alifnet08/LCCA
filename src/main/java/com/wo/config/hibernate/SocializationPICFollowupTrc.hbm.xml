@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.regulationSocialization.model">
+	<class name="SocializationPICFollowupTrc" table="wo_trc_socialization_pic_fp">
+		<id name="socializationPicFollowupId" column="socialization_pic_followup_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_socialization_pic_fp_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="socializationTrc" column="socialization_id"
+			class="com.wo.module.regulationSocialization.model.SocializationTrc"
+			fetch="join" />
+
+		<property name="divisionId" column="division_id" type="long" />
+
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="target_date" type="date" />
+		<property name="rescheduleReason" column="reschedule_reason" type="string" />
+		<property name="notes" column="notes" type="string" />
+		
+		<many-to-one name="followupStatus" property-ref="parameterDtlCode"
+			column="followup_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<!-- <property name="followupStatus" column="followup_status" type="string" 
+			/> -->
+		<many-to-one name="followupBy" column="followup_by_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="confirmationDate" column="confirmation_date"
+			type="date" />
+		<property name="followupDate" column="followup_date" type="date" />
+		<property name="followupNote" column="followup_note" type="string" />
+
+		<many-to-one name="complianceStatus" property-ref="parameterDtlCode"
+			column="compliance_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<!-- <property name="complianceStatus" column="compliance_status" type="string" 
+			/> -->
+		<property name="complianceNote" column="compliance_note"
+			type="string" />
+		<many-to-one name="complianceBy" column="compliance_by_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="complianceDate" column="compliance_date"
+			type="date" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+		<bag name="socializationPICFollowupEmailTrcs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="sclztion_pic_fp_email_id asc">
+			<key column="socialization_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.regulationSocialization.model.SocializationPICFollowupEmailTrc" />
+		</bag>
+
+		<bag name="socializationPICFollowupAttachmentTrcs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="sclization_pic_fp_atch_id asc">
+			<key column="socialization_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.regulationSocialization.model.SocializationPICFollowupAttachmentTrc" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

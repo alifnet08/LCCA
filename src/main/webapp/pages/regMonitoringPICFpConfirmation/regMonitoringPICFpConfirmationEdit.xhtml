@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<f:event listener="#{regMonitoringPICFpConfirmationEditBean.redirectCurrentPage}" type="preRenderView" />
+	<ui:define name="head">
+		<style>
+				.form-control[readonly] {;
+					font-family: 'Montserrat';
+					color: #444444;
+				    margin: -4px 0px 0px;
+				}
+				.form-control-datepicker-wrap input.hasDatepicker {
+				    font-family: 'Montserrat';
+				}
+				.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
+				    opacity: 0.8;
+				}
+				.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    	box-shadow: none;
+				}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formPICFollowupConfirmationTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:messages id="messagesView" showDetail="summary" 
+			rendered="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'Y'}"/>
+		
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formPICFollowupConfirmationTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label for="jenis_ketentuan" class="control-label tl-label"><h:outputText
+									value="#{msg.formPICFollowupConfirmationProvType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2" disabled="true"
+								value="#{regMonitoringPICFpConfirmationEditBean.regMonitoringTrc.jenisKetentuan.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regMonitoringPICFpConfirmationEditBean.provTypes}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+
+					<h3>
+						<h:outputText value="#{msg.formPICFollowupConfirmationRegTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTable" var="data"
+									value="#{regMonitoringPICFpConfirmationEditBean.tableModel}"
+									rowIndexVar="statIndex">
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationRegNo}"
+										width="190">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentNo}" title="#{data.regulation.documentNo}"
+											value="#{data.regulation.documentNo}" readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationLinkJudul}"
+										width="300">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.regulation.name}" title="#{data.regulation.name}"
+														styleClass="form-control temp-no-peraturan"
+														value="#{data.regulation.name}" readonly="true" /></td>
+
+											</tr>
+										</table>
+
+									</p:column>
+									
+									<p:column headerText="#{msg.formRegulationMonitoringNote}"
+										style="width:300px;">										
+										<p:dataList value="#{data.regulation.regulationTrackRecords}"
+											emptyMessage=""
+											var="dtl2" >#{dtl2.trackNote}</p:dataList>										
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationDocType}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentType.documentType}" title="#{data.regulation.documentType.documentType}"
+											value="#{data.regulation.documentType.documentType}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationPublishedDate}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.publishedDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.publishedDate):''}"
+											title="#{data.regulation.publishedDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.publishedDate):''}"
+											value="#{data.regulation.publishedDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.publishedDate):''}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationEffectiveDate}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.effectiveDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.effectiveDate):''}"
+											title="#{data.regulation.effectiveDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.effectiveDate):''}"
+											value="#{data.regulation.effectiveDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.effectiveDate):''}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationExpiredDate}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.expiredDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.expiredDate):''}"
+											title="#{data.regulation.expiredDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.expiredDate):''}"
+											value="#{data.regulation.expiredDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(data.regulation.expiredDate):''}"
+											readonly="true" />
+									</p:column>
+									
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationCategory}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentCategory.documentCategory}" title="#{data.regulation.documentCategory.documentCategory}"
+											value="#{data.regulation.documentCategory.documentCategory}"
+											readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationTopic}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentTopic.documentTopic}" title="#{data.regulation.documentTopic.documentTopic}"
+											value="#{data.regulation.documentTopic.documentTopic}"
+											readonly="true" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					&nbsp;
+					<h3>
+						<h:outputText
+							value="#{msg.formPICFollowupConfirmationPICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{regMonitoringPICFpConfirmationEditBean.tableModelCompliance}"
+									rowIndexVar="statIndex">
+
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationNIK}"
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.user.nik}" title="#{data.user.nik}"
+														styleClass="form-control temp-no-peraturan"
+														value="#{data.user.nik}" readonly="true" /></td>
+
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationName}"
+										width="200">
+										<h:inputText styleClass="form-control" alt="#{data.user.name}" title="#{data.user.name}"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationEmail}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.user.email}" title="#{data.user.email}"
+											value="#{data.user.email}" readonly="true" />
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top:15px;">
+							<label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formPICFollowupConfirmationFollowup}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regMonitoringPICFpConfirmationEditBean.regMonitoringTrc.followUp}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regMonitoringPICFpConfirmationEditBean.followUps}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formPICFollowupConfirmationNote}" /></label>
+							<p:inputTextarea styleClass="form-control"
+								value="#{regMonitoringPICFpConfirmationEditBean.regMonitoringTrc.notes}"
+								disabled="true"></p:inputTextarea>
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText
+							value="#{msg.formPICFollowupConfirmationPICAndWorkUnit}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableFollowup" var="data"
+									value="#{regMonitoringPICFpConfirmationEditBean.tableModelFollowup}"
+									rowIndexVar="statIndex">
+
+									<p:column
+										headerText="#{msg.formRegulationMonitoringNote}"
+										width="150">
+										<h:outputText value="#{data.notes}" title="#{data.notes}" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationDivision}"
+										width="200">
+
+
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{data.divisionId}" disabled="true">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems
+												value="#{regMonitoringPICFpConfirmationEditBean.divisions}" />
+										</h:selectOneMenu>
+
+
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationPIC1}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control user1#{statIndex}" alt="#{data.user1.name}" title="#{data.user1.name}"
+														id="userName1#{statIndex}" value="#{data.user1.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationPIC2}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.user2.name}" title="#{data.user2.name}"
+														styleClass="form-control user2" value="#{data.user2.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+
+									<p:column headerText="#{msg.formPICFollowupConfirmationPIC3}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.user3.name}" title="#{data.user3.name}"
+														styleClass="form-control user3" value="#{data.user3.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationTargetDate}"
+										width="150">
+										<p:calendar style="width:100px" value="#{data.targetDate}" styleClass="form-control-datepicker-wrap" alt="#{data.targetDate}" title="#{data.targetDate}"
+											pattern="dd-MMM-yyyy" locale="en"  disabled="true" maxlength="11"/>
+									</p:column>
+									<p:column 
+										headerText="#{msg.formPICFollowupConfirmationRescheduleReason}"
+										width="150">
+										<p:inputTextarea
+											disabled="true"
+											id="rescheduleReason" 
+											styleClass="form-control"
+											value="#{data.rescheduleReason}"
+											maxlength="500"></p:inputTextarea>
+									</p:column>
+									<p:column
+										headerText="#{msg.formPICFollowupConfirmationEmailDate}"
+										width="150">
+										<p:dataList value="#{data.regMonitoringPICFollowUpEmailTrcs}"
+											emptyMessage=""
+											var="dtl">#{dtl.emailDate!=null?regMonitoringPICFpConfirmationEditBean.sdf.format(dtl.emailDate):''}</p:dataList>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top:15px;">
+							<label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formPICFollowupConfirmationReminderType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regMonitoringPICFpConfirmationEditBean.counterTypeId}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regMonitoringPICFpConfirmationEditBean.counterTypes}" />
+							</h:selectOneMenu>
+						</div>
+					</div> -->
+
+					
+					<div class="col-lg-12">
+						<h3>
+							<h:outputLabel
+								value="#{msg.formRegulationMonitoringFollowupStatus}" />
+						</h3>
+						<div class="form-group">
+							<label class="tl-label"><h:outputLabel
+									value="#{msg.formPICFollowupConfirmationConfirmationEvidence}" />
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{regMonitoringPICFpConfirmationEditBean.textWarningUpload}"/>
+							</label>
+							
+							<p:fileUpload fileUploadListener="#{regMonitoringPICFpConfirmationEditBean.handleFileUpload}" mode="advanced" dragDropSupport="false" multiple="true"
+				                   update="msgs evidenceList" sizeLimit="#{regMonitoringPICFpConfirmationEditBean.maxAttachmentSize}" auto="true" rendered="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'N'}"  />
+				            <p:dataList value="#{regMonitoringPICFpConfirmationEditBean.uploadedFiles}" 
+				            	emptyMessage=""
+				            	var="vo" id="evidenceList" rowIndexVar="index">
+							        <table>
+								    	<tr>
+								    	<td style="width:80%">
+								        	<p:commandLink title="#{vo.fileSize} KB" ajax="false" immediate="true" actionListener="#{regMonitoringPICFpConfirmationEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+								        </td>
+								        <td>
+								        	<p:commandLink  immediate="true" actionListener="#{regMonitoringPICFpConfirmationEditBean.deleteAttachment(vo.fileId,index)}" update="evidenceList" rendered="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'N'}">#{msg.buttonDelete}</p:commandLink>
+								        </td>
+							        	</tr>
+							        </table>
+							</p:dataList>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required" style="margin-top:15px;">
+							<label class="tl-label"><h:outputLabel
+									value="#{msg.formPICFollowupConfirmationFollowupDate}" /></label>
+							<p:calendar id ="folllowupDate" styleClass="form-control-datepicker-wrap"
+								value="#{regMonitoringPICFpConfirmationEditBean.regMonitoringPICFollowUpTrc.followUpDate}"
+								autocomplete="off" disabled="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'Y'}"
+								pattern="#{regMonitoringPICFpConfirmationEditBean.inputDateFormat}" maxlength="11"
+								locale="#{regMonitoringPICFpConfirmationEditBean.inputDateLocale}"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputLabel
+									value="#{msg.formPICFollowupConfirmationInformation}" /></label>
+							<p:inputTextarea styleClass="form-control" autocomplete="off"
+								disabled="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'Y'}"
+								maxlength="1000"
+								value="#{regMonitoringPICFpConfirmationEditBean.regMonitoringPICFollowUpTrc.followUpNote}"></p:inputTextarea>
+
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<h3>
+							<h:outputLabel
+								value="#{msg.formPICFollowupConfirmationStatusConfirmation}" />
+						</h3>
+					</div>
+					
+					<div class="col-lg-12">
+						<div id="mp-confirmation-status">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableConfirmation" var="vo"
+									value="#{regMonitoringPICFpConfirmationEditBean.complianceTableList}"
+									rowIndexVar="statIndex" style="width:100%;">
+																	
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerStatus}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceStatus.name}"/>
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerNote}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceNote}"/>
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceDate}" >
+													<f:convertDateTime
+														pattern="#{regMonitoringPICFpConfirmationEditBean.inputDateFormat}"
+														locale="#{regMonitoringPICFpConfirmationEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerBy}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceBy.name}"  />
+											</div>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>	 -->
+				</div>
+			</div>
+			<div class="box-footer">
+				<p:commandButton value="#{msg.buttonSave}" 
+					rendered="#{regMonitoringPICFpConfirmationEditBean.viewOnly eq 'N'}"
+					actionListener="#{regMonitoringPICFpConfirmationEditBean.save()}"
+					update="msgs" styleClass="btn btn-primary pull-left tl-label"></p:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{regMonitoringPICFpConfirmationEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+
+			</div>
+		</div>
+	</ui:define>
+
+
+</ui:composition>

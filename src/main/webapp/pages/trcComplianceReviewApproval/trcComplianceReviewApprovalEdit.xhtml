@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			 td.optionDisabled .ui-chkbox{
+				display: none;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.selectionHide {
+				display: none;
+			}
+			
+			.label {
+        width: 20%;
+        padding: 4px;
+    }
+
+    .value {
+        width: 80%;
+        padding: 4px;
+    }
+
+    .grid {
+        width: 100%;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .outputLabel {
+        font-weight: bold;
+    }
+
+    .grid {
+        width: 33%;
+        padding: 4px;
+    }
+		</style>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTmpComplianceReviewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="messages" rendered="true"></p:growl>
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formTmpComplianceReviewAddTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="card">
+					<p:wizard flowListener="#{trcComplianceReviewApprovalEditBean.onFlowProcess}" widgetVar="wiz">
+						<p:tab id="preliminary" title="Preliminary Testing">  
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel
+									value="Judul Pemeriksaan" /></label>
+							<h:inputHidden id="complianceTestingId" value="#{trcComplianceReviewApprovalEditBean.complianceTesting.complianceTestingId}"></h:inputHidden>
+							<p:inputText id="jdlPemeriksaan" required="true" disabled="true"
+										styleClass="form-control" maxlength="1000" 
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+						</div>
+						<div class="form-group required">
+									<label class="tl-label"><p:outputLabel 
+											value="Nomor Pemeriksaan" /></label>
+									<p:inputText id="noPemeriksaan" required="true" disabled="true"
+										styleClass="form-control" maxlength="1000" autocomplete="off" 
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+									
+						</div>
+						<div class="form-group required">
+									<div class="col-md-4">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+									    disabled="true"
+										required="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+									</div>
+									
+									<div class="col-md-4">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="dateTo" required="true" disabled="true"
+										requiredMessage="#{msg.formAuditPeriodeTo} #{msg.validateRequired}"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										 autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									</div>
+									<div class="col-md-4">
+									<label class="tl-label">
+									<h:outputText value="Upload Dokumen" />
+									<br/>
+									<h:outputText style="color: #dd4b39" value="#{trcComplianceReviewApprovalEditBean.textWarningUpload}"/>
+									</label>
+									
+									<p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" id="attachmentList"
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td>
+												</td>
+											</tr>
+										</table>
+									</p:dataList>
+									</div>
+								
+						</div>
+						
+						<div class="form-group ">
+							<label  class="control-label tl-label" tl=""><p:outputLabel
+									for="keterangan"
+									value="Keterangan" /></label>
+							<p:inputTextarea id="keterangan" styleClass="form-control" value="#{trcComplianceReviewApprovalEditBean.complianceTesting.notes}" disabled="true" >
+							</p:inputTextarea>
+							<p:message for="keterangan" />
+						</div>
+						<div class="table-wrapper table-responsive">
+						<label  class="control-label tl-label" tl=""><p:outputLabel
+									value="Viewer" /></label>
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{trcComplianceReviewApprovalEditBean.tableModelComplianceTestingPICReview}"
+									selection="#{trcComplianceReviewApprovalEditBean.selectedDataComplianceTestingPICReview}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex"
+									rowSelectMode="checkbox">
+
+									
+
+									<p:column headerText="#{msg.formAuditPicComplianceNIK}" 
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control temp-no-peraturan" style="background-color: rgba(245, 131, 34, 0.25) !important;"
+														value="#{data.user.nik}" readonly="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column headerText="Nama" 
+										width="200">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="Modified By" 
+										width="200">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+								</p:dataTable>
+							</div>
+							
+						</p:tab>
+						
+						<p:tab id="filedWork" title="Field Work">  
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="Judul Pemeriksaan" for="jdlPemeriksaanFw"/></label>
+							<p:inputText id="jdlPemeriksaanFw" required="true" 
+										styleClass="form-control" maxlength="1000" autocomplete="off" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+						</div>
+						<div class="form-group">
+									<label class="tl-label"><p:outputLabel 
+											value="Nomor Pemeriksaan" /></label>
+									<p:inputText id="noPemeriksaanFw" required="true" disabled="true"
+										styleClass="form-control" maxlength="1000" autocomplete="off" 
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+									
+						</div>
+						<div class="form-group required">
+									<div class="col-md-4">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+									</div>
+									
+									<div class="col-md-4">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="dateToFw" required="true" disabled="true"
+										requiredMessage="#{msg.formAuditPeriodeTo} #{msg.validateRequired}"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										 autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									</div>
+									<div class="col-md-4">
+									<label class="tl-label">
+									<h:outputText value="Upload Dokumen" />
+									<br/>
+									<h:outputText style="color: #dd4b39" value="#{trcComplianceReviewApprovalEditBean.textWarningUpload}"/>
+									</label>
+									
+									<p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" id="attachmentListFw"
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td>
+												</td>
+											</tr>
+										</table>
+									</p:dataList>
+									</div>
+								
+						</div>
+						
+					<h3>
+						<h:outputText value="" />
+					</h3>
+					<div class="form-group">
+					<div class="col-lg-12">
+						<div id="mp-audit-points">
+							<h:panelGroup id="subject">
+								<p:dataList id="listSubject"
+									value="#{trcComplianceReviewApprovalEditBean.complianceTesting.complianceTestingDtls}"
+									var="subject" type="definition"
+									rowIndexVar="rivSubject">
+									
+									<div class="col-lg-11">
+									
+									<div class="col-lg-12">
+									<label class="tl-label"><p:outputLabel 
+											value="Subject Pemeriksaan" /></label>
+									<p:inputText id="subjectPemeriksaan" style="background-color: rgba(245, 131, 34, 0.25) !important;"
+										styleClass="form-control required" maxlength="1000" autocomplete="off" disabled="true"
+										value="#{subject.subject}">
+									</p:inputText>
+									</div>
+									
+									<!-- <div class="col-lg-5">
+									<label class="tl-label"><p:outputLabel 
+											value="Rating" /></label>
+									<h:selectOneMenu styleClass="form-control s2" disabled="true"
+													value="#{subject.rating}" >
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItem itemLabel="Compliant" itemValue="C" />
+													<f:selectItem itemLabel="Largely Compliant" itemValue="LC" />
+													<f:selectItem itemLabel="Partially Compliant" itemValue="PC" />
+													<f:selectItem itemLabel="Non Compliant" itemValue="NC" />
+									</h:selectOneMenu>
+									</div> -->
+									</div>
+								</p:dataList>
+								</h:panelGroup>
+							</div>
+							
+						
+						</div>
+						</div>
+						<div class="form-group">
+									<label class="tl-label"><p:outputLabel 
+											value="Rating Keseluruhan" /></label>
+									<h:selectOneMenu styleClass="form-control s2" disabled="true"
+													value="#{trcComplianceReviewApprovalEditBean.complianceTesting.overallRating}" >
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItem itemLabel="Compliant" itemValue="C" />
+													<f:selectItem itemLabel="Largely Compliant" itemValue="LC" />
+													<f:selectItem itemLabel="Partially Compliant" itemValue="PC" />
+													<f:selectItem itemLabel="Non Compliant" itemValue="NC" />
+									</h:selectOneMenu>
+					</div>
+					<h3>
+						<h:outputText value="Tahapan Pemeriksaan" />
+					</h3>
+						<div class="col-lg-12">
+							<div class="col-lg-4">
+							<p:panel header=" Preliminary Testing">
+							    <p>
+							     <label class="tl-label"><h:outputText
+										value="Judul Pemeriksaan" /></label>
+							    </p>
+							    <p>
+							   <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+							  </p>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Nomor Pemeriksaan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+							   </p>
+							   <p>
+							    <label class="tl-label"><h:outputText
+										value="Periode Pemeriksaan" /></label>
+							   </p>
+							   <p>
+							   <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Keterangan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.notes}"></p:inputText>
+							   </p>
+							   </p>
+							  <p>
+							    <label class="tl-label"><h:outputText
+										value="Lampiran" /></label>
+							  </p>
+							  <p>
+							    <p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" 
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"></td>
+											</tr>
+										</table>
+									</p:dataList>
+							   </p>
+							</p:panel>
+							</div>
+						</div>
+							
+						<div class="">
+						<label  class="control-label tl-label" tl=""><p:outputLabel
+									value="Viewer" /></label>
+								<p:dataTable id="dataTableComplianceFw" var="data"
+									value="#{trcComplianceReviewApprovalEditBean.tableModelComplianceTestingPICReview}"
+									selection="#{trcComplianceReviewApprovalEditBean.selectedDataComplianceTestingPICReview}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex"
+									rowSelectMode="checkbox">
+
+									
+									<p:column headerText="#{msg.formAuditPicComplianceNIK}" 
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText disabled="true"
+														styleClass="form-control temp-no-peraturan" style="background-color: rgba(245, 131, 34, 0.25) !important;"
+														value="#{data.user.nik}" readonly="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column headerText="Nama" 
+										width="200">
+										<h:inputText styleClass="form-control" disabled="true"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="Modified By" 
+										width="200">
+										<h:inputText styleClass="form-control" disabled="true"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+								</p:dataTable>
+							</div>
+							
+							
+							
+							
+						</p:tab>
+						
+						<p:tab id="reporting" title="Reporting">  
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="Judul Pemeriksaan" for="jdlPemeriksaanRpt"/></label>
+							<p:inputText id="jdlPemeriksaanRpt" required="true" disabled="true"
+										styleClass="form-control" maxlength="1000" autocomplete="off" 
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+						</div>
+						<div class="form-group">
+									<label class="tl-label"><p:outputLabel 
+											value="Nomor Pemeriksaan" /></label>
+									<p:inputText id="noPemeriksaanRpt" required="true" disabled="true"
+										styleClass="form-control" maxlength="1000" autocomplete="off" 
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+									
+						</div>
+						<div class="form-group">
+									<div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+									</div>
+									
+									<div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="dateToRpt" required="true" disabled="true"
+										requiredMessage="#{msg.formAuditPeriodeTo} #{msg.validateRequired}"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										 autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+									</div>
+									
+								
+						</div>
+						
+					<h3>
+						<h:outputText value="" />
+					</h3>
+					<div class="form-group required">
+					<div class="col-lg-12">
+						<div id="mp-audit-points">
+							<h:panelGroup id="subjectRpt">
+								<p:dataList id="listSubjectRpt"
+									value="#{trcComplianceReviewApprovalEditBean.complianceTesting.complianceTestingDtls}"
+									var="subject" type="definition"
+									rowIndexVar="rivSubject">
+									<div class="col-lg-12">
+									<div class="col-lg-4">
+									<label class="tl-label"><p:outputLabel 
+											value="Subject Pemeriksaan" /></label>
+									<p:inputText id="subjectPemeriksaan" disabled="true"
+										styleClass="form-control" maxlength="1000" autocomplete="off" 
+										value="#{subject.subject}">
+									</p:inputText>
+									</div>
+									<!-- <div class="col-lg-4">
+									<label class="tl-label"><p:outputLabel 
+											value="Rating" /></label>
+									<h:selectOneMenu styleClass="form-control s2" disabled="true"
+													value="#{subject.rating}" >
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItem itemLabel="Compliant" itemValue="C" />
+													<f:selectItem itemLabel="Largely Compliant" itemValue="LC" />
+													<f:selectItem itemLabel="Partially Compliant" itemValue="PC" />
+													<f:selectItem itemLabel="Non Compliant" itemValue="NC" />
+									</h:selectOneMenu>
+									</div> -->
+									
+									<div class="col-lg-12">
+										<label  class="tl-label" tl="">
+										<p:outputLabel value="Hasil Observasi" /></label>
+										<p:inputTextarea  styleClass="form-control required" disabled="true" style="background-color: rgba(245, 131, 34, 0.25) !important;" value="#{subject.observationResults}" >
+										</p:inputTextarea>
+									</div>
+									<div class="col-lg-12">
+										<label  class="tl-label" tl="">
+										<p:outputLabel value="Rekomendasi" /></label>
+										<p:inputTextarea  styleClass="form-control required" disabled="true" style="background-color: rgba(245, 131, 34, 0.25) !important;" value="#{subject.recommendation}" >
+										</p:inputTextarea>
+									</div>
+									
+								<div class="col-lg-12">
+									<label class="tl-label"><p:outputLabel
+											value="Perlu Tindak Lanjut" /></label>
+									<h:selectOneMenu styleClass="form-control" disabled="true"
+																	value="#{subject.isFollowup}">
+																	<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+																	<f:selectItem itemLabel="Yes" itemValue="Y" />
+																	<f:selectItem itemLabel="No" itemValue="N" />
+																	
+									</h:selectOneMenu>
+								</div>
+								
+								<div class="col-lg-12">
+								<h:panelGroup id="panelTindakLanjut">
+								<h:outputText
+										value="PIC Tindak Lanjut" />
+								<div id="mp-rekam-jejak">
+							
+							
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableComplianceRpt" var="data"
+									value="#{subject.complianceTestingPICFollowups}"
+									selection="#{trcComplianceReviewApprovalEditBean.selectedDataComplianceRpt}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex"
+									rowSelectMode="checkbox">
+								
+									
+
+									<p:column headerText="Unit Kerja" 
+										width="250">
+									<h:selectOneMenu disabled="true"
+										style="font-size:13px;font-weight:normal;"
+								        styleClass="form-control s2 division#{rivSubject}#{statIndex}"
+										value="#{data.divisionId}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{trcComplianceReviewApprovalEditBean.divisions}" />
+										<p:ajax event="change" 
+											listener="#{trcComplianceReviewApprovalEditBean.onSelectDivision(rivSubject,statIndex)}" >
+										</p:ajax>
+									</h:selectOneMenu>
+									</p:column>
+									
+									<p:column headerText="Branch / Sub Branch" 
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 5%"><h:inputText styleClass="branch#{rivSubject}#{statIndex}" style="visibility:hidden"
+														value="#{data.branchCode}"  /></td>
+												<td style="width: 75%">
+												
+												<h:inputText
+														styleClass="form-control temp-no-peraturan" disabled="true"
+														value="#{data.branchName}" readonly="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+
+									</p:column>
+									<p:column headerText="#{msg.formAuditPicComplianceNIK}" 
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText disabled="true"
+														styleClass="form-control temp-no-peraturan"
+														value="#{data.user1.nik}" readonly="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+
+									</p:column>
+									
+									<p:column headerText="Nama" 
+										width="200">
+										<h:inputText styleClass="form-control" disabled="true"
+											value="#{data.user1.name}" readonly="true" />
+									</p:column>
+									<p:column headerText="Target Date" 
+										width="200">
+										<p:calendar styleClass="form-control-datepicker-wrap"
+										value="#{data.targetDate}"
+										 autocomplete="off" 
+										 disabled="true"
+										pattern="dd-MMM-yyyy" locale="en">
+										</p:calendar>
+									</p:column>
+									<p:column headerText="Tindak Lanjut" 
+										width="400">
+										<p:inputTextarea  disabled="true" styleClass="form-control" value="#{data.followup}" >
+										</p:inputTextarea>
+									</p:column>
+									
+								</p:dataTable>
+							</div>
+							</div>
+							</h:panelGroup>
+							</div>
+									</div>
+								</p:dataList>
+								</h:panelGroup>
+							</div>
+							
+						
+						</div>
+						</div>
+					<h:panelGroup id="panelReminder">
+						<div class="col-lg-12" style="margin-top: 15px;">
+							<div
+								class="form-group">
+								<label class="control-label tl-label" tl=""><p:outputLabel
+										value="#{msg.formAuditPICReminderType}" /></label>
+								<h:selectOneMenu id="tmpAuditReminder" disabled="true"
+									styleClass="form-control s2 regulationSocializationProv"
+									value="#{trcComplianceReviewApprovalEditBean.complianceTesting.counterType.counterTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{trcComplianceReviewApprovalEditBean.counterTypes}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
+					<div class="form-group">
+									<label class="tl-label"><p:outputLabel 
+											value="Rating Keseluruhan" /></label>
+									<h:selectOneMenu styleClass="form-control s2" disabled="true"
+													value="#{trcComplianceReviewApprovalEditBean.complianceTesting.overallRating}" >
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItem itemLabel="Compliant" itemValue="C" />
+													<f:selectItem itemLabel="Largely Compliant" itemValue="LC" />
+													<f:selectItem itemLabel="Partially Compliant" itemValue="PC" />
+													<f:selectItem itemLabel="Non Compliant" itemValue="NC" />
+									</h:selectOneMenu>
+					</div>
+					<div class="form-group">
+									<label class="tl-label">
+									<h:outputText value="Upload Dokumen" />
+									<br/>
+									<h:outputText style="color: #dd4b39" value="#{trcComplianceReviewApprovalEditBean.textWarningUpload}"/>
+									</label>
+									
+									<p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" id="attachmentListRpt"
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td>
+												</td>
+											</tr>
+										</table>
+									</p:dataList>
+						</div>	
+						
+					<h3>
+						<h:outputText value="Tahapan Pemeriksaan" />
+					</h3>
+						<div class="col-lg-12">
+							<div class="col-lg-4">
+							<p:panel header=" Preliminary Testing">
+							    <p>
+							     <label class="tl-label"><h:outputText
+										value="Judul Pemeriksaan" /></label>
+							    </p>
+							    <p>
+							   <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+							  </p>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Nomor Pemeriksaan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+							   </p>
+							   <p>
+							    <label class="tl-label"><h:outputText
+										value="Periode Pemeriksaan" /></label>
+							   </p>
+							   <p>
+							   <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Keterangan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.notes}"></p:inputText>
+							   </p>
+							   </p>
+							  <p>
+							    <label class="tl-label"><h:outputText
+										value="Lampiran" /></label>
+							  </p>
+							  <p>
+							    <p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" 
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataList>
+							   </p>
+							</p:panel>
+							</div>
+							<div class="col-lg-4">
+							<p:panel header=" Field Work">
+							    <p>
+							     <label class="tl-label"><h:outputText
+										value="Judul Pemeriksaan" /></label>
+							    </p>
+							    <p>
+							   <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionTitle}"></p:inputText>
+							  </p>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Nomor Pemeriksaan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.inspectionNo}"></p:inputText>
+							   </p>
+							   <p>
+							    <label class="tl-label"><h:outputText
+										value="Periode Pemeriksaan" /></label>
+							   </p>
+							   <p>
+							   <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Mulai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.startDate}"
+										autocomplete="off" placeholder="Tanggal Mulai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <div class="col-md-6">
+									<label class="tl-label"><h:outputText
+										value="Tanggal Selesai" /></label>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.endDate}"
+										autocomplete="off" placeholder="Tanggal Selesai"
+										pattern="dd-MMM-yyyy" locale="en" >
+									</p:calendar>
+							  </div>
+							  <p>
+							    
+							    <label class="tl-label"><h:outputText
+										value="Keterangan" /></label>
+							  </p>
+							  <p>
+							    <p:inputText 
+										styleClass="form-control" maxlength="1000" disabled="true"
+										value="#{trcComplianceReviewApprovalEditBean.complianceTesting.notes}"></p:inputText>
+							   </p>
+							   </p>
+							  <p>
+							    <label class="tl-label"><h:outputText
+										value="Lampiran" /></label>
+							  </p>
+							  <p>
+							    <p:dataList
+										value="#{trcComplianceReviewApprovalEditBean.uploadedFilesAttachment}"
+										emptyMessage="" var="vo" 
+										rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataList>
+							   </p>
+							</p:panel>
+							</div>
+						</div>
+							
+							
+						
+					<h3>
+						<h:outputText value="Status Konfirmasi" />
+					</h3>
+					<div>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<div class="top-scroller">
+								<div class="div-wrapper"></div>
+							</div>
+							<div
+								class="table-wrapper table-responsive linked-to-top-scroller">
+								<p:dataTable id="dataTableStatus" var="vo"
+									value="#{trcComplianceReviewApprovalEditBean.tableStatus}" rowIndexVar="statIndex">
+
+									<p:column
+										headerText="Bukti Tindak Lanjut"
+										width="150">
+										<p:dataList value="#{vo.attachments}"
+											emptyMessage="" var="dtlAttach" >
+											<p:commandLink title="#{dtlAttach.size} KB" ajax="false"
+												actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(dtlAttach.id,dtlAttach.name,null)}"
+												target="_blank">#{dtlAttach.name}</p:commandLink>
+										</p:dataList>
+									</p:column>
+
+
+									<p:column headerText="Status Tindak Lanjut"
+										width="150">
+										<h:outputLabel value="#{vo.followupStatus}" />
+									</p:column>
+
+									<p:column headerText="PIC Tindak Lanjut"
+										width="150">
+										<h:outputLabel value="#{vo.followupBy}" />
+									</p:column>
+									
+									<p:column headerText="Tanggal Perpanjangan"
+										width="150">
+										<h:outputLabel value="#{vo.newTargetDate}" />
+									</p:column>
+
+									<p:column headerText="Alasan Perpanjangan"
+										width="150">
+										<h:outputLabel value="#{vo.perpanjanganNote}" />
+									</p:column>
+									
+									<p:column
+										headerText="Lampiran Perpanjangan"
+										width="150">
+										<p:dataList value="#{vo.attachmentsPerpanjangan}"
+											emptyMessage="" var="dtlAttach" >
+											<p:commandLink title="#{dtlAttach.size} KB" ajax="false"
+												actionListener="#{trcComplianceReviewApprovalEditBean.downloadFile(dtlAttach.id,dtlAttach.name,null)}"
+												target="_blank">#{dtlAttach.name}</p:commandLink>
+										</p:dataList>
+									</p:column>
+									
+									<p:column headerText="Tanggal Pemenuhan"
+										width="150">
+										<h:outputLabel value="#{vo.followupDate}" />
+									</p:column>
+
+									<p:column headerText="Keterangan"
+										width="150">
+										<h:outputLabel value="#{vo.followupNote}" />
+									</p:column>
+
+									<p:column headerText="Status Pengecekan"
+										width="150">
+										<h:selectOneMenu  styleClass="form-control s2 division" rendered="#{vo.followupDate != null}"
+															value="#{vo.complianceStatus}">
+															<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+															<f:selectItem itemLabel="Open" itemValue="COMPLIANCE_OPEN" />
+															<f:selectItem itemLabel="Close" itemValue="COMPLIANCE_CLOSE" />
+															
+							  			</h:selectOneMenu>
+							  			<h:selectOneMenu  styleClass="form-control s2 division" rendered="#{vo.followupDate == null}"
+															value="#{vo.complianceStatus}">
+															<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+															<f:selectItem itemLabel="Belum Sesuai" itemValue="COMPLIANCE_NOT_APPROPRIATE" />
+															<f:selectItem itemLabel="Sesuai" itemValue="COMPLIANCE_APPROPRIATE" />
+															
+							  			</h:selectOneMenu>
+									</p:column>
+
+									<p:column headerText="Catatan Pengecekan"
+										width="450">
+										<p:inputTextarea  styleClass="form-control" value="#{vo.complianceNote}" >
+										</p:inputTextarea>
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+							</div>
+							<div class="box-footer">
+							<p:commandButton styleClass="btn btn-primary pull-left tl-label" value="#{msg.buttonSave}" action="#{trcComplianceReviewApprovalEditBean.saveSendMailAndRedirect}" update="messages complianceTestingId" />
+							
+							<h:commandLink value="#{msg.buttonCancel}"
+								actionListener="#{trcComplianceReviewApprovalEditBean.cancel()}"
+								styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+								
+							<p:remoteCommand
+								actionListener="#{trcComplianceReviewApprovalEditBean.onAddNewCompliance(rivSubject)}" process="@this"
+								immediate="true" name="onAddNewCompliance"
+								></p:remoteCommand>
+							<p:remoteCommand
+								actionListener="#{trcComplianceReviewApprovalEditBean.onDeleteRowCompliance(rivSubject)}" process="@this"
+								immediate="true" name="onDeleteRowCompliance"
+								></p:remoteCommand>
+							</div>
+						</p:tab>
+					</p:wizard>
+				</div>
+			</div>
+			
+		</div>
+		
+		<wo:selector id="ComplianceDummy" height="450" width="550"
+			title="LOV #{msg.formTmpComplianceReviewPICCompliance}"
+			widgetVar="picComplianceDummyDialog"
+			selectorInfo="#{trcComplianceReviewApprovalEditBean.selectorCompliance}"
+			bean="#{trcComplianceReviewApprovalEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+						
+		<wo:selector id="Compliance" height="450" width="550"
+			title="LOV #{msg.formRegulationSocializationPICCompliance}"
+			widgetVar="picComplianceDialog"
+			selectorInfo="#{trcComplianceReviewApprovalEditBean.selectorCompliance}"
+			bean="#{trcComplianceReviewApprovalEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+			
+		<wo:selector id="ComplianceFw" height="450" width="550"
+			title="LOV #{msg.formRegulationSocializationPICCompliance}"
+			widgetVar="picComplianceDialogFw"
+			selectorInfo="#{trcComplianceReviewApprovalEditBean.selectorComplianceFw}"
+			bean="#{trcComplianceReviewApprovalEditBean}"
+			updateOnSelected="form:dataTableComplianceFw" />
+			
+		<wo:selector id="Branch" height="450" width="550"
+			title="LOV Branch"
+			widgetVar="branchDialog"
+			selectorInfo="#{trcComplianceReviewApprovalEditBean.selectorBranch}"
+			bean="#{trcComplianceReviewApprovalEditBean}"
+			updateOnSelected="form:dataTableComplianceFw" />
+			
+
+	</ui:define>
+
+
+</ui:composition>

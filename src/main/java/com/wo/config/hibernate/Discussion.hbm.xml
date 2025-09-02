@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.discussion.model">
+	<class name="Discussion" table="wo_mst_discussion">
+		<id name="discussionId" column="DISCUSSION_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_discussion_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="threadInitiator" 
+			column="THREAD_INITIATOR_ID" class="com.wo.module.user.model.User"
+			fetch="join" />
+			
+		<many-to-one name="threadUser" 
+			column="THREAD_USER_ID" class="com.wo.module.user.model.User"
+			fetch="join" />
+			
+		<many-to-one name="threadType" property-ref="parameterDtlCode"
+			column="THREAD_TYPE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="threadInitiatorDate" column="THREAD_INITIATOR_DATE" type="date" />
+		<property name="threadInitiatorComment" column="THREAD_INITIATOR_COMMENT" type="string" />
+		<property name="threadNameIn" column="THREAD_NAME_IN" type="string" />
+		<property name="threadNameEn" column="THREAD_NAME_EN" type="string" />
+		<property name="threadRating" column="THREAD_RATING" type="string" />
+		<property name="threadStartDate" column="THREAD_START_DATE" type="date" />
+		
+		<property name="threadContentIn" column="THREAD_CONTENT_IN" type="string" />
+		<property name="threadContentEn" column="THREAD_CONTENT_EN" type="string" />
+		<property name="threadCloseStatus" column="THREAD_CLOSE_STATUS" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="discussionPosts" inverse="true"
+			cascade="save-update, delete-orphan" order-by="discussion_post_id asc">
+			<key column="discussion_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.discussion.model.DiscussionPost" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.externalRegulation.model">
+	<class name="RegulationTrackRecord" table="wo_tmp_regulation_track_record">
+		<id name="regulationTrackRecordId" column="regulation_track_record_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_REGULATION_TRCK_RCRD_SQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="regulation" column="regulation_id"
+			class="com.wo.module.externalRegulation.model.Regulation" fetch="join" />
+
+		<property name="trackCode" column="track_code" type="string" />
+
+		<property name="regulationLinkId" column="regulation_link_id" type="long" />
+		<property name="regulationLinkName" column="regulation_link_name" type="string" />
+
+		<property name="trackNote" column="track_note" type="string" />
+		
+		<property name="inActiveFlag" column="inactive_flag" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			.ui-chips-container {
+		     width:100%!important;
+		     background-color: rgba(245, 131, 34, 0.25);
+		     }
+			
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formArticleTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-article">
+					<h:outputText value="#{msg.formArticleTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="articleType"><p:outputLabel
+									value="#{msg.formArticleType}" for="articleType" /></label>								
+							<h:selectOneMenu id="articleType" required="true" requiredMessage="#{msg.formArticleType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{articleEditBean.tmpArticle.articleType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{articleEditBean.articleTypeList}"/>
+							</h:selectOneMenu>
+							<p:message for="articleType"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="author"><p:outputLabel
+									value="#{msg.formArticleAuthor}" for="author" /></label>								
+							<p:inputText id="author"  required="true" requiredMessage="#{msg.formArticleAuthor} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{articleEditBean.tmpArticle.author}"
+								></p:inputText>
+							<p:message for="author"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="publishDate"><p:outputLabel
+									value="#{msg.formArticlePublishDate}" for="publishDate" /></label>								
+							<p:calendar id="publishDate" required="true"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{articleEditBean.tmpArticle.publishDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="publishDate"/>
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="tagName"><p:outputLabel
+									value="#{msg.formArticleTagName}" for="tagName" />
+									</label>								
+							<p:chips style="width:100%" styleClass="form-control" id="tagName" value="#{articleEditBean.tagName}"  required="true" requiredMessage="#{msg.formArticleTagName} #{msg.validateRequired}"/>
+							<p:message for="tagName"/>
+						</div>
+					</div> -->
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="title"><p:outputLabel
+									value="#{msg.formArticleJudul}" for="titleIn" /> &#160;&#160;
+							</label>
+							<p:inputText id="titleIn" required="true"
+								requiredMessage="#{msg.formArticleJudul} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{articleEditBean.tmpArticle.articleTitleIn}"></p:inputText>
+							<p:message for="titleIn" />
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="titleEn"><p:outputLabel
+									value="#{msg.formArticleTitle}" for="titleEn" />
+									&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span>
+									</label>								
+							<p:inputText id="titleEn"  
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{articleEditBean.tmpArticle.articleTitleEn}"
+								></p:inputText>
+							<p:message for="titleEn"/>
+						</div>
+					</div> -->
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="descIn"><p:outputLabel
+									value="#{msg.formArticleDescription}" for="descIn" />
+								&#160;&#160; </label>
+							<p:inputTextarea id="descIn" styleClass="form-control"
+								required="true"
+								requiredMessage="#{msg.formArticleDescription} #{msg.validateRequired}"
+								value="#{articleEditBean.tmpArticle.descriptionIn}" />
+							<p:message for="descIn" />
+						</div>
+					</div> -->
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="descEn"><p:outputLabel
+									value="#{msg.formArticleDescription}" for="descEn" />
+									&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span>
+									</label>								
+							<p:inputTextarea id="descEn" styleClass="form-control"
+							value="#{articleEditBean.tmpArticle.descriptionIn}" />
+							<p:message for="descIn"/>
+						</div>
+					</div> -->
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="contentIn"><p:outputLabel
+									value="#{msg.formArticleContent}" for="contentIn" />
+								&#160;&#160; </label>
+							<pe:ckEditor widgetVar="editorContentIn" width="100%"
+								id="contentIn" value="#{articleEditBean.tmpArticle.contentIn}"
+								height="300" style="margin-bottom:10px" />
+							<p:message for="contentIn" />
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="contentEn"><p:outputLabel
+									value="#{msg.formArticleContent}" for="contentEn" />
+									&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span>
+									</label>								
+							<pe:ckEditor widgetVar="editorContentEn" width="100%" id="contentEn"
+								value="#{articleEditBean.tmpArticle.contentEn}"
+								height="300" style="margin-bottom:10px" />
+							<p:message for="contentEn"/>
+						</div>
+					</div> -->
+					
+					<h3>
+						<h:outputText
+							value="#{msg.formArticleAttachment}" />
+					</h3>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label">
+								<h:outputText value="#{msg.formArticleDocumentUpload}"/>
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{articleEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload fileUploadListener="#{articleEditBean.handleFileUpload}"
+									oncomplete="onCompleteUpload()"
+									value="articleEditBean.uploadFiles"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{articleEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{articleEditBean.uploadFiles}" 
+									emptyMessage=""
+									var="vo" id="attachment" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{articleEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+									        <td>
+									        	<p:commandLink  immediate="true" actionListener="#{articleEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="attachment">#{msg.buttonDelete}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+					
+					<h:outputText value="&#160;" />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label">
+								<h:outputText value="#{msg.formArticleStatus}" />
+							</label>
+							<h:selectOneRadio value="#{articleEditBean.tmpArticle.activeStatus.parameterDtlCode}">
+								<f:selectItems
+									value="#{articleEditBean.activeStatusList}" />
+							</h:selectOneRadio>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{articleEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{articleEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

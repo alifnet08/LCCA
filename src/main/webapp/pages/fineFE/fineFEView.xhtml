@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+		<style>
+			.ui-datalist-data{
+				list-style-type: none;
+				margin-left: -40px;
+			}
+			.ui-widget-content{
+				border: none;
+			}
+			.ui-widget .ui-widget{
+				color: lightseagreen;
+			}
+		</style>
+		
+		<div class="row brdcrumb">
+			 <nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+			 	<div class=" navbar-collapse " id="collapsibleNavbar">
+			 		<ul class="navbar-nav">
+			 			<li class="nav-item">
+			 				<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+			 				<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+			 				<a class="nav-link disabled" href="#">VIEW - Denda</a>
+			 			</li>
+			 		</ul>
+			 	</div>
+			 </nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">VIEW - Denda</div>
+			<h:form class="internal-form" style="margin-top:20px;" id="form" prependId="false">
+				<p:growl id="messages" severity="error"/>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Pengirim</div>
+						<div class="value-form">#{fineFEViewBean.pengirim}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Terima Surat</div>
+						<div class="value-form">#{fineFEViewBean.tanggalTerimaSurat}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Perihal</div>
+						<div class="value-form">#{fineFEViewBean.perihal}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Surat</div>
+						<div class="value-form">#{fineFEViewBean.tanggalSurat}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Tipe Surat</div>
+						<div class="value-form">#{fineFEViewBean.tipeSurat}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Catatan Compliance</div>
+						<div class="value-form">#{fineFEViewBean.catatanComplinace}</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Debitted/Booked</div>
+						<div class="value-form">#{fineFEViewBean.trcFinePicFollowup.fineDebitted}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Nominal</div>
+						<div class="value-form">#{fineFEViewBean.trcFinePicFollowup.fineAmount}</div>
+					</div>
+				</div>
+
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">RC</div>
+						<div class="value-form">#{fineFEViewBean.selectedRC}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Root Cause</div>
+						<div class="value-form">#{fineFEViewBean.trcFinePicFollowup.rootCause}</div>
+					</div>
+				</div>
+
+
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Kategori</div>
+						<div class="value-form">#{fineFEViewBean.categoryName}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Action Plan</div>
+						<div class="value-form">#{fineFEViewBean.trcFinePicFollowup.breaches}</div>
+					</div>
+				</div>
+	
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Target Waktu Penyelesaian</div>
+						<div class="value-form">#{fineFEViewBean.targetDate}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Pemenuhan Tindak Lanjut</div>
+						<div class="value-form">#{fineFEViewBean.followupDate}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Bukti Konfirmasi PIC</div>
+						<ul class="attachment-list">
+						<ui:repeat style="#{fineFEViewBean.trcFinePicFollowups !=null ?'':'display:none'}"
+									value="#{fineFEViewBean.trcFinePicFollowups}"
+									var="vo">
+							<li><i class="far fa-file-alt"></i><p:spacer/>
+								<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{fineFEViewBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+							</li>
+						</ui:repeat>
+						</ul>
+						
+					</div>
+					
+					<div class="col">
+						<div class="label-form">Bukti Perpanjangan waktu</div>
+						<ul class="attachment-list">
+						<ui:repeat style="#{fineFEViewBean.trcFinePicExtendeds !=null ?'':'display:none'}"
+									value="#{fineFEViewBean.trcFinePicExtendeds}"
+									var="vo">
+							<li><i class="far fa-file-alt"></i><p:spacer/>
+								<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{fineFEViewBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+							</li>
+						</ui:repeat>
+						</ul>
+						
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Keterangan</div>
+						<div class="value-form">#{fineFEViewBean.followupNotes}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form" >Status Pengecekan</div>
+						<div class="value-form">#{fineFEViewBean.verifyStatusName}</div> 
+					</div>
+					<div class="col">
+						<div class="label-form" >Catatan Pengecekan</div>
+						<div class="value-form">#{fineFEViewBean.trcFinePicFollowup.complianceNote}</div> 
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{fineFEViewBean.cancel}"
+							name="cancel" immediate="true"/>
+						<button type="button" class="btn btn-outline-secondary" onclick="cancel()">Kembali</button>
+					</div>
+				</div>
+				
+			</h:form>
+		</div>
+		
+	</ui:define>
+</ui:composition>

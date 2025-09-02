@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+.ui-state-default.form-control {
+	background: #F7F8F8;
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="Compliance Testing" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{tmpComplianceReviewBean.getNavigateEdit()}"
+					ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<p:growl id="deletedMessage" globalOnly="true" />
+		<div class="box box-solid">
+			<div class="box-body">
+					<h:panelGroup id="panelSearch">
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label class="tl-label" tl=""><h:outputText
+											value="Judul Pemeriksaan" /></label>
+									<p:inputText styleClass="form-control" value="#{tmpComplianceReviewBean.searchInspectionTitle}" autocomplete="off"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">								
+									<label class="tl-label" tl=""><h:outputText
+											value="Nomor Pemeriksaan" /></label>
+									<p:inputText styleClass="form-control" value="#{tmpComplianceReviewBean.searchInspectionNo}" autocomplete="off"></p:inputText>					
+								</div>
+							</div>
+							
+							
+							
+							<div class="col-lg-3">
+								<h:panelGroup id="panelAuditFollowupStatus">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditPICFollowupStatus}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{tmpComplianceReviewBean.searchFollowupStatus}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems value="#{tmpComplianceReviewBean.selectFollowupStatus}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label><h:outputText
+											value="Periode Pemeriksaan" /></label>
+									<div class="input-group">
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.from}" maxlength="11"
+											value="#{tmpComplianceReviewBean.searchPeriodFrom}"
+											autocomplete="off"
+											pattern="#{tmpComplianceReviewBean.inputDateFormat}"
+											locale="#{tmpComplianceReviewBean.inputDateLocale}"></p:calendar>
+										<span class="input-group-addon plain">-</span>
+			
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.to}" maxlength="11"
+											autocomplete="off"
+											value="#{tmpComplianceReviewBean.searchPeriodTo}"
+											pattern="#{tmpComplianceReviewBean.inputDateFormat}"
+											locale="#{tmpComplianceReviewBean.inputDateLocale}"></p:calendar>
+			
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+				
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="ComplianceOnsiteReview"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{tmpComplianceReviewBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="ComplianceOnsiteReview panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{tmpComplianceReviewBean.reset}"></p:commandButton></li>
+							</ul>
+							<ul class="no-margin no-padding pull-right">
+							    <p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+								<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload(); PF('statusDialog').hide()" >
+										<i class="fa fa-table"></i> &nbsp;
+		        	                    <h:outputText
+											value="#{msg.formTmpComplianceReviewExportToExcel}" />
+
+										<p:dataExporter type="xls" target="ComplianceOnsiteReview"
+											fileName="ComplianceTesting" pageOnly="true"
+											postProcessor="#{tmpComplianceReviewBean.postProcessXLS}"
+											/>
+									</h:commandLink></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="ComplianceOnsiteReview"  paginator="true" var="vo"
+								value="#{tmpComplianceReviewBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{tmpComplianceReviewBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+
+								<p:column width="100" headerText="#{msg.formAction}" exportable="false"
+									style="text-align:center;" groupRow="true">
+									
+									<p:commandLink id="edit" rendered="#{vo.targetTgl == null or vo.closeFlag>0}"
+										value="#{msg.buttonEdit}"
+										action="#{tmpComplianceReviewBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.id}" />
+									</p:commandLink>
+								&#160;
+								
+									<p:commandLink id="Delete" rendered="#{vo.targetTgl == null or vo.closeFlag>0}"
+										value="#{msg.buttonDelete}" styleClass="tl-label"
+										update="ComplianceOnsiteReview form:deletedMessage"
+										action="#{tmpComplianceReviewBean.delete(vo.id)}"
+										>
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+									
+									<p:commandLink id="view" rendered="#{vo.targetTgl != null and vo.closeFlag==0}"
+										value="#{msg.buttonView}" 
+										action="/pages/trcComplianceReviewView/trcComplianceReviewViewEdit.faces"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.id}" />
+										<f:param name="isAdmin" value="true" />
+									</p:commandLink>
+									<h:outputLabel value="#{vo.id}"
+										style="vertical-align: top;visibility:hidden;" />
+								</p:column>
+
+								<p:column
+									headerText="Judul Pemeriksaan"
+									width="100" groupRow="true">
+									<h:outputLabel value="#{vo.judulPemeriksaan}"
+										style="vertical-align: top;" />
+								    <h:outputLabel value="#{vo.id}"
+										style="vertical-align: top;visibility:hidden;" />
+								</p:column>
+								
+								<p:column headerText="Nomor Pemeriksaan"
+									width="260" groupRow="true">
+									<h:outputLabel value="#{vo.noPemeriksaan}" />
+									<h:outputLabel value="#{vo.id}"
+										style="vertical-align: top;visibility:hidden;" />
+								</p:column>
+								
+								<p:column headerText="Nama PIC"
+									width="260">
+									<h:outputLabel value="#{vo.namaPic}" />
+								</p:column>
+								
+								<p:column headerText="Target Tanggal"
+									width="150">
+									<h:outputLabel value="#{vo.targetTgl}" />
+								</p:column>
+
+								<p:column
+									headerText="Status Tindak Lanjut"
+									width="150">
+									<h:outputLabel value="#{vo.statusTindakLanjut}" />
+								</p:column>
+
+								<p:column
+									headerText="Tgl Pemenuhan Tindak Lanjut"
+									width="150">
+									<h:outputLabel value="#{vo.tglPemenuhanTindakLanjut}" />
+								</p:column>
+
+								<p:column
+									headerText="Hasil Observasi"
+									width="150">
+									<h:outputLabel value="#{vo.hasilObservasi}" />
+								</p:column>
+								
+								<p:column
+									headerText="Rekomendasi"
+									width="150">
+									<h:outputLabel value="#{vo.rekomendasi}" />
+								</p:column>
+								
+								<p:column
+									headerText="Tindak Lanjut"
+									width="150">
+									<h:outputLabel value="#{vo.keterangan}" />
+								</p:column>
+								
+								
+							</p:dataTable>
+						</div>
+					</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+
+
+
+	</ui:define>
+</ui:composition>

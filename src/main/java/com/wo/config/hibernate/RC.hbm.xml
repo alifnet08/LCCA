@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.rc.model">
+	<class name="RC" table="wo_mst_rc">
+		<id name="rcId" column="RC_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_rc_seq</param>
+			</generator>
+		</id>
+
+		<property name="regionCode" column="REGION_CODE" type="string" />
+		<property name="workingUnit" column="WORKING_UNIT" type="string" />
+		<property name="region" column="REGION" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

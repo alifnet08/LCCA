@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-widget {
+			    font-size: inherit;
+			}
+			.ui-state-default.form-control {
+				background: #F7F8F8;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formParameterTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{parameterDetailBean.getNavigateEdit()}" type="submit"
+					process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:outputPanel id="panelParameterHeader">
+								<label class="tl-label"> <h:outputText
+										value="#{msg.formParameter}" />
+								</label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{parameterDetailBean.parameterCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{parameterDetailBean.parameterList}" />
+								</h:selectOneMenu>
+							</p:outputPanel>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"> <h:outputText
+									value="#{msg.formParameterTitle}" />
+							</label>
+							<p:inputText id="searchVal" styleClass="form-control"
+								value="#{parameterDetailBean.searchVal}">
+							</p:inputText>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{parameterDetailBean.search}">
+									</p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" 
+										ajax="true" update="tableSearch form:panelParameterHeader form:searchVal"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{parameterDetailBean.reset}">
+									</p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-lg-12">&nbsp;</div>
+
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{parameterDetailBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{parameterDetailBean.paging}" rowIndexVar="startIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex % 2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;width:50;"
+									headerText="#{msg.formAction}">
+
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{parameterDetailBean.getNavigateEdit()}"
+										type="submit" ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.parameterDtlId}" />
+									</p:commandLink>
+									<h:outputText style=" padding-left:4px; color:grey;'"
+										value=" | " />
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+										styleClass="tl-label" update="tableSearch form:deletedMessage"
+										action="#{parameterDetailBean.delete(vo.parameterDtlId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column style="width:150;"
+									headerText="#{msg.formParameterDetailCode}">
+									<h:outputLabel value="#{vo.parameterDtlCode}" title="#{vo.parameterDtlCode}" />
+								</p:column>
+
+								<p:column style="text-align:center;width:150;"
+									headerText="#{msg.formParameterCode}">
+									<h:outputText value="#{vo.parameterCode}" title="#{vo.parameterCode}" />
+								</p:column>
+
+								<p:column style="width:150;"
+									headerText="#{msg.formParameterDetailName}">
+									<h:outputText value="#{vo.nameIn}" title="#{vo.nameIn}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formParameterConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formParameterDelete}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formParameterConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

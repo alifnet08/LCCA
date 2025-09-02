@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpCorrespondence.model">
+	<class name="TmpCorrespondence" table="wo_tmp_correspondence">
+		<id name="correspondenceId" column="correspondence_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_correspondence_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="senderCode" property-ref="parameterDtlCode"
+			column="sender_code" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+
+		<property name="letterReceivedDate" column="letter_received_date"
+			type="date" />
+		<property name="letterNo" column="letter_no" type="string" />
+		<property name="letterDate" column="letter_date" type="date" />
+		<property name="perihalIn" column="perihal_in" type="string" />
+		<property name="perihalEn" column="perihal_en" type="string" />
+		<property name="letterSummary" column="letter_summary" type="string" />
+		<property name="followUp" column="follow_up" type="string" />
+		<property name="notes" column="notes" type="string" />
+		<property name="divisionId" column="division_id" type="long" />
+		<property name="userDivisionId" column="user_division_id" type="long" />
+		<many-to-one name="userId1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="userId2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="userId3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="targetDate" column="target_date" type="date" />
+		<many-to-one name="counterType" column="counter_type_id"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+		<many-to-one name="reminderStatus" property-ref="parameterDtlCode"
+			column="REMINDER_STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="status" property-ref="parameterDtlCode"
+			column="STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="correspondenceCode" property-ref="parameterDtlCode"
+			column="correspondence_type" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		
+
+		<bag name="tmpCorrespondenceApprovals" inverse="true"
+			cascade="save-update, delete-orphan" order-by="correspondence_approval_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondenceApproval" />
+		</bag>
+
+		<bag name="tmpCorrespondenceDocuments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="correspondence_attachment_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondenceDocument" />
+		</bag>
+
+		<bag name="tmpCorrespondencePicCompliances" inverse="true"
+			cascade="save-update, delete-orphan" order-by="correspond_pic_cmplc_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondencePicCompliance" />
+		</bag>
+
+		<bag name="tmpCorrespondencePicFollowupEmails" inverse="true"
+			cascade="delete-orphan" order-by="correspond_pic_fp_email_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondencePicFollowupEmail" />
+		</bag>
+
+		<bag name="tmpCorrespondencePicFollowupReschedules" inverse="true"
+			cascade="delete-orphan" order-by="crpdc_pic_fp_rschdl_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondencePicFollowupReschedule" />
+		</bag>
+
+		<bag name="tmpCorrespondenceSupportingUnits" inverse="true"
+			cascade="save-update, delete-orphan" order-by="correspondence_supp_unit_id asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondenceSupportingUnit" />
+		</bag>
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<!-- <many-to-one name="rc"
+			column="RC_ID" class="com.wo.module.rc.model.RC"
+			fetch="join" />
+		
+		<property name="fineDebitted" column="FINE_DEBITTED" type="date" />
+		
+		<property name="fineAmount" column="FINE_AMOUNT" type="long" />
+		
+		<property name="breaches" column="BREACHES" type="string" />
+		
+		<property name="rootCause" column="ROOT_CAUSE" type="string" />
+		
+		<property name="category" column="CATEGORY" type="string" /> -->
+
+	</class>
+</hibernate-mapping>

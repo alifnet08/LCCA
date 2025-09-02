@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			.select2-container {
+    			width: 100px !important;
+			}
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formCounterTypeTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-counterType">
+					<h:outputText value="#{msg.formCounterTypeTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="counterTypeIn"><p:outputLabel
+									value="#{msg.formCounterTypeCounterTypeName}" for="counterTypeNameIn" />&#160;&#160;<span
+								class="label label-warning">
+									<h:outputLabel value="#{msg.indonesia}"/>
+								</span></label>								
+							<p:inputText id="counterTypeNameIn" maxlength="100" required="true" requiredMessage="#{msg.formCounterTypeCounterTypeName} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{counterTypeEditBean.counterType.counterTypeIn}"
+								></p:inputText>
+							<p:message for="counterTypeNameIn"/>
+						</div>
+					</div>
+					<!-- <div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="counterTypeEn"><p:outputLabel
+									value="#{msg.formCounterTypeCounterTypeName}" for="counterTypeNameEn" />&#160;&#160;<span
+								class="label label-warning">
+									<h:outputLabel value="#{msg.english}"/>
+								</span></label>
+							<p:inputText id="counterTypeNameEn" maxlength="100" required="true" requiredMessage="#{msg.formCounterTypeCounterTypeName} #{msg.english} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{counterTypeEditBean.counterType.counterTypeEn}"
+								></p:inputText>
+							<p:message for="counterTypeNameEn"/>
+						</div>
+					</div> -->
+
+					<div class="col-lg-12">
+						<div id="mp-detail">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNew()">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRow()">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableDetail" var="vo"
+									value="#{counterTypeEditBean.tableModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{counterTypeEditBean.selectedData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" /> 
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+
+									<p:column headerText="#{msg.formCounterTypeSla}"
+										style="width:250px;">
+										
+										<div style="width:200px;">
+											<h:outputLabel value="H &#160;" style="width:70px;text-align:center;margin-top:10px;" />
+											<h:outputLabel value="&#160;" />
+											<h:selectOneMenu required="true" requiredMessage="#{msg.formCounterTypeSla} #{msg.validateRequired}"
+												styleClass="form-control s2" id="optionSla"
+												value="#{vo.slaType}" style="width:70px;">
+												<f:selectItems value="#{counterTypeEditBean.slaTypeList}"
+													style="font-size: 12px;" />
+												<p:ajax event="change"></p:ajax>
+											</h:selectOneMenu>
+											<h:outputLabel value="&#160;" />
+											<p:inputText styleClass="form-control" value="#{vo.sla}"
+												autocomplete="off" style="width:70px;" maxlength="3" >
+												<p:ajax event="change"></p:ajax>
+											</p:inputText>
+											<p:message for="optionSla"/>
+										</div>
+									</p:column>
+
+									<p:column headerText="#{msg.formCounterTypeEmailTo}"
+										style="width:250px;text-align:center;">
+										<h:selectOneMenu styleClass="form-control s2" id="optionEmailTo"
+											value="#{vo.emailTo}" style="width:150px">
+											<f:selectItems value="#{counterTypeEditBean.nameList}"
+												style="font-size: 12px" />
+											<p:ajax event="change"></p:ajax>
+										</h:selectOneMenu>
+									</p:column>
+
+									<p:column headerText="#{msg.formCounterTypeEmailCc}"
+										style="width:350px;text-align:center;">
+										<h:selectOneMenu 
+											styleClass="form-control s2" id="optionEmailCc1"
+											value="#{vo.emailCc1}" style="width:150px;float:left;">
+											<f:selectItem itemLabel="Select" itemValue=""/>
+											<f:selectItems value="#{counterTypeEditBean.nameList}"
+												style="font-size: 12px" />
+											<p:ajax event="change"></p:ajax>
+										</h:selectOneMenu>
+
+										<h:outputLabel value="&#160;&#160;" />
+										<h:selectOneMenu styleClass="form-control s2" id="optionEmailCc2"
+											value="#{vo.emailCc2}" style="width:150px;float:left;margin-right:20px;">
+											<f:selectItem itemLabel="Select" itemValue=""/>
+											<f:selectItems value="#{counterTypeEditBean.nameList}"
+												style="font-size: 12px" />
+											<p:ajax event="change"></p:ajax>
+										</h:selectOneMenu>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{counterTypeEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{counterTypeEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+				<p:remoteCommand action="#{counterTypeEditBean.onAddNew}" immediate="true"
+					name="onAddNew" update="tableDetail"></p:remoteCommand>
+				<p:remoteCommand action="#{counterTypeEditBean.onDeleteRow}" immediate="true"
+					name="onDeleteRow" update="tableDetail"></p:remoteCommand>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

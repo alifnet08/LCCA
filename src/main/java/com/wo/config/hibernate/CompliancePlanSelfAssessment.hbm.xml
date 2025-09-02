@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.cpsa.model">
+	<class name="CompliancePlanSelfAssessment" table="wo_mst_cpsa">
+		<id name="cpsaId" column="CPSA_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_cpsa_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="cpsaType" property-ref="parameterDtlCode"
+			column="CPSA_TYPE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="cpsaName" column="CPSA_NAME" type="string" />
+		
+		<property name="uploadDate" column="UPLOAD_DATE" type="date" />
+		<property name="periodFrom" column="PERIOD_FROM" type="date" />
+		<property name="periodTo" column="PERIOD_TO" type="date" />
+		<property name="attachmentFile" column="ATTACHMENT_FILE" type="string" />
+		<property name="fileId" column="FILE_ID" type="string" />
+		<property name="fileSize" column="FILE_SIZE" type="long" />
+		<property name="note" column="NOTE" type="string" />		
+		<property name="letterNo" column="LETTER_NO" type="string" />
+		<property name="letterDate" column="LETTER_DATE" type="date" />
+		<property name="letterAbout" column="LETTER_ABOUT" type="string" />
+		<property name="attachmentQuestFile" column="ATTACHMENT_QUEST_FILE" type="string" />
+		<property name="fileQuestId" column="FILE_QUEST_ID" type="string" />
+		<property name="fileQuestSize" column="FILE_QUEST_SIZE" type="long" />
+		<property name="filePathDownload" column="FILE_PATH_DOWNLOAD" type="string" />
+		<property name="statusDownload" column="STATUS_DOWNLOAD" type="string" />
+		<property name="cpsaStatus" column="CPSA_STATUS" type="string" />
+		<property name="cpsaBranchSubBranch" column="CPSA_BRANCH_SUB_BRANCH" type="string" />
+		
+		<many-to-one name="counterType" column="counter_type_id"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="cpsaPics" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cpsa_pic_id asc">
+			<key column="cpsa_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.cpsa.model.CompliancePlanSelfAssessmentPic" />
+		</bag>
+		
+	</class>
+</hibernate-mapping>

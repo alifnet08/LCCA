@@ -1,0 +1,117 @@
+package com.wo.module.common.dao;
+
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.Date;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+public abstract class GenericDAOHibernateOther<T, ID extends Serializable> implements GenericDAOOther<T, ID> {
+	private Class<T> persistentClass;
+
+//	@Autowired()
+//	@Qualifier("sessionFactory")
+//	private SessionFactory sessionFactory;
+	
+	private SessionFactoryConfigBasedOther sessionFactoryConfig = new SessionFactoryConfigBasedOther();
+
+	@SuppressWarnings("unchecked")
+	public GenericDAOHibernateOther() {
+		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+				.getActualTypeArguments()[0];
+	}
+
+	protected Session getSession() {
+		return sessionFactoryConfig.getSessionFactory().getCurrentSession();
+
+	}
+
+	public Class<T> getPersistentClass() {
+		return persistentClass;
+	}
+
+	public void clear() {
+		getSession().clear();
+	}
+
+	public void evict(T entity) {
+		try {
+			getSession().evict(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void rollback() {
+		getSession().getTransaction().rollback();
+	}
+
+	public T findById(ID id) {
+		return (T) getSession().load(getPersistentClass(), id);
+	}
+
+	public T getById(ID id) {
+		return (T) getSession().get(getPersistentClass(), id);
+	}
+
+	public void flush() {
+		getSession().flush();
+	}
+
+	public T save(T entity) {
+		try {
+			getSession().save(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return entity;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T merge(T entity) {
+		return (T) getSession().merge(entity);
+	}
+
+	public void update(T entity) {
+		try {
+			getSession().update(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void delete(T entity) {
+		try {
+			getSession().delete(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Date getCurrentTimestamp() {
+		return new java.util.Date();
+	}
+
+	public void commit() {
+		getSession().getTransaction().commit();
+	}
+
+	public Transaction beginTransaction() {
+		return getSession().beginTransaction();
+	}
+	
+	public void close() {
+		getSession().close();
+	}
+
+	public SessionFactoryConfigBasedOther getSessionFactoryConfig() {
+		return sessionFactoryConfig;
+	}
+
+	public void setSessionFactoryConfig(SessionFactoryConfigBasedOther sessionFactoryConfig) {
+		this.sessionFactoryConfig = sessionFactoryConfig;
+	}
+
+}

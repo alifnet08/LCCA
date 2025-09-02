@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-datatable .ui-datatable-data td {
+				vertical-align: top
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+	<!-- msg.formInternalRegulationTitle -->
+		<h:outputText value="#{msg.formInternalRegulationTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{internalRegulationBean.getNavigateEdit()}" ajax="false"
+					styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="messages" />
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegulationType}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationBean.documentTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationBean.docTypes}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegulationCategory}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationBean.documentCategoryId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationBean.docCategories}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationProposerUnit}" /></label>
+								<p:inputText styleClass="form-control" value="#{internalRegulationBean.publisherUnit}" 
+									autocomplete="off"/>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationDocNo}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{internalRegulationBean.documentNo}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegTitle}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{internalRegulationBean.judulPeraturan}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formInternalRegulationPublishedDate}" /></label>
+								<div class="input-group">
+									<!-- <input type="text" class="form-control date_picker"
+										id="startDate" placeholder="from"
+										value="#{internalRegulationBean.startDateStr}" /> --> 
+									<p:calendar styleClass="form-control-datepicker-wrap" id="startDate"
+											placeholder="#{msg.from}" maxlength="11"
+											value="#{internalRegulationBean.startDate}" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en"  >
+								    </p:calendar>	
+								    <span class="input-group-addon plain">-</span> 
+								    <!-- <input type="text"
+										class="form-control date_picker" id="endDate" placeholder="to"
+										value="#{internalRegulationBean.endDateStr}" /> -->
+									<p:calendar styleClass="form-control-datepicker-wrap" id="endDate"
+											placeholder="#{msg.to}" maxlength="11"
+											value="#{internalRegulationBean.endDate}" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en"  >
+									</p:calendar>			
+								</div>
+							</div>
+						</div>
+	
+	
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationTrackRecord}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationBean.trackRecordCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationBean.trackRecords}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formInternalRegulationStatus}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationBean.statusCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationBean.status}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="InternalRegulation"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{internalRegulationBean.search}" ></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}"
+										ajax="true" update="InternalRegulation panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{internalRegulationBean.reset}"></p:commandButton>
+								</li>
+							</ul>
+							<ul class="no-margin no-padding pull-right">
+								<li>
+								<p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+								    <h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload();PF('statusDialog').hide();">
+										<i class="fa fa-table"></i> &nbsp;
+											<h:outputText value="#{msg.formInternalRegulationExportExcel}" />
+		        
+		        						<p:dataExporter type="xls" target="InternalRegulation"
+											fileName="IntenalRegulation" pageOnly="true"
+											postProcessor="#{internalRegulationBean.postProcessXLS}" />
+									</h:commandLink>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="InternalRegulation" paginator="true" var="vo"
+								value="#{internalRegulationBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{internalRegulationBean.paging}" rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column width="140" headerText="#{msg.formAction}" exportable="false" >
+									<p:commandButton id="rekamJejak" icon="fa fa-history"
+										title="#{msg.formInternalRegulationRekamJejak}"
+										process="@this"
+										onclick="$('.hdnParamRekamJejak').val(#{vo.regulationId});rekamJejakDialog.show();">
+									</p:commandButton>
+									<h:outputLabel value="&#160;" rendered="#{vo.status eq 'DATA_NEW'}"/>
+									<p:commandButton title="#{msg.formWaitingForApproval}" icon="fa fa-pause"
+										rendered="#{vo.status eq 'DATA_NEW'}" onclick="return false;"/>
+									<h:outputLabel value="&#160;" rendered="#{vo.status ne 'DATA_NEW'}"/>
+									<p:commandButton id="edit"
+										rendered="#{vo.status ne 'DATA_NEW'}"
+										icon="fa fa-pencil" title="#{msg.buttonEdit}"
+										action="#{internalRegulationBean.getNavigateEdit()}"
+										ajax="false">
+										<f:param name="id" value="#{vo.regulationId}" />
+									</p:commandButton>
+									<h:outputLabel value="&#160;" rendered="#{vo.status ne 'DATA_NEW'}"/>
+									<p:commandButton id="Delete"
+										rendered="#{vo.status ne 'DATA_NEW'}"
+										icon="fa fa-trash" title="#{msg.buttonDelete}"
+										update="form:messages InternalRegulation"
+										action="#{internalRegulationBean.delete(vo.regulationId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandButton>
+									<h:outputLabel value="&#160;"/>
+									<p:button id="btnNonAjax"  icon="fa fa-copy" onclick="return false;" />
+									<pe:clipboard id="clipContextCopy" trigger="btnNonAjax" action="copy" text="#{internalRegulationBean.toEncrypt(vo.regulationId)}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationRegNo}"
+									width="150">
+									<h:outputLabel value="#{vo.documentNo}" title="#{vo.documentNo}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formInternalRegulationRegTitle}"
+									width="150">
+									<h:outputLabel value="#{vo.name}" title="#{vo.name}"/>
+								</p:column>
+								<!-- 
+								<p:column headerText="#{msg.formInternalRegulationAttachment}"
+									width="250">
+									<p:dataList value="#{vo.regulationAttachments}" 
+										emptyMessage=""
+										var="dtl">
+										<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" actionListener="#{internalRegulationBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}" target="_blank">#{dtl.attachmentFile}</p:commandLink>
+									</p:dataList>
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationNote}"
+									width="250">
+									<p:dataList value="#{vo.regulationTrackRecords}" 
+										emptyMessage=""
+										var="dtl2"><h:outputLabel value="#{dtl2.trackNote}" /></p:dataList>
+								</p:column>
+								 -->
+								<p:column headerText="#{msg.formInternalRegulationStatus}"
+									width="100" style="text-align:center;">									
+									<h:outputLabel rendered="#{vo.status eq 'DATA_ACTIVE'}" >
+									<span  class="label label-success">
+										<h:outputText value="#{vo.statusName}"/>
+									</span>
+								</h:outputLabel>
+								<h:outputLabel rendered="#{vo.status eq 'DATA_INACTIVE'}" >
+									<span  class="label label-danger">
+										<h:outputText value="#{vo.statusName}"/>
+									</span>
+								</h:outputLabel>
+								<h:outputLabel rendered="#{vo.status eq 'DATA_NEW'}" >
+									<span  class="label label-info">
+										<h:outputText value="#{vo.statusName}"/>
+									</span>
+								</h:outputLabel>
+								<h:outputLabel rendered="#{vo.status eq 'DATA_REVISE'}" >
+									<span  class="label label-warning">
+										<h:outputText value="#{vo.statusName}"/>
+									</span>
+								</h:outputLabel>
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationRegulationType}"
+									width="100">
+									<h:outputLabel value="#{vo.documentTypeName}" title="#{vo.documentTypeName}"
+										style="vertical-align: top;" />
+								</p:column>
+
+								<p:column headerText="#{msg.formInternalRegulationProposerUnit}"
+									width="100">
+									<h:outputLabel value="#{vo.publisherUnit}" title="#{vo.publisherUnit}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formInternalRegulationPublishedDate}"
+									width="120">
+									<h:outputLabel value="#{vo.publishedDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationRekamJejak}"
+									width="120"> 
+									<h:outputLabel value="#{vo.rekamJejak}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationPreviousRegulationRegNo}"
+									width="120"> 
+									<h:outputLabel value="#{vo.prevDocNo}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationPreviousRegulationRegTitle}"
+									width="120"> 
+									<h:outputLabel value="#{vo.prevRegTitle}" />
+								</p:column>
+								
+								<!--
+								<p:column headerText="#{msg.formInternalRegulationReviewDate}"
+									width="120">
+									<h:outputLabel value="#{vo.expiredDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationPICName}"
+									width="100">
+									<h:outputLabel value="#{vo.publisherUnit}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formInternalRegulationRegulationCategory}"
+									width="100">
+									<h:outputLabel value="#{vo.documentCategoryName}" title="#{vo.documentCategoryName}"/>
+								</p:column>
+								 -->
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button" update="messages"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<wo:selector id="RekamJejakDummy" height="330" width="700"
+			title="#{msg.formInternalRegulationRekamJejak}"
+			widgetVar="rekamJejakDummyDialog"
+			selectorInfo="#{internalRegulationBean.selectorRekamJejak}"
+			bean="#{internalRegulationBean}" isSelected="false" />
+			
+		<wo:selector id="RekamJejak" height="330" width="700"
+			title="#{msg.formInternalRegulationRekamJejak}"
+			widgetVar="rekamJejakDialog"
+			selectorInfo="#{internalRegulationBean.selectorRekamJejak}"
+			bean="#{internalRegulationBean}" isSelected="false" />
+
+
+
+	</ui:define>
+</ui:composition>

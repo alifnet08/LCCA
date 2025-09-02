@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formQAAdminTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="tl-label">
+										<h:outputText
+											value="#{msg.formQAAdminSearchTitle}" />
+									</label>
+									<p:inputText id="searchTitle" styleClass="form-control"
+										autocomplete="off" value="#{qaAdminBean.searchTitle}" />
+								</div>
+							</div>
+							
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="tl-label">
+										<h:outputText
+											value="#{msg.formQAStatus}" />
+									</label>
+									<h:selectOneMenu id="searchStatus"
+										styleClass="form-control s2"
+										value="#{qaAdminBean.searchStatus}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems
+											value="#{qaAdminBean.statusList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="tl-label">
+										<h:outputText
+											value="#{msg.formQATicketNo}" />
+									</label>
+									<p:inputText id="searchTicketNo" styleClass="form-control"
+										autocomplete="off" value="#{qaAdminBean.searchTicketNo}" />
+								</div>
+							</div>
+							
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="tl-label">
+										<h:outputText
+											value="#{msg.formQACreatedDate}" />
+									</label>
+									<div class="input-group">
+										<p:calendar id="searchCreatedDateFrom" autocomplete="off"
+											maxlength="11" styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.from}"
+											value="#{qaAdminBean.searchCreateFrom}"
+											pattern="#{qaAdminBean.inputDateFormat}"
+											locale="#{qaAdminBean.inputDateLocale}" />
+										<span class="input-group-addon plain">-</span>
+										<p:calendar id="searchCreatedDateTo" autocomplete="off"
+											maxlength="11" styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.to}"
+											value="#{qaAdminBean.searchCreateTo}"
+											pattern="#{qaAdminBean.inputDateFormat}"
+											locale="#{qaAdminBean.inputDateLocale}" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li>
+									<p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="dataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{qaAdminBean.search}">
+									</p:commandButton>
+								</li>
+								<li>
+									<p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="dataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{qaAdminBean.reset}">
+									</p:commandButton>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="dataTable" paginator="true" var="vo"
+								value="#{qaAdminBean.qAdmintableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{qaAdminBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+								
+								<p:column width="150" headerText="#{msg.formAction}" style="text-align:center;">
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{qaAdminBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="editId" value="#{vo.qnaId}" />
+									</p:commandLink>
+									<h:outputLabel value="&#160;"/>
+									<h:outputLabel value="|" />
+									<h:outputLabel value="&#160;"/>
+									<p:commandLink id="delete"
+										value="#{msg.buttonDelete}" styleClass="tl-label"
+										update="form:deletedMessage dataTable"
+										action="#{qaAdminBean.delete(vo.qnaId)}">
+										<p:confirm header="Konfirmasi" 
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAStatus}">
+									<h:outputLabel value="#{vo.status}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQATicketNo}">
+									<h:outputLabel value="#{vo.ticketNo}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQASender}">
+									<h:outputLabel value="#{vo.qName}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQACategory}">
+									<h:outputLabel value="#{vo.kategori}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAdminSearchTitle}">
+									<h:outputLabel value="#{vo.qTitle}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQACreatedDate}">
+									<h:outputLabel value="#{vo.creationDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAKeyword}">
+									<h:outputLabel value="#{vo.kataKunci}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAnsweredBy}">
+									<h:outputLabel value="#{vo.answerBy}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAdminLastModifiedBy}">
+									<h:outputLabel value="#{vo.terakhirDiUbah}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formQAAdminLastModifiedDate}">
+									<h:outputLabel value="#{vo.tanggalTerkahirdiUbahStr}" />
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			widgetVar="deleteConfirm" hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				update="messages" styleClass="ui-confirmdialog-yes"
+				icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+		
+	</ui:define>
+</ui:composition>

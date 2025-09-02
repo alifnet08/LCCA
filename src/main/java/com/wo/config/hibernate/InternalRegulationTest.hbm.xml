@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.internalRegulationObsolete.model">
+	<class name="InternalRegulationTest" table="wo_tmp_internal_reg_test">
+	
+		<id name="internalRegulationId" column="internal_regulation_id" type="long"></id>	
+		<property name="internalRegulationTitle" column="internal_regulation_title" type="string" />
+
+	</class>
+</hibernate-mapping>

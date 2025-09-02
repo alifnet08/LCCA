@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formAuditPICFollowupConfirmationTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="box box-solid">
+
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{trcAuditBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{trcAuditBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column width="100" style="text-align:center;"
+									headerText="#{msg.formAction}">
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{trcAuditBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.picFollowupId}" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column headerText="#{msg.formAuditTemplateName}" width="100">
+									<h:outputLabel value="#{vo.auditTemplateName}" title="#{vo.auditTemplateName}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formAuditType}" width="100">
+									<h:outputLabel value="#{vo.auditor}" title="#{vo.auditor}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formAuditPICFollowupConfirmationFindingName}" width="150">
+									<h:outputLabel value="#{vo.findingNameIn}"
+										title="#{vo.findingNameIn}" />
+								</p:column>
+
+								<!--<p:column headerText="#{msg.formAuditObject}" width="150">
+									<h:outputLabel value="#{vo.auditObject}"
+										title="#{vo.auditObject}" />
+								</p:column>-->
+								
+								<!--<p:column headerText="#{msg.formAuditCategory}" width="150">
+									<h:outputLabel value="#{vo.auditCategory}"
+										title="#{vo.auditCategory}" style="vertical-align: top;" />
+								</p:column>-->
+
+								<!--<p:column headerText="#{msg.formAuditPeriode}" width="200">
+									<h:outputLabel value="#{vo.auditDateFrom} - #{vo.auditDateTo}"
+										title="#{vo.auditDateFrom} - #{vo.auditDateTo}"
+										style="vertical-align: top;" />
+								</p:column>-->
+
+								<!--<p:column headerText="#{msg.formAuditScope}" width="100">
+									<h:outputLabel value="#{vo.scope}" title="#{vo.scope}" />
+								</p:column>-->
+
+								<p:column
+									headerText="#{msg.formAuditPICFollowupConfirmationPICName}"
+									width="100">
+									<p:dataList value="#{vo.picNameList}" emptyMessage="" var="dtl">#{dtl}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formAuditPICFollowupConfirmationDueDate}"
+									width="100" style="text-align:center;">
+									<h:outputLabel value="#{vo.dueDate}" />
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formAuditPICFollowupConfirmationFollowupStatus}"
+									width="100" style="text-align:center;">
+									<h:outputText styleClass="label label-warning"
+										value="#{vo.status}"></h:outputText>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formAuditPICFollowupConfirmationComplianceCheckNote}"
+									width="150">
+									<h:outputText value="#{vo.complianceNote}" />
+								</p:column>
+
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>

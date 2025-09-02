@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpAudit.model">
+	<class name="TmpAuditApproval" table="wo_tmp_audit_approval">
+		<id name="auditApprovalId" column="audit_approval_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_audit_approval_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpAudit" column="audit_id"
+			class="com.wo.module.tmpAudit.model.TmpAudit"
+			fetch="join" />
+
+		<many-to-one name="user" column="user_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<many-to-one name="approvalStatus" property-ref="parameterDtlCode"
+			column="APPROVAL_STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="approvalDate" column="APPROVAL_DATE" type="date" />
+		<property name="approvalNote" column="APPROVAL_NOTE" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

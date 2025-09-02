@@ -1,0 +1,765 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<f:event listener="#{trcCorrespondenceEditBean.redirectCurrentPage}" type="preRenderView" />
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}
+			.form-control[disabled]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+				box-shadow: none;
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTrcCorrespondenceTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:messages id="messagesView" showDetail="summary" 
+			rendered="#{trcCorrespondenceEditBean.viewOnly eq 'Y'}"/>
+		
+		<p:growl id="messages" />
+		
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+
+		 
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceSender}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.sender.parameterDtlCode}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.senderCodeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterReceiveDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.letterReceivedDate}"
+								autocomplete="off"
+								pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+								locale="#{trcCorrespondenceEditBean.inputDateLocale}"
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterNo}" /></label>
+							<h:inputText styleClass="form-control" title="#{trcCorrespondenceEditBean.trcCorrespondence.letterNo}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.letterNo}"
+								disabled="true"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="role" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.letterDate}"
+								autocomplete="off"
+								pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+								locale="#{trcCorrespondenceEditBean.inputDateLocale}"
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePerihal}" />&#160;&#160;<span
+								class="label label-warning">
+									<h:outputLabel value="#{msg.indonesia}"/>
+								</span></label>
+							<h:inputText styleClass="form-control" title="#{trcCorrespondenceEditBean.trcCorrespondence.perihalIn}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.perihalIn}"
+								disabled="true"/>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterSummary}" /></label>
+							<h:inputText styleClass="form-control" title="#{trcCorrespondenceEditBean.trcCorrespondence.letterSummary}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.letterSummary}"
+								disabled="true"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpCorrespondenceCorrespondenceType}" for="tmpCorrespondenceType"/></label>
+							<h:selectOneMenu id="tmpCorrespondenceType"
+								styleClass="form-control s2" disabled="true"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.correspondenceTypeCodeList}"/>
+							</h:selectOneMenu>
+							<p:message for="tmpCorrespondenceType"/>
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelDenda" style="#{trcCorrespondenceEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'FINE'?'':'display:none'}" >
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpCorrespondenceRC}" for="rc"/></label>
+							<h:selectOneMenu id="rc"
+								styleClass="form-control s2"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.rc.rcId}">
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.rcList}"/>
+							</h:selectOneMenu>
+							<p:message for="rc"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+							<div class="form-group">
+							<label for="role" class="control-label tl-label"><p:outputLabel
+									for="debitted"
+									value="#{msg.formTmpCorrespondenceDebitted}" /></label>
+							<p:calendar id="debitted"
+								styleClass="form-control-datepicker-wrap"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.fineDebitted}"
+								autocomplete="off" maxlength="11"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="debitted"/>
+						</div>
+					</div>
+					
+					<div class="form-group">
+							<label class="tl-label"><p:outputLabel for="nominal"
+									value="#{msg.formTmpCorrespondenceNominal}" /></label>
+						    
+							<p:inputText id="nominal" type="number" styleClass="form-control"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.fineAmount}"></p:inputText>
+							<p:message for="nominal"/>
+					</div>
+					
+					<div class="form-group">
+							<label class="tl-label"><p:outputLabel for="breaches"
+									value="#{msg.formTmpCorrespondenceBreaches}" /></label>
+						    
+							<p:inputTextarea id="breaches" styleClass="form-control" value="#{trcCorrespondenceEditBean.trcCorrespondence.breaches}" />
+							<p:message for="breaches"/>
+					</div>
+					
+					<div class="form-group">
+							<label class="tl-label"><p:outputLabel for="rootCause"
+									value="#{msg.formTmpCorrespondenceRootCause}" /></label>
+						    
+							<p:inputTextarea id="rootCause" styleClass="form-control" value="#{trcCorrespondenceEditBean.trcCorrespondence.rootCause}" />
+							<p:message for="rootCause"/>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpCorrespondenceCategory}" for="categories"/></label>
+							<h:selectOneMenu id="categories"
+								styleClass="form-control s2"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.category}">
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.categoryList}"/>
+							</h:selectOneMenu>
+							<p:message for="categories"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpCorrespondenceDocumentLetterTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:remoteCommand name="onCompleteUpload" update="documentList"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceDocumentLetterSubTitle}" /></label>
+							<p:dataList value="#{trcCorrespondenceEditBean.uploadedFilesDocument}" 
+								emptyMessage=""
+								var="vo" id="documentList" rowIndexVar="index">
+								<table>
+							    	<tr>
+							    	<td style="width:80%">
+							        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"  target="_blank">#{vo.fileName}</p:commandLink>
+							        </td>
+							        
+						        	</tr>
+						        </table>
+							</p:dataList>
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText value="#{msg.formTmpCorrespondencePICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tablePicComplianceDetail" var="vo"
+									value="#{trcCorrespondenceEditBean.tablePicComplianceModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{trcCorrespondenceEditBean.selectedPicComplianceData}"
+									rowKey="#{vo.sequence}">
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column headerText="#{msg.formTmpCorrespondenceNIK}"
+										style="width:200px;">
+										<h:inputText id="picCompliance#{statIndex}" alt="#{vo.nikTemp}" title="#{vo.nikTemp}"
+											styleClass="form-control" value="#{vo.nikTemp}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceName}"
+										style="width:200px;">
+										<h:inputText styleClass="form-control" value="#{vo.nameTemp}" alt="#{vo.nameTemp}" title="#{vo.nameTemp}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmail}"
+										style="width:200px;">
+										<h:inputText styleClass="form-control" value="#{vo.emailTemp}" alt="#{vo.emailTemp}" title="#{vo.emailTemp}"
+											disabled="true" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceFollowup}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.followUp}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{trcCorrespondenceEditBean.yesNoList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><h:outputText
+									value="#{msg.formTmpCorrespondenceNote}" /></label>
+							<h:inputText styleClass="form-control" title="#{trcCorrespondenceEditBean.trcCorrespondence.notesDecrypted}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.notesDecrypted}"
+								disabled="true"/>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<h3>
+							<h:outputText
+								value="#{msg.formTmpCorrespondenceSubmissionConfirmation}" />
+						</h3>
+						<div class="form-group">
+							<label for="divison" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceDivision}" /></label>
+							<h:selectOneMenu styleClass="form-control s2 divId"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.divisionId}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{trcCorrespondenceEditBean.divisionList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic1" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic1}" /> </label>
+							<h:inputText id="inputPic1" styleClass="form-control" alt="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp1}" title="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp1}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp1}"
+								readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic2" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic2}" /> </label>
+							<h:inputText id="inputPic2" styleClass="form-control" alt="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp2}" title="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp2}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp2}"
+								readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic3" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic3}" /></label>
+							<h:inputText id="inputPic3" styleClass="form-control" alt="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp3}" title="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp3}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.userNameTemp3}"
+								readonly="true" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="targetDate" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.targetDate}"
+								autocomplete="off"
+								pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+								locale="#{trcCorrespondenceEditBean.inputDateLocale}"
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="emailDate" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
+								for="emailDate" class="control-label tl-label"><h:outputText /></label>
+							<p:dataTable id="tableFollowupEmail" var="vo"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.trcCorrespondencePicFollowupEmails}"
+								styleClass="noHeader" style="width:100%;">
+								<p:column styleClass="noHeader">
+									<h:outputText value="#{vo.emailDate}">
+										<f:convertDateTime
+											pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+											locale="#{trcCorrespondenceEditBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+
+					<h3>
+						<h:outputText value="#{msg.formTmpCorrespondenceSupportingUnit}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-supporting-unit">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableSupportingUnitDetail" var="vo"
+									value="#{trcCorrespondenceEditBean.tableSupportingUnitModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{trcCorrespondenceEditBean.selectedSupportingUnitData}"
+									rowKey="#{vo.sequence}">
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+
+									<p:column headerText="#{msg.formTmpCorrespondenceDivision}"
+										style="width:200px;">
+										<div class="form-group" style="margin-top:15px;">
+											<h:selectOneMenu
+												styleClass="form-control s2 divisionCc#{statIndex}"
+												value="#{vo.divisionId}" disabled="true">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems
+													value="#{trcCorrespondenceEditBean.divisionList}" />
+											</h:selectOneMenu>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc1}"
+										style="width:200px;">
+										<h:inputText id="emailCc1#{statIndex}" alt="#{vo.emailCcTemp1}" title="#{vo.emailCcTemp1}"
+											styleClass="form-control" value="#{vo.emailCcTemp1}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc2}"
+										style="width:200px;">
+										<h:inputText id="emailCc2#{statIndex}" alt="#{vo.emailCcTemp2}" title="#{vo.emailCcTemp2}"
+											styleClass="form-control" value="#{vo.emailCcTemp2}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc3}"
+										style="width:200px;">
+										<h:inputText id="emailCc3#{statIndex}" alt="#{vo.emailCcTemp3}" title="#{vo.emailCcTemp3}"
+											styleClass="form-control" value="#{vo.emailCcTemp3}"
+											disabled="true" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label for="counterType" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceReminderType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.counterType.counterTypeId}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.counterTypeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+
+					<h:outputText value="&#160;" />
+					
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpCorrespondenceFollowupStatus}" />
+					</h3>
+					
+					<h:panelGroup rendered="#{trcCorrespondenceEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'FINE' }">
+					
+						<div class="col-lg-12">
+							<div class="form-group">
+								<p:remoteCommand name="onCompleteUpload" update="evidenceFineList"></p:remoteCommand>
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdPicConfirmationEvidence}"/>
+									<br/>
+									<h:outputText style="color: #dd4b39" value="#{trcCorrespondenceEditBean.textWarningUpload}"/>
+								</label>
+								<p:fileUpload fileUploadListener="#{trcCorrespondenceEditBean.handleFileUploadEvidence}"
+									oncomplete="onCompleteUpload()"
+									value="trcCorrespondenceEditBean.uploadedFilesEvidence"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{trcCorrespondenceEditBean.standardAttachmentSize}"
+									update="messages" rendered="#{trcCorrespondenceEditBean.viewOnly eq 'N'}"/>
+								<p:dataList value="#{trcCorrespondenceEditBean.uploadedFilesEvidence}" 
+									emptyMessage=""
+									var="vo" id="evidenceFineList" rowIndexVar="index">
+									<table>
+								    	<tr>
+								    	<td style="width:80%">
+								        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{trcCorrespondenceEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+								        </td>
+								        <td>
+								        	<p:commandLink  immediate="true" actionListener="#{trcCorrespondenceEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_EVIDENCE')}" update="evidenceList" rendered="#{trcCorrespondenceEditBean.viewOnly eq 'N'}">#{msg.buttonDelete}</p:commandLink>
+								        </td>
+							        	</tr>
+							        </table>
+								</p:dataList>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label id="followupDate" class="control-label tl-label" ><p:outputLabel
+										value="#{msg.formTmpCorrespondenceTimeline}" /></label>
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.followupDate}"
+									autocomplete="off" maxlength="11" disabled="#{trcCorrespondenceEditBean.viewOnly eq 'Y'}"
+									pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+									locale="#{trcCorrespondenceEditBean.inputDateLocale}"></p:calendar>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceRemedialAction}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" maxlength="1000"
+									disabled="#{trcCorrespondenceEditBean.viewOnly eq 'Y'}"
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.followupNote}"></p:inputText>
+								<p:inputTextarea  styleClass="form-control" value="#{trcCorrespondenceEditBean.trcCorrespondence.followupNote}" />
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceUserMaker}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" 
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.userMaker}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceUserSPV}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" 
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.userSpv}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceNoErr}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" 
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.noErr}"></p:inputText>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{trcCorrespondenceEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'NONINVITATION' }">
+					
+						<div class="col-lg-12">
+							<div class="form-group">
+								<p:remoteCommand name="onCompleteUpload" update="evidenceList"></p:remoteCommand>
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdPicConfirmationEvidence}"/>
+									<br/>
+									<h:outputText style="color: #dd4b39" value="#{trcCorrespondenceEditBean.textWarningUpload}"/>
+								</label>
+								<p:fileUpload fileUploadListener="#{trcCorrespondenceEditBean.handleFileUploadEvidence}"
+									oncomplete="onCompleteUpload()"
+									value="trcCorrespondenceEditBean.uploadedFilesEvidence"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{trcCorrespondenceEditBean.standardAttachmentSize}"
+									update="messages" rendered="#{trcCorrespondenceEditBean.viewOnly eq 'N'}"/>
+								<p:dataList value="#{trcCorrespondenceEditBean.uploadedFilesEvidence}" 
+									emptyMessage=""
+									var="vo" id="evidenceList" rowIndexVar="index">
+									<table>
+								    	<tr>
+								    	<td style="width:80%">
+								        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{trcCorrespondenceEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+								        </td>
+								        <td>
+								        	<p:commandLink  immediate="true" actionListener="#{trcCorrespondenceEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_EVIDENCE')}" update="evidenceList" rendered="#{trcCorrespondenceEditBean.viewOnly eq 'N'}">#{msg.buttonDelete}</p:commandLink>
+								        </td>
+							        	</tr>
+							        </table>
+								</p:dataList>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label id="followupDate" class="control-label tl-label" ><p:outputLabel
+										value="#{msg.formTmpRmdFollowupDate}" /></label>
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.followupDate}"
+									autocomplete="off" maxlength="11" disabled="#{trcCorrespondenceEditBean.viewOnly eq 'Y'}"
+									pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+									locale="#{trcCorrespondenceEditBean.inputDateLocale}"></p:calendar>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpRmdInformation}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off" maxlength="1000"
+									disabled="#{trcCorrespondenceEditBean.viewOnly eq 'Y'}"
+									value="#{trcCorrespondenceEditBean.trcCorrespondence.followupNote}"></p:inputText>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{trcCorrespondenceEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'INVITATION' }">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label id="attendance" class="control-label tl-label" ><p:outputLabel
+										value="#{msg.formTmpCorrespondenceAttedance}" /></label>
+								<h:selectOneMenu id="fromAttendance" styleClass="form-control s2"
+								required="true" requiredMessage="#{msg.formTmpCorrespondenceAttedance} #{msg.validateRequired}"
+								value="#{trcCorrespondenceEditBean.trcCorrespondence.attendance.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{trcCorrespondenceEditBean.attendanceList}" />
+								</h:selectOneMenu>
+							</div>
+							<p:message for="fromAttendance"></p:message>
+						</div>
+						<p:outputPanel id="updateInformation">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formTmpRmdInformation}" /></label>
+									<p:inputText id="formInformation" styleClass="form-control" autocomplete="off" maxlength="1000"
+										value="#{trcCorrespondenceEditBean.trcCorrespondence.followupNote}"></p:inputText>
+								</div>	
+								<p:message for="formInformation"></p:message>
+							</div>
+						</p:outputPanel>
+						<h3>
+							<h:outputText value="#{msg.formTmpCorrespondencePICAttendance}" />
+						</h3>
+					
+						<div class="col-lg-12">
+							<div id="mp-pic-attendance">
+								<h4 class="sub-header">
+									&nbsp;
+									<div class="box-tools">
+										<ul class="no-margin no-padding">
+											<li><p:commandLink
+													onclick="onAddNewPicAttendance();">
+													<i class="fa fa-plus"></i>
+												</p:commandLink></li>
+											<li><p:commandLink
+													onclick="onDeleteRowPicAttendance();">
+													<i class="fa fa-trash"></i>
+												</p:commandLink></li>
+										</ul>
+									</div>
+								</h4>
+								<div class="table-wrapper table-responsive">
+									<p:dataTable id="tablePicAttendanceDetail" var="vo"
+										value="#{trcCorrespondenceEditBean.tableAttedanceModel}"
+										rowIndexVar="statIndex" style="width:100%;"
+										selection="#{trcCorrespondenceEditBean.selectedPicAttendanceData}"
+										rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+										
+										<p:ajax event="rowSelectCheckbox" process="@this" />
+										<p:ajax event="rowUnselectCheckbox" process="@this" />
+										<p:ajax event="toggleSelect" process="@this" />
+	
+										<p:column selectionMode="multiple"
+											style="text-align:center; width:40px;" />
+										<p:column headerText="#{msg.formTmpCorrespondenceNIK}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															id="picAttendance#{statIndex}" styleClass="form-control"
+															value="#{vo.userNIK}" disabled="true" /></td>
+													<td style="width: 20%"><p:commandLink process="@this"
+															onstart="picAttendanceDialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{trcCorrespondenceEditBean.indexDtlPicAttendance}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceName}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															styleClass="form-control" value="#{vo.userName}" disabled="true" /></td>
+													<td style="width: 20%"></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceEmail}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															styleClass="form-control" value="#{vo.userEmail}" disabled="true" /></td>
+													<td style="width: 20%"></td>
+												</tr>
+											</table>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:outputText value="&#160;" />
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpCorrespondenceConfirmationStatus}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-confirmation-status">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableConfirmation" var="vo"
+									value="#{trcCorrespondenceApprovalEditBean.trcCorrespondenceList}"
+									rowIndexVar="statIndex" style="width:100%;">
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerStatus}"
+										style="width:150px;text-align:center;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceStatus.name}" title="#{vo.complianceStatus.name}"/>												
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerNote}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceNote}" title="#{vo.complianceNote}"/>
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceDate}" >
+													<f:convertDateTime
+														pattern="#{trcCorrespondenceEditBean.inputDateFormat}"
+														locale="#{trcCorrespondenceEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									<p:column
+										headerText="#{msg.formTmpCorrespondenceComplianceCheckerBy}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.complianceBy.name}" title="#{vo.complianceBy.name}"/>
+											</div>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					
+
+				</div>
+			</div>
+
+			<div class="box-footer">
+				
+				<p:remoteCommand
+					action="#{trcCorrespondenceEditBean.onAddNewPicAttendance}" immediate="true"
+					name="onAddNewPicAttendance" update="tablePicAttendanceDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{trcCorrespondenceEditBean.onDeleteRowPicAttendance}" immediate="true"
+					name="onDeleteRowPicAttendance" update="tablePicAttendanceDetail"></p:remoteCommand>
+			
+				<p:commandButton value="#{msg.buttonSave}" update="messages"
+					styleClass="btn btn-primary pull-left" rendered="#{trcCorrespondenceEditBean.viewOnly eq 'N'}"
+					actionListener="#{trcCorrespondenceEditBean.save()}"></p:commandButton>
+
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{trcCorrespondenceEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+
+	<wo:selector id="PicAttendanceOptionNew" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondencePICAttendance}"
+			widgetVar="picAttendanceNewDialog"
+			selectorInfo="#{trcCorrespondenceEditBean.selectorPicAttendance}"
+			bean="#{trcCorrespondenceEditBean}"
+			updateOnSelected="form:tablePicAttendanceDetail" />
+	<wo:selector id="PicAttendanceOption" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondencePICAttendance}"
+			widgetVar="picAttendanceDialog"
+			selectorInfo="#{trcCorrespondenceEditBean.selectorPicAttendance}"
+			bean="#{trcCorrespondenceEditBean}"
+			updateOnSelected="form:tablePicAttendanceDetail" />
+
+	</ui:define>
+</ui:composition>

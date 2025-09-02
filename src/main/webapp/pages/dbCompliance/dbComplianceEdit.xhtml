@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}	
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    -webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.form-control[disabled]{
+			    font-size: 13px;
+			    font-family: 'Montserrat';
+			    color: #444444;
+			}
+			.input-group {
+			    margin-top: 15px;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-family: 'Montserrat';
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formDBComplianceTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-dbCompliance">
+					<h:outputText value="#{msg.formDBComplianceTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+				
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="category"><p:outputLabel
+									value="#{msg.formDBComplianceReportType}" for="reportType" /></label>								
+							<h:selectOneMenu id="reportType" required="true" requiredMessage="#{msg.formDBComplianceReportType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{dbComplianceEditBean.dbCompliance.reportType.reportTypeId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{dbComplianceEditBean.reportTypeList}"/>
+								<p:ajax event="change" update="form:panelDueDate" 
+									listener="#{dbComplianceEditBean.onChangeReportTypeNow}"
+									 />
+							</h:selectOneMenu>
+							<p:message for="reportType"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="reportName"><p:outputLabel
+									value="#{msg.formDBComplianceReportName}" for="reportName" /></label>								
+							<p:inputText id="reportName"  required="true" requiredMessage="#{msg.formDBComplianceReportName} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{dbComplianceEditBean.dbCompliance.reportNameIn}"
+								></p:inputText>
+							<p:message for="reportName"/>
+						</div>
+					</div>
+					
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="description"><p:outputLabel
+									value="#{msg.formDBComplianceDescription}" for="description" /></label>								
+							<p:inputTextarea id="description" styleClass="form-control" required="true" requiredMessage="#{msg.formDBComplianceDescription} #{msg.validateRequired}" 
+							value="#{dbComplianceEditBean.dbCompliance.description}" />
+							<p:message for="description"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><p:outputLabel
+									value="#{msg.formDBComplianceNote}" for="note" /></label>								
+							<p:inputTextarea id="note" styleClass="form-control" 
+							value="#{dbComplianceEditBean.dbCompliance.note}" />
+							<p:message for="note"/>
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="date"><p:outputLabel
+									value="#{msg.formDBComplianceDate}" for="date" /></label>								
+							<p:calendar id="date"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{dbComplianceEditBean.dbCompliance.creationDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="date"/>
+						</div>
+					</div> -->
+					
+					<h:panelGroup id="panelDueDate">
+					<div class="col-lg-12">
+						<div id="mp-due-date">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink 
+												onclick="onAddNewDueDate();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink 
+												onclick="onDeleteRowDueDate();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<p:dataTable id="tableDueDateDetail" var="vo"
+								value="#{dbComplianceEditBean.tableDueDateModel}"
+								rowIndexVar="statIndex" style="width:100%;"
+								selection="#{dbComplianceEditBean.selectedDueDateData}"
+								rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+								
+								<p:ajax event="rowSelectCheckbox" process="@this" />
+								<p:ajax event="rowUnselectCheckbox" process="@this" />
+								<p:ajax event="toggleSelect" process="@this" /> 
+
+								<p:column selectionMode="multiple"
+									style="text-align:center; width:40px;" />
+									
+								<p:column headerText="#{msg.formTmpRmdDueDate}"
+									style="width:300px;"
+									rendered="#{dbComplianceEditBean.dueDateType eq 'day'}"
+									>
+									<div class="form-group">
+										<h:selectOneMenu styleClass="form-control s2" id="selectDay"
+											value="#{vo.dueDay}" style="width:100px;">
+											<f:selectItems value="#{dbComplianceEditBean.dayList}"
+												style="font-size: 12px;" />
+										</h:selectOneMenu>
+									</div>
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdDueDate}"
+									style="width:300px;"
+									rendered="#{dbComplianceEditBean.dueDateType eq 'dateonly'}">
+									<div class="form-group">
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{vo.dueDateOnly}"
+											style="width:70px;">
+											<f:selectItems value="#{dbComplianceEditBean.dateList}"
+												style="font-size: 12px;" />
+										</h:selectOneMenu>
+									</div>
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdDueDate}"
+									style="width:300px;"
+									rendered="#{dbComplianceEditBean.dueDateType eq 'date'}">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										value="#{vo.dueDate}" autocomplete="off"
+										pattern="dd-MMM-yyyy" locale="en">
+										<p:ajax event="dateSelect"></p:ajax>
+									</p:calendar>
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdDueDate}"
+									style="width:300px;"
+									rendered="#{dbComplianceEditBean.dueDateType eq '' or dbComplianceEditBean.dueDateType eq null}">
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+										value="#{msg.formDBComplianceAttachment}"/>
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{dbComplianceEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload fileUploadListener="#{dbComplianceEditBean.handleFileUpload}"
+									oncomplete="onCompleteUpload()"
+									value="dbComplianceEditBean.uploadFiles"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{dbComplianceEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{dbComplianceEditBean.uploadFiles}" 
+									emptyMessage=""
+									var="vo" id="attachment" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{dbComplianceEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+									        <td>
+									        	<p:commandLink  immediate="true" actionListener="#{dbComplianceEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="attachment">#{msg.buttonDelete}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+					
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{dbComplianceEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{dbComplianceEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+					
+				<p:remoteCommand action="#{dbComplianceEditBean.onAddNewDueDate}" name="onAddNewDueDate" 
+					update="tableDueDateDetail" process="@this tableDueDateDetail"></p:remoteCommand>
+				<p:remoteCommand action="#{dbComplianceEditBean.onDeleteRowDueDate}" name="onDeleteRowDueDate"
+					update="tableDueDateDetail" process="@this tableDueDateDetail"></p:remoteCommand>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

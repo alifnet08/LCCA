@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-widget input, .ui-widget select, 
+			.ui-widget textarea, .ui-widget button {
+				    font-family: 'Montserrat';
+				    font-size: 13px;
+				    cursor: pointer;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formDocumentTopicRegTitle}" />
+	</ui:define>
+	
+	<ui:define name="content">
+	<p:growl id="messages" rendered="true"/>
+	<div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title tl-label" tl="new-master-document-type"><h:outputText value="#{msg.formDocumentTopicRegAddTitle}" /></h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+            	<h:panelGroup id="provType">
+            		<div class="form-group required">
+		                <label for="jenis_ketentuan" class="control-label tl-label" tl="provision-type"><p:outputLabel value="#{msg.formDocumentTopicProvTopic}" for="docProv"/></label>
+		                <h:selectOneMenu id="docProv" required="true" requiredMessage="#{msg.formDocumentTopicProvTopic} #{msg.validateRequired}"
+		                	disabled="#{(documentTopicEditBean.actionMode eq 'EDIT') == true}" 
+		                	styleClass="form-control s2" value="#{documentTopicEditBean.documentTopic.parameterDetail.parameterDtlCode}">
+		                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+					    <f:selectItems value="#{documentTopicEditBean.provTypes}" />
+		                </h:selectOneMenu>
+		              	<p:message for="docProv"/>
+		           	</div>
+            	</h:panelGroup>
+            </div>
+            <p:outputPanel rendered="false">
+            <div class="col-lg-12">
+            	 <h:panelGroup id="docCategory">
+            	  	<div class="form-group required">
+                		<label for="jenis_kategori" class="control-label tl-label" tl="provision-type"><p:outputLabel value="#{msg.formDocumentTopicRegTopicCat}"  for="docCat"/></label>
+                			<h:selectOneMenu id="docCat" required="true" requiredMessage="#{msg.formDocumentTopicRegTopicCat} #{msg.validateRequired}"
+                				disabled="#{(documentTopicEditBean.actionMode eq 'EDIT') == true}"
+                				styleClass="form-control s2" value="#{documentTopicEditBean.documentTopic.documentCategory.documentCategoryId}">
+                			<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+			    			<f:selectItems value="#{documentTopicEditBean.categories}" />
+                			</h:selectOneMenu>
+                		<p:message for="docCat"/>
+              		</div>
+              	</h:panelGroup>
+            </div>
+            </p:outputPanel>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" tl="document-type--form-id">
+                	<p:outputLabel value="#{msg.formDocumentTopicReg}" for="docTitleIn" />
+                </label>
+                <p:inputText id="docTitleIn" maxlength="200" required="true" requiredMessage="#{msg.formDocumentTopicReg} #{msg.validateRequired}"
+                	autocomplete="off" styleClass="form-control form-required" value="#{documentTopicEditBean.documentTopic.documentTopicIn}"></p:inputText>
+              	<p:message for="docTitleIn"/>
+              </div>
+            </div>
+           <!--  <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" tl="document-type-form-en"><p:outputLabel value="#{msg.formDocumentTopicTitle}" for="docTitleEn"/>&#160;&#160;<span class="label label-warning">
+                	<h:outputLabel value="#{msg.english}"/>
+                </span></label>
+                <p:inputText id="docTitleEn" maxlength="200" required="true" requiredMessage="#{msg.formDocumentTopicTitle} #{msg.english} #{msg.validateRequired}"
+                	autocomplete="off" styleClass="form-control form-required" value="#{documentTopicEditBean.documentTopic.documentTopicEn}"></p:inputText>
+              	<p:message for="docTitleEn"/>
+              </div>
+            </div> -->
+          </div>
+      </div>
+      <div class="box-footer">
+        <h:commandButton value="#{msg.buttonSave}" type="submit"
+							styleClass="btn btn-primary pull-left"
+							actionListener="#{documentTopicEditBean.save()}"></h:commandButton>
+        <h:commandLink value="#{msg.buttonCancel}" actionListener="#{documentTopicEditBean.cancel()}" immediate="true"
+							styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+      </div>
+    </div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcAudit.model">
+	<class name="TrcAuditPicFollowupExt" table="wo_trc_audit_pic_fp_ext">
+		<id name="auditPicFollowupExtId" column="audit_pic_followup_ext_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_audit_pic_fp_ext_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcAuditPicFollowup" column="audit_pic_followup_id"
+			class="com.wo.module.trcAudit.model.TrcAuditPicFollowup"
+			fetch="join" />
+		
+		<property name="oldTargetDate" column="OLD_TARGET_DATE" type="date" />
+		<property name="newTargetDate" column="NEW_TARGET_DATE" type="date" />
+			
+		<property name="attachmentFile" column="ATTACHMENT_FILE"
+			type="string" />
+		
+		<property name="fileId" column="FILE_ID" type="string" />
+		<property name="fileSize" column="file_size" type="long" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

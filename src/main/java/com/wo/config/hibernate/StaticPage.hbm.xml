@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.staticPage.model">
+	<class name="StaticPage" table="wo_mst_static_page">
+		<id name="staticPageId" column="STATIC_PAGE_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_static_page_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="staticPageCategory" property-ref="parameterDtlCode"
+			column="STATIC_PAGE_CATEGORY" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		
+		
+		<property name="titleIn" column="TITLE_IN" type="string" />
+		<property name="titleEn" column="TITLE_EN" type="string" />
+		<property name="contentIn" column="CONTENT_IN" type="string" />
+		<property name="contentEn" column="CONTENT_EN" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		
+	</class>
+</hibernate-mapping>

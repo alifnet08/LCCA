@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<composite:interface>
+		<composite:attribute name="bean"
+                        required="true"
+			displayName="Caller bean which implement SelectorListener"/>
+        <composite:attribute name="updateOnSelected"
+			displayName="Comp updated when selected"/>                
+        <composite:attribute name="widgetVar"
+                displayName="Widget var accessible by JS"/>
+        <composite:attribute name="title"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="width"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="height"
+                displayName="name itself depict what it does"/>
+        <composite:attribute name="isSelected" default="true"
+                displayName="false or true"/>
+        <composite:attribute name="selectorInfo"
+                displayName="selector info, columns, properties and db query"/>
+        <composite:attribute name="selectorInfoWithCriteria"
+                displayName="selector info, columns, properties and db query"/>
+        <composite:attribute name="listSearchSelectItem" required="true"
+                displayName="List options for select items"/>         
+                        
+
+	</composite:interface>
+
+	<composite:implementation>
+        <p:dialog id="selectorDialog#{cc.attrs.id}"  position="center" appendToBody="true"  fitViewport="true"
+                      header="#{cc.attrs.title}" widgetVar="#{cc.attrs.widgetVar}" responsive="true"
+                      height="#{cc.attrs.height}" width="#{cc.attrs.width}" onShow="$(PF('btnSearch#{cc.attrs.id}').jqId).click()"
+                      >  
+            <h:form id="selectorForm#{cc.attrs.id}" onsubmit="return false;">
+                 <p:remoteCommand 
+                    name="reset#{cc.attrs.id}AndShow"
+                    actionListener="#{mbLovRegulationSocializationCommon.reset(cc.attrs.id)}" 
+                    oncomplete="$(txtSearch#{cc.attrs.id}.jqId).val('');PF('#{cc.attrs.widgetVar}').show();"
+                    update="selectorTable#{cc.attrs.id} txtSearch"/>
+               
+                <p:remoteCommand 
+                    name="doSearch#{cc.attrs.id}"
+                    actionListener="#{mbLovRegulationSocializationCommon.search(cc.attrs.id)}" 
+                    update="selectorTable#{cc.attrs.id}"
+                    process="@form"
+                                 /> 
+                <table>
+                    <tr>
+                        
+                        <td>
+                            <h:selectOneMenu id="selectSearch#{cc.attrs.id}" name="selectSearch#{cc.attrs.id}">
+                            	<f:selectItems value="#{cc.attrs.listSearchSelectItem}"/>
+                            </h:selectOneMenu>
+                            <input type="hidden" name="hdnParam#{cc.attrs.id}" class="hdnParam#{cc.attrs.id}"/>
+                            <input type="text" style="display:#{cc.attrs.isSelected == true?'':'none'}" id="txtSearch" name="txtSearch#{cc.attrs.id}"></input>
+                            <p:commandButton style="display:#{cc.attrs.isSelected == true?'':'none'}" id="btnSearch#{cc.attrs.id}" process="@form" widgetVar="btnSearch#{cc.attrs.id}" value="Search" action="#{mbLovRegulationSocializationCommon.search(cc.attrs.id)}" update="selectorTable#{cc.attrs.id}"></p:commandButton>
+                            
+                            <p:inputText id="txtSearch" 
+                                         widgetVar="txtSearch#{cc.attrs.id}"
+                                         style="display:none"/>
+                        </td>
+                    </tr>
+                </table>
+                
+                
+                <p:dataTable var="item" value="#{mbLovRegulationSocializationCommon.getDataModel(cc.attrs.id, cc.attrs.selectorInfo)}" rows="10"
+                            lazy="true" paginator="true" paginatorPosition="top"
+                            rowIndexVar="rowIndex" reflow="true"
+                            styleClass="table-needs-hover-marker"
+                            id="selectorTable#{cc.attrs.id}"
+                            >  
+                    
+                    <p:columns value="#{mbLovRegulationSocializationCommon.getColumnModel(cc.attrs.id)}" 
+                               var="column" columnIndexVar="colIndex">
+                        <f:facet name="header" >  
+                            #{column.header}  
+                        </f:facet>  
+                        <p:outputPanel id="panelLeft" 
+                                       rendered="#{mbLovRegulationSocializationCommon.alignLeft(item[column.property]) }">
+                            #{item[column.property]}
+                        </p:outputPanel>
+                        <p:outputPanel id="panelRight" style="width: 100%;"
+                                        rendered="#{mbLovRegulationSocializationCommon.alignRight(item[column.property])}">
+                            <div style="width: 100%; text-align: right;" >
+                                #{item[column.property]}
+                            </div>                            
+                        </p:outputPanel>
+
+                    </p:columns>
+
+                     <p:column headerText="Action" width="80" rendered="#{cc.attrs.isSelected}" >
+                        <p:commandLink id="btnSelect" value="Choose" rendered="#{cc.attrs.isSelected}"
+                            actionListener="#{mbLovRegulationSocializationCommon.select(cc.attrs.id, cc.attrs.widgetVar, cc.attrs.bean, item, cc.attrs.selectorInfo)}" 
+                            update="#{cc.attrs.updateOnSelected} " 
+                            onsuccess="PF('#{cc.attrs.widgetVar}').hide();" 
+                            process="@this" >
+                        </p:commandLink>
+                        <script language="javascript" type="text/javascript">
+
+                            $(document).ready(function() {
+                                $('##{cc.attrs.id}\\:selectorForm#{cc.attrs.id}\\:selectorTable#{cc.attrs.id}\\:#{rowIndex}\\:btnSelect')
+                                    .parents('tr').first().children('td').attr('onclick', "$('##{cc.attrs.id}\\\\:selectorForm#{cc.attrs.id}\\\\:selectorTable#{cc.attrs.id}\\\\:#{rowIndex}\\\\:btnSelect').trigger('click');");
+                                $('##{cc.attrs.id}\\:selectorForm#{cc.attrs.id}\\:selectorTable#{cc.attrs.id}\\:#{rowIndex}\\:btnSelect')
+                                    .parents('td').first().attr('onclick', '');
+                            });
+
+                        </script>                       
+
+
+                    </p:column>   
+
+                </p:dataTable>
+                
+            </h:form>
+
+        </p:dialog>              
+            
+            
+	</composite:implementation>
+</html>

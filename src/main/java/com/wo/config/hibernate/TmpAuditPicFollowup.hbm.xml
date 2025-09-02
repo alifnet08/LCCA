@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpAudit.model">
+	<class name="TmpAuditPicFollowup" table="wo_tmp_audit_pic_followup">
+		<id name="auditPicFollowupId" column="audit_pic_followup_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_audit_pic_followup_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpAuditPicFollowupBankCommitment" column="AUDIT_PIC_FP_BANK_COMMIT_ID"
+			class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupBankCommitment"
+			fetch="join" />
+
+		<property name="divisionId" column="division_id" type="long" />
+
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="target_date" type="date" />
+		<property name="rescheduleReason" column="reschedule_reason" type="string" />
+		<property name="notes" column="notes" type="string" />
+		
+		
+		<bag name="tmpAuditPicFollowupEmails" inverse="true"
+			cascade="save-update, delete-orphan" order-by="adt_pic_fp_email_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupEmail" />
+		</bag>
+		
+		<bag name="tmpAuditPicFollowupRecs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="AUDIT_PIC_FOLLOWUP_REC_ID asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupRec" />
+		</bag>
+		
+		
+		<bag name="tmpAuditPicFollowupReschedules" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_fp_reschedule_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupReschedule" />
+		</bag>
+		
+		<!--
+		<bag name="tmpAuditPicFollowupAuditFindings" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_fp_audit_find_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupAuditFindings" />
+		</bag>
+		
+		 <bag name="tmpAuditPicFollowupBankCommitments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_fp_bank_commit_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupBankCommitment" />
+		</bag> 
+		
+		<bag name="tmpAuditPicFollowupBankResponses" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_fp_bank_response_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupBankResponse" />
+		</bag>-->
+		
+		<bag name="tmpAuditPicFollowupSupportingUnits" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_fp_supp_unit_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupSupportingUnit" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

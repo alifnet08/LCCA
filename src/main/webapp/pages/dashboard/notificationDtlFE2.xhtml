@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+<div class="container-fluid faq-content">		
+  <div class="row">
+    <div class="col-12 sidebar">
+      <div class="row noti">
+        <div class="col-sm-12 upper notification">
+          <div class="sidebar-title font-weight-bold">Notifikasi</div>
+
+            Sejak kunjungan terakhir, anda <h:outputText value="memiliki:" rendered="#{headerFrontEndBean.showDataNotif ne '' and headerFrontEndBean.showDataNotif ne null}" /><h:outputText value="tidak memiliki notifikasi" rendered="#{headerFrontEndBean.showDataNotif eq '' or headerFrontEndBean.showDataNotif eq null}" />
+          
+          <a href="/compliance/pages/qaFE/qaFE.faces" style="#{headerFrontEndBean.countPertanyaanBelumDijawab > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countPertanyaanBelumDijawab}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Pertanyaan belum dijawab</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePertanyaanBelumDijawab}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/qaFE/qaFE.faces" style="#{headerFrontEndBean.countPertanyaanSudahDijawab > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countPertanyaanSudahDijawab}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Pertanyaan sudah dijawab</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePertanyaanSudahDijawab}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/qaFE/qaFE.faces" style="#{headerFrontEndBean.countPertanyaanPerluDijawab > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countPertanyaanPerluDijawab}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Pertanyaan perlu dijawab</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDijawab}</div>   
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/qaFE/qaFE.faces" style="#{headerFrontEndBean.countPertanyaanPerluDitutup > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight">
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countPertanyaanPerluDitutup}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Pertanyaan perlu ditutup</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDitutup}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/socializationFE/socializationFE.faces" style="#{headerFrontEndBean.countTindakLanjutSosialisasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutSosialisasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Sosialisasi</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSosialisasi}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/fineFE/fineFE.faces" style="#{headerFrontEndBean.countTindakLanjutDenda > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutDenda}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Denda</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutDenda}</div>   
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/correspondenceFE/correspondenceFE.faces" style="#{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutSuratMasuk}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Surat Masuk</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSuratMasuk}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/regulatoryReportingFE/regulatoryReportingFE.faces" style="#{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutRegulatoryReport}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Regulatory Reporting</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulatoryReport}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/auditFE/auditFE.faces" style="#{headerFrontEndBean.countTindakLanjutAudit > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutAudit}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Audit</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutAudit}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/complianceTestingFE/complianceTestingFE.faces" style="#{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutComplianceTesting}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Compliance Testing</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutComplianceTesting}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/regulationMonitoringFE/regulationMonitoringFE.faces" style="#{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight">
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countTindakLanjutRegulationMonitor}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Tindak Lanjut Regulation Monitoring</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulationMonitor}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/regulationSocializationVerification/regulationSocializationVerification.faces" style="#{headerFrontEndBean.countSosialisasiPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight">
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countSosialisasiPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Sosialisasi Perlu Verifikasi</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateSosialisasiPerluVerifikasi}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/trcFineApproval/trcFineApproval.faces" style="#{headerFrontEndBean.countDendaPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countDendaPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Denda Perlu Verifikasi</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateDendaPerluVerifikasi}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/trcCorrespondenceApproval/trcCorrespondenceApproval.faces" style="#{headerFrontEndBean.countSuratMasukPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight">
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countSuratMasukPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Surat Masuk Perlu Verifikasi</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateSuratMasukPerluVerifikasi}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/trcAuditVerification/trcAuditVerification.faces" style="#{headerFrontEndBean.countAuditPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight">
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countAuditPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Audit Perlu Verifikasi</div>
+               <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateAuditPerluVerifikasi}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/trcComplianceReviewApproval/trcComplianceReviewApproval.faces" style="#{headerFrontEndBean.countComplianceTestingPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countComplianceTestingPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Compliance Testing Perlu Verifikasi</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateComplianceTestingPerluVerifikasi}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/regulationMonitoringVerification/regulationMonitoringVerification.faces" style="#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi > 0 ? '' : 'display:none' }">
+          <div class="media mt-2 p-1 notif-highlight" >
+            <span class="mr-3 ml-2 mt-2 font-weight-bolder" style="font-size: 24px;">#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Regulation Monitoring Perlu Verifikasi</div>
+               <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateRegulationMoitorPerluVerifikasi}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces" style="#{headerFrontEndBean.countPeraturanInternalBaru > 0 ? '' : 'display:none' }">
+          <div class="media p-1 media-hide2" >
+            <span class="mr-2 notif-bullet rounded-circle" style="margin-top: 2px;">#{headerFrontEndBean.countPeraturanInternalBaru}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Peraturan Internal baru</div>
+               <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePeraturanInternalBaru}</div>
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces" style="#{headerFrontEndBean.countPeraturanEksternalBaru > 0 ? '' : 'display:none' }">
+          <div class="media p-1 media-hide2" >
+            <span class="mr-2 notif-bullet rounded-circle" style="margin-top: 2px;">#{headerFrontEndBean.countPeraturanEksternalBaru}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Peraturan Eksternal baru</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDatePeraturanEksternalBaru}</div> 
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/articleFE/articleFE.faces" style="#{headerFrontEndBean.countArtikelBaru > 0 ? '' : 'display:none' }">
+          <div class="media p-1 media-hide2" >
+            <span class="mr-2 notif-bullet rounded-circle" style="margin-top: 2px;">#{headerFrontEndBean.countArtikelBaru}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Artikel baru</div>
+              <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateArtikelBaru}</div>  
+            </div>
+          </div>
+          </a>
+          
+          <a href="/compliance/pages/discussionFE/discussionFE.faces" style="#{headerFrontEndBean.countDiskusiBaru > 0 ? '' : 'display:none' }">
+          <div class="media p-1 media-hide2" >
+            <span class="mr-2 notif-bullet rounded-circle" style="margin-top: 2px;">#{headerFrontEndBean.countDiskusiBaru}</span>
+            <div class="media-body">
+              <div class="font-weight-bold" >Diskusi baru</div>
+               <div style="font-size: 12px;opacity: 0.5;">Terakhir update #{headerFrontEndBean.maxDateDiskusiBaru}</div>   
+            </div>
+          </div>
+          </a>
+         
+        </div>
+      </div>
+      </div>
+      </div>
+      </div>
+		
+		
+	</ui:define>
+</ui:composition>

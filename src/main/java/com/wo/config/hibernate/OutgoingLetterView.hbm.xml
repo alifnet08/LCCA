@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.outgoingLetterView.model">
+	<class name="OutgoingLetterView" table="wo_mst_outgoing_letter">
+		<id name="outgoingLetterId" column="OUTGOING_LETTER_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_outgoing_letter_seq</param>
+			</generator>
+		</id>
+
+		<property name="letterPurposeIn" column="LETTER_PURPOSE_IN" type="string" />
+		<property name="letterPurposeEn" column="LETTER_PURPOSE_EN" type="string" />
+		<property name="letterDate" column="LETTER_DATE" type="timestamp" />
+		<property name="letterNo" column="LETTER_NO" type="string" />
+		<property name="perihalIn" column="PERIHAL_IN" type="string" />
+		<property name="perihalEn" column="PERIHAL_EN" type="string" />
+		<property name="deliveredTo" column="DELIVERED_TO" type="string" />
+		<property name="tembusan" column="TEMBUSAN" type="string" />
+		
+		<bag name="outgoingLetterAttachmentView" inverse="true"
+			cascade="save-update, delete-orphan" order-by="outgoing_letter_attachment_id asc">
+			<key column="outgoing_letter_id" />
+			<one-to-many not-found="ignore" 
+				class="com.wo.module.outgoingLetterView.model.OutgoingLetterAttachmentView" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

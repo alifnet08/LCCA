@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			 td.optionDisabled .ui-chkbox{
+				display: none;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			
+			td label{
+				
+			}
+			
+		</style>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formOutgoingLetterTitle}" />
+	</ui:define>
+	
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink ajax="false"
+					action="#{outgoingLetterBean.getNavigateEdit()}" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+	
+	<ui:define name="content">
+		<p:growl id="messages" />
+		<div class="box box-solid">
+			<div class="box-body">
+			
+				<h:panelGroup id="panelSearch">
+					<p:growl id="deletedMessage" globalOnly="true" />
+					<div class="row">
+					
+					<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceLetterDate}" /></label>
+								<div class="input-group">
+									<p:calendar id="tanggalSuratFrom" autocomplete="off"
+										maxlength="11" placeholder="#{msg.from}"
+										styleClass="form-control-datepicker-wrap"
+										value="#{outgoingLetterBean.tanggalSuratFrom}"
+										pattern="#{outgoingLetterBean.inputDateFormat}"
+										locale="#{outgoingLetterBean.inputDateLocale}" />
+									<span class="input-group-addon plain">-</span>
+									<p:calendar id="tanggalSuratTo" autocomplete="off"
+										maxlength="11" placeholder="#{msg.to}"
+										styleClass="form-control-datepicker-wrap"
+										value="#{outgoingLetterBean.tanggalSuratTo}"
+										pattern="#{outgoingLetterBean.inputDateFormat}"
+										locale="#{outgoingLetterBean.inputDateLocale}" />
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formOutgoingLetterNo}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{outgoingLetterBean.nomorSurat}" />
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formOutgoingLetterPurpose}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{outgoingLetterBean.tujuanSurat}" />
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formOutgoingLetterPerihal}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{outgoingLetterBean.perihal}" />
+							</div>
+						</div>
+						
+						<!-- <div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formOutgoingLetterDeliveredTo}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{outgoingLetterBean.sampaikanKepada}" />
+							</div>
+						</div> -->
+						
+						
+						
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formOutgoingLetterCarbonCopyNatation}" /></label>
+								<h:inputText styleClass="form-control"
+									value="#{outgoingLetterBean.tembusanSurat}" />
+							</div>
+						</div>
+						
+					</div>
+				</h:panelGroup>
+				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="OutgoingLetter"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{outgoingLetterBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="OutgoingLetter panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{outgoingLetterBean.reset}"></p:commandButton></li>
+							</ul>
+							<ul class="no-margin no-padding pull-right">
+								<p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+								<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload(); PF('statusDialog').hide();">
+									<i class="fa fa-table"></i> &nbsp;
+		        						<h:outputText
+										value="#{msg.formOutgoingLetterExportExcel}" />
+
+									<p:dataExporter type="xls" target="OutgoingLetter"
+										fileName="OutgoingLetter" pageOnly="true"
+										postProcessor="#{outgoingLetterBean.postProcessXLS}" />
+								</h:commandLink></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-12">&nbsp;</div>
+				
+				<div class="col-lg-12">
+					<div class="top-scroller">
+					    <div class="div-wrapper">
+					    </div>
+					</div>
+					<div class="table-responsive linked-to-top-scroller">
+						<p:dataTable id="OutgoingLetter" paginator="true" var="vo"
+							value="#{outgoingLetterBean.tableModel}" dynamic="true"
+							lazy="true" emptyMessage="#{msg.textNodata}"
+							rows="#{outgoingLetterBean.paging}" rowIndexVar="statIndex"
+							rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							>
+							
+							<p:column style="text-align:center;" exportable="false"
+								width="120" headerText="#{msg.formAction}">
+
+								<h:outputLabel value="&#160;" />
+								<p:commandLink id="edit" value="#{msg.buttonEdit}"
+									action="#{outgoingLetterBean.getNavigateEdit()}" type="submit"
+									ajax="false" styleClass="tl-label">
+									<f:param name="id" value="#{vo.outgoingLetterId}" />
+								</p:commandLink>
+
+								<h:outputText style=" padding-left:4px; color:grey;'"
+									value=" | " />
+								<p:commandLink id="Delete" value="#{msg.buttonDelete}"
+									styleClass="tl-label" update="OutgoingLetter form:deletedMessage"
+									action="#{outgoingLetterBean.delete(vo.outgoingLetterId)}">
+									<p:confirm header="Konfirmasi"
+										message="#{msg.formDeleteMessage}"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandLink>
+
+							</p:column>
+							
+							<p:column headerText="#{msg.formOutgoingLetterPurpose}"
+								width="250">
+								<h:outputText value="#{vo.letterPursposeName}"
+									title="#{vo.letterPursposeName}" />
+							</p:column>
+
+							<p:column headerText="#{msg.formOutgoingLetterNo}" width="250">
+								<h:outputText value="#{vo.letterNo}" title="#{vo.letterNo}" />
+							</p:column>
+							
+							<p:column headerText="#{msg.formOutgoingLetterDate}" width="250">
+								<h:outputText value="#{vo.letterDateStr}" title="#{vo.letterDateStr}" />
+							</p:column>
+							
+							<p:column headerText="#{msg.formOutgoingLetterSubTitle}"
+									width="250">
+									<p:dataList value="#{vo.outgoingLetterAttachments}" emptyMessage=""
+										var="dtl">
+										<p:commandLink title="#{dtl.fileSize} KB" ajax="false" rendered="#{dtl.attachmentType !=null and dtl.attachmentType eq 'OUTGOING_LETTER_ATTACHMENT'}"
+											actionListener="#{outgoingLetterBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+											target="_blank">#{dtl.attachmentFile}</p:commandLink>
+									</p:dataList>
+								</p:column>
+							<p:column headerText="#{msg.formOutgoingLetterReceipt}"
+									width="250">
+									<p:dataList value="#{vo.outgoingLetterAttachments}" emptyMessage="" 
+										var="dtl">
+										<p:commandLink title="#{dtl.fileSize} KB" ajax="false" rendered="#{dtl.attachmentType !=null and dtl.attachmentType eq 'OUTGOING_LETTER_RECEIPT'}"
+											actionListener="#{outgoingLetterBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+											target="_blank">#{dtl.attachmentFile}</p:commandLink>
+									</p:dataList>
+								</p:column>
+							<p:column headerText="#{msg.formOutgoingLetterPerihal}"
+								width="250">	
+								<h:outputText style="white-space: pre-line;" value= "#{vo.perihalIn.trim()}"
+									title="#{vo.perihalIn}" />
+							</p:column>
+
+							<!-- <p:column headerText="#{msg.formOutgoingLetterDeliveredTo}"
+								width="250">
+								<h:outputLabel value="#{vo.deliveredTo}"
+									title="#{vo.deliveredTo}" />
+							</p:column> -->
+
+							<p:column
+								headerText="#{msg.formOutgoingLetterCarbonCopyNatation}"
+								width="250">
+								<h:outputText value="#{vo.tembusan}" title="#{vo.tembusan}" />
+							</p:column>
+							
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+		
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formCounterTypeConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formCounterTypeDeleteCounterType}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formCounterTypeConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>
+</ui:composition>

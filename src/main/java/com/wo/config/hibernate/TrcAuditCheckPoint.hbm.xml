@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcAudit.model">
+	<class name="TrcAuditCheckPoint" table="WO_TRC_AUDIT_CHECK_POINT">
+		<id name="auditCheckPointId" column="AUDIT_CHECK_POINT_ID"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TRC_AUDIT_CHECK_POINT_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcAudit" column="audit_id"
+			class="com.wo.module.trcAudit.model.TrcAudit"
+			fetch="join" />
+
+		<property name="auditFindings" column="audit_findings" type="string" />
+		<property name="column" column="columns" type="int" />
+		<property name="hasHeader" column="has_header" type="string" />
+		<property name="bankResponse" column="bank_response" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+		<bag name="trcAuditPicFollowupAuditFindingsTables" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pc_fp_aud_fdgs_table_id asc">
+			<key column="AUDIT_CHECK_POINT_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupAuditFindingsTable" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupBankCommitments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pc_fp_bank_cmitmt_id asc">
+			<key column="AUDIT_CHECK_POINT_ID" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupBankCommitment" />
+		</bag>
+		
+	</class>
+</hibernate-mapping>

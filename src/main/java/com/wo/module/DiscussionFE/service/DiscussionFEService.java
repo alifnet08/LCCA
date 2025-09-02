@@ -1,0 +1,21 @@
+package com.wo.module.DiscussionFE.service;
+
+import java.util.List;
+
+import com.wo.module.DiscussionFE.vo.DiscussionFEVo;
+import com.wo.module.DiscussionFE.vo.DiscussionPostFEVo;
+import com.wo.module.common.paging.RetrieverDataPage;
+import com.wo.module.discussion.model.Discussion;
+
+public interface DiscussionFEService extends RetrieverDataPage<DiscussionFEVo>{
+
+	public void update(Discussion entity);
+	
+	public Discussion findById(Long discussionId);
+	
+	public List<DiscussionPostFEVo> getDiscussionPostDataById(Long discussionId);
+	
+	public Long getReplies(Long discussionId);
+	
+	public Long getViews(Long discussionId);
+}

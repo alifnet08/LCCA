@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formAnnouncementTitle}" />
+	</ui:define>
+	
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li>
+				<h:commandLink action="#{announcementBean.getNavigateEdit()}"
+					type="submit" process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink>
+			</li>
+		</ul>
+	</ui:define>
+	
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formAnnouncementAnnounTitle}" />
+								</label>
+								<p:inputText id="searchCpsaName" styleClass="form-control"
+									autocomplete="off" value="#{announcementBean.searchAnnouncementTitle}" />
+							</div>
+						</div>
+						
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formAnnouncementPeriod}" />
+								</label>
+								<div class="input-group">
+									<p:calendar id="searchPeriodStart" autocomplete="off"
+										maxlength="11" styleClass="form-control-datepicker-wrap"
+										value="#{announcementBean.searchPeriodStart}"
+										pattern="#{announcementBean.inputDateFormat}"
+										locale="#{announcementBean.inputDateLocale}" />
+									<span class="input-group-addon plain">-</span>
+									<p:calendar id="searchPeriodEnd" autocomplete="off"
+										maxlength="11" styleClass="form-control-datepicker-wrap"
+										value="#{announcementBean.searchPeriodEnd}"
+										pattern="#{announcementBean.inputDateFormat}"
+										locale="#{announcementBean.inputDateLocale}" />
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li>
+									<p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="dataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{announcementBean.search}">
+									</p:commandButton>
+								</li>
+								<li>
+									<p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="dataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{announcementBean.reset}">
+									</p:commandButton>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="dataTable" paginator="true" var="vo"
+								value="#{announcementBean.announcementTableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{announcementBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+								
+								<p:column width="150" headerText="#{msg.formAction}" style="text-align:center;">
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{announcementBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="editId" value="#{vo.announcementId}" />
+									</p:commandLink>
+									<h:outputLabel value="&#160;"/>
+									<h:outputLabel value="|" />
+									<h:outputLabel value="&#160;"/>
+									<p:commandLink id="delete"
+										value="#{msg.buttonDelete}" styleClass="tl-label"
+										update="form:deletedMessage dataTable"
+										action="#{announcementBean.delete(vo.announcementId)}">
+										<p:confirm header="Konfirmasi" 
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column headerText="#{msg.formAnnouncementAnnounTitle}">
+									<h:outputLabel value="#{vo.announcementTitle}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formAnnouncementPeriod}">
+									<h:outputLabel value="#{vo.period}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formAnnouncementContent}">
+									<h:outputLabel value="#{vo.announcementContent}" />
+								</p:column>
+							
+							</p:dataTable>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			widgetVar="deleteConfirm" hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				update="messages" styleClass="ui-confirmdialog-yes"
+				icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+		
+	</ui:define>
+</ui:composition>

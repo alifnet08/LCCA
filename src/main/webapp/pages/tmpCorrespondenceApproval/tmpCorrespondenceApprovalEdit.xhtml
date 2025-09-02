@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}
+			.form-control[disabled]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			.select2-container--default .select2-selection--single {
+			    background-color: #eeeeee;
+    		}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTmpCorrespondenceApprovalTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="messages" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-rmd">
+					<h:outputText value="#{msg.formTmpCorrespondenceApprovalAddTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceSender}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.senderCode.parameterDtlCode}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.senderCodeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterReceiveDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterReceivedDate}"
+								autocomplete="off"
+								pattern="#{tmpCorrespondenceApprovalEditBean.inputDateFormat}"
+								locale="#{tmpCorrespondenceApprovalEditBean.inputDateLocale}"
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterNo}" /></label>
+							<h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterNo}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterNo}"
+								disabled="true"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="role" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterDate}"
+								autocomplete="off"
+								pattern="#{tmpCorrespondenceApprovalEditBean.inputDateFormat}"
+								locale="#{tmpCorrespondenceApprovalEditBean.inputDateLocale}"
+								disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePerihal}" />&#160;&#160;<span
+								class="label label-warning"><h:outputText value="#{msg.indonesia}"/></span></label>
+							<h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.perihalIn}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.perihalIn}" disabled="true"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePerihal}" />&#160;&#160;<span
+								class="label label-warning"><h:outputText value="#{msg.english}"/></span></label>
+							<h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.perihalEn}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.perihalEn}" disabled="true"/>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceLetterSummary}" /></label>
+							<h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterSummary}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.letterSummary}" disabled="true"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formTmpCorrespondenceCorrespondenceType}"/></label>
+							<h:selectOneMenu styleClass="form-control s2" disabled="true"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.correspondenceCode.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.correspondenceTypeCodeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText
+							value="#{msg.formTmpCorrespondenceDocumentLetterTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:remoteCommand name="onCompleteUpload" update="documentList"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceDocumentLetterSubTitle}" /></label>
+
+							<p:dataList
+								value="#{tmpCorrespondenceApprovalEditBean.uploadedFilesDocument}"
+								emptyMessage=""
+								var="vo" id="documentList">
+								<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{tmpCorrespondenceApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+							</p:dataList>
+						</div>
+					</div>
+
+
+					<h3>
+						<h:outputText value="#{msg.formTmpCorrespondencePICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tablePicComplianceDetail" var="vo"
+									value="#{tmpCorrespondenceApprovalEditBean.tablePicComplianceModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpCorrespondenceApprovalEditBean.selectedPicComplianceData}"
+									rowKey="#{vo.sequence}">
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+									 
+									<p:column headerText="#{msg.formTmpCorrespondenceNIK}"
+										style="width:200px;">
+										<h:inputText id="picCompliance#{statIndex}" alt="#{vo.nikTemp}" title="#{vo.nikTemp}"
+											styleClass="form-control" value="#{vo.nikTemp}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceName}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{vo.nameTemp}" title="#{vo.nameTemp}"
+														styleClass="form-control" value="#{vo.nameTemp}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmail}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{vo.emailTemp}" title="#{vo.emailTemp}"
+														styleClass="form-control" value="#{vo.emailTemp}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceFollowup}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.followUp}" disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.yesNoList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><h:outputText
+									value="#{msg.formTmpCorrespondenceNote}" /></label>
+							<!-- <h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.notes}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.notes}" disabled="true"/> -->
+							<h:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.notesDecrypted}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.notesDecrypted}" disabled="true"/>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<h3>
+							<h:outputText
+								value="#{msg.formTmpCorrespondenceSubmissionConfirmation}" />
+						</h3>
+						<div class="form-group">
+							<label for="divison" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceDivision}" /></label>
+							<h:selectOneMenu styleClass="form-control s2 divI"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.divisionId}" disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.divisionList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic1" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic1}" /> </label>
+							<h:inputText id="inputPic1" styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp1}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp1}"
+								readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic2" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic2}" /></label>
+							<h:inputText id="inputPic2" styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp2}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp2}"
+								readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic3" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondencePic3}" /> </label>
+							<h:inputText id="inputPic3" styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp3}"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.userNameTemp3}"
+								readonly="true" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="targetDate" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.targetDate}"
+								autocomplete="off"
+								pattern="#{tmpCorrespondenceApprovalEditBean.inputDateFormat}"
+								locale="#{tmpCorrespondenceApprovalEditBean.inputDateLocale}" disabled="true"></p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="emailDate" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
+								for="emailDate" class="control-label tl-label"><h:outputText /></label>
+							<p:dataTable id="tableFollowupEmail" var="vo"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.tmpCorrespondencePicFollowupEmails}"
+								styleClass="noHeader" style="width:100%;">
+								<p:column styleClass="noHeader">
+									<h:outputText value="#{vo.emailDate}">
+										<f:convertDateTime
+											pattern="#{tmpCorrespondenceApprovalEditBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceApprovalEditBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+
+					<h3>
+						<h:outputText value="#{msg.formTmpCorrespondenceSupportingUnit}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-supporting-unit">
+
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableSupportingUnitDetail" var="vo"
+									value="#{tmpCorrespondenceApprovalEditBean.tableSupportingUnitModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpCorrespondenceApprovalEditBean.selectedSupportingUnitData}"
+									rowKey="#{vo.sequence}">
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+
+									<p:column headerText="#{msg.formTmpCorrespondenceDivision}"
+										style="width:200px;">
+										<div class="form-group" style="margin-top:15px;">
+											<h:selectOneMenu
+												styleClass="form-control s2 divisionCc#{statIndex}"
+												value="#{vo.divisionId}" disabled="true">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems
+													value="#{tmpCorrespondenceApprovalEditBean.divisionList}" />
+											</h:selectOneMenu>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc1}"
+										style="width:200px;">
+										<h:inputText id="emailCc1#{statIndex}" alt="#{vo.emailCcTemp1}" title="#{vo.emailCcTemp1}"
+											styleClass="form-control" value="#{vo.emailCcTemp1}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc2}"
+										style="width:200px;">
+										<h:inputText id="emailCc2#{statIndex}" alt="#{vo.emailCcTemp2}" title="#{vo.emailCcTemp2}"
+											styleClass="form-control" value="#{vo.emailCcTemp2}"
+											disabled="true" />
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc3}"
+										style="width:200px;">
+										<h:inputText id="emailCc3#{statIndex}" alt="#{vo.emailCcTemp3}" title="#{vo.emailCcTemp3}"
+											styleClass="form-control" value="#{vo.emailCcTemp3}"
+											disabled="true" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label for="counterType" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceReminderType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.counterType.counterTypeId}" disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.counterTypeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<h:outputText value="&#160;" />
+
+					<h:outputText value="&#160;" />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpCorrespondenceStatus}" /></label>
+							<h:selectOneRadio
+								value="#{tmpCorrespondenceApprovalEditBean.tmpCorrespondence.reminderStatus.parameterDtlCode}" disabled="true">
+								<f:selectItems
+									value="#{tmpCorrespondenceApprovalEditBean.reminderStatusList}" />
+							</h:selectOneRadio>
+
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+		             <div class="form-group required">
+		             	<label class="tl-label"><h:outputText value="#{msg.textApprovalStatus}" /></label>
+			          	<h:selectOneMenu styleClass="form-control s2" value="#{tmpCorrespondenceApprovalEditBean.approvalStat}">
+			                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+						    <f:selectItems value="#{tmpCorrespondenceApprovalEditBean.approvalStatus}" />
+			            </h:selectOneMenu>
+		             </div>
+		           </div>
+		           
+					<h:outputText value="&#160;" />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><h:outputText
+									value="#{msg.formTmpCorrespondenceNote}" /></label>
+							<p:inputText styleClass="form-control" title="#{tmpCorrespondenceApprovalEditBean.approvalNote}"
+								value="#{tmpCorrespondenceApprovalEditBean.approvalNote}"
+								autocomplete="off"></p:inputText>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}"
+					actionListener="#{tmpCorrespondenceApprovalEditBean.save}"
+					styleClass="btn btn-success pull-left tl-label" update="messages"></h:commandButton>
+				
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{tmpCorrespondenceApprovalEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+
+
+
+	</ui:define>
+</ui:composition>

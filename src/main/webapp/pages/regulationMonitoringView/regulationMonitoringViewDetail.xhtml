@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<f:event listener="#{regMonitoringViewDetailBean.redirectCurrentPage}" type="preRenderView" />
+	<ui:define name="head">
+		<style>
+				.form-control[readonly] {;
+					font-family: 'Montserrat';
+					color: #444444;
+				    margin: -4px 0px 0px;
+				}
+				.form-control-datepicker-wrap input.hasDatepicker {
+				    font-family: 'Montserrat';
+				}
+				.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    	box-shadow: none;
+				}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationMonitoringViewTitle}" />
+	</ui:define>
+	
+	<ui:define name="content">
+	<p:messages id="messages" />
+	<p:growl id="msgs"  rendered="true"/>
+	<div class="box box-solid">
+      <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label for="jenis_ketentuan" class="control-label tl-label" ><h:outputText value="#{msg.formRegulationMonitoringApprovalProvType}" /></label>
+                <h:selectOneMenu styleClass="form-control s2" value="#{regMonitoringViewDetailBean.regMonitoringTrc.jenisKetentuan.parameterDtlCode}" disabled="true">
+                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+			    <f:selectItems value="#{regMonitoringViewDetailBean.provTypes}" />
+                </h:selectOneMenu>
+              </div>
+            </div>
+            
+         
+            <h3><h:outputText value="#{msg.formRegulationMonitoringApprovalRegTitle}" /></h3>
+              <div class="col-lg-12">
+                <div id="mp-rekam-jejak">
+                  <h4 class="sub-header">&nbsp;
+                   
+                  </h4>
+                  <div class="table-wrapper table-responsive">
+                  <p:dataTable id="dataTable" var="data" value="#{regMonitoringViewDetailBean.tableModel}" 
+                  
+                  rowIndexVar="statIndex">
+                  		
+                    <p:column headerText="#{msg.formRegulationMonitoringApprovalRegNo}" width="200">
+				        <h:inputText styleClass="form-control" value="#{data.regulation.documentNo}" alt="#{data.regulation.documentNo}" title="#{data.regulation.documentNo}" readonly="true"/>
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalLinkJudul}" width="300">
+				    	<table>
+				    	<tr>
+				    	<td style="width:80%">
+				        
+				        <h:inputText  styleClass="form-control temp-no-peraturan" value="#{data.regulation.name}" alt="#{data.regulation.name}" title="#{data.regulation.name}" readonly="true"/>
+                        </td>
+                        
+                         </tr>
+                        </table>
+                       
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringNote}"
+						style="width:300px;">										
+						<p:dataList value="#{data.regulation.regulationTrackRecords}"
+							emptyMessage=""
+							var="dtl2" >#{dtl2.trackNote}</p:dataList>										
+					</p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalDocType}" width="300">
+				        <h:inputText styleClass="form-control" value="#{data.regulation.documentType.documentType}" alt="#{data.regulation.documentType.documentType}" title="#{data.regulation.documentType.documentType}" readonly="true"/>
+				    </p:column>	   
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalPublishedDate}" width="150">
+				        <h:inputText styleClass="form-control" value="#{data.regulation.publishedDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.publishedDate):''}"
+				        	alt="#{data.regulation.publishedDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.publishedDate):''}"
+				        	title="#{data.regulation.publishedDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.publishedDate):''}"
+				        	readonly="true" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalEffectiveDate}" width="150">
+				        <h:inputText styleClass="form-control" 
+				        	title="#{data.regulation.effectiveDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.effectiveDate):''}"
+				        	alt="#{data.regulation.effectiveDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.effectiveDate):''}"
+				        	value="#{data.regulation.effectiveDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.effectiveDate):''}" readonly="true"/>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalExpiredDate}" width="150">
+				        <h:inputText styleClass="form-control" 
+				        	alt="#{data.regulation.expiredDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.expiredDate):''}"
+				        	title="#{data.regulation.expiredDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.expiredDate):''}"
+				        	value="#{data.regulation.expiredDate!=null?regMonitoringViewDetailBean.sdf.format(data.regulation.expiredDate):''}" readonly="true"/>
+				    </p:column>
+					
+					<p:column headerText="#{msg.formRegulationMonitoringApprovalCategory}" width="300">
+				        <h:inputText styleClass="form-control" value="#{data.regulation.documentCategory.documentCategory}" alt="#{data.regulation.documentCategory.documentCategory}" title="#{data.regulation.documentCategory.documentCategory}" readonly="true"/>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalTopic}" width="300">
+				        <h:inputText styleClass="form-control" value="#{data.regulation.documentTopic.documentTopic}" alt="#{data.regulation.documentTopic.documentTopic}" title="#{data.regulation.documentTopic.documentTopic}" readonly="true"/>
+				    </p:column>
+				</p:dataTable>
+				</div>
+                </div>
+              </div>
+              
+              &nbsp;
+              <h3><h:outputText value="#{msg.formRegulationMonitoringApprovalPICCompliance}" /></h3>
+              <div class="col-lg-12">
+                <div id="mp-rekam-jejak">
+                  <h4 class="sub-header">&nbsp;
+                    
+                  </h4>
+                  <div class="table-wrapper table-responsive">
+                  <p:dataTable id="dataTableCompliance" var="data" value="#{regMonitoringViewDetailBean.tableModelCompliance}" 
+                  rowIndexVar="statIndex">
+                  		
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalNIK}" width="150">
+				    	<table>
+				    	<tr>
+				    	<td style="width:80%">
+				        
+				        <h:inputText  styleClass="form-control temp-no-peraturan" value="#{data.user.nik}" alt="#{data.user.nik}" title="#{data.user.nik}" readonly="true"/>
+                        </td>
+                        
+                         </tr>
+                        </table>
+                       
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalName}" width="200">
+				        <h:inputText styleClass="form-control" value="#{data.user.name}" alt="#{data.user.name}" title="#{data.user.name}" readonly="true"/>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalEmail}" width="150">
+				        <h:inputText styleClass="form-control" value="#{data.user.email}" alt="#{data.user.email}" title="#{data.user.email}" readonly="true"/>
+				    </p:column>
+				    
+				    
+				</p:dataTable>
+				</div>
+                </div>
+              </div>
+              
+              <div class="col-lg-12">
+	            <div class="form-group" style="margin-top:15px;">
+	              <label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText value="#{msg.formRegulationMonitoringApprovalFollowup}" /></label>
+		            <h:selectOneMenu styleClass="form-control s2" value="#{regMonitoringViewDetailBean.regMonitoringTrc.followUp}" disabled="true">
+	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+				    <f:selectItems value="#{regMonitoringViewDetailBean.followUps}" />
+	                </h:selectOneMenu>
+	            </div>
+	          </div>
+	          <div class="col-lg-12">
+	            <div class="form-group">
+	              <label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText value="#{msg.formRegulationMonitoringApprovalNote}" /></label>
+	              <p:inputTextarea styleClass="form-control" value="#{regMonitoringViewDetailBean.regMonitoringTrc.notes}" disabled="true"></p:inputTextarea>
+	            </div>
+	          </div>
+	          
+	          <h3><h:outputText value="#{msg.formRegulationMonitoringApprovalPICAndWorkUnit}" /></h3>
+              <div class="col-lg-12">
+                <div id="mp-rekam-jejak">
+                  <h4 class="sub-header">&nbsp;
+                   
+                  </h4>
+                  <div class="table-wrapper table-responsive">
+                  <p:dataTable id="dataTableFollowup" var="data" value="#{regMonitoringViewDetailBean.tableModelFollowup}" 
+                  rowIndexVar="statIndex">
+                  		
+                    <p:column
+						headerText="#{msg.formRegulationMonitoringNote}"
+						width="150">
+						<h:outputText value="#{data.notes}" title="#{data.notes}" />
+					</p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalDivision}" width="200">
+				    	
+                       
+							<h:selectOneMenu styleClass="form-control s2" value="#{data.divisionId}" disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{regMonitoringViewDetailBean.divisions}" />
+							</h:selectOneMenu>
+						
+                       
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalPIC1}" width="250">
+				        <table>
+				    	<tr>
+				    	<td style="width:80%">
+				        <h:inputText styleClass="form-control user1#{statIndex}" id="userName1#{statIndex}" value="#{data.user1.name}" alt="#{data.user1.name}" title="#{data.user1.name}" readonly="true"/>
+                        </td>
+                        
+                         </tr>
+                        </table>
+				    </p:column>
+				   
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalPIC2}" width="250">
+				        <table>
+				    	<tr>
+				    	<td style="width:80%">
+				        <h:inputText styleClass="form-control user2" value="#{data.user2.name}" alt="#{data.user2.name}" title="#{data.user2.name}" readonly="true"/>
+                        </td>
+                        
+                         </tr>
+                        </table>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalPIC3}" width="250">
+				        <table>
+				    	<tr>
+				    	<td style="width:80%">
+				        <h:inputText styleClass="form-control user3" value="#{data.user3.name}" alt="#{data.user3.name}" title="#{data.user3.name}" readonly="true"/>
+                        </td>
+                        
+                         </tr>
+                        </table>
+				    </p:column>
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalTargetDate}" width="150">
+				        <p:calendar maxlength="11" styleClass="form-control-datepicker-wrap"  
+				        	disabled="true" value="#{data.targetDate}" pattern="dd-MMM-yyyy" locale="en" />
+				    </p:column>
+				    <p:column 
+						headerText="#{msg.formPICFollowupConfirmationRescheduleReason}"
+						width="150">
+						<p:inputTextarea
+							disabled="true"
+							id="rescheduleReason" 
+							styleClass="form-control"
+							value="#{data.rescheduleReason}"
+							maxlength="500"></p:inputTextarea>
+					</p:column>
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalEmailDate}" width="150">
+				        <p:dataList value="#{data.regMonitoringPICFollowUpEmailTrcs}" 
+				        	emptyMessage=""
+				        	var="dtl">#{dtl.emailDate!=null?regMonitoringViewDetailBean.sdf.format(dtl.emailDate):''}</p:dataList>
+				    </p:column>
+				</p:dataTable>
+				</div>
+                </div>
+              </div>
+              
+              <div class="col-lg-12">
+	            <div class="form-group" style="margin-top:15px;">
+	              <label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText value="#{msg.formRegulationMonitoringApprovalReminderType}" /></label>
+		            <h:selectOneMenu styleClass="form-control s2" value="#{regMonitoringViewDetailBean.counterTypeId}" disabled="true">
+	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+				    <f:selectItems value="#{regMonitoringViewDetailBean.counterTypes}" />
+	                </h:selectOneMenu>
+	            </div>
+	          </div>
+	          
+              <h3><h:outputText value="#{msg.formRegulationMonitoringApprovalStatusConfirmation}" /></h3>
+              <div class="col-lg-12">
+                <div id="mp-rekam-jejak">
+                  <h4 class="sub-header">&nbsp;
+                  </h4>
+                  <div class="top-scroller">
+					    <div class="div-wrapper">
+					    </div>
+					</div>
+                  <div class="table-wrapper table-responsive linked-to-top-scroller">
+                  <p:dataTable id="dataTableStatus" var="vo" value="#{regMonitoringViewDetailBean.tableStatus}" rowIndexVar="statIndex">
+                  		
+                    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalConfirmationEvidence}" style="width:250px;" styleClass="wr">
+				    	<p:dataList value="#{vo.regMonitoringPICFollowUpAttachmentTrcs}" 
+				    		emptyMessage=""
+				    		var="dtl">
+								<p:commandLink title="#{dtl.fileSize} KB" ajax="false" actionListener="#{regMonitoringViewDetailBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}" target="_blank">#{dtl.attachmentFile}</p:commandLink>
+						</p:dataList> 
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalFollowupStatus}" width="150">
+				        <h:outputLabel value="#{vo.followupStatus}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalConfirmation}" width="150">
+				        <h:outputLabel value="#{vo.followupBy}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalConfirmationDate}" width="150">
+				        <h:outputLabel value="#{vo.confirmationDate}"> 
+				        	<f:convertDateTime
+								pattern="#{regMonitoringViewDetailBean.inputDateFormat}"
+								locale="#{regMonitoringViewDetailBean.inputDateLocale}">
+							</f:convertDateTime>
+						</h:outputLabel>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalFollowupDate}" width="150">
+				        <h:outputLabel value="#{vo.followupDate}"> 
+				        	<f:convertDateTime
+								pattern="#{regMonitoringViewDetailBean.inputDateFormat}"
+								locale="#{regMonitoringViewDetailBean.inputDateLocale}">
+							</f:convertDateTime>
+				        </h:outputLabel>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalInformation}" width="150">
+				        <h:outputLabel value="#{vo.followupNote}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalFullfilmentOfFollowupDate}" width="150">
+				        <h:outputLabel value="#{vo.complianceDate}"> 
+				        	<f:convertDateTime
+								pattern="#{regMonitoringViewDetailBean.inputDateFormat}"
+								locale="#{regMonitoringViewDetailBean.inputDateLocale}">
+							</f:convertDateTime>
+				        </h:outputLabel>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalComplianceCheckStatus}" width="150">
+				        <h:outputLabel value="#{vo.complianceStatus}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formRegulationMonitoringApprovalComplianceCheckNote}" width="150">
+				        <h:outputLabel value="#{vo.complianceNote}" />
+				    </p:column>
+				    
+				    
+				</p:dataTable>
+				</div>
+                </div>
+              </div>
+              
+            <div class="col-lg-12">
+            <div class="form-group" style="margin-top:15px;">
+              <label class="tl-label" tl=""><h:outputText value="#{msg.formRegulationMonitoringApprovalReminderStatus}" /></label>
+              <h:selectOneRadio
+								value="#{regMonitoringViewDetailBean.regMonitoringTrc.reminderStatus}" disabled="true">
+								<f:selectItems value="#{regMonitoringViewDetailBean.reminderStatusList}" />
+			  </h:selectOneRadio>
+            </div>
+          </div>
+          </div>
+      </div>
+      <div class="box-footer">
+     	   <p:commandButton value="#{msg.buttonBack}" actionListener="#{regMonitoringViewDetailBean.back()}"
+							styleClass="btn btn-default pull-left tl-label">
+		   </p:commandButton>        
+      </div>
+    </div>
+    
+	</ui:define>
+	
+	
+</ui:composition>

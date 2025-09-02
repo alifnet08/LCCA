@@ -1,0 +1,706 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+		.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}	
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    -webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.form-control[disabled]{
+			    font-size: 13px;
+			    font-family: 'Montserrat';
+			    color: #444444;
+			}
+			.input-group {
+			    margin-top: 15px;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-family: 'Montserrat';
+			}
+		</style>
+		<script>
+		function disable(){
+			/* PT */
+			$('#form\\:courtDetails\\:1\\:courtType').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:courtName').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:progress').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:decision').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:date_input').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:panelUpayaHukum').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:note').prop('disabled',true);
+			$('#form\\:courtDetails\\:1\\:lampiranPutusanPT_input').prop('disabled',true);
+			
+			/* MA */
+			$('#form\\:courtDetails\\:2\\:courtType').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:courtName').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:progress').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:decision').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:date_input').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:panelUpayaHukum').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:note').prop('disabled',true);
+			$('#form\\:courtDetails\\:2\\:lampiranPutusanMA_input').prop('disabled',true);
+		}
+		function disableEnable(){
+			if($('#form\\:courtDetails\\:0\\:legalEffortPN').val() == 'DECISION_BANDING'){
+				$('#form\\:courtDetails\\:1\\:courtType').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:courtName').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:progress').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:decision').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:date_input').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:legalEffortPT').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:note').prop('disabled',false);
+				$('#form\\:courtDetails\\:1\\:lampiranPutusanPT_input').prop('disabled',false);
+			}else{
+				$('#form\\:courtDetails\\:1\\:courtType').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:courtName').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:progress').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:decision').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:date_input').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:legalEffortPT').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:note').prop('disabled',true);
+				$('#form\\:courtDetails\\:1\\:lampiranPutusanPT_input').prop('disabled',true);
+			}
+			
+			if ($('#form\\:courtDetails\\:1\\:legalEffortPT').val() == 'LEGAL_EFFORT_KASASI') {
+				$('#form\\:courtDetails\\:2\\:courtType').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:progress').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:decision').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:date_input').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:legalEffortMA').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:note').prop('disabled',false);
+				$('#form\\:courtDetails\\:2\\:lampiranPutusanPT_input').prop('disabled',false);
+			} else {
+				$('#form\\:courtDetails\\:2\\:courtType').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:progress').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:decision').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:date_input').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:legalEffortMA').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:note').prop('disabled',true);
+				$('#form\\:courtDetails\\:2\\:lampiranPutusanPT_input').prop('disabled',true);
+			}
+		}
+		</script>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formLitigationTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-litigation">
+					<h:outputText value="#{msg.formLitigationTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+				
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="category"><p:outputLabel
+									value="#{msg.formLitigationCaseType}" for="caseType" /></label>								
+							<h:selectOneMenu id="caseType" required="true" requiredMessage="#{msg.formLitigationCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{litigationEditBean.litigation.caseType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{litigationEditBean.caseTypeList}"/>
+								<p:ajax update="panelLawsuitType panelPkpuType panelPailitType panelPidanaType courtDetails panelPidanaStatus" event="change" immediate="true"
+									listener="#{litigationEditBean.updatePanelLawsuit}"/>
+							</h:selectOneMenu>
+							<p:message for="caseType"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="debitur"><p:outputLabel
+									value="#{msg.formLitigationDebitur}" for="debitur" /></label>								
+							<p:inputText autocomplete="off" style="width:100%" styleClass="form-control" id="debitur" value="#{litigationEditBean.litigation.debitur}"  required="true" requiredMessage="#{msg.formLitigationDebitur} #{msg.validateRequired}"/>
+							<p:message for="debitur"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="branchOffice"><p:outputLabel
+									value="#{msg.formLitigationBranchOffice}" for="branchOffice" /></label>								
+							<h:selectOneMenu id="branchOffice" required="true" requiredMessage="#{msg.formLitigationBranchOffice} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{litigationEditBean.litigation.branchOffice.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{litigationEditBean.branchOfficeList}"/>
+							</h:selectOneMenu>
+							<p:message for="branchOffice"/>
+						</div>
+					</div>
+					
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="litigationNo"><p:outputLabel
+									value="#{msg.formLitigationNo}" for="litigationNo" /></label>								
+							<p:inputText autocomplete="off" id="litigationNo" styleClass="form-control" required="true" requiredMessage="#{msg.formLitigationNo}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.litigation.litigationNo}" />
+							<p:message for="litigationNo"/>
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelPidanaType" style="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'':'display:none'}" >
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'required':''}">
+							<label class="tl-label" tl="pemohonPd"><p:outputLabel
+									value="Pelapor" for="pemohonPd" /></label>								
+							<p:inputText id="pemohonPd" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'true':'false'}" requiredMessage="Pelapor  #{msg.validateRequired}" 
+							value="#{litigationEditBean.pelapor}" >
+							</p:inputText>
+							<p:message for="pemohonPd"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'required':''}">
+							<label class="tl-label" tl="termohonPd"><p:outputLabel
+									value="Terlapor" for="termohonPd" /></label>								
+							<p:inputText id="termohonPd" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'true':'false'}" requiredMessage="Terlapor  #{msg.validateRequired}" 
+							value="#{litigationEditBean.terlapor}" >
+							</p:inputText>
+							<p:message for="termohonPd"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					<h:panelGroup id="panelPkpuType" style="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'':'display:none'}" >
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'required':''}">
+							<label class="tl-label" tl="pemohon"><p:outputLabel
+									value="#{msg.formLitigationPemohon}" for="pemohon" /></label>								
+							<p:inputText id="pemohon" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'true':'false'}" requiredMessage="#{msg.formLitigationPemohon}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.pemohon}" />
+							<p:message for="pemohon"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'required':''}">
+							<label class="tl-label" tl="termohon"><p:outputLabel
+									value="#{msg.formLitigationTermohon}" for="termohon" /></label>								
+							<p:inputText id="termohon" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'true':'false'}" requiredMessage="#{msg.formLitigationTermohon}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.termohon}" />
+							<p:message for="termohon"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'required':''}">
+							<label class="tl-label" tl="hakimPengawas"><p:outputLabel
+									value="#{msg.formLitigationHakimPengawas}" for="hakimPengawas" /></label>								
+							<p:inputText id="hakimPengawas" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'true':'false'}" requiredMessage="#{msg.formLitigationHakimPengawas}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.hakimPengawas}" />
+							<p:message for="hakimPengawas"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'required':''}">
+							<label class="tl-label" tl="team"><p:outputLabel
+									value="#{msg.formLitigationTimPengurus}" for="team" /></label>								
+							<p:inputText id="team" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PKPU' ?'true':'false'}" requiredMessage="#{msg.formLitigationTimPengurus}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.timPengurus}" />
+							<p:message for="team"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					<h:panelGroup id="panelLawsuitType" style="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'':'display:none'}" >
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'required':''}">
+							<label class="tl-label" tl="lawsuit"><p:outputLabel
+									value="#{msg.formLitigationLawsuit}" for="lawsuit" /></label>								
+							<p:inputText id="lawsuit" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'true':'false'}" requiredMessage="#{msg.formLitigationLawsuit}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.litigation.lawSuit}" />
+							<p:message for="lawsuit"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'required':''}">
+							<label class="tl-label" tl="penggugat"><p:outputLabel
+									value="#{msg.formLitigationPenggugat}" for="penggugat" /></label>								
+							<p:inputText id="penggugat" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'true':'false'}" requiredMessage="#{msg.formLitigationPenggugat}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.penggugat}" />
+							<p:message for="penggugat"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'required':''}">
+							<label class="tl-label" tl="tergugat"><p:outputLabel
+									value="#{msg.formLitigationTergugat}" for="tergugat" /></label>								
+							<p:inputText id="tergugat" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA' ?'true':'false'}" requiredMessage="#{msg.formLitigationTergugat}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.tergugat}" />
+							<p:message for="tergugat"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					<h:panelGroup id="panelPailitType" style="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'':'display:none'}" >
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'required':''}">
+							<label class="tl-label" tl="pemohonPL"><p:outputLabel
+									value="#{msg.formLitigationPemohon}" for="pemohonPL" /></label>								
+							<p:inputText id="pemohonPL" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'true':'false'}" requiredMessage="#{msg.formLitigationPemohon}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.pemohonPailit}" />
+							<p:message for="pemohonPL"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'required':''}">
+							<label class="tl-label" tl="termohonPL"><p:outputLabel
+									value="#{msg.formLitigationTermohon}" for="termohonPL" /></label>								
+							<p:inputText id="termohonPL" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'true':'false'}" requiredMessage="#{msg.formLitigationTermohon}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.termohonPailit}" />
+							<p:message for="termohonPL"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'required':''}">
+							<label class="tl-label" tl="hakimPengawasPL"><p:outputLabel
+									value="#{msg.formLitigationHakimPengawas}" for="hakimPengawasPL" /></label>								
+							<p:inputText id="hakimPengawasPL" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'true':'false'}" requiredMessage="#{msg.formLitigationHakimPengawas}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.litigation.supervisoryJudge}" />
+							<p:message for="hakimPengawasPL"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group #{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'required':''}">
+							<label class="tl-label" tl="teamPL"><p:outputLabel
+									value="#{msg.formLitigationTimKurator}" for="teamPL" /></label>								
+							<p:inputText id="teamPL" styleClass="form-control" required="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PAILIT' ?'true':'false'}" requiredMessage="#{msg.formLitigationTimKurator}  #{msg.validateRequired}" 
+							value="#{litigationEditBean.litigation.team}" />
+							<p:message for="teamPL"/>
+						</div>
+					</div>
+					</h:panelGroup>
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="litigationPlace"><p:outputLabel
+									value="#{msg.formLitigationPlace}" for="litigationPlace" /></label>								
+							<h:selectOneMenu id="litigationPlace" required="true" requiredMessage="#{msg.formLitigationPlace} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{litigationEditBean.litigation.litigationPlace.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{litigationEditBean.litigationPlaceList}"/>
+							</h:selectOneMenu>
+							<p:message for="litigationPlace"/>
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelPidanaStatus" style="#{litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PIDANA' ?'':'display:none'}" >
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label" tl="litigationPlace"><p:outputLabel
+										value="#{msg.formLitigationStatusCheck}" for="litigationStatusCheck" /></label>	
+								<p:inputText id="litigationStatusCheck" styleClass="form-control" value="#{litigationEditBean.litigation.statusCheck}" />							
+								<p:message for="litigationStatusCheck"/>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="charges"><p:outputLabel
+									value="#{msg.formLitigationCharges}" for="charges" /></label>								
+							<p:inputTextarea id="charges" styleClass="form-control" 
+							value="#{litigationEditBean.litigation.charges}" />
+							<p:message for="charges"/>
+						</div>
+					</div> -->
+					
+					<!-- <h3>
+						<h:outputLabel value="#{msg.formLitigationCharges}"/>
+					</h3>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:panelGrid columns="3" style="text-align:center;" layout="grid" >
+
+								<h:panelGroup id="panelMaterial">
+									<div class="form-group required">
+										<label class="tl-label" tl="material" for="material">
+											<p:outputLabel value="#{msg.formLitigationMaterial}" />
+										</label>
+										<p:inputText id="material" styleClass="form-control"
+											style="background-color: rgba(245, 131, 34, 0.25);"
+											type="number"
+											value="#{litigationEditBean.litigation.materialCharges}"
+											required="true" 
+											requiredMessage="#{msg.formLitigationMaterial} #{msg.validateRequired}"/>
+										<p:message for="material" />
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup id="panelImmaterial">
+									<div class="form-group">
+										<label class="tl-label" tl="immaterial" for="immaterial"><p:outputLabel
+												value="#{msg.formLitigationImmaterial}" /></label>
+										<p:inputText id="immaterial" styleClass="form-control"
+											style="background-color: rgba(245, 131, 34, 0.25);"
+											type="number"
+											value="#{litigationEditBean.litigation.immaterialCharges}"
+											required="true"
+											requiredMessage="#{msg.formLitigationImmaterial} #{msg.validateRequired}" />
+										<p:message for="immaterial" />
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup id="panelInformation">
+									<label class="tl-label" tl="information" for="information"><p:outputLabel
+											value="#{msg.formLitigationInformation}" /></label>
+									<p:inputText autocomplete="off" id="information" styleClass="form-control" />
+									<p:message for="information" />
+								</h:panelGroup>
+							</p:panelGrid>						
+						</div>
+					</div> -->
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="material"><p:outputLabel
+									value="#{msg.formLitigationMaterial}" for="material" /></label>								
+							<p:inputText id="material" type="number" styleClass="form-control" 
+							value="#{litigationEditBean.litigation.materialCharges}" />
+							<p:message for="material"/>
+						</div>
+					</div> -->
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="immaterial"><p:outputLabel
+									value="#{msg.formLitigationImmaterial}" for="immaterial" /></label>								
+							<p:inputText id="immaterial" type="number" styleClass="form-control" 
+							value="#{litigationEditBean.litigation.immaterialCharges}" />
+							<p:message for="immaterial"/>
+						</div>
+					</div> -->
+					
+					<h3>
+						<h:outputLabel value="#{msg.formLitigationCourt}"/>
+					</h3>
+					
+					<div class="col-lg-12">
+						<div id="form-group">
+							<p:dataGrid id="courtDetails" value="#{litigationEditBean.litigation.litigationDetails}" var="vo" rowIndexVar="statIndex" 
+								columns="3" layout="grid" paginator="false">
+								
+								<!-- court Type -->
+								<h:panelGroup id="panelCourtType">
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationCourtType}" />
+									</label>
+									<h:selectOneMenu id="courtType#{statIndex}" styleClass="form-control s2" 
+										value="#{vo.courtType.parameterDtlCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" style="background-color:rgba(245, 131, 34, 0.25);"/>
+										<f:selectItems value="#{litigationEditBean.courtTypeList}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+								
+								<!-- Court Name -->
+								<h:panelGroup id="panelCourtName" >
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationCourtName}" />
+									</label>
+									<h:selectOneMenu id="courtName#{statIndex}" styleClass="form-control s2"
+										value="#{vo.courtName.parameterDtlCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.courtNameList}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+								
+								<!-- Progress -->
+								<h:panelGroup id="panelProgress" >
+									<label class="tl-label" style="width:100%;text-align:center;">
+										<p:outputLabel value="#{msg.formLitigationProgress}"/>
+									</label>
+									<p:inputText autocomplete="off" value="#{vo.progress}" id="progress#{statIndex}" styleClass="form-control"/>
+								</h:panelGroup>
+								
+								<!-- Decision -->
+								<h:panelGroup id="panelDecision" >
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationDecision}" />
+									</label>
+									<h:selectOneMenu id="decision#{statIndex}"
+										styleClass="form-control s2" 
+										value="#{vo.sentence.parameterDtlCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.decisionList}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+								
+								<!-- Decision Date -->
+								<h:panelGroup id="panelDecisionDate">
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationDate}" />
+									</label>
+									<p:calendar id="date#{statIndex}" styleClass="form-control-datepicker-wrap" 
+										maxlength="11" value="#{vo.courtDate}" autocomplete="off"
+										pattern="dd-MMM-yyyy" locale="en">
+									</p:calendar>
+								</h:panelGroup>
+								
+								<!-- Upaya Hukum -->
+								<h:panelGroup id="panelUpayaHukum">
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationLegalEffort}" />
+									</label>
+									<h:selectOneMenu id="legalEffortPN#{statIndex}" rendered="#{statIndex == 0}" onchange="disableEnable()"
+										styleClass="form-control s2" 
+										value="#{litigationEditBean.legalEffort1}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.legalEffortListPN}" />
+									</h:selectOneMenu>
+									<h:selectOneMenu id="legalEffortPT#{statIndex}" rendered="#{statIndex == 1}" onchange="disableEnable()"
+										styleClass="form-control s2" 
+										value="#{litigationEditBean.legalEffort2}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.legalEffortListPT}" />
+									</h:selectOneMenu>
+									<h:selectOneMenu id="legalEffortMA#{statIndex}" rendered="#{statIndex == 2 and litigationEditBean.litigation.caseType.parameterDtlCode ne 'CASE_TYPE_PERDATA'}"
+										styleClass="form-control s2" 
+										value="#{litigationEditBean.legalEffort3}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.legalEffortListMA}" />
+									</h:selectOneMenu>
+									<h:selectOneMenu id="legalEffortMAPerdata#{statIndex}" rendered="#{statIndex == 2 and litigationEditBean.litigation.caseType.parameterDtlCode eq 'CASE_TYPE_PERDATA'}"
+										styleClass="form-control s2" 
+										value="#{litigationEditBean.legalEffort4}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationEditBean.legalEffortListMAPerdata}" />
+									</h:selectOneMenu>
+								</h:panelGroup>
+								
+								<!-- Information -->
+								<h:panelGroup id="panelInformation">
+									<label class="tl-label" style="width: 100%;text-align:center;"> <p:outputLabel
+											value="#{msg.formLitigationInformation}" />
+									</label>
+									<h:inputText autocomplete="off" id="note" styleClass="form-control"
+										value="#{vo.note}" />
+								</h:panelGroup>
+								
+								<!-- Lampiran Putusan -->
+								<h:panelGroup id="panelLampiranPutusan">
+									<p:remoteCommand name="onCompleteUploadPN" update="form:courtDetails:0:attachmentPN"></p:remoteCommand>
+									<p:remoteCommand name="onCompleteUploadPT" update="form:courtDetails:1:attachmentPT"></p:remoteCommand>
+									<p:remoteCommand name="onCompleteUploadMA" update="form:courtDetails:2:attachmentMA"></p:remoteCommand>
+									<label class="tl-label" style="width: 100%;"> <p:outputLabel
+											value="#{msg.formLitigationAttachment}" />
+											<br/>
+											<h:outputText style="color: #dd4b39" value="#{litigationEditBean.textWarningUpload}"/>
+									</label>
+									<p:fileUpload rendered="#{statIndex == 0}"
+										fileUploadListener="#{litigationEditBean.handleFileUploadPN}"
+										oncomplete="onCompleteUploadPN()" id="lampiranPutusanPN#{statIndex}"
+										value="litigationEditBean.uploadFilesPN" mode="advanced"
+										auto="true" dragDropSupport="false" multiple="true"
+										sizeLimit="#{litigationEditBean.standardAttachmentSize}"
+										update="form:msgs" />
+									<p:dataList value="#{litigationEditBean.uploadFilesPN}" rendered="#{statIndex == 0}"
+										emptyMessage="" var="vo" id="attachmentPN" rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{litigationEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td><p:commandLink immediate="true"
+														actionListener="#{litigationEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_DOCUMENT_PN')}"
+														update="form:courtDetails:0:attachmentPN">#{msg.buttonDelete}</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataList>
+									<p:fileUpload rendered="#{statIndex == 1}"
+										fileUploadListener="#{litigationEditBean.handleFileUploadPT}"
+										oncomplete="onCompleteUploadPT()" id="lampiranPutusanPT#{statIndex}"
+										value="litigationEditBean.uploadFilesPT" mode="advanced"
+										auto="true" dragDropSupport="false" multiple="true"
+										sizeLimit="#{litigationEditBean.standardAttachmentSize}"
+										update="form:msgs" />
+									<p:dataList value="#{litigationEditBean.uploadFilesPT}" rendered="#{statIndex == 1}"
+										emptyMessage="" var="vo" id="attachmentPT" rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{litigationEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td><p:commandLink immediate="true"
+														actionListener="#{litigationEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_DOCUMENT_PT')}"
+														update="form:courtDetails:1:attachmentPT">#{msg.buttonDelete}</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataList>
+									<p:fileUpload rendered="#{statIndex == 2}"
+										fileUploadListener="#{litigationEditBean.handleFileUploadMA}"
+										oncomplete="onCompleteUploadMA()" id="lampiranPutusanMA#{statIndex}"
+										value="litigationEditBean.uploadFilesMA" mode="advanced"
+										auto="true" dragDropSupport="false" multiple="true"
+										sizeLimit="#{litigationEditBean.standardAttachmentSize}"
+										update="form:msgs" />
+									<p:dataList value="#{litigationEditBean.uploadFilesMA}" rendered="#{statIndex == 2}"
+										emptyMessage="" var="vo" id="attachmentMA" rowIndexVar="index">
+										<table>
+											<tr>
+												<td style="width: 80%"><p:commandLink
+														title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{litigationEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+														target="_blank">#{vo.fileName}</p:commandLink></td>
+												<td><p:commandLink immediate="true"
+														actionListener="#{litigationEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_DOCUMENT_MA')}"
+														update="form:courtDetails:2:attachmentMA">#{msg.buttonDelete}</p:commandLink></td>
+											</tr>
+										</table>
+									</p:dataList>
+								</h:panelGroup>
+
+							</p:dataGrid>
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputText value="#{msg.formLitigationViewer}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewViewer();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowViewer();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableViewerDetail" var="vo"
+									value="#{litigationEditBean.tableViewerModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{litigationEditBean.selectedLitigationViewer}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="#{msg.formLitigationNik}"
+										style="width:200px;">
+										<table>
+											<tr class="form-group required">
+												<td style="width: 80%"><h:inputText
+														id="viewer#{statIndex}" styleClass="form-control"
+														value="#{vo.user.nik}" disabled="true" /></td>
+												<td style="width: 20%"><p:commandLink process="@this"
+														onstart="viewerDialog.show();">
+														<span><i class="fa fa-search ico-lg"></i></span>
+														<f:setPropertyActionListener
+															target="#{litigationEditBean.indexDtlViewer}"
+															value="#{statIndex}" />
+													</p:commandLink></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formLitigationName}"
+										style="width:200px;">
+										<table>
+											<tr class="form-group required">
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.user.name}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formLitigationStatus}"
+										style="width:200px;">
+										<table>
+											<tr class="form-group required">
+												<td style="width: 80%">
+												<h:selectOneMenu id="status"
+													styleClass="form-control s2"
+													value="#{vo.status}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{litigationEditBean.statusList}"/>
+												</h:selectOneMenu></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formLitigationModifiedBy}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.lastUpdateBy}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{litigationEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{litigationEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+				<p:remoteCommand
+					action="#{litigationEditBean.onAddNewViewer}" immediate="true"
+					name="onAddNewViewer" update="tableViewerDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{litigationEditBean.onDeleteRowViewer}" immediate="true"
+					name="onDeleteRowViewer" update="tableViewerDetail"></p:remoteCommand>
+			</div>
+		</div>
+		
+		<wo:selector id="viewer0" height="450" width="550"
+			title="LOV User" widgetVar="viewerDialog0"
+			selectorInfo="#{litigationEditBean.selectorViewer}"
+			bean="#{litigationEditBean}"
+			updateOnSelected="form:tableViewerDetail" />
+		<wo:selector id="viewer" height="450" width="550"
+			title="LOV User" widgetVar="viewerDialog"
+			selectorInfo="#{litigationEditBean.selectorViewer}"
+			bean="#{litigationEditBean}"
+			updateOnSelected="form:tableViewerDetail" />
+			
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,164 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:wo="http://java.sun.com/jsf/composite/wo"
+                template="../templates/templateFrontEnd.xhtml">
+
+	     
+  <ui:define name="content">
+  
+  		<style>
+			.ui-datalist-data{
+				list-style-type: none;
+			}
+			.ui-widget-content{
+				border: none;
+			}
+			.ui-widget .ui-widget{
+				color: lightseagreen;
+			}
+			.ui-button-text-icon-left .ui-button-text {
+			    color: #4f4f4f;
+			}
+		</style>
+  	
+	  	<div class="row brdcrumb">
+        <nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+          
+          <div class=" navbar-collapse " id="collapsibleNavbar">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+                <a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+                <a class="nav-link disabled" href="#">TINDAK LANJUT - SURAT MASUK</a>
+              </li> 
+            </ul>
+          </div>  
+        </nav>
+      </div>
+      
+  	  <div class="container-fluid faq-content">
+        <div class="sidebar-title font-weight-bold">TINDAK LANJUT - SURAT MASUK</div>
+       
+        <h:form class="internal-form" style="margin-top:20px;" id="form">
+        <p:growl id="messages" severity="error"/>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Pengirim</div>
+              <div class="value-form">#{correspondenceFEVerificationBean.trcCorrespondence.sender.nameIn}</div>
+            </div>
+            <div class="col">
+              <div class="label-form">Tanggal Diterima Surat</div>
+              <div class="value-form">#{correspondenceFEVerificationBean.sdf.format(correspondenceFEVerificationBean.trcCorrespondence.letterReceivedDate)}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Perihal</div>
+              <div class="value-form">#{correspondenceFEVerificationBean.trcCorrespondence.perihalIn}</div>
+            </div>
+			<div class="col">
+              <div class="label-form">Tanggal Surat</div>
+              <div class="value-form">#{correspondenceFEVerificationBean.sdf.format(correspondenceFEVerificationBean.trcCorrespondence.letterDate)}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Tipe Surat</div>
+              <div class="value-form">#{correspondenceFEVerificationBean.trcCorrespondence.correspondenceCode.nameIn}</div>
+            </div>
+            <div class="col">
+              <div class="label-form"></div>
+              <div class="value-form"></div>
+            </div>
+          </div>
+      
+          
+          <h:panelGroup rendered="#{correspondenceFEVerificationBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'INVITATION' }">
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Status</div>
+              <div class="form-group">
+	          <p:selectOneMenu styleClass="form-control" disabled="true"
+									value="#{correspondenceFEVerificationBean.trcCorrespondence.followupStatus.parameterDtlCode}">
+									<f:selectItem itemLabel="Pilih" itemValue="" />
+									<f:selectItems value="#{correspondenceFEVerificationBean.attendanceList}" />
+			  </p:selectOneMenu>
+			  </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Tindak Lanjut</div>
+	          <div class="form-group">
+	          <p:selectOneMenu styleClass="form-control"
+									value="#{correspondenceFEVerificationBean.trcCorrespondence.picFollowupStatus.parameterDtlCode}">
+									<f:selectItem itemLabel="Pilih" itemValue="" />
+									<f:selectItems value="#{correspondenceFEVerificationBean.yesNoList}" />
+			  </p:selectOneMenu>
+			  </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Keterangan</div>
+               <input type="text" class="form-control upload-form" id="keterangan" value="#{correspondenceFEVerificationBean.trcCorrespondence.followupNote}" disabled="true"/> 
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Kehadiran</div>
+					<div id="mp-pic-attendance">
+						<div class="table-wrapper table-responsive linked-to-top-scroller">
+							<p:dataTable id="tablePicAttendanceDetail" var="vo" styleClass="wo-table-grid"
+								value="#{correspondenceFEVerificationBean.tableAttedanceModel}"
+								rowIndexVar="statIndex" style="width:100%;"
+								selection="#{correspondenceFEVerificationBean.selectedPicAttendanceData}"
+								rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+								
+								<p:column headerText="#{msg.formTmpCorrespondenceNIK}"
+									style="width:30%;">
+									#{vo.userId.nik}
+								</p:column>
+								<p:column headerText="#{msg.formTmpCorrespondenceName}"
+									style="width:35%;">#{vo.userId.name}
+								</p:column>
+								<p:column headerText="#{msg.formTmpCorrespondenceEmail}"
+									style="width:35%;">#{vo.userId.email}
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+          </h:panelGroup>
+
+
+          <div class="form-row">
+            <div class="col">
+            <p:remoteCommand
+					action="#{correspondenceFEVerificationBean.onAddNewPicAttendance}" immediate="true"
+					name="onAddNewPicAttendance" update="tablePicAttendanceDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{correspondenceFEVerificationBean.onDeleteRowPicAttendance}" immediate="true"
+					name="onDeleteRowPicAttendance" update="tablePicAttendanceDetail"></p:remoteCommand>
+              <p:remoteCommand action="#{correspondenceFEVerificationBean.cancel}" name="cancel" immediate="true"></p:remoteCommand>
+              <h:commandButton value="Simpan" type="submit"
+					styleClass="btn btn-mb-secondary"
+					actionListener="#{correspondenceFEVerificationBean.save()}" update="form:messages"></h:commandButton>
+              <button type="button" class="btn btn-outline-secondary" onclick="cancel()">Batal</button>
+            </div>
+          </div>
+
+          
+        </h:form>
+
+        
+      </div>
+      
+    
+			
+  </ui:define>
+</ui:composition>

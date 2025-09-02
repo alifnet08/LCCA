@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+.ui-state-default.form-control {
+	background: #F7F8F8;
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationMonitoringTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink
+					action="#{regMonitoringBean.getNavigateEdit()}"
+					ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<p:growl id="deletedMessage" globalOnly="true" />
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+				<h:panelGroup id="panelSearch">
+					<div class="col-lg-4">
+						<h:panelGroup id="panelProvType">
+							<div class="form-group">								
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formRegulationMonitoringProvType}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{regMonitoringBean.provTypeCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{regMonitoringBean.provTypes}" />
+									<p:ajax event="change"
+										update="form:panelDocType form:panelDocCategory form:panelDocTopic"
+										listener="#{regMonitoringBean.onChangeProvType}" />
+								</h:selectOneMenu>							
+							</div>
+						</h:panelGroup>
+					</div>
+					
+					<div class="col-lg-4">
+						<h:panelGroup id="panelDocType">
+							<div class="form-group">
+								<label class="tl-label size-font" tl="document-type"><h:outputText
+										value="#{msg.formRegulationMonitoringDocType}" /></label>
+								<h:selectOneMenu id="docType" styleClass="form-control s2"
+									value="#{regMonitoringBean.documentTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{regMonitoringBean.docTypes}" />
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+					</div>
+					
+					<div class="col-lg-4">
+						<h:panelGroup id="panelDocCategory">
+							<div class="form-group">
+								<label class="tl-label size-font" tl=""><h:outputText
+										value="#{msg.formRegulationMonitoringCategory}" /></label>
+								<h:selectOneMenu id="docCategory" styleClass="form-control s2"
+									value="#{regMonitoringBean.documentCategoryId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{regMonitoringBean.docCategories}" />
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+					</div>
+					
+					<div class="col-lg-3">
+						<h:panelGroup id="panelDocTopic">
+							<div class="form-group">
+								<label class="tl-label size-font" tl=""><h:outputText
+										value="#{msg.formRegulationMonitoringTopic}" /></label>
+								<h:selectOneMenu id="docTopic" styleClass="form-control s2"
+									value="#{regMonitoringBean.documentTopicId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{regMonitoringBean.docTopics}" />
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+					</div>
+					
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationMonitoringRegNo}" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{regMonitoringBean.documentNo}"></p:inputText>
+						</div>
+					</div>
+					
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationMonitoringRegTitle}" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{regMonitoringBean.judulPeraturan}"></p:inputText>
+						</div>
+					</div>
+					
+					<div class="col-lg-2">
+						<div class="form-group">
+							<label class="tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationMonitoringStatus}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regMonitoringBean.statusCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{regMonitoringBean.status}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formRegulationMonitoringPublishedDate}" /></label>
+							<div class="input-group">
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.from}" maxlength="11"
+									value="#{regMonitoringBean.pubDateFrom}"
+									autocomplete="off"
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+								<!-- <input type="text" class="form-control date_picker"
+										id="publishedDateFrom" />  -->
+								<span class="input-group-addon plain">-</span>
+	
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.to}" maxlength="11"
+									value="#{regMonitoringBean.pubDateTo}"
+									autocomplete="off"
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+	
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+								value="#{msg.formRegulationMonitoringEffectiveDate}" /></label>
+							<div class="input-group">
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.from}" maxlength="11"
+									value="#{regMonitoringBean.effDateFrom}"
+									autocomplete="off" 
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+	
+								<span class="input-group-addon plain">-</span>
+	
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.to}" maxlength="11"
+									value="#{regMonitoringBean.effDateTo}"
+									autocomplete="off"
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+	
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formRegulationMonitoringTargetDate}" /></label>
+							<div class="input-group">
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.from}" maxlength="11"
+									value="#{regMonitoringBean.targetDateFrom}"
+									autocomplete="off"
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+								<span class="input-group-addon plain">-</span>
+	
+								<p:calendar styleClass="form-control-datepicker-wrap"
+									placeholder="#{msg.to}" maxlength="11"
+									value="#{regMonitoringBean.targetDateTo}"
+									autocomplete="off"
+									pattern="#{regMonitoringBean.inputDateFormat}"
+									locale="#{regMonitoringBean.inputDateLocale}"></p:calendar>
+	
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+				
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="RegulationMonitoring"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{regMonitoringBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="RegulationMonitoring panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{regMonitoringBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="RegulationMonitoring" paginator="true" var="vo"
+								value="#{regMonitoringBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{regMonitoringBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+								<p:column width="100" headerText="#{msg.formAction}" exportable="false"
+									style="text-align:center;">
+									
+									<h:outputLabel value="#{msg.formWaitingForApproval}"
+										rendered="#{vo.statusCd eq 'DATA_NEW'}"	/>
+									
+									<h:outputLabel value="&#160;"
+										rendered="#{vo.statusCd ne 'DATA_NEW'}" />
+									<p:commandLink id="edit"
+										rendered="#{vo.statusCd ne 'DATA_NEW'}"
+										value="#{msg.buttonEdit}"
+										action="#{regMonitoringBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.regMonitoringId}" />
+									</p:commandLink>
+								&#160;
+								<h:outputLabel value="|"
+										rendered="#{vo.followupStatusCd eq null and vo.statusCd ne 'DATA_NEW'}" />
+									<h:outputLabel value="&#160;"
+										rendered="#{vo.followupStatusCd eq null and vo.statusCd ne 'DATA_NEW'}" />
+									<p:commandLink id="Delete"
+										rendered="#{vo.followupStatusCd eq null and vo.statusCd ne 'DATA_NEW'}"
+										value="#{msg.buttonDelete}" styleClass="tl-label"
+										update="RegulationMonitoring form:deletedMessage"
+										action="#{regMonitoringBean.delete(vo.regMonitoringId)}">
+										<p:confirm header="Konfirmasi"
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringProvType}"
+									width="100">
+									<h:outputLabel value="#{vo.jenisKetentuan}" title="#{vo.jenisKetentuan}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringRegNo}"
+									width="150">
+									<h:outputLabel value="#{vo.noDokumen}" title="#{vo.noDokumen}"/>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationMonitoringRegTitle}"
+									width="150">
+									<h:outputLabel value="#{vo.jdlPeraturan}" title="#{vo.jdlPeraturan}"/>
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringDocType}"
+									width="100">
+									<h:outputLabel value="#{vo.tipeDokumen}" title="#{vo.tipeDokumen}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringPublishedDate}"
+									width="150">
+									<h:outputLabel value="#{vo.publishedDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringEffectiveDate}"
+									width="150">
+									<h:outputLabel value="#{vo.effectiveDateStr}" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringPICName}"
+									width="200">
+									<p:dataList value="#{vo.statusList}"
+										emptyMessage=""
+										var="dtl" >#{dtl.pic1}<br />#{dtl.pic2}<br />#{dtl.pic3}</p:dataList>
+								</p:column>
+
+								<p:column headerText="#{msg.formRegulationMonitoringStatus}"
+									width="150" style="text-align:center;">
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_ACTIVE'}">
+										<span class="label label-success"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_INACTIVE'}">
+										<span class="label label-danger"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_NEW'}">
+										<span class="label label-info"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_REVISE'}">
+										<span class="label label-warning"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+								</p:column>
+								
+								<p:column headerText="#{msg.formRegulationMonitoringTargetDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.targetDate}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringFollowupStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupStatus}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringPICConfirmation}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupBy}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringConfirmationDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.confirmationDate}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringFollowupDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupDate}</p:dataList>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationMonitoringComplianceCheckStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.complianceStatus}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationMonitoringCategory}"
+									width="150">
+									<h:outputLabel value="#{vo.kategori}" title="#{vo.kategori}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formRegulationMonitoringTopic}"
+									width="150">
+									<h:outputLabel value="#{vo.topik}" title="#{vo.topik}"/>
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+
+
+
+	</ui:define>
+</ui:composition>

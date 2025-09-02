@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcFineApproval.model">
+	<class name="TrcFinePicFollowupEmail" table="wo_trc_fine_pic_followup_email">
+		<id name="finePicFollowupEmailId" column="fine_pic_followup_email_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_fine_pic_fp_email_Seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcFinePicFollowup" column="fine_pic_followup_id"
+			class="com.wo.module.trcFineApproval.model.TrcFinePicFollowup"
+			fetch="join" />
+
+		<property name="emailDate" column="EMAIL_DATE" type="date" />
+		<property name="slaType" column="SLA_TYPE" type="string" />
+		<property name="sla" column="SLA" type="long" />
+		<property name="emailType" column="EMAIL_TYPE" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

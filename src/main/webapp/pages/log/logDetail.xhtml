@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+.bg-red td {
+	background-color: #FF0000 !important;
+}
+
+.bg-yellow td {
+	background-color: #FFFF00 !important;
+}
+.bg-red-dark td{
+	background-color: #e60000 !important;
+	color : white;
+}
+.bg-yellow-dark td{
+	background-color: #e6e600 !important;
+	color : white;
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formLogHeaderTitle}" />
+	</ui:define>
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formLogHeaderStartDate}" /></label>
+							<p:calendar value="#{logDetailBean.log.processDate}" readonly="true"
+								disabled="true" pattern="#{logDetailBean.inputDateFormat}"
+								locale="#{logDetailBean.inputDateLocale}" />
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formLogHeaderProcessId}" /></label>
+							<p:inputText value="#{logDetailBean.log.processId}" readonly="true"
+								size="27" disabled="true" />
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formLogHeaderEndDate}" /></label>
+							<p:calendar value="#{logDetailBean.log.endDate}" readonly="true"
+								disabled="true" pattern="#{logDetailBean.inputDateFormat}"
+								locale="#{logDetailBean.inputDateLocale}" />
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formLogHeaderStatus}" /></label>
+							<p:inputText value="#{logDetailBean.log.processStsParam.name}" readonly="true"
+								size="27" disabled="true" />
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label><h:outputText
+									value="#{msg.formLogHeaderFunction}" /></label>
+							<p:inputText value="#{logDetailBean.log.functionParam.name}" readonly="true"
+								size="27" disabled="true" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonBack}"
+									actionListener="#{logDetailBean.back}" type="submit" ajax="false"
+									immediate="true" />
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<p:dataTable id="dataTable" var="entity" paginator="true"
+					value="#{logDetailBean.log.logDetailList}" dynamic="true"
+					emptyMessage="#{msg.textNodata}" rowIndexVar="statIndex"
+					rowStyleClass="#{entity.msgType eq 'ERR' ? 'bg-red-dark' : (entity.msgType eq 'WRN' ? 'bg-yellow-dark' : (statIndex%2 == 1 ? 'odd' : null))}">
+					<p:column headerText="#{msg.formLogDetailSeqNo}">
+						<h:outputText value="#{entity.seqNo}" />
+					</p:column>
+					<p:column headerText="#{msg.formLogDetailMsgDt}">
+						<h:outputText value="#{entity.msgDate}">
+							<f:convertDateTime pattern="dd-MMM-yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{msg.formLogDetailLocation}">
+						<h:outputText value="#{entity.msgLocation}" />
+					</p:column>
+					<p:column headerText="#{msg.formLogDetailMsgType}">
+						<h:outputText value="#{entity.msgType}" />
+					</p:column>
+					<p:column headerText="#{msg.formLogDetailMsgDetail}">
+						<h:outputText value="#{entity.msgMessage}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

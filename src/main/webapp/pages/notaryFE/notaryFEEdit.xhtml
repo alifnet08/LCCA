@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		<style>
+			.p-3.table-active {
+			    background-color: rgba(236, 236, 236, 1);
+			}
+		</style>
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+
+			<div class=" navbar-collapse " id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+						<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top: -5px; color: #FFC600;"></i></a> 
+						<a class="nav-link disabled" href="#">NOTARIS</a>
+						<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top: -5px; color: #FFC600;"></i></a> 
+						<a class="nav-link disabled" href="#">VIEW DETAIL NOTARIS</a>
+					</li>
+				</ul>
+			</div>
+			</nav>
+		</div>
+
+		<div class="container-fluid faq-content">
+			<div class="box-body">
+				<p:growl id="messages" severity="error" />
+				<div class="row pt-4 pl-3 pr-3 pb-2">
+					<div style="margin:auto;">
+						<div id="notarisCard" class="table table-bordered rounded">
+							<div class="row py-2">
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 my-auto">
+									<div class="p-1 px-3 font-weight-bold">
+										<span>#{notaryFEEditBean.notary.notaryName}</span>
+									</div>
+									<div class="p-1 px-3 font-weight-bold">
+										<span class="text-secondary">#{notaryFEEditBean.notary.notaryCategory.nameIn}</span>
+									</div>
+								</div>
+								<div
+									class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 border border-top-0 border-right-0  border-bottom-0">
+									<div class="p-2 px-3 font-weight-bold">
+										<i class="fa fa-phone"></i> : <span>#{notaryFEEditBean.notary.phoneNo}</span>
+									</div>
+									<div class="p-2 px-3 font-weight-bold">
+										<i class="fa fa-fax"></i> : <span>#{notaryFEEditBean.notary.faxNo}</span>
+									</div>
+									<div class="p-2 px-3 font-weight-bold">
+										<i class="fa fa-envelope"></i> : <span>#{notaryFEEditBean.notary.email}</span>
+									</div>
+									<div class="p-2 px-3 font-weight-bold">
+										<i class="fa fa-mobile"></i> : <span>#{notaryFEEditBean.notary.mobileNo}</span>
+									</div>
+									<div class="p-2 px-3 font-weight-bold">
+										<i class="fas fa-map-marker-alt"></i> : <span>#{notaryFEEditBean.notary.address}</span>
+									</div>
+								</div>
+							</div>
+							<div class="p-3 table-active">
+								<div class="row">
+									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 my-auto">
+										<div class="font-weight-bold">
+											<span class="text-secondary">Kode Area </span><span
+												class="font-weight-bold">#{notaryFEEditBean.notary.areaCode}</span>
+										</div>
+									</div>
+									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 my-auto">
+										<div class="px-3 font-weight-bold">
+											<span class="text-secondary">Area </span>
+											<span class="font-weight-bold">#{notaryFEEditBean.notary.area}</span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-row pt-2 pl-3">
+					<div class="col">
+						<div class="label-form">Wilayah Kerja</div>
+						<div class="value-form">#{notaryFEEditBean.notary.workArea}</div>
+					</div>
+				</div>
+				<div class="form-row pt-2 pl-3 pb-3">
+					<div class="col">
+						<div class="label-form">Keterangan</div>
+						<div class="value-form">#{notaryFEEditBean.notary.note}</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{notaryFEEditBean.cancel}" name="cancel"
+							immediate="true"></p:remoteCommand>
+						<p:commandButton type="button" styleClass="btn btn-mb-secondary"
+							onclick="cancel()" value="Kembali" />
+						
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>

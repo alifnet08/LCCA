@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTrcComplianceReviewApprovalTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="box box-solid">
+
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="top-scroller">
+						    <div class="div-wrapper">
+						    </div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+										
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{trcComplianceReviewApprovalBean.tableModel}"
+								dynamic="true" lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{trcComplianceReviewApprovalBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column width="100" style="text-align:center;"
+									headerText="#{msg.formAction}">
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{trcComplianceReviewApprovalBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.id}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column
+									headerText="Judul Pemeriksaan"
+									width="80">
+									<h:outputLabel value="#{vo.judulPemeriksaan}"
+										title="#{vo.judulPemeriksaan}" style="vertical-align: top;" />
+								</p:column>
+
+								<p:column
+									headerText="Nomor Pemeriksaan"
+									width="100">
+									<h:outputLabel value="#{vo.noPemeriksaan}"
+										title="#{vo.noPemeriksaan}" />
+								</p:column>
+
+								<p:column
+									headerText="Nama PIC"
+									width="150">
+									<h:outputLabel value="#{vo.namaPic}"
+										title="#{vo.namaPic}" />
+								</p:column>
+
+								<p:column
+									headerText="Target Tanggal"
+									width="110">
+									<h:outputLabel value="#{vo.targetTgl}"
+										title="#{vo.targetTgl}" />
+								</p:column>
+
+								<p:column headerText="Status Tindak Lanjut"
+									width="100">
+									<h:outputLabel value="#{vo.statusTindakLanjut}" title="#{vo.statusTindakLanjut}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column
+									headerText="Tgl Pemenuhan Tindak Lanjut"
+									width="110">
+									<h:outputLabel value="#{vo.tglPemenuhanTindakLanjut}"
+										title="#{vo.tglPemenuhanTindakLanjut}" />
+								</p:column>
+								
+								<p:column
+									headerText="Hasil Observasi"
+									width="200">
+									<h:outputLabel value="#{vo.hasilObservasi}"
+										title="#{vo.hasilObservasi}" />
+								</p:column>
+								
+								<p:column
+									headerText="Rekomendasi"
+									width="200">
+									<h:outputLabel value="#{vo.rekomendasi}"
+										title="#{vo.rekomendasi}" />
+								</p:column>
+								
+								<p:column
+									headerText="Tindak Lanjut"
+									width="200">
+									<h:outputLabel value="#{vo.keterangan}"
+										title="#{vo.keterangan}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formStaticPageTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-staticPage">
+					<h:outputText value="#{msg.formStaticPageTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="category"><p:outputLabel
+									value="#{msg.formFaqCategory}" for="category" /></label>		
+							<h:selectOneMenu id="category" required="true" requiredMessage="#{msg.formStaticPageCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{staticPageEditBean.staticPage.staticPageCategory.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{staticPageEditBean.categoryList}"/>
+							</h:selectOneMenu>						
+							
+							<p:message for="category"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="titleIn"><p:outputLabel
+									value="#{msg.formStaticPageTitles}" for="titleIn" />
+							</label>								
+							<p:inputText id="titleIn"  required="true" requiredMessage="#{msg.formStaticPageTitles}  #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{staticPageEditBean.staticPage.titleIn}"
+								></p:inputText>
+							<p:message for="titleIn"/>
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="titleEn"><p:outputLabel
+									value="#{msg.formStaticPageTitles}" for="titleEn" />
+							&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span>
+							</label>								
+							<p:inputText id="titleEn"  required="true" requiredMessage="#{msg.formStaticPageTitles} #{msg.english} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{staticPageEditBean.staticPage.titleIn}"
+								></p:inputText>
+							<p:message for="titleEn"/>
+						</div>
+					</div> -->
+					
+					<div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="contentIn"><p:outputLabel
+									value="#{msg.formStaticPageContent}" for="contentIn" />
+							</label>								
+							<pe:ckEditor widgetVar="editorContentIn" width="100%" id="contentIn"
+								value="#{staticPageEditBean.staticPage.contentIn}"
+								height="300" style="margin-bottom:10px" />
+							<p:message for="contentIn"/>
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group ">
+							<label class="tl-label" tl="contentEn"><p:outputLabel
+									value="#{msg.formStaticPageContent}" for="contentEn" />
+								&#160;&#160;<span
+								class="label label-warning">
+									<h:outputText value="#{msg.english}"/>
+								</span>	
+							</label>								
+							<pe:ckEditor widgetVar="editorContentEn" width="100%" id="contentEn"
+								value="#{staticPageEditBean.staticPage.contentEn}"
+								height="300" style="margin-bottom:10px" />
+							<p:message for="contentEn"/>
+						</div>
+					</div> -->
+					
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{staticPageEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{staticPageEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

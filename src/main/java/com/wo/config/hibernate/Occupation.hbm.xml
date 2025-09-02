@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.occupation.model">
+	<class name="Occupation" table="wo_mst_fcc_occupation">
+		<id name="occupationId" column="OCCUPATION_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_fcc_occupation_seq</param>
+			</generator>
+		</id>
+			
+		<property name="occupationName" column="OCCUPATION_NAME" type="string" />
+		<property name="riskRating" column="RISK_RATING" type="string" />
+		
+		<property name="fileName" column="FILE_NAME" type="string" />
+		<property name="uploadDate" column="UPLOAD_DATE" type="timestamp" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

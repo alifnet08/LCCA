@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.documentTopic.model">
+	<class name="DocumentTopic" table="wo_mst_document_topic">
+		<id name="documentTopicId" column="document_topic_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_document_topic_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="parameterDetail" property-ref="parameterDtlCode"
+			column="jenis_ketentuan_code" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="documentCategory" column="document_category_id"
+			class="com.wo.module.documentCategory.model.DocumentCategory" fetch="join" />
+
+		<property name="documentTopicIn" column="document_topic_in"
+			type="string" />
+
+		<property name="documentTopicEn" column="document_topic_en"
+			type="string" />
+
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+
+		<property name="delId" column="del_id" type="long" />
+
+
+	</class>
+</hibernate-mapping>

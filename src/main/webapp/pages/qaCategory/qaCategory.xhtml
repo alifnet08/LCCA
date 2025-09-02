@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formQACategoryTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li><h:commandLink action="#{qaCategoryBean.getNavigateEdit()}"
+					type="submit" process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink></li>
+		</ul>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="box box-solid">
+
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label" tl=""> <p:outputLabel
+										for="searchVal" value="Category" />
+								</label>
+								<h:selectOneMenu id="searchVal" 
+									styleClass="form-control s2"
+									value="#{qaCategoryBean.searchVal}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{qaCategoryBean.categoryList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
+				</div>
+				<div class="col-lg-12">
+					<div class="filter-tools">
+						<ul class="no-margin no-padding">
+							<li><p:commandButton value="#{msg.buttonSearch}" ajax="true"
+									update="tableSearch" styleClass="btn btn-success tl-label"
+									actionListener="#{qaCategoryBean.search}"></p:commandButton></li>
+							<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+									update="tableSearch panelSearch"
+									styleClass="btn btn-default btn-flat tl-label"
+									actionListener="#{qaCategoryBean.reset}"></p:commandButton></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-12">&nbsp;</div>
+				<div class="col-lg-12">
+					<div class="table-responsive">
+						<p:dataTable id="tableSearch" paginator="true" var="vo"
+							value="#{qaCategoryBean.tableModel}" dynamic="true" lazy="true"
+							emptyMessage="#{msg.textNodata}" rows="#{qaCategoryBean.paging}"
+							rowIndexVar="statIndex"
+							styleClass="table table-striped table-hover"
+							rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+							<p:column style="text-align:center;width:20%;"
+								headerText="#{msg.formAction}">
+
+								<h:outputLabel value="&#160;" />
+								<p:commandLink id="edit" value="#{msg.buttonEdit}"
+									action="#{qaCategoryBean.getNavigateEdit()}" type="submit"
+									ajax="false" styleClass="tl-label">
+									<f:param name="categoryCode" value="#{vo.qnaCategoryCode.parameterDtlCode}" />
+									<f:param name="viewId" value="false" />
+								</p:commandLink>
+							</p:column>
+
+							<p:column headerText="#{msg.formQACategoryCategory}" style="text-align:center">
+								<h:outputLabel value="#{vo.qnaCategoryCode.name}" />
+							</p:column>
+							
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

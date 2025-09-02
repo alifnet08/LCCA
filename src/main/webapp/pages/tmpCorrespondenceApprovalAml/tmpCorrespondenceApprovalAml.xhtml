@@ -1,0 +1,107 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+	<ui:define name="head">
+		<style>
+			.ui-calendar input {
+				display: block!important;
+			    width: 100%!important;
+			    padding: 10px 12px!important;
+			    background-color: #F7F8F8 !important;
+			    background-image: none!important;
+			    border-radius: 5px!important;
+			    box-shadow: none;
+			    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s!important;
+			    border: 0 !important;
+		        height: inherit;
+			}
+			
+			.ui-inputfield.ui-state-focus {
+				box-shadow: none;
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTmpCorrespondenceApprovalAmlTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<div class="col-lg-12">&nbsp;</div>
+					
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{tmpCorrespondenceApprovalAmlBean.tableCorrespondenceAml}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{tmpCorrespondenceApprovalAmlBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;" width="100"
+									headerText="#{msg.formAction}">
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{tmpCorrespondenceApprovalAmlBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.correspondenceId}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceApprovalAmlLetterNo}" width="300">
+									<h:outputLabel value="#{vo.letterNo}" title="#{vo.letterNo}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceApprovalAmlSenderLetter}" width="150">
+									<h:outputLabel value="#{vo.senderName}" title="#{vo.senderName}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceApprovalAmlLetterReceivedDate}" style="text-align:center;" width="140">
+									<h:outputText value="#{vo.letterReceivedDate}">
+										<f:convertDateTime pattern="#{tmpCorrespondenceApprovalAmlBean.inputDateFormat}"
+											locale="#{tmpCorrespondenceApprovalAmlBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>									
+								</p:column>
+
+								<p:column headerText="#{msg.formTmpCorrespondenceApprovalAmlSearchStatus}" width="100"
+									style="text-align:center;">
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_ACTIVE'}">
+										<span class="label label-success">
+											<h:outputText value="#{vo.statusName}"/>
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_INACTIVE'}">
+										<span class="label label-danger">
+											<h:outputText value="#{vo.statusName}"/>
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_NEW'}">
+										<span class="label label-info">
+											<h:outputText value="#{vo.statusName}"/>
+										</span>
+									</p:outputLabel>
+									<p:outputLabel rendered="#{vo.statusCode eq 'DATA_REVISE'}">
+										<span class="label label-warning">
+											<h:outputText value="#{vo.statusName}"/>
+										</span>
+									</p:outputLabel>
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>
+</ui:composition>
