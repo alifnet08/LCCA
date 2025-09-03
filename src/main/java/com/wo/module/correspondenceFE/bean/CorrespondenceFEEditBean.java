@@ -417,7 +417,9 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 						trcCorrespondence.setFollowupStatus(followupStatus);
 					}
 					
-					trcCorrespondence.setFollowupBy(userService.getUserByNik(facesUtil.retrieveUserLogin()));
+					User userData = userService.getUserByNik(facesUtil.retrieveUserLogin());
+					trcCorrespondence.setFollowupBy(userData);
+					trcCorrespondence.setUserId1(userData);
 					
 					ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
 							ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);
@@ -434,7 +436,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 					trcCorrespondence.setComplianceNote(null);
 					trcCorrespondence.setComplianceBy(null);
 					trcCorrespondence.setComplianceDate(null);
-
+					
 					trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
 					trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));
 					trcCorrespondence.setDelId(new Long(0));
