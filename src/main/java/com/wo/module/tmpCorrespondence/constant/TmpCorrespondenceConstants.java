@@ -59,4 +59,24 @@ public interface TmpCorrespondenceConstants {
                 Arrays.asList("1", "2", "3"),false);
         return info;
 	}
+	
+	public static SelectorInfo buildSelectorReferensiSurat() {
+		SelectorModel.SelectorInfo info = new SelectorModel.SelectorInfo(
+                " select CORRESPONDENCE_ID,  DBMS_LOB.SUBSTR(PERIHAL_IN, 4000, 1) PERIHAL, LETTER_NO, ''LAMPIRAN "
+              + "   FROM WO_TMP_CORRESPONDENCE "
+              + "  WHERE 1=1 "
+              + "        AND ( upper(DBMS_LOB.SUBSTR(PERIHAL_IN, 4000, 1)) like upper('%{0}%') or upper(LETTER_NO) like upper('%{0}%') ) "
+              + "        AND enabled_flag = 'Y' "
+              + "  order by CORRESPONDENCE_ID "  ,
+              "   SELECT COUNT(1) "
+              + "   FROM WO_TMP_CORRESPONDENCE "
+              + "  WHERE 1=1 "
+              + "        AND ( upper(DBMS_LOB.SUBSTR(PERIHAL_IN, 4000, 1)) like upper('%{0}%') or upper(LETTER_NO) like upper('%{0}%') ) "
+              + "        AND enabled_flag = 'Y' ",
+            Arrays.asList("Perihal Surat", "Nomor Surat", "Lampiran"),
+            Arrays.asList("1", "2", "3"),false);
+				
+        return info;
+	}
+	
 }

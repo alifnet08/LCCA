@@ -36,6 +36,10 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicComplianceTableModel;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnit;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnitTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirmTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetterTableModel;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.user.model.Division;
 import com.wo.module.user.service.UserService;
@@ -62,7 +66,9 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 	private SelectorInfo selectorUser2;
 	private SelectorInfo selectorUser3;
 	private SelectorInfo selectorPicCompliance;
-
+	private SelectorInfo selectedReferalLetterData;
+	private SelectorInfo selectedSubPicConfirmData;
+	
 	private SelectorInfo selectorUserCc1;
 	private SelectorInfo selectorUserCc2;
 	private SelectorInfo selectorUserCc3;
@@ -71,6 +77,8 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 
 	private TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance> tablePicComplianceModel;
 	private TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit> tableSupportingUnitModel;
+	private TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> tableReferalLetterModel;
+	private TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> tableSubPicConfirmModel;
 
 	private Integer indexDtlPicCompliance;
 	private Integer indexDtlCc;
@@ -278,7 +286,7 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 			trcCorrespondence.setRc(new RC());
 		}
 
-		if (trcCorrespondence.getUserId1() != null) {
+		/*if (trcCorrespondence.getUserId1() != null) {
 			trcCorrespondence.setUserNameTemp1(trcCorrespondence.getUserId1().getName());
 		}
 
@@ -288,7 +296,7 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 
 		if (trcCorrespondence.getUserId3() != null) {
 			trcCorrespondence.setUserNameTemp3(trcCorrespondence.getUserId3().getName());
-		}
+		}*/
 
 		if (trcCorrespondence.getTrcCorrespondencePicCompliances() != null) {
 			for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicCompliances().size(); i++) {
@@ -316,6 +324,38 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 
 				if (dtl.getEmailCc3() != null) {
 					dtl.setEmailCcTemp3(dtl.getEmailCc3().getNik() + "-" + dtl.getEmailCc3().getName());
+				}
+			}
+		}
+		
+		if (trcCorrespondence.getTrcCrpdcReffLetters() != null) {
+			for (int i = 0; i < trcCorrespondence.getTrcCrpdcReffLetters().size(); i++) {
+				TrcCrpdcReffLetter dtl = (TrcCrpdcReffLetter) trcCorrespondence
+						.getTrcCrpdcReffLetters().get(i);
+
+				if (dtl.getReffLetterCorrespondence() != null) {
+					dtl.setPerihal(dtl.getReffLetterCorrespondence().getPerihalIn());
+					dtl.setLetterNo(dtl.getReffLetterCorrespondence().getLetterNo());
+					dtl.setLampiran("");					
+				}
+			}
+		}
+		
+		if (trcCorrespondence.getTrcCrpdcPicConfirms() != null) {
+			for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+				TrcCrpdcPicConfirm dtl = (TrcCrpdcPicConfirm) trcCorrespondence
+						.getTrcCrpdcPicConfirms().get(i);
+				
+				if (dtl.getUser1() != null) {
+					dtl.setUserName1(dtl.getUser1().getName());
+				}
+
+				if (dtl.getUser2() != null) {
+					dtl.setUserName2(dtl.getUser2().getName());
+				}
+
+				if (dtl.getUser3() != null) {
+					dtl.setUserName3(dtl.getUser3().getName());
 				}
 			}
 		}
@@ -370,6 +410,10 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 				trcCorrespondence.getTrcCorrespondenceSupportingUnits());
 		tablePicComplianceModel = new TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance>(
 				trcCorrespondence.getTrcCorrespondencePicCompliances());
+		tableReferalLetterModel = new TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter>(
+				trcCorrespondence.getTrcCrpdcReffLetters());
+		tableSubPicConfirmModel = new TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm>(
+				trcCorrespondence.getTrcCrpdcPicConfirms());
 
 		trcCorrespondence.setTrcCorrespondencePicCompliances(new ArrayList<TrcCorrespondencePicCompliance>());
 
@@ -728,7 +772,37 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
+	public SelectorInfo getSelectedReferalLetterData() {
+		return selectedReferalLetterData;
+	}
+
+	public void setSelectedReferalLetterData(SelectorInfo selectedReferalLetterData) {
+		this.selectedReferalLetterData = selectedReferalLetterData;
+	}
+
+	public SelectorInfo getSelectedSubPicConfirmData() {
+		return selectedSubPicConfirmData;
+	}
+
+	public void setSelectedSubPicConfirmData(SelectorInfo selectedSubPicConfirmData) {
+		this.selectedSubPicConfirmData = selectedSubPicConfirmData;
+	}
+
+	public TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> getTableReferalLetterModel() {
+		return tableReferalLetterModel;
+	}
+
+	public void setTableReferalLetterModel(TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> tableReferalLetterModel) {
+		this.tableReferalLetterModel = tableReferalLetterModel;
+	}
+
+	public TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> getTableSubPicConfirmModel() {
+		return tableSubPicConfirmModel;
+	}
+
+	public void setTableSubPicConfirmModel(TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> tableSubPicConfirmModel) {
+		this.tableSubPicConfirmModel = tableSubPicConfirmModel;
+	}
 
 }

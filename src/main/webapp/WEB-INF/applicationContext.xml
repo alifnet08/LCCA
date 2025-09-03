@@ -104,6 +104,8 @@
 		        <value>com/wo/config/hibernate/TmpCorrespondencePicFollowupEmail.hbm.xml </value> 
 		        <value>com/wo/config/hibernate/TmpCorrespondencePicFollowupReschedule.hbm.xml </value>
 		        <value>com/wo/config/hibernate/TmpCorrespondenceSupportingUnit.hbm.xml </value>
+		        <value>com/wo/config/hibernate/TmpCrpdcPicConfirm.hbm.xml </value>
+		        <value>com/wo/config/hibernate/TmpCrpdcReffLetter.hbm.xml </value>	        
 		        
 		        <value>com/wo/config/hibernate/TrcCorrespondence.hbm.xml</value>
 				<value>com/wo/config/hibernate/TrcCorrespondenceDocument.hbm.xml</value>
@@ -112,6 +114,8 @@
 				<value>com/wo/config/hibernate/TrcCorrespondencePicFollowupEmail.hbm.xml</value>
 				<value>com/wo/config/hibernate/TrcCorrespondenceSupportingUnit.hbm.xml</value>
 				<value>com/wo/config/hibernate/TrcCorrespondencePicFollowupAttendance.hbm.xml</value>
+				<value>com/wo/config/hibernate/TrcCrpdcPicConfirm.hbm.xml</value>
+		        <value>com/wo/config/hibernate/TrcCrpdcReffLetter.hbm.xml</value>	  
 				
 				<!-- <value>com/wo/config/hibernate/SocializationTrc.hbm.xml</value> -->
 				<value>com/wo/config/hibernate/SocializationRegulationTrc.hbm.xml</value>

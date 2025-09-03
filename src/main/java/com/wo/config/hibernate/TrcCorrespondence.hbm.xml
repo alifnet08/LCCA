@@ -110,6 +110,20 @@
 			<one-to-many not-found="ignore"
 				class="com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance" />
 		</bag>
+		
+		<bag name="trcCrpdcPicConfirms" inverse="true"
+			cascade="save-update, delete-orphan" order-by="CRPDC_PIC_CONFIRM_ID asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm" />
+		</bag>
+		
+		<bag name="trcCrpdcReffLetters" inverse="true"
+			cascade="save-update, delete-orphan" order-by="CRPDC_REFF_LETTER_ID asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter" />
+		</bag>
 
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />

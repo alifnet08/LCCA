@@ -43,7 +43,9 @@ public class TmpCorrespondence extends BaseEntity implements Serializable {
 	private List<TmpCorrespondencePicCompliance> tmpCorrespondencePicCompliances;
 	private List<TmpCorrespondencePicFollowupEmail> tmpCorrespondencePicFollowupEmails;
 	private List<TmpCorrespondencePicFollowupReschedule> tmpCorrespondencePicFollowupReschedules;
-	private List<TmpCorrespondenceSupportingUnit> tmpCorrespondenceSupportingUnits;
+	private List<TmpCorrespondenceSupportingUnit> tmpCorrespondenceSupportingUnits;	
+	private List<TmpCrpdcPicConfirm> tmpCrpdcPicConfirms;
+	private List<TmpCrpdcReffLetter> tmpCrpdcReffLetters;
 
 	private String userNameTemp1;
 	private String userNameTemp2;
@@ -412,6 +414,21 @@ public class TmpCorrespondence extends BaseEntity implements Serializable {
 	public void setUserDivisionId(Long userDivisionId) {
 		this.userDivisionId = userDivisionId;
 	}
-	
-	
+
+	public List<TmpCrpdcPicConfirm> getTmpCrpdcPicConfirms() {
+		return tmpCrpdcPicConfirms;
+	}
+
+	public void setTmpCrpdcPicConfirms(List<TmpCrpdcPicConfirm> tmpCrpdcPicConfirms) {
+		this.tmpCrpdcPicConfirms = tmpCrpdcPicConfirms;
+	}
+
+	public List<TmpCrpdcReffLetter> getTmpCrpdcReffLetters() {
+		return tmpCrpdcReffLetters;
+	}
+
+	public void setTmpCrpdcReffLetters(List<TmpCrpdcReffLetter> tmpCrpdcReffLetters) {
+		this.tmpCrpdcReffLetters = tmpCrpdcReffLetters;
+	}
+		
 }

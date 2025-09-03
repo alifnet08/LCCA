@@ -54,6 +54,10 @@ import com.wo.module.tmpCorrespondence.model.TmpCorrespondencePicCompliance;
 import com.wo.module.tmpCorrespondence.model.TmpCorrespondencePicComplianceTableModel;
 import com.wo.module.tmpCorrespondence.model.TmpCorrespondenceSupportingUnit;
 import com.wo.module.tmpCorrespondence.model.TmpCorrespondenceSupportingUnitTableModel;
+import com.wo.module.tmpCorrespondence.model.TmpCrpdcPicConfirm;
+import com.wo.module.tmpCorrespondence.model.TmpCrpdcPicConfirmTableModel;
+import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetter;
+import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetterTableModel;
 import com.wo.module.tmpCorrespondence.service.TmpCorrespondenceService;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
@@ -80,12 +84,16 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 	private TmpCorrespondencePicCompliance[] selectedPicComplianceData;
 	private TmpCorrespondenceSupportingUnit[] selectedSupportingUnitData;
+	private TmpCrpdcReffLetter[] selectedReferalLetterData;
+	private TmpCrpdcPicConfirm[] selectedSubPicConfirmData;
 
 	private SelectorInfo selectorUser1;
 	private SelectorInfo selectorUser2;
 	private SelectorInfo selectorUser3;
 	private SelectorInfo selectorPicCompliance;
-
+	private SelectorInfo selectedReferalLetter;
+	private SelectorInfo selectedSubPicConfirm;
+	
 	private SelectorInfo selectorUserCc1;
 	private SelectorInfo selectorUserCc2;
 	private SelectorInfo selectorUserCc3;
@@ -95,12 +103,19 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 	private TmpCorrespondencePicComplianceTableModel<TmpCorrespondencePicCompliance> tablePicComplianceModel;
 	private TmpCorrespondenceSupportingUnitTableModel<TmpCorrespondenceSupportingUnit> tableSupportingUnitModel;
+	private TmpCrpdcReffLetterTableModel<TmpCrpdcReffLetter> tableReferalLetterModel;
+	private TmpCrpdcPicConfirmTableModel<TmpCrpdcPicConfirm> tableSubPicConfirmModel;
 
 	private Integer lastSequenceOfPicCompliance;
 	private Integer lastSequenceOfSupportingUnitModel;
+	private Integer lastSequenceOfReffLetter;
+	private Integer lastSequenceOfPicConfirm;
 
 	private Integer indexDtlPicCompliance;
 	private Integer indexDtlCc;
+	private Integer indexDtlRefLetter;
+	private Integer indexDtlPicConfirm;
+	
 	private String divNameLogin;
 
 	// private List<TrcRmd> trcRmdList;
@@ -160,6 +175,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		selectorUserCc1 = TmpCorrespondenceConstants.buildSelectorUser();
 		selectorUserCc2 = TmpCorrespondenceConstants.buildSelectorUser();
 		selectorUserCc3 = TmpCorrespondenceConstants.buildSelectorUser();
+		selectedReferalLetter = TmpCorrespondenceConstants.buildSelectorReferensiSurat();
 
 		checkNewOrEdit();
 
@@ -275,7 +291,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 	}
 
-	public void clearPic2() {
+/*	public void clearPic2() {
 		tmpCorrespondence.setUserId2(null);
 		tmpCorrespondence.setUserNameTemp2(null);
 	}
@@ -283,7 +299,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 	public void clearPic3() {
 		tmpCorrespondence.setUserId3(null);
 		tmpCorrespondence.setUserNameTemp3(null);
-	}
+	} */
 
 	public void clearPicDetail2(int i) {
 		tmpCorrespondence.getTmpCorrespondenceSupportingUnits().get(i).setEmailCc2(null);
@@ -296,15 +312,27 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		tmpCorrespondence.getTmpCorrespondenceSupportingUnits().get(i).setEmailCcTemp3(null);
 		PrimeFaces.current().executeScript("reInitSelect2();");
 	}
+	
+	public void clearPicConfirm2(int i) {
+		tmpCorrespondence.getTmpCrpdcPicConfirms().get(i).setUser2(null);
+		tmpCorrespondence.getTmpCrpdcPicConfirms().get(i).setUserName2(null);
+		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
 
-	public void onChangeDivisionSingle() {
+	public void clearPicConfirm3(int i) {
+		tmpCorrespondence.getTmpCrpdcPicConfirms().get(i).setUser3(null);
+		tmpCorrespondence.getTmpCrpdcPicConfirms().get(i).setUserName3(null);
+		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
+	
+	/*public void onChangeDivisionSingle() {
 		tmpCorrespondence.setUserId1(null);
 		tmpCorrespondence.setUserNameTemp1(null);
 		tmpCorrespondence.setUserId2(null);
 		tmpCorrespondence.setUserNameTemp2(null);
 		tmpCorrespondence.setUserId3(null);
 		tmpCorrespondence.setUserNameTemp3(null);
-	}
+	} */
 
 	public void onChangeDivision(int i) {
 		TmpCorrespondenceSupportingUnit data = tmpCorrespondence.getTmpCorrespondenceSupportingUnits().get(i);
@@ -316,30 +344,42 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		data.setEmailCcTemp3(null);
 		PrimeFaces.current().executeScript("reInitSelect2();");
 	}
+	
+	public void onChangeDivisionPicConfirm(int i) {
+		TmpCrpdcPicConfirm data = tmpCorrespondence.getTmpCrpdcPicConfirms().get(i);
+		data.setUser1(null);
+		data.setUserName1(null);
+		data.setUser2(null);
+		data.setUserName2(null);
+		data.setUser3(null);
+		data.setUserName3(null);
+		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
 
 	public void onChangeFollowupStatus() {
 		if (tmpCorrespondence.getFollowUp() != null) {
 			if ("Y".equals(tmpCorrespondence.getFollowUp())) {
-				tmpCorrespondence.setUserId1(null);
-				tmpCorrespondence.setUserNameTemp1(null);
-				tmpCorrespondence.setUserId2(null);
-				tmpCorrespondence.setUserNameTemp2(null);
-				tmpCorrespondence.setUserId3(null);
-				tmpCorrespondence.setUserNameTemp3(null);
-
+				/*
+				 * tmpCorrespondence.setUserId1(null); tmpCorrespondence.setUserNameTemp1(null);
+				 * tmpCorrespondence.setUserId2(null); tmpCorrespondence.setUserNameTemp2(null);
+				 * tmpCorrespondence.setUserId3(null); tmpCorrespondence.setUserNameTemp3(null);
+				 */
+				
 				if (tmpCorrespondence.getCounterType() == null) {
 					tmpCorrespondence.setCounterType(new CounterType());
 				}
 
 			} else if ("N".equals(tmpCorrespondence.getFollowUp())) {
-				tmpCorrespondence.setDivisionId(null);
-				tmpCorrespondence.setTargetDate(null);
-				tmpCorrespondence.setUserId1(null);
-				tmpCorrespondence.setUserNameTemp1(null);
-				tmpCorrespondence.setUserId2(null);
-				tmpCorrespondence.setUserNameTemp2(null);
-				tmpCorrespondence.setUserId3(null);
-				tmpCorrespondence.setUserNameTemp3(null);
+				/*
+				 * tmpCorrespondence.setDivisionId(null); tmpCorrespondence.setTargetDate(null);
+				 * tmpCorrespondence.setUserId1(null); tmpCorrespondence.setUserNameTemp1(null);
+				 * tmpCorrespondence.setUserId2(null); tmpCorrespondence.setUserNameTemp2(null);
+				 * tmpCorrespondence.setUserId3(null); tmpCorrespondence.setUserNameTemp3(null);
+				 */
+				
+				if (tmpCorrespondence.getTmpCrpdcPicConfirms() != null) {
+					tmpCorrespondence.getTmpCrpdcPicConfirms().clear();
+				}
 
 				if (tmpCorrespondence.getTmpCorrespondenceSupportingUnits() != null) {
 					tmpCorrespondence.getTmpCorrespondenceSupportingUnits().clear();
@@ -424,6 +464,68 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		PrimeFaces.current().executeScript("reInitSelect2();");
 //		RequestContext.getCurrentInstance().execute("reInitSelect2();");
 	}
+	
+	public void onAddNewRefLetter() {
+		if (tmpCorrespondence.getTmpCrpdcReffLetters() == null) {
+			tmpCorrespondence.setTmpCrpdcReffLetters(new ArrayList<TmpCrpdcReffLetter>());
+			lastSequenceOfReffLetter = 0;
+		} else {
+			if (tmpCorrespondence.getTmpCrpdcReffLetters().size() == 0) {
+				lastSequenceOfReffLetter = 0;
+			}
+		}
+
+		TmpCrpdcReffLetter d = new TmpCrpdcReffLetter();
+		lastSequenceOfReffLetter = lastSequenceOfReffLetter + 1;
+		d.setSequence(lastSequenceOfReffLetter);
+		tmpCorrespondence.getTmpCrpdcReffLetters().add(d);
+		tableReferalLetterModel.setWrappedData(tmpCorrespondence.getTmpCrpdcReffLetters());
+
+	}
+
+	public void onDeleteRowRefLetter() {
+		for (int i = 0; i < selectedReferalLetterData.length; i++) {
+			tmpCorrespondence.getTmpCrpdcReffLetters().remove(selectedReferalLetterData[i]);
+		}
+
+		if (tmpCorrespondence.getTmpCrpdcReffLetters() == null
+				|| tmpCorrespondence.getTmpCrpdcReffLetters().size() == 0) {
+			lastSequenceOfReffLetter = 0;
+		}
+
+		tableReferalLetterModel.setWrappedData(tmpCorrespondence.getTmpCrpdcReffLetters());
+	}
+	
+	public void onAddNewSubPicConfirmasi() {
+		if (tmpCorrespondence.getTmpCrpdcPicConfirms() == null) {
+			tmpCorrespondence.setTmpCrpdcPicConfirms(new ArrayList<TmpCrpdcPicConfirm>());
+			lastSequenceOfPicConfirm = 0;
+		} else {
+			if (tmpCorrespondence.getTmpCrpdcPicConfirms().size() == 0) {
+				lastSequenceOfPicConfirm = 0;
+			}
+		}
+
+		TmpCrpdcPicConfirm d = new TmpCrpdcPicConfirm();
+		lastSequenceOfPicConfirm = lastSequenceOfPicConfirm + 1;
+		d.setSequence(lastSequenceOfPicConfirm);
+		tmpCorrespondence.getTmpCrpdcPicConfirms().add(d);
+		tableSubPicConfirmModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+
+	}
+
+	public void onDeleteRowSubPiConfiramsi() {
+		for (int i = 0; i < selectedSubPicConfirmData.length; i++) {
+			tmpCorrespondence.getTmpCrpdcPicConfirms().remove(selectedSubPicConfirmData[i]);
+		}
+
+		if (tmpCorrespondence.getTmpCrpdcPicConfirms() == null
+				|| tmpCorrespondence.getTmpCrpdcPicConfirms().size() == 0) {
+			lastSequenceOfPicConfirm = 0;
+		}
+
+		tableSubPicConfirmModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+	}
 
 	public void handleFileUploadDocument(FileUploadEvent event) throws Exception {
 		try {
@@ -470,6 +572,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 		lastSequenceOfPicCompliance = 0;
 		lastSequenceOfSupportingUnitModel = 0;
+		lastSequenceOfReffLetter = 0;
+		lastSequenceOfPicConfirm = 0;
 
 		User user1 = userService.getUserByNik(facesUtil.retrieveUserLogin());
 		if (user1 != null) {
@@ -517,6 +621,10 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				tmpCorrespondence.getTmpCorrespondenceSupportingUnits());
 		tablePicComplianceModel = new TmpCorrespondencePicComplianceTableModel<TmpCorrespondencePicCompliance>(
 				tmpCorrespondence.getTmpCorrespondencePicCompliances());
+		tableReferalLetterModel = new TmpCrpdcReffLetterTableModel<TmpCrpdcReffLetter>(
+				tmpCorrespondence.getTmpCrpdcReffLetters());
+		tableSubPicConfirmModel = new TmpCrpdcPicConfirmTableModel<TmpCrpdcPicConfirm>(
+				tmpCorrespondence.getTmpCrpdcPicConfirms());
 
 		actionMode = Constants.ACTION_ADD;
 		facesUtil.setSessionAttribute("token", null);
@@ -535,6 +643,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		tmpCorrespondence.setOldTargetDate(tmpCorrespondence.getTargetDate());
 		lastSequenceOfPicCompliance = 0;
 		lastSequenceOfSupportingUnitModel = 0;
+		lastSequenceOfReffLetter = 0;
+		lastSequenceOfPicConfirm = 0;
 
 		TrcCorrespondence trcCorrespondence = trcCorrespondenceService.findById(idLong);
 		if (trcCorrespondence != null) {
@@ -555,7 +665,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			disabledFollowUpStatus = false;
 		}
 
-		if (tmpCorrespondence.getUserId1() != null) {
+		/*if (tmpCorrespondence.getUserId1() != null) {
 			tmpCorrespondence.setUserNameTemp1(tmpCorrespondence.getUserId1().getName());
 		}
 
@@ -565,7 +675,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 		if (tmpCorrespondence.getUserId3() != null) {
 			tmpCorrespondence.setUserNameTemp3(tmpCorrespondence.getUserId3().getName());
-		}
+		} */
 		
 		User userInputer = userService.getUserByNik(tmpCorrespondence.getCreatedBy());
 		if (userInputer != null) {
@@ -614,6 +724,46 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				}
 			}
 		}
+		
+		if (tmpCorrespondence.getTmpCrpdcReffLetters() != null) {
+			lastSequenceOfReffLetter = tmpCorrespondence.getTmpCrpdcReffLetters().size();
+			for (int i = 0; i < tmpCorrespondence.getTmpCrpdcReffLetters().size(); i++) {
+				TmpCrpdcReffLetter dtl = (TmpCrpdcReffLetter) tmpCorrespondence
+						.getTmpCrpdcReffLetters().get(i);
+
+				lastSequenceOfReffLetter = lastSequenceOfReffLetter + 1;
+				dtl.setSequence(lastSequenceOfReffLetter);
+
+				if (dtl.getReffLetterCorrespondence() != null) {
+					dtl.setPerihal(dtl.getTmpCorrespondence().getPerihalIn());
+					dtl.setLetterNo(dtl.getTmpCorrespondence().getLetterNo());
+					dtl.setLampiran("");					
+				}
+			}
+		}
+		
+		if (tmpCorrespondence.getTmpCrpdcPicConfirms() != null) {
+			lastSequenceOfPicConfirm = tmpCorrespondence.getTmpCrpdcPicConfirms().size();
+			for (int i = 0; i < tmpCorrespondence.getTmpCrpdcPicConfirms().size(); i++) {
+				TmpCrpdcPicConfirm dtl = (TmpCrpdcPicConfirm) tmpCorrespondence
+						.getTmpCrpdcPicConfirms().get(i);
+
+				lastSequenceOfPicConfirm = lastSequenceOfPicConfirm + 1;
+				dtl.setSequence(lastSequenceOfPicConfirm);
+
+				if (dtl.getUser1() != null) {
+					dtl.setUserName1(dtl.getUser1().getName());
+				}
+
+				if (dtl.getUser2() != null) {
+					dtl.setUserName2(dtl.getUser2().getName());
+				}
+
+				if (dtl.getUser3() != null) {
+					dtl.setUserName3(dtl.getUser3().getName());
+				}
+			}
+		}
 
 		uploadedFilesDocument = new ArrayList<UploadedFileWO>();
 
@@ -632,6 +782,11 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				tmpCorrespondence.getTmpCorrespondenceSupportingUnits());
 		tablePicComplianceModel = new TmpCorrespondencePicComplianceTableModel<TmpCorrespondencePicCompliance>(
 				tmpCorrespondence.getTmpCorrespondencePicCompliances());
+		tableReferalLetterModel = new TmpCrpdcReffLetterTableModel<TmpCrpdcReffLetter>(
+				tmpCorrespondence.getTmpCrpdcReffLetters());
+		tableSubPicConfirmModel = new TmpCrpdcPicConfirmTableModel<TmpCrpdcPicConfirm>(
+				tmpCorrespondence.getTmpCrpdcPicConfirms());
+		
 	}
 
 	public Boolean validate() {
@@ -717,11 +872,30 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			flag = true;
 		} else {
 			if (tmpCorrespondence.getFollowUp().equals(Constants.CONSTANT_YES)) {
-				if (tmpCorrespondence.getUserId1() == null) {
+				if(tmpCorrespondence.getTmpCrpdcPicConfirms() == null || 
+						tmpCorrespondence.getTmpCrpdcPicConfirms().size() == 0) {
+					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceSubmissionConfirmation") + " "
+							+ facesUtil.retrieveMessage("validateRequired"));
+					flag = true;					
+				} else {
+					for (int i = 0; i < tmpCorrespondence.getTmpCrpdcPicConfirms().size(); i++) {
+						TmpCrpdcPicConfirm dtl = (TmpCrpdcPicConfirm) tmpCorrespondence
+								.getTmpCrpdcPicConfirms().get(i);
+
+						if (dtl.getUser1() == null) {
+							facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePic1") + " "
+									+ facesUtil.retrieveMessage("validateRequired"));
+							flag = true;
+							break;
+						}
+					}
+				}
+				
+				/*if (tmpCorrespondence.getUserId1() == null) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePic1") + " "
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
-				}
+				} */
 
 				if (tmpCorrespondence.getTmpCorrespondenceSupportingUnits() == null
 						|| tmpCorrespondence.getTmpCorrespondenceSupportingUnits().size() == 0) {
@@ -849,6 +1023,40 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					for (int i = 0; i < tmpCorrespondence.getTmpCorrespondenceSupportingUnits().size(); i++) {
 						TmpCorrespondenceSupportingUnit dtl = (TmpCorrespondenceSupportingUnit) tmpCorrespondence
 								.getTmpCorrespondenceSupportingUnits().get(i);
+						dtl.setTmpCorrespondence(tmpCorrespondence);
+						if (dtl.getCreatedBy() == null) {
+							dtl.setCreatedBy(facesUtil.retrieveUserLogin());
+							dtl.setCreationDate(new Timestamp(new Date().getTime()));
+						}
+
+						dtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
+						dtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
+						dtl.setDelId(new Long(0));
+						dtl.setEnabledFlag(Constants.CONSTANT_YES);
+					}
+				}
+				
+				if (tmpCorrespondence.getTmpCrpdcReffLetters() != null) {
+					for (int i = 0; i < tmpCorrespondence.getTmpCrpdcReffLetters().size(); i++) {
+						TmpCrpdcReffLetter dtl = (TmpCrpdcReffLetter) tmpCorrespondence
+								.getTmpCrpdcReffLetters().get(i);
+						dtl.setTmpCorrespondence(tmpCorrespondence);
+						if (dtl.getCreatedBy() == null) {
+							dtl.setCreatedBy(facesUtil.retrieveUserLogin());
+							dtl.setCreationDate(new Timestamp(new Date().getTime()));
+						}
+
+						dtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
+						dtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
+						dtl.setDelId(new Long(0));
+						dtl.setEnabledFlag(Constants.CONSTANT_YES);
+					}
+				}
+				
+				if (tmpCorrespondence.getTmpCrpdcPicConfirms() != null) {
+					for (int i = 0; i < tmpCorrespondence.getTmpCrpdcPicConfirms().size(); i++) {
+						TmpCrpdcPicConfirm dtl = (TmpCrpdcPicConfirm) tmpCorrespondence
+								.getTmpCrpdcPicConfirms().get(i);
 						dtl.setTmpCorrespondence(tmpCorrespondence);
 						if (dtl.getCreatedBy() == null) {
 							dtl.setCreatedBy(facesUtil.retrieveUserLogin());
@@ -1076,14 +1284,26 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				emailContent = emailContent.replaceAll("division_name",
 						(tmpCorrespondence.getDivisionId() != null
 								? userService.getDivisionNameByDivisionId(tmpCorrespondence.getDivisionId())
-								: "NA"));
+								: "NA")); 
+				
+				/* 20250903 ditutup
 				emailContent = emailContent.replaceAll("pic_1_name",
 						(tmpCorrespondence.getUserId1() != null ? tmpCorrespondence.getUserId1().getName() : "NA"));
 				emailContent = emailContent.replaceAll("pic_2_name",
 						(tmpCorrespondence.getUserId2() != null ? tmpCorrespondence.getUserId2().getName() : "NA"));
 				emailContent = emailContent.replaceAll("pic_3_name",
 						(tmpCorrespondence.getUserId3() != null ? tmpCorrespondence.getUserId3().getName() : "NA"));
-
+				*/
+				
+				// 20250903 diganti pakai ini
+				TmpCrpdcPicConfirm dataPic = tmpCorrespondence.getTmpCrpdcPicConfirms().get(0);
+				emailContent = emailContent.replaceAll("pic_1_name",
+						(dataPic.getUser1() != null ? dataPic.getUser1().getName() : "NA"));
+				emailContent = emailContent.replaceAll("pic_2_name",
+						(dataPic.getUser2() != null ? dataPic.getUser2().getName() : "NA"));
+				emailContent = emailContent.replaceAll("pic_3_name",
+						(dataPic.getUser3() != null ? dataPic.getUser3().getName() : "NA"));
+				
 				emailContent = emailContent.replaceAll("letter_no", tmpCorrespondence.getLetterNo());
 				emailContent = emailContent.replaceAll("receive_letter_date",
 						tmpCorrespondence.getLetterReceivedDate() != null
@@ -1287,7 +1507,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						emailTo = cd.getEmailTo();
 						emailCc1 = cd.getEmailCc1();
 						emailCc2 = cd.getEmailCc2();
-
+						
+						/*
 						if (emailTo.equals(Constants.REMINDER_PIC1)) {
 							emailTo = tmpCorrespondence.getUserId1() != null ? tmpCorrespondence.getUserId1().getEmail()
 									: "";
@@ -1325,15 +1546,82 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							emailCc2 = tmpCorrespondence.getUserId3() != null
 									? tmpCorrespondence.getUserId3().getEmail()
 									: "";
+						}*/
+						
+						String emailToConcate = "";
+						String emailCc1Concate = "";
+						String emailCc2Concate = "";
+						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
+							if (emailTo !=null && emailTo.equals(Constants.REMINDER_PIC1) && 
+									tmpData.getUser1() != null ) {
+								emailToConcate = emailToConcate != "" ? (emailToConcate.concat(",").concat(tmpData.getUser1().getEmail()))
+										: emailToConcate.concat(tmpData.getUser1().getEmail());
+							} else if (emailTo !=null && emailTo.equals(Constants.REMINDER_PIC2) && 
+									tmpData.getUser2() != null ) {
+								emailToConcate = emailToConcate != "" ? (emailToConcate.concat(",").concat(tmpData.getUser2().getEmail()))
+										: emailToConcate.concat(tmpData.getUser2().getEmail());
+							} else if (emailTo !=null && emailTo.equals(Constants.REMINDER_PIC3) && 
+									tmpData.getUser3() != null ) {
+								emailToConcate = emailToConcate != "" ? (emailToConcate.concat(",").concat(tmpData.getUser3().getEmail()))
+										: emailToConcate.concat(tmpData.getUser3().getEmail());
+							}		
+							
+							if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC1) && 
+									tmpData.getUser1() != null ) {
+								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser1().getEmail()))
+										: emailCc1Concate.concat(tmpData.getUser1().getEmail());
+							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC2) && 
+									tmpData.getUser2() != null ) {
+								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser2().getEmail()))
+										: emailCc1Concate.concat(tmpData.getUser2().getEmail());
+							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC3) && 
+									tmpData.getUser3() != null ) {
+								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser3().getEmail()))
+										: emailCc1Concate.concat(tmpData.getUser3().getEmail());
+							}		
+							
+							if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC1) && 
+									tmpData.getUser1() != null ) {
+								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser1().getEmail()))
+										: emailCc2Concate.concat(tmpData.getUser1().getEmail());
+							} else if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC2) && 
+									tmpData.getUser2() != null ) {
+								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser2().getEmail()))
+										: emailCc2Concate.concat(tmpData.getUser2().getEmail());
+							} else if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC3) && 
+									tmpData.getUser3() != null ) {
+								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser3().getEmail()))
+										: emailCc2Concate.concat(tmpData.getUser3().getEmail());
+							}	
 						}
+						
+						emailTo = emailToConcate;
+						emailCc1 = emailCc1Concate;
+						emailCc2 = emailCc2Concate;						
 
 					} else {
-						emailTo = tmpCorrespondence.getUserId1() != null ? tmpCorrespondence.getUserId1().getEmail()
-								: "";
-						emailCc1 = tmpCorrespondence.getUserId2() != null ? tmpCorrespondence.getUserId2().getEmail()
-								: "";
-						emailCc2 = tmpCorrespondence.getUserId3() != null ? tmpCorrespondence.getUserId3().getEmail()
-								: "";
+						/*
+						 * emailTo = tmpCorrespondence.getUserId1() != null ?
+						 * tmpCorrespondence.getUserId1().getEmail() : ""; emailCc1 =
+						 * tmpCorrespondence.getUserId2() != null ?
+						 * tmpCorrespondence.getUserId2().getEmail() : ""; emailCc2 =
+						 * tmpCorrespondence.getUserId3() != null ?
+						 * tmpCorrespondence.getUserId3().getEmail() : "";
+						 */
+						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
+							if (tmpData.getUser1() != null ) {
+								emailTo = emailTo != "" ? (emailTo.concat(",").concat(tmpData.getUser1().getEmail()))
+										: emailTo.concat(tmpData.getUser1().getEmail());
+							}							
+							if (tmpData.getUser2() != null ) {
+								emailCc1 = emailCc1 != "" ? (emailCc1.concat(",").concat(tmpData.getUser2().getEmail()))
+										: emailCc1.concat(tmpData.getUser2().getEmail());
+							}
+							if (tmpData.getUser3() != null ) {
+								emailCc2 = emailCc2 != "" ? (emailCc2.concat(",").concat(tmpData.getUser3().getEmail()))
+										: emailCc2.concat(tmpData.getUser3().getEmail());
+							}	
+						}
 					}
 					
 					User userInputer = userService.getUserByNik(tmpCorrespondence.getCreatedBy());
@@ -1382,7 +1670,13 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 					ExecutorService emailExecutor = Executors.newCachedThreadPool();
 
+					/* 20250903 ditutup
 					if (tmpCorrespondence.getUserId1() == null && StringUtils.isNotEmpty(emailCcSupporting)) {
+						emailTo = emailCcSupporting;
+					}*/
+					
+					// 20250903 diganti
+					if (tmpCorrespondence.getTmpCrpdcPicConfirms() == null && StringUtils.isNotEmpty(emailCcSupporting)) {
 						emailTo = emailCcSupporting;
 					}
 
@@ -1410,7 +1704,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		}
 
 	}
-
+	
 	public FacesUtil getFacesUtil() {
 		return facesUtil;
 	}
@@ -1528,9 +1822,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 	@Override
 	public void itemSelected(String clientId, String widgetVar, Object selectedItem) {
-		if (StringUtils.equals("pic1Dialog", widgetVar)) {
+		/*if (StringUtils.equals("pic1Dialog", widgetVar)) {
 			Object[] objects = (Object[]) selectedItem;
-			// User user1 = userService.findById(((BigInteger) objects[0]).longValue());
 			User user1 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
 			if (user1 != null) {
 				tmpCorrespondence.setUserId1(user1);
@@ -1553,7 +1846,6 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		if (StringUtils.equals("pic2Dialog", widgetVar)) {
 			Object[] objects = (Object[]) selectedItem;
 
-			// User user2 = userService.findById(((BigInteger) objects[0]).longValue());
 			User user2 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
 			if (user2 != null) {
 				tmpCorrespondence.setUserId2(user2);
@@ -1565,7 +1857,18 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					tmpCorrespondence.setUserNameTemp3(user3.getNik() + "-" + user3.getName());
 				}
 			}
-		}
+		} 
+		
+		if (StringUtils.equals("pic3Dialog", widgetVar)) {
+			Object[] objects = (Object[]) selectedItem;
+
+			// User user3 = userService.findById(((BigInteger) objects[0]).longValue());
+			User user3 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
+			if (user3 != null) {
+				tmpCorrespondence.setUserId3(user3);
+				tmpCorrespondence.setUserNameTemp3(user3.getNik() + "-" + user3.getName());
+			}
+		}	*/
 
 		if (StringUtils.equals("picComplianceDialog", widgetVar)) {
 			Object[] objects = (Object[]) selectedItem;
@@ -1583,17 +1886,6 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						.setEmailTemp(userPicCompliance.getEmail());
 
 				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCorrespondenceSupportingUnits());
-			}
-		}
-
-		if (StringUtils.equals("pic3Dialog", widgetVar)) {
-			Object[] objects = (Object[]) selectedItem;
-
-			// User user3 = userService.findById(((BigInteger) objects[0]).longValue());
-			User user3 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
-			if (user3 != null) {
-				tmpCorrespondence.setUserId3(user3);
-				tmpCorrespondence.setUserNameTemp3(user3.getNik() + "-" + user3.getName());
 			}
 		}
 
@@ -1665,6 +1957,72 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				 * .setDivisionId(user3.getDivisionId());
 				 */
 				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCorrespondenceSupportingUnits());
+			}
+		}
+		
+		if (StringUtils.equals("referalLetterDialog", widgetVar)) {
+			Object[] objects = (Object[]) selectedItem;
+
+			TmpCorrespondence dataCorresponse = new TmpCorrespondence();
+			dataCorresponse.setCorrespondenceId(MathUtil.returnIdObjectToLong(objects[0]));
+			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffLetterCorrespondence(dataCorresponse);
+			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setPerihal((String)objects[1]);
+			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setLetterNo((String)objects[2]);
+			//lamaran
+		}
+		
+		if (StringUtils.equals("picConfirmPic1Dialog", widgetVar)) {
+			Object[] objects = (Object[]) selectedItem;
+			
+			User user1 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
+			if (user1 != null) {
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser1(user1);
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName1(user1.getName());
+
+				User user2 = userService.getUserByNik(user1.getPukNik());
+				if (user2 != null) {
+					tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser2(user2);
+					tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName2(user2.getName());
+
+
+					User user3 = userService.getUserByNik(user2.getPukNik());
+					if (user3 != null) {
+						tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser3(user3);
+						tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName3(user3.getName());
+					}
+				}
+
+				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+			}
+		}
+		
+		if (StringUtils.equals("picConfirmPic2Dialog", widgetVar)) {
+			Object[] objects = (Object[]) selectedItem;
+			
+			User user2 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
+			if (user2 != null) {
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser2(user2);
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName2(user2.getName());
+
+				User user3 = userService.getUserByNik(user2.getPukNik());
+				if (user3 != null) {
+					tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser3(user3);
+					tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName3(user3.getName());
+				}
+				
+				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+			}
+		}
+		
+		if (StringUtils.equals("picConfirmPic3Dialog", widgetVar)) {
+			Object[] objects = (Object[]) selectedItem;
+			
+			User user3 = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
+			if (user3 != null) {
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser3(user3);
+				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName3(user3.getName());
+			
+				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
 			}
 		}
 
@@ -1951,6 +2309,86 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 	public void setTextWarningUpload(String textWarningUpload) {
 		this.textWarningUpload = textWarningUpload;
+	}
+
+	public TmpCrpdcReffLetter[] getSelectedReferalLetterData() {
+		return selectedReferalLetterData;
+	}
+
+	public void setSelectedReferalLetterData(TmpCrpdcReffLetter[] selectedReferalLetterData) {
+		this.selectedReferalLetterData = selectedReferalLetterData;
+	}
+
+	public SelectorInfo getSelectedReferalLetter() {
+		return selectedReferalLetter;
+	}
+
+	public void setSelectedReferalLetter(SelectorInfo selectedReferalLetter) {
+		this.selectedReferalLetter = selectedReferalLetter;
+	}
+
+	public TmpCrpdcReffLetterTableModel<TmpCrpdcReffLetter> getTableReferalLetterModel() {
+		return tableReferalLetterModel;
+	}
+
+	public void setTableReferalLetterModel(TmpCrpdcReffLetterTableModel<TmpCrpdcReffLetter> tableReferalLetterModel) {
+		this.tableReferalLetterModel = tableReferalLetterModel;
+	}
+
+	public Integer getIndexDtlRefLetter() {
+		return indexDtlRefLetter;
+	}
+
+	public void setIndexDtlRefLetter(Integer indexDtlRefLetter) {
+		this.indexDtlRefLetter = indexDtlRefLetter;
+	}
+
+	public Integer getLastSequenceOfReffLetter() {
+		return lastSequenceOfReffLetter;
+	}
+
+	public void setLastSequenceOfReffLetter(Integer lastSequenceOfReffLetter) {
+		this.lastSequenceOfReffLetter = lastSequenceOfReffLetter;
+	}
+
+	public TmpCrpdcPicConfirm[] getSelectedSubPicConfirmData() {
+		return selectedSubPicConfirmData;
+	}
+
+	public void setSelectedSubPicConfirmData(TmpCrpdcPicConfirm[] selectedSubPicConfirmData) {
+		this.selectedSubPicConfirmData = selectedSubPicConfirmData;
+	}
+
+	public SelectorInfo getSelectedSubPicConfirm() {
+		return selectedSubPicConfirm;
+	}
+
+	public void setSelectedSubPicConfirm(SelectorInfo selectedSubPicConfirm) {
+		this.selectedSubPicConfirm = selectedSubPicConfirm;
+	}
+
+	public TmpCrpdcPicConfirmTableModel<TmpCrpdcPicConfirm> getTableSubPicConfirmModel() {
+		return tableSubPicConfirmModel;
+	}
+
+	public void setTableSubPicConfirmModel(TmpCrpdcPicConfirmTableModel<TmpCrpdcPicConfirm> tableSubPicConfirmModel) {
+		this.tableSubPicConfirmModel = tableSubPicConfirmModel;
+	}
+
+	public Integer getLastSequenceOfPicConfirm() {
+		return lastSequenceOfPicConfirm;
+	}
+
+	public void setLastSequenceOfPicConfirm(Integer lastSequenceOfPicConfirm) {
+		this.lastSequenceOfPicConfirm = lastSequenceOfPicConfirm;
+	}
+
+	public Integer getIndexDtlPicConfirm() {
+		return indexDtlPicConfirm;
+	}
+
+	public void setIndexDtlPicConfirm(Integer indexDtlPicConfirm) {
+		this.indexDtlPicConfirm = indexDtlPicConfirm;
 	}
 
 }

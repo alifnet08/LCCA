@@ -200,8 +200,84 @@
 							</p:dataList>
 						</div>
 					</div>
+					
+					<h3>
+						<h:outputText value="Refrensi Surat" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-ref-letter">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewRefLetter();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowRefLetter();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableReferalLetterDetail" var="vo"
+									value="#{tmpCorrespondenceEditBean.tableReferalLetterModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpCorrespondenceEditBean.selectedReferalLetterData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
 
-
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="Perihal Surat"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														id="perihalLetter#{statIndex}" styleClass="form-control"
+														value="#{vo.perihal}" disabled="true" /></td>
+												<td style="width: 20%"><p:commandLink process="@this"
+														onstart="referalLetterDialog.show();">
+														<span><i class="fa fa-search ico-lg"></i></span>
+														<f:setPropertyActionListener
+															target="#{tmpCorrespondenceEditBean.indexDtlRefLetter}"
+															value="#{statIndex}" />
+													</p:commandLink></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="Nomor Surat"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control" value="#{vo.letterNo}" disabled="true" /></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="Lampiran"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"></td>
+												<td style="width: 20%"></td>
+											</tr>
+										</table>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" />
+		
 					<h3>
 						<h:outputText value="#{msg.formTmpCorrespondencePICCompliance}" />
 					</h3>
@@ -289,7 +365,7 @@
 									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
 									<f:selectItems value="#{tmpCorrespondenceEditBean.yesNoList}" />
 									<p:ajax event="change" 
-										update="form:panelReminder form:panelSubmissionConfirmation form:panelSupportingUnit" 
+										update="form:panelReminder form:panelTagetDateSubmissionConfirmation form:panelSupportingUnit" 
 										listener="#{tmpCorrespondenceEditBean.onChangeFollowupStatus}" />
 								</h:selectOneMenu>
 								<p:message for="tmpCorrespondenceFollowup"/>
@@ -306,137 +382,168 @@
 						</div>
 					</h:panelGroup>
 					
-					
-									
-					
-					
+					<!-- ayuu -->
 
-					<h:panelGroup id="panelSubmissionConfirmation">
-					<div class="col-lg-12">
+					<h:panelGroup id="panelSubPicConfirmasi">
+						<h:outputText value="&#160;" />
+
 						<h3>
-							<h:outputText
-								value="#{msg.formTmpCorrespondenceSubmissionConfirmation}" />
+							<h:outputText value="#{msg.formTmpCorrespondenceSubmissionConfirmation}" />
 						</h3>
-						<div class="form-group">
-							<label for="divison" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondenceDivision}" /></label>
-							<h:selectOneMenu styleClass="form-control s2 divId"
-								disabled="#{('Y' or 'N') ne tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-								or tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.divisionId}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems value="#{tmpCorrespondenceEditBean.divisionList}" />
-								<p:ajax event="change" update="form:panelSubmissionConfirmation"
-									listener="#{tmpCorrespondenceEditBean.onChangeDivisionSingle}"
-								 />
-								
-							</h:selectOneMenu>
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label for="pic1" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondencePic1}" /> 
-								<p:commandLink
-									rendered="#{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-									and !tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-									process="@this"
-									onstart="$('.hdnParamPic1Option').val($('.divId').val());pic1Dialog.show();">
-									<span class="input-group-btn fa fa-search btn btn-link"></span>
-								</p:commandLink>
-								
-							</label>
-							<p:inputText id="inputPic1" styleClass="form-control"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.userNameTemp1}"
-								readonly="true" />
+						<div class="col-lg-12">
+							<div id="mp-pic-tindak-lanjut">
+								<h4 class="sub-header">
+									&nbsp;
+									<div class="box-tools">
+										<ul class="no-margin no-padding">
+											<li><p:commandLink onclick="onAddNewSubPicConfirmasi();">
+													<i class="fa fa-plus"></i>
+												</p:commandLink></li>
+											<li><p:commandLink
+													onclick="onDeleteRowSubPiConfiramsi();">
+													<i class="fa fa-trash"></i>
+												</p:commandLink></li>
+										</ul>
+									</div>
+								</h4>
+								<div class="table-wrapper table-responsive">
+									<p:dataTable id="tableSubPicConfirmDetail" var="vo"
+										value="#{tmpCorrespondenceEditBean.tableSubPicConfirmModel}"
+										rowIndexVar="statIndex" style="width:100%;"
+										selection="#{tmpCorrespondenceEditBean.selectedSubPicConfirmData}"
+										rowKey="#{vo.sequence}" rowSelectMode="checkbox">
 
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label for="pic2" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondencePic2}" /> 
-								<p:commandLink 
-									rendered="#{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-									and !tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-									process="@this"
-									onstart="$('.hdnParamPic2Option').val($('.divId').val());pic2Dialog.show();">
-									<span class="input-group-btn fa fa-search btn btn-link"></span>
-								</p:commandLink>
-								<p:commandLink immediate="true"
-									rendered="#{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-									and !tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-									actionListener="#{tmpCorrespondenceEditBean.clearPic2}"
-									update="form:inputPic2">
-									<span class="input-group-btn fa fa-trash btn btn-link"></span>	
-								</p:commandLink>
-							</label>
-							<p:inputText id="inputPic2" styleClass="form-control"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.userNameTemp2}"
-								readonly="true" />
+										<p:ajax event="rowSelectCheckbox" process="@this" />
+										<p:ajax event="rowUnselectCheckbox" process="@this" />
 
+										<p:ajax event="toggleSelect" process="@this" />
+
+										<p:column selectionMode="multiple"
+											style="text-align:center; width:40px;">
+
+										</p:column>
+
+										<p:column headerText="#{msg.formTmpCorrespondenceDivision}"
+											style="width:200px;">
+											<div class="form-group" style="margin-top: 15px;">
+												<h:selectOneMenu
+													styleClass="form-control s2 divisionPicConfirm#{statIndex}"
+													style="margin-top:15px;height:38px;"
+													value="#{vo.divisionId}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{tmpCorrespondenceEditBean.divisionList}" />
+													<p:ajax event="change"
+														update="form:tableSubPicConfirmDetail"
+														listener="#{tmpCorrespondenceEditBean.onChangeDivisionPicConfirm(statIndex)}" />
+												</h:selectOneMenu>
+											</div>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondencePic1}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															id="picConfirm1#{statIndex}" styleClass="form-control"
+															value="#{vo.userName1}" disabled="true" /></td>
+													<td style="width: 20%"><p:commandLink process="@this"
+															onstart="$('.hdnParamPicConfirm1Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic1Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlPicConfirm}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondencePic2}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 70%"><h:inputText
+															id="picConfirm2#{statIndex}" styleClass="form-control"
+															value="#{vo.userName2}" disabled="true" /></td>
+													<td style="width: 15%"><p:commandLink process="@this"
+															onstart="$('..hdnParamPicConfirm2Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic2Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlPicConfirm}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink immediate="true"
+															style="float:left;margin-left:-10px;"
+															actionListener="#{tmpCorrespondenceEditBean.clearPicConfirm2(statIndex)}"
+															update="form:panelSubPicConfirmasi">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondencePic3}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 70%"><h:inputText
+															id="picConfirm3#{statIndex}" styleClass="form-control"
+															value="#{vo.userName3}" disabled="true" /></td>
+													<td style="width: 15%"><p:commandLink process="@this"
+															onstart="$('..hdnParamPicConfirm3Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic3Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlPicConfirm}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink immediate="true"
+															style="float:left;margin-left:-10px;"
+															actionListener="#{tmpCorrespondenceEditBean.clearPicConfirm3(statIndex)}"
+															update="form:panelSubPicConfirmasi">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label for="pic3" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondencePic3}" /> 
-								<p:commandLink 
-									rendered="#{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-									and !tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-									process="@this"
-									onstart="$('.hdnParamPic3Option').val($('.divId').val());pic3Dialog.show();">
-									<span class="input-group-btn fa fa-search btn btn-link"></span>
-								</p:commandLink>
-								<p:commandLink immediate="true"
-									rendered="#{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp
-									and !tmpCorrespondenceEditBean.disabledFollowUpStatus}"
-									actionListener="#{tmpCorrespondenceEditBean.clearPic3}"
-									update="form:inputPic3">
-									<span class="input-group-btn fa fa-trash btn btn-link"></span>	
-								</p:commandLink>
-							</label>
-							<p:inputText id="inputPic3" styleClass="form-control"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.userNameTemp3}"
-								readonly="true" />
-						</div>
-					</div>
-					<div class="col-lg-12">
-						
-						<div class="form-group #{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp? 'required':''}">
-							<label for="targetDate" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
-							<p:calendar id="targetDateCalendar" styleClass="form-control-datepicker-wrap"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.targetDate}"
-								autocomplete="off" maxlength="11"
-								required="#{'Y' eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp}" 
-								requiredMessage="#{msg.formTmpCorrespondenceTargetDate} #{msg.validateRequired}"
-								disabled="#{'Y' ne tmpCorrespondenceEditBean.tmpCorrespondence.followUp}"
-								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
-						</div>
-						
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label for="emailDate" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
-								for="emailDate" class="control-label tl-label"><h:outputText /></label>
-							<p:dataTable id="tableFollowupEmail" var="vo"
-								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.tmpCorrespondencePicFollowupEmails}"
-								styleClass="noHeader" style="width:100%;">
-								<p:column styleClass="noHeader">
-									<h:outputText value="#{vo.emailDate}">
-										<f:convertDateTime
-											pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
-											locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
-										</f:convertDateTime>
-									</h:outputText>
-								</p:column>
-							</p:dataTable>
-						</div>
-					</div>
 					</h:panelGroup>
 
+					<h:outputText value="&#160;" />
+					<h:panelGroup id="panelTagetDateSubmissionConfirmation">					
+						<div class="col-lg-12">						
+							<div class="form-group #{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp? 'required':''}">
+								<label for="targetDate" class="control-label tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
+								<p:calendar id="targetDateCalendar" styleClass="form-control-datepicker-wrap"
+									value="#{tmpCorrespondenceEditBean.tmpCorrespondence.targetDate}"
+									autocomplete="off" maxlength="11"
+									required="#{'Y' eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp}" 
+									requiredMessage="#{msg.formTmpCorrespondenceTargetDate} #{msg.validateRequired}"
+									disabled="#{'Y' ne tmpCorrespondenceEditBean.tmpCorrespondence.followUp}"
+									pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							</div>
+							
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label for="emailDate" class="control-label tl-label"><h:outputText
+										value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
+									for="emailDate" class="control-label tl-label"><h:outputText /></label>
+								<p:dataTable id="tableFollowupEmail" var="vo"
+									value="#{tmpCorrespondenceEditBean.tmpCorrespondence.tmpCorrespondencePicFollowupEmails}"
+									styleClass="noHeader" style="width:100%;">
+									<p:column styleClass="noHeader">
+										<h:outputText value="#{vo.emailDate}">
+											<f:convertDateTime
+												pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
+												locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
+											</f:convertDateTime>
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</h:panelGroup>
 
 					<h:panelGroup id="panelSupportingUnit">
 					<h:outputText value="&#160;" />
@@ -888,6 +995,21 @@
 				<p:remoteCommand
 					action="#{tmpCorrespondenceEditBean.onDeleteRowSupportingUnit}" immediate="true"
 					name="onDeleteRowSupportingUnit" update="tableSupportingUnitDetail"></p:remoteCommand>
+					
+				<p:remoteCommand
+					action="#{tmpCorrespondenceEditBean.onAddNewRefLetter}" immediate="true"
+					name="onAddNewRefLetter" update="tableReferalLetterDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpCorrespondenceEditBean.onDeleteRowRefLetter}" immediate="true"
+					name="onDeleteRowRefLetter" update="tableReferalLetterDetail"></p:remoteCommand>
+					
+				<p:remoteCommand
+					action="#{tmpCorrespondenceEditBean.onAddNewSubPicConfirmasi}" immediate="true"
+					name="onAddNewSubPicConfirmasi" update="tableSubPicConfirmDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpCorrespondenceEditBean.onDeleteRowSubPiConfiramsi}" immediate="true"
+					name="onDeleteRowSubPiConfiramsi" update="tableSubPicConfirmDetail"></p:remoteCommand>
+						
 			</div>
 		</div>
 
@@ -955,33 +1077,38 @@
 		</div>  -->
 
 
-		
-
-		
-		<wo:selector id="Pic0Option" height="450" width="550"
-			title="LOV #{msg.formTmpCorrespondencePic1}" widgetVar="pic0Dialog"
-			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser1}"
-			bean="#{tmpCorrespondenceEditBean}"
+		<!-- <wo:selector id="Pic0Option" height="450" width="550"
+			title="LOV msg.formTmpCorrespondencePic1}" widgetVar="pic0Dialog"
+			selectorInfo="tmpCorrespondenceEditBean.selectorUser1}"
+			bean="tmpCorrespondenceEditBean}"
 			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
 				
 		<wo:selector id="Pic1Option" height="450" width="550"
-			title="LOV #{msg.formTmpCorrespondencePic1}" widgetVar="pic1Dialog"
-			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser1}"
-			bean="#{tmpCorrespondenceEditBean}"
+			title="LOV msg.formTmpCorrespondencePic1}" widgetVar="pic1Dialog"
+			selectorInfo="tmpCorrespondenceEditBean.selectorUser1}"
+			bean="tmpCorrespondenceEditBean}"
 			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
 
 		<wo:selector id="Pic2Option" height="450" width="550"
-			title="LOV #{msg.formTmpCorrespondencePic2}" widgetVar="pic2Dialog"
-			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser2}"
-			bean="#{tmpCorrespondenceEditBean}"
+			title="LOV msg.formTmpCorrespondencePic2}" widgetVar="pic2Dialog"
+			selectorInfo="tmpCorrespondenceEditBean.selectorUser2}"
+			bean="tmpCorrespondenceEditBean}"
 			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
 			
 		<wo:selector id="Pic3Option" height="450" width="550"
 			title="LOV #{msg.formTmpCorrespondencePic3}" widgetVar="pic3Dialog"
 			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser3}"
 			bean="#{tmpCorrespondenceEditBean}"
-			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
-
+			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" /> 
+		 -->
+		
+		<wo:selector id="PicCompliance0Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondencePICCompliance}"
+			widgetVar="pic0ComplianceDialog"
+			selectorInfo="#{tmpCorrespondenceEditBean.selectorPicCompliance}"
+			bean="#{tmpCorrespondenceEditBean}"
+			updateOnSelected="form:tablePicComplianceDetail" />
+			
 		<wo:selector id="PicComplianceOption" height="450" width="550"
 			title="LOV #{msg.formTmpCorrespondencePICCompliance}"
 			widgetVar="picComplianceDialog"
@@ -1006,6 +1133,33 @@
 			selectorInfo="#{tmpCorrespondenceEditBean.selectorUserCc3}"
 			bean="#{tmpCorrespondenceEditBean}"
 			updateOnSelected="form:tableSupportingUnitDetail" />
+		
+		<wo:selector id="referensiSuratOption" height="450" width="550"
+			title="LOV Referensi Surat" 
+			widgetVar="referalLetterDialog"
+			selectorInfo="#{tmpCorrespondenceEditBean.selectedReferalLetter}"
+			bean="#{tmpCorrespondenceEditBean}"
+			updateOnSelected="form:tableReferalLetterDetail" />
+		
+		<wo:selector id="PicConfirm1Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser1}" widgetVar="picConfirmPic1Dialog"
+			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser1}"
+			bean="#{tmpCorrespondenceEditBean}"
+			updateOnSelected="form:tableSubPicConfirmDetail" />
+
+		<wo:selector id="PicConfirm2Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser2}" widgetVar="picConfirmPic2Dialog"
+			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser2}"
+			bean="#{tmpCorrespondenceEditBean}"
+			updateOnSelected="form:tableSubPicConfirmDetail" />
+
+		<wo:selector id="PicConfirm3Option" height="450" width="550"
+			title="LOV #{msg.formTmpCorrespondenceUser3}" widgetVar="picConfirmPic3Dialog"
+			selectorInfo="#{tmpCorrespondenceEditBean.selectorUser3}"
+			bean="#{tmpCorrespondenceEditBean}"
+			updateOnSelected="form:tableSubPicConfirmDetail" />
+			
+		
 
 	</ui:define>
 </ui:composition>

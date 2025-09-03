@@ -37,6 +37,10 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicComplianceTableModel;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnit;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnitTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirmTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetterTableModel;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.trcCorrespondenceApproval.constant.TrcCorrespondenceApprovalConstants;
 import com.wo.module.user.model.Division;
@@ -59,6 +63,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 
 	private TrcCorrespondencePicCompliance[] selectedPicComplianceData;
 	private TrcCorrespondenceSupportingUnit[] selectedSupportingUnitData;
+	private TrcCrpdcReffLetter[] selectedReferalLetterData;
+	private TrcCrpdcPicConfirm[] selectedSubPicConfirmData;
 
 	private SelectorInfo selectorUser1;
 	private SelectorInfo selectorUser2;
@@ -73,6 +79,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 
 	private TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance> tablePicComplianceModel;
 	private TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit> tableSupportingUnitModel;
+	private TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> tableReferalLetterModel;
+	private TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> tableSubPicConfirmModel;
 
 	private Integer indexDtlPicCompliance;
 	private Integer indexDtlCc;
@@ -252,7 +260,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 				trcCorrespondenceList.get(0).setComplianceStatus(new ParameterDetail());
 			}
 			
-			if (trcCorrespondence.getUserId1() != null) {
+			/*if (trcCorrespondence.getUserId1() != null) {
 				trcCorrespondence.setUserNameTemp1(trcCorrespondence.getUserId1().getName());
 			}
 	
@@ -262,7 +270,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 	
 			if (trcCorrespondence.getUserId3() != null) {
 				trcCorrespondence.setUserNameTemp3(trcCorrespondence.getUserId3().getName());
-			}
+			}*/
 			
 			if (trcCorrespondence.getTrcCorrespondencePicCompliances() != null) {
 				for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicCompliances().size(); i++) {
@@ -292,6 +300,38 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 				}
 			}
 			
+			if (trcCorrespondence.getTrcCrpdcReffLetters() != null) {
+				for (int i = 0; i < trcCorrespondence.getTrcCrpdcReffLetters().size(); i++) {
+					TrcCrpdcReffLetter dtl = (TrcCrpdcReffLetter) trcCorrespondence
+							.getTrcCrpdcReffLetters().get(i);
+
+					if (dtl.getReffLetterCorrespondence() != null) {
+						dtl.setPerihal(dtl.getReffLetterCorrespondence().getPerihalIn());
+						dtl.setLetterNo(dtl.getReffLetterCorrespondence().getLetterNo());
+						dtl.setLampiran("");					
+					}
+				}
+			}
+			
+			if (trcCorrespondence.getTrcCrpdcPicConfirms() != null) {
+				for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+					TrcCrpdcPicConfirm dtl = (TrcCrpdcPicConfirm) trcCorrespondence
+							.getTrcCrpdcPicConfirms().get(i);
+					
+					if (dtl.getUser1() != null) {
+						dtl.setUserName1(dtl.getUser1().getName());
+					}
+
+					if (dtl.getUser2() != null) {
+						dtl.setUserName2(dtl.getUser2().getName());
+					}
+
+					if (dtl.getUser3() != null) {
+						dtl.setUserName3(dtl.getUser3().getName());
+					}
+				}
+			}
+			
 			uploadedFilesDocument = new ArrayList<UploadedFileWO>();
 			
 			for (int i = 0; i < trcCorrespondence.getTrcCorrespondenceDocuments().size(); i++) {
@@ -308,7 +348,10 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 			tableSupportingUnitModel = new TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit>(
 					trcCorrespondence.getTrcCorrespondenceSupportingUnits());
 			tablePicComplianceModel = new TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance>(trcCorrespondence.getTrcCorrespondencePicCompliances());
-		
+			tableReferalLetterModel = new TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter>(
+					trcCorrespondence.getTrcCrpdcReffLetters());
+			tableSubPicConfirmModel = new TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm>(
+					trcCorrespondence.getTrcCrpdcPicConfirms());
 		
 			trcCorrespondence.setTrcCorrespondencePicCompliances(new ArrayList<TrcCorrespondencePicCompliance>());	
 		}
@@ -739,6 +782,38 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 
 	public void setCategoryList(List<SelectItem> categoryList) {
 		this.categoryList = categoryList;
+	}
+
+	public TrcCrpdcReffLetter[] getSelectedReferalLetterData() {
+		return selectedReferalLetterData;
+	}
+
+	public void setSelectedReferalLetterData(TrcCrpdcReffLetter[] selectedReferalLetterData) {
+		this.selectedReferalLetterData = selectedReferalLetterData;
+	}
+
+	public TrcCrpdcPicConfirm[] getSelectedSubPicConfirmData() {
+		return selectedSubPicConfirmData;
+	}
+
+	public void setSelectedSubPicConfirmData(TrcCrpdcPicConfirm[] selectedSubPicConfirmData) {
+		this.selectedSubPicConfirmData = selectedSubPicConfirmData;
+	}
+
+	public TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> getTableReferalLetterModel() {
+		return tableReferalLetterModel;
+	}
+
+	public void setTableReferalLetterModel(TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> tableReferalLetterModel) {
+		this.tableReferalLetterModel = tableReferalLetterModel;
+	}
+
+	public TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> getTableSubPicConfirmModel() {
+		return tableSubPicConfirmModel;
+	}
+
+	public void setTableSubPicConfirmModel(TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> tableSubPicConfirmModel) {
+		this.tableSubPicConfirmModel = tableSubPicConfirmModel;
 	}
 
 	

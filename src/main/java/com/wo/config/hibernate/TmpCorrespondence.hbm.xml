@@ -92,6 +92,20 @@
 				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondenceSupportingUnit" />
 		</bag>
 		
+		<bag name="tmpCrpdcPicConfirms" inverse="true"
+			cascade="save-update, delete-orphan" order-by="CRPDC_PIC_CONFIRM_ID asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCrpdcPicConfirm" />
+		</bag>
+		
+		<bag name="tmpCrpdcReffLetters" inverse="true"
+			cascade="save-update, delete-orphan" order-by="CRPDC_REFF_LETTER_ID asc">
+			<key column="correspondence_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetter" />
+		</bag>
+				
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
 		<property name="createdBy" column="CREATED_BY" type="string" />

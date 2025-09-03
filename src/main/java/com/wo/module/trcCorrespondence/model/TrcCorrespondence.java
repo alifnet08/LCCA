@@ -53,6 +53,8 @@ public class TrcCorrespondence extends BaseEntity implements Serializable {
 	private List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments;
 	private List<TrcCorrespondencePicFollowupEmail> trcCorrespondencePicFollowupEmails;
 	private List<TrcCorrespondenceSupportingUnit> trcCorrespondenceSupportingUnits;
+	private List<TrcCrpdcPicConfirm> trcCrpdcPicConfirms;
+	private List<TrcCrpdcReffLetter> trcCrpdcReffLetters;
 	
 	private List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance;
 	
@@ -704,6 +706,22 @@ public class TrcCorrespondence extends BaseEntity implements Serializable {
 
 	public void setPicFollowupStatus(ParameterDetail picFollowupStatus) {
 		this.picFollowupStatus = picFollowupStatus;
+	}
+
+	public List<TrcCrpdcPicConfirm> getTrcCrpdcPicConfirms() {
+		return trcCrpdcPicConfirms;
+	}
+
+	public void setTrcCrpdcPicConfirms(List<TrcCrpdcPicConfirm> trcCrpdcPicConfirms) {
+		this.trcCrpdcPicConfirms = trcCrpdcPicConfirms;
+	}
+
+	public List<TrcCrpdcReffLetter> getTrcCrpdcReffLetters() {
+		return trcCrpdcReffLetters;
+	}
+
+	public void setTrcCrpdcReffLetters(List<TrcCrpdcReffLetter> trcCrpdcReffLetters) {
+		this.trcCrpdcReffLetters = trcCrpdcReffLetters;
 	}
 	
 	
