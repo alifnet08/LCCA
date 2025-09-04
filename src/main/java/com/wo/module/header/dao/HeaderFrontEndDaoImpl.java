@@ -195,8 +195,18 @@ public class HeaderFrontEndDaoImpl extends GenericDAOHibernate<QA, Long> impleme
 	public Long getCountTindakLanjutSuratMasuk(String nik) throws Exception {
 		// TODO Auto-generated method stub
 		StringBuilder sb = new StringBuilder();
-		sb.append(" select count(1) from wo_trc_correspondence s where s.enabled_flag = 'Y' and s.status = 'DATA_ACTIVE' and s.follow_up = 'Y' AND (CORRESPONDENCE_TYPE = 'INVITATION' OR (s.followup_status is null OR s.followup_status <> 'PIC_DONE')) AND (CORRESPONDENCE_TYPE = 'NONINVITATION' OR s.followup_status is null or s.pic_followup_status is null) and exists (select 1 from wo_mst_user u where u.nik = :nik and (u.user_id = s.user_id_1 or u.user_id = s.user_id_2 or u.user_id = s.user_id_3)) ");
-
+		//sb.append(" select count(1) from wo_trc_correspondence s where s.enabled_flag = 'Y' and s.status = 'DATA_ACTIVE' and s.follow_up = 'Y' AND (CORRESPONDENCE_TYPE = 'INVITATION' OR (s.followup_status is null OR s.followup_status <> 'PIC_DONE')) AND (CORRESPONDENCE_TYPE = 'NONINVITATION' OR s.followup_status is null or s.pic_followup_status is null) and exists (select 1 from wo_mst_user u where u.nik = :nik and (u.user_id = s.user_id_1 or u.user_id = s.user_id_2 or u.user_id = s.user_id_3)) ");
+		sb.append(" select count(1) ");
+		sb.append("   from wo_trc_correspondence s where s.enabled_flag = 'Y' and s.status = 'DATA_ACTIVE' and s.follow_up = 'Y' ");
+		sb.append("        AND (CORRESPONDENCE_TYPE = 'INVITATION' OR (s.followup_status is null OR s.followup_status <> 'PIC_DONE')) ");
+		sb.append("        AND (CORRESPONDENCE_TYPE = 'NONINVITATION' OR s.followup_status is null or s.pic_followup_status is null) ");				
+		sb.append("        AND EXISTS");
+		sb.append("            (SELECT 1 ");
+		sb.append("               FROM WO_TRC_CRPDC_PIC_CONFIRM ucpc ");
+		sb.append("                    INNER JOIN WO_MST_USER us1 ON ucpc.user_id_1 = us1.USER_ID ");
+		sb.append("              WHERE us1.nik = :nik ");
+		sb.append("                    AND s.correspondence_id = ucpc.correspondence_id) ");
+		
 		Query query = getSession().createSQLQuery(sb.toString());
 
 

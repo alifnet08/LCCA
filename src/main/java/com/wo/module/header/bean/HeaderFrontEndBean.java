@@ -263,7 +263,7 @@ public class HeaderFrontEndBean extends CommonPagingFEBean<NotificationDtlVo> im
 								"Tindak Lanjut Surat Masuk");
 						listAllData.add(ndv);
 					}
-
+					
 					countTindakLanjutRegulatoryReport = headerFrontEndService.getCountTindakLanjutRegulatoryReport(nik);
 					date = null;
 					date = headerFrontEndService.getMaxDateTindakLanjutRegulatoryReport(nik);
