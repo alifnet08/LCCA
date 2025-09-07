@@ -43,6 +43,7 @@ import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirmTableModel;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetterTableModel;
+import com.wo.module.trcCorrespondence.model.TrcReffDocument;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.trcCorrespondenceApproval.constant.TrcCorrespondenceApprovalConstants;
 import com.wo.module.user.model.Division;
@@ -311,7 +312,20 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 					if (dtl.getReffLetterCorrespondence() != null) {
 						dtl.setPerihal(dtl.getReffLetterCorrespondence().getPerihalIn());
 						dtl.setLetterNo(dtl.getReffLetterCorrespondence().getLetterNo());
-						dtl.setLampiran("");					
+						
+						if(dtl.getReffLetterCorrespondence().getTrcCorrespondenceDocuments() !=null) {
+							   List<TrcReffDocument> dataList = new ArrayList<TrcReffDocument>();
+							   for(TrcCorrespondenceDocument tmpRefDocument : dtl.getReffLetterCorrespondence().getTrcCorrespondenceDocuments()) {
+								   TrcReffDocument refDoc = new TrcReffDocument();
+								  refDoc.setAttachmentFile(tmpRefDocument.getAttachmentFile());
+								  refDoc.setCorrespondenceAttachmentId(tmpRefDocument.getCorrespondenceAttachmentId());
+								  refDoc.setFileId(tmpRefDocument.getFileId());
+								  dataList.add(refDoc);
+							   }
+								
+							dtl.setReffDocumentList(dataList);		
+						}	
+						
 					}
 				}
 			}

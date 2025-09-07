@@ -58,6 +58,7 @@ import com.wo.module.tmpCorrespondence.model.TmpCrpdcPicConfirm;
 import com.wo.module.tmpCorrespondence.model.TmpCrpdcPicConfirmTableModel;
 import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetter;
 import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetterTableModel;
+import com.wo.module.tmpCorrespondence.model.TmpReffDocument;
 import com.wo.module.tmpCorrespondence.service.TmpCorrespondenceService;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
@@ -733,11 +734,23 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 				lastSequenceOfReffLetter = lastSequenceOfReffLetter + 1;
 				dtl.setSequence(lastSequenceOfReffLetter);
-
+				
 				if (dtl.getReffLetterCorrespondence() != null) {
-					dtl.setPerihal(dtl.getTmpCorrespondence().getPerihalIn());
-					dtl.setLetterNo(dtl.getTmpCorrespondence().getLetterNo());
-					dtl.setLampiran("");					
+					dtl.setPerihal(dtl.getReffLetterCorrespondence().getPerihalIn());
+					dtl.setLetterNo(dtl.getReffLetterCorrespondence().getLetterNo());
+					
+					if(dtl.getReffLetterCorrespondence().getTmpCorrespondenceDocuments() !=null) {
+					   List<TmpReffDocument> dataList = new ArrayList<TmpReffDocument>();
+					   for(TmpCorrespondenceDocument tmpRefDocument : dtl.getReffLetterCorrespondence().getTmpCorrespondenceDocuments()) {
+						  TmpReffDocument refDoc = new TmpReffDocument();
+						  refDoc.setAttachmentFile(tmpRefDocument.getAttachmentFile());
+						  refDoc.setCorrespondenceAttachmentId(tmpRefDocument.getCorrespondenceAttachmentId());
+						  refDoc.setFileId(tmpRefDocument.getFileId());
+						  dataList.add(refDoc);
+					   }
+						
+					   dtl.setReffDocumentList(dataList);		
+					}
 				}
 			}
 		}
@@ -1963,12 +1976,26 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		if (StringUtils.equals("referalLetterDialog", widgetVar)) {
 			Object[] objects = (Object[]) selectedItem;
 
-			TmpCorrespondence dataCorresponse = new TmpCorrespondence();
-			dataCorresponse.setCorrespondenceId(MathUtil.returnIdObjectToLong(objects[0]));
-			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffLetterCorrespondence(dataCorresponse);
+			TmpCorrespondence dataReffCorresponse = new TmpCorrespondence();
+			Long correspindenIdReff = MathUtil.returnIdObjectToLong(objects[0]);			
+			dataReffCorresponse = tmpCorrespondenceService.findById(correspindenIdReff);
+			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffLetterCorrespondence(dataReffCorresponse);
 			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setPerihal((String)objects[1]);
 			tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setLetterNo((String)objects[2]);
-			//lamaran
+			
+			if(dataReffCorresponse !=null && dataReffCorresponse.getTmpCorrespondenceDocuments() !=null) {
+			   List<TmpReffDocument> dataList = new ArrayList<TmpReffDocument>();
+			   for(TmpCorrespondenceDocument tmpRefDocument : dataReffCorresponse.getTmpCorrespondenceDocuments()) {
+				  TmpReffDocument refDoc = new TmpReffDocument();
+				  refDoc.setAttachmentFile(tmpRefDocument.getAttachmentFile());
+				  refDoc.setCorrespondenceAttachmentId(tmpRefDocument.getCorrespondenceAttachmentId());
+				  refDoc.setFileId(tmpRefDocument.getFileId());
+				  dataList.add(refDoc);
+			   }
+				
+			   tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffDocumentList(dataList);		
+			}
+				
 		}
 		
 		if (StringUtils.equals("picConfirmPic1Dialog", widgetVar)) {

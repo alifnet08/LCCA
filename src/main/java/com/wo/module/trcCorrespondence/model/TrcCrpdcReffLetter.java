@@ -1,8 +1,10 @@
 package com.wo.module.trcCorrespondence.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
+import com.wo.module.tmpCorrespondence.model.TmpReffDocument;
 
 public class TrcCrpdcReffLetter extends BaseEntity implements Serializable {
 
@@ -17,7 +19,9 @@ public class TrcCrpdcReffLetter extends BaseEntity implements Serializable {
 
 	private String perihal;
 	private String letterNo;
-	private String lampiran;
+	
+	private List<TrcReffDocument> reffDocumentList;
+
 
 	public Long getCrpdcReffLetterId() {
 		return crpdcReffLetterId;
@@ -67,12 +71,12 @@ public class TrcCrpdcReffLetter extends BaseEntity implements Serializable {
 		this.letterNo = letterNo;
 	}
 
-	public String getLampiran() {
-		return lampiran;
+	public List<TrcReffDocument> getReffDocumentList() {
+		return reffDocumentList;
 	}
 
-	public void setLampiran(String lampiran) {
-		this.lampiran = lampiran;
+	public void setReffDocumentList(List<TrcReffDocument> reffDocumentList) {
+		this.reffDocumentList = reffDocumentList;
 	}
 
 }

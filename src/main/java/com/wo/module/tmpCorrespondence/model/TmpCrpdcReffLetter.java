@@ -1,6 +1,7 @@
 package com.wo.module.tmpCorrespondence.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
 
@@ -18,6 +19,8 @@ public class TmpCrpdcReffLetter extends BaseEntity implements Serializable {
 	private String perihal;
 	private String letterNo;
 	private String lampiran;
+	
+	private List<TmpReffDocument> reffDocumentList;
 
 	public int getSequence() {
 		return sequence;
@@ -73,6 +76,14 @@ public class TmpCrpdcReffLetter extends BaseEntity implements Serializable {
 
 	public void setReffLetterCorrespondence(TmpCorrespondence reffLetterCorrespondence) {
 		this.reffLetterCorrespondence = reffLetterCorrespondence;
+	}
+
+	public List<TmpReffDocument> getReffDocumentList() {
+		return reffDocumentList;
+	}
+
+	public void setReffDocumentList(List<TmpReffDocument> reffDocumentList) {
+		this.reffDocumentList = reffDocumentList;
 	}
 
 	

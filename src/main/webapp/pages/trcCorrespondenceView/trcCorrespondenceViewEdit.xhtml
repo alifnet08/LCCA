@@ -262,12 +262,18 @@
 									</p:column>
 									<p:column headerText="Lampiran"
 										style="width:200px;">
+										<p:dataList value="#{vo.reffDocumentList}" emptyMessage="" var="dtl" >
 										<table>
-											<tr>
-												<td style="width: 80%"></td>
-												<td style="width: 20%"></td>
-											</tr>
-										</table>
+									     <tr>
+										    <td style="width: 80%">
+										        <p:commandLink ajax="false" immediate="true"
+												       actionListener="#{trcCorrespondenceEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+												      target="_blank">#{dtl.attachmentFile}
+										        </p:commandLink>		
+										     </td>   
+										  </tr>
+										  </table>   								
+										</p:dataList>
 									</p:column>
 								</p:dataTable>
 							</div>
