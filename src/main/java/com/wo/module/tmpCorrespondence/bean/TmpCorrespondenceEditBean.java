@@ -763,7 +763,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 				lastSequenceOfPicConfirm = lastSequenceOfPicConfirm + 1;
 				dtl.setSequence(lastSequenceOfPicConfirm);
-
+				dtl.setDivisionIdTemp(dtl.getDivisionId());
+				
 				if (dtl.getUser1() != null) {
 					dtl.setUserName1(dtl.getUser1().getName());
 				}
@@ -1071,6 +1072,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						TmpCrpdcPicConfirm dtl = (TmpCrpdcPicConfirm) tmpCorrespondence
 								.getTmpCrpdcPicConfirms().get(i);
 						dtl.setTmpCorrespondence(tmpCorrespondence);
+						dtl.setDivisionId(dtl.getDivisionIdTemp());
 						if (dtl.getCreatedBy() == null) {
 							dtl.setCreatedBy(facesUtil.retrieveUserLogin());
 							dtl.setCreationDate(new Timestamp(new Date().getTime()));

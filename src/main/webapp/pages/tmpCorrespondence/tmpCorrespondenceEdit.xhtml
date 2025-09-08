@@ -391,8 +391,6 @@
 					<!-- ayuu -->
 
 					<h:panelGroup id="panelSubPicConfirmasi">
-						<h:outputText value="&#160;" />
-
 						<h3>
 							<h:outputText value="#{msg.formTmpCorrespondenceSubmissionConfirmation}" />
 						</h3>
@@ -413,11 +411,11 @@
 									</div>
 								</h4>
 								<div class="table-wrapper table-responsive">
-									<p:dataTable id="tableSubPicConfirmDetail" var="vo"
+									<p:dataTable id="tableSubPicConfirmDetail" var="voPic"
 										value="#{tmpCorrespondenceEditBean.tableSubPicConfirmModel}"
 										rowIndexVar="statIndex" style="width:100%;"
 										selection="#{tmpCorrespondenceEditBean.selectedSubPicConfirmData}"
-										rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+										rowKey="#{voPic.sequence}" rowSelectMode="checkbox">
 
 										<p:ajax event="rowSelectCheckbox" process="@this" />
 										<p:ajax event="rowUnselectCheckbox" process="@this" />
@@ -435,12 +433,12 @@
 												<h:selectOneMenu
 													styleClass="form-control s2 divisionPicConfirm#{statIndex}"
 													style="margin-top:15px;height:38px;"
-													value="#{vo.divisionId}">
+													value="#{voPic.divisionIdTemp}">
 													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
 													<f:selectItems
 														value="#{tmpCorrespondenceEditBean.divisionList}" />
 													<p:ajax event="change"
-														update="form:tableSubPicConfirmDetail"
+														update="form:panelSubPicConfirmasi"
 														listener="#{tmpCorrespondenceEditBean.onChangeDivisionPicConfirm(statIndex)}" />
 												</h:selectOneMenu>
 											</div>
@@ -451,7 +449,7 @@
 												<tr>
 													<td style="width: 80%"><h:inputText
 															id="picConfirm1#{statIndex}" styleClass="form-control"
-															value="#{vo.userName1}" disabled="true" /></td>
+															value="#{voPic.userName1}" disabled="true" /></td>
 													<td style="width: 20%"><p:commandLink process="@this"
 															onstart="$('.hdnParamPicConfirm1Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic1Dialog.show();">
 															<span><i class="fa fa-search ico-lg"></i></span>
@@ -468,9 +466,9 @@
 												<tr>
 													<td style="width: 70%"><h:inputText
 															id="picConfirm2#{statIndex}" styleClass="form-control"
-															value="#{vo.userName2}" disabled="true" /></td>
+															value="#{voPic.userName2}" disabled="true" /></td>
 													<td style="width: 15%"><p:commandLink process="@this"
-															onstart="$('..hdnParamPicConfirm2Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic2Dialog.show();">
+															onstart="$('.hdnParamPicConfirm2Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic2Dialog.show();">
 															<span><i class="fa fa-search ico-lg"></i></span>
 															<f:setPropertyActionListener
 																target="#{tmpCorrespondenceEditBean.indexDtlPicConfirm}"
@@ -491,9 +489,9 @@
 												<tr>
 													<td style="width: 70%"><h:inputText
 															id="picConfirm3#{statIndex}" styleClass="form-control"
-															value="#{vo.userName3}" disabled="true" /></td>
+															value="#{voPic.userName3}" disabled="true" /></td>
 													<td style="width: 15%"><p:commandLink process="@this"
-															onstart="$('..hdnParamPicConfirm3Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic3Dialog.show();">
+															onstart="$('.hdnParamPicConfirm3Option').val($('.divisionPicConfirm#{statIndex}').val());picConfirmPic3Dialog.show();">
 															<span><i class="fa fa-search ico-lg"></i></span>
 															<f:setPropertyActionListener
 																target="#{tmpCorrespondenceEditBean.indexDtlPicConfirm}"

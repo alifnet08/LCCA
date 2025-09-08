@@ -10,7 +10,7 @@ import org.primefaces.model.SelectableDataModel;
 public class TmpCrpdcPicConfirmTableModel<E> extends ListDataModel<TmpCrpdcPicConfirm>
 		implements SelectableDataModel<TmpCrpdcPicConfirm>, Serializable {
 
-	private static final long serialVersionUID = 7099809144744093769L;
+	private static final long serialVersionUID = -1475796682297935522L;
 
 	public TmpCrpdcPicConfirmTableModel(List<TmpCrpdcPicConfirm> data) {
 		super(data);

@@ -25,6 +25,8 @@ public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private String userName1;
 	private String userName2;
 	private String userName3;
+	
+	private Long divisionIdTemp;
 
 	public Long getCrpdcPicConfirmId() {
 		return crpdcPicConfirmId;
@@ -112,6 +114,14 @@ public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 
 	public void setUserName3(String userName3) {
 		this.userName3 = userName3;
+	}
+
+	public Long getDivisionIdTemp() {
+		return divisionIdTemp;
+	}
+
+	public void setDivisionIdTemp(Long divisionIdTemp) {
+		this.divisionIdTemp = divisionIdTemp;
 	}
 	
 	
