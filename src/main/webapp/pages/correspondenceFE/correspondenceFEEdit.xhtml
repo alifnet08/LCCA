@@ -71,7 +71,7 @@
             </div>
             <div class="col">
               <div class="label-form">Target Waktu</div>
-              <div class="value-form">#{correspondenceFEEditBean.trcCorrespondence.correspondenceCode.nameIn}</div>
+              <div class="value-form">#{correspondenceFEEditBean.trcCorrespondence.targetDate!=null?correspondenceFEEditBean.sdf.format(correspondenceFEEditBean.trcCorrespondence.targetDate):null}</div>
             </div>
           </div>
           
@@ -81,22 +81,21 @@
               <div class="value-form">#{correspondenceFEEditBean.trcCorrespondence.letterNo}</div>
             </div>
             <div class="col">
-              <div class="label-form">File Dokumen</div>
-              <div class="value-form">
-              
-              <p:dataList value="#{correspondenceFEEditBean.filesDocument}" 
-								emptyMessage=""
-								var="vo" id="documentList" rowIndexVar="index">
-								<table>
-							    	<tr>
-							    	<td style="width:80%; padding-right:10px">
-							        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{correspondenceFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
-							        </td>
-						        	</tr>
-						        </table>
-				</p:dataList>
-              </div>
-            </div>
+            <div class="label-form">File Dokumen</div>
+				<div class="value-form">
+					<p:dataList value="#{correspondenceFEEditBean.filesDocument}"
+						emptyMessage="" var="vo" id="documentList" rowIndexVar="index">
+						<table>
+							<tr>
+								<td style="width: 80%; padding-right: 10px"><p:commandLink
+										title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+										actionListener="#{correspondenceFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+										target="_blank">#{vo.fileName}</p:commandLink></td>
+							</tr>
+						</table>
+					</p:dataList>
+				</div>
+			</div>
           </div>
           
            
@@ -107,8 +106,20 @@
             </div>
             <div class="col">
               <div class="label-form">File Dokumen Referensi</div>
-              <div class="value-form">#{correspondenceFEEditBean.trcCorrespondence.correspondenceCode.nameIn}</div>
-            </div>
+              <div class="value-form">
+				<p:dataList value="#{correspondenceFEEditBean.filesDocumentReferensi}"
+					emptyMessage="" var="vo" id="documentReferensiList" rowIndexVar="index">
+					<table>
+						<tr>
+							<td style="width: 80%; padding-right: 10px"><p:commandLink
+									title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+									actionListener="#{correspondenceFEEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+									target="_blank">#{vo.fileName}</p:commandLink></td>
+						</tr>
+					</table>
+				</p:dataList>
+			 </div>
+           </div>
           </div>
           
            <div class="form-row">

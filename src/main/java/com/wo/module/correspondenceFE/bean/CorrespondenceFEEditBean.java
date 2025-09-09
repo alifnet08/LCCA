@@ -44,6 +44,7 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendanceTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
@@ -60,6 +61,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	private List<UploadedFileWO> uploadedFilesDocument;
 	
 	private List<UploadedFileWO> filesDocument;
+	
+	private List<UploadedFileWO> filesDocumentReferensi;
 	
 	private List<SelectItem> attendanceList;
 	
@@ -189,6 +192,24 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			uf.setFileSize(ra.getFileSize());
 			filesDocument.add(uf);
 
+		}
+		
+		filesDocumentReferensi = new ArrayList<UploadedFileWO>();
+		for (int i = 0; i < trcCorrespondence.getTrcCrpdcReffLetters().size(); i++) {
+			TrcCrpdcReffLetter referensiLet = trcCorrespondence.getTrcCrpdcReffLetters().get(i);
+			if(referensiLet.getReffLetterCorrespondence() !=null && 
+					referensiLet.getReffLetterCorrespondence().getTrcCorrespondenceDocuments() !=null) {
+				List<TrcCorrespondenceDocument> dataList = referensiLet.getReffLetterCorrespondence().getTrcCorrespondenceDocuments();
+				for(int j=0; j<dataList.size(); j++) {
+					TrcCorrespondenceDocument documentData = (TrcCorrespondenceDocument)dataList.get(j);
+					UploadedFileWO uf = new UploadedFileWO();
+					uf.setFileName(documentData.getAttachmentFile());
+					uf.setFileId(documentData.getFileId());
+					uf.setIsNew(false);
+					uf.setFileSize(documentData.getFileSize());
+					filesDocumentReferensi.add(uf);
+				}
+			}
 		}
 		
 		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
@@ -740,12 +761,17 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	public void setTestFirst(Integer testFirst) {
 		this.testFirst = testFirst;
 	}
-	
 
-	
+	public List<UploadedFileWO> getFilesDocumentReferensi() {
+		return filesDocumentReferensi;
+	}
 
-	
-	
-	
+	public void setFilesDocumentReferensi(List<UploadedFileWO> filesDocumentReferensi) {
+		this.filesDocumentReferensi = filesDocumentReferensi;
+	}
+
+	public void setFilesDocument(List<UploadedFileWO> filesDocument) {
+		this.filesDocument = filesDocument;
+	}		
 
 }
