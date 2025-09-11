@@ -935,7 +935,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					flag = true;
 				}
 
-				if (tmpCorrespondence.getTargetDate() == null) {
+				/*if (tmpCorrespondence.getTargetDate() == null) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceTargetDate") + " "
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
@@ -949,7 +949,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						}
 					}
 
-				}
+				}*/
 
 			} else if (tmpCorrespondence.getFollowUp().equals(Constants.CONSTANT_NO)
 					&& StringUtils.isEmpty(tmpCorrespondence.getNotes())) {
@@ -1296,12 +1296,13 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					emailContent = emailContent.replaceAll("sender_in", "NA");
 					emailContent = emailContent.replaceAll("sender_en", "NA");
 				}
+			
+				
+				/* 20250903 ditutup				
 				emailContent = emailContent.replaceAll("division_name",
 						(tmpCorrespondence.getDivisionId() != null
 								? userService.getDivisionNameByDivisionId(tmpCorrespondence.getDivisionId())
 								: "NA")); 
-				
-				/* 20250903 ditutup
 				emailContent = emailContent.replaceAll("pic_1_name",
 						(tmpCorrespondence.getUserId1() != null ? tmpCorrespondence.getUserId1().getName() : "NA"));
 				emailContent = emailContent.replaceAll("pic_2_name",
@@ -1310,14 +1311,50 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						(tmpCorrespondence.getUserId3() != null ? tmpCorrespondence.getUserId3().getName() : "NA"));
 				*/
 				
-				// 20250903 diganti pakai ini
-				TmpCrpdcPicConfirm dataPic = tmpCorrespondence.getTmpCrpdcPicConfirms().get(0);
-				emailContent = emailContent.replaceAll("pic_1_name",
-						(dataPic.getUser1() != null ? dataPic.getUser1().getName() : "NA"));
-				emailContent = emailContent.replaceAll("pic_2_name",
-						(dataPic.getUser2() != null ? dataPic.getUser2().getName() : "NA"));
-				emailContent = emailContent.replaceAll("pic_3_name",
-						(dataPic.getUser3() != null ? dataPic.getUser3().getName() : "NA"));
+				// 20250903 diganti pakai ini				
+				if (tmpCorrespondence.getTmpCrpdcPicConfirms() != null
+						&& tmpCorrespondence.getTmpCrpdcPicConfirms().size() > 0) {
+					String divisionName = "";
+					String user1Name = "";
+					String user2Name = "";
+					String user3Name = "";
+				    for(TmpCrpdcPicConfirm dataPic : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
+						String divDataName = userService.getDivisionNameByDivisionId(dataPic.getDivisionId());
+						if(StringUtils.isNotEmpty(divDataName)) {
+							divisionName = divisionName.concat("<br>").concat(divDataName);
+						}else {
+							divisionName = "NA";
+						}							
+						
+						if(dataPic.getUser1() !=null && dataPic.getUser1().getName() !=null) {
+							user1Name = user1Name.concat("<br>").concat(dataPic.getUser1().getName());
+						}else {
+							user1Name = "NA";
+						}
+						
+						if(dataPic.getUser2() !=null && dataPic.getUser2().getName() !=null) {
+							user2Name = user2Name.concat("<br>").concat(dataPic.getUser2().getName());
+						}else {
+							user2Name = "NA";
+						}
+						
+						if(dataPic.getUser3() !=null && dataPic.getUser3().getName() !=null) {
+							user3Name = user3Name.concat("<br>").concat(dataPic.getUser3().getName());
+						}else {
+							user3Name = "NA";
+						}
+					}
+						
+					emailContent = emailContent.replaceAll("division_name", divisionName); 
+					emailContent = emailContent.replaceAll("pic_1_name", user1Name);
+					emailContent = emailContent.replaceAll("pic_2_name", user2Name);
+					emailContent = emailContent.replaceAll("pic_3_name", user3Name);					
+				}else {
+					emailContent = emailContent.replaceAll("division_name", "NA"); 
+					emailContent = emailContent.replaceAll("pic_1_name", "NA");
+					emailContent = emailContent.replaceAll("pic_2_name", "NA");
+					emailContent = emailContent.replaceAll("pic_3_name", "NA");		
+				}					
 				
 				emailContent = emailContent.replaceAll("letter_no", tmpCorrespondence.getLetterNo());
 				emailContent = emailContent.replaceAll("receive_letter_date",

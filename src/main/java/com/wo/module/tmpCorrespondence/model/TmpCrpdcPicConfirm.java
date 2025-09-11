@@ -1,13 +1,19 @@
 package com.wo.module.tmpCorrespondence.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.wo.module.common.model.BaseEntity;
+import com.wo.module.parameter.model.ParameterDetail;
 import com.wo.module.user.model.User;
 
 public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = -2868792882459045331L;
+	
+	private TmpCorrespondence tmpCorrespondence;
+	private ParameterDetail statusPic;
+	private ParameterDetail complianceStatus;
 	
 	private Long crpdcPicConfirmId;
 	private Long divisionId;
@@ -17,8 +23,8 @@ public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private User user1;
 	private User user2;
 	private User user3;
-		
-	private TmpCorrespondence tmpCorrespondence;
+	
+	private Date targetDate;	
 	
 	private Integer sequence;
 	
@@ -27,6 +33,9 @@ public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private String userName3;
 	
 	private Long divisionIdTemp;
+	
+	private Boolean isEditableTemp;
+	
 
 	public Long getCrpdcPicConfirmId() {
 		return crpdcPicConfirmId;
@@ -123,6 +132,37 @@ public class TmpCrpdcPicConfirm extends BaseEntity implements Serializable {
 	public void setDivisionIdTemp(Long divisionIdTemp) {
 		this.divisionIdTemp = divisionIdTemp;
 	}
-	
+
+	public ParameterDetail getStatusPic() {
+		return statusPic;
+	}
+
+	public void setStatusPic(ParameterDetail statusPic) {
+		this.statusPic = statusPic;
+	}
+
+	public ParameterDetail getComplianceStatus() {
+		return complianceStatus;
+	}
+
+	public void setComplianceStatus(ParameterDetail complianceStatus) {
+		this.complianceStatus = complianceStatus;
+	}
+
+	public Date getTargetDate() {
+		return targetDate;
+	}
+
+	public void setTargetDate(Date targetDate) {
+		this.targetDate = targetDate;
+	}
+
+	public Boolean getIsEditableTemp() {
+		return isEditableTemp;
+	}
+
+	public void setIsEditableTemp(Boolean isEditableTemp) {
+		this.isEditableTemp = isEditableTemp;
+	}
 	
 }

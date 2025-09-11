@@ -371,7 +371,7 @@
 									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
 									<f:selectItems value="#{tmpCorrespondenceEditBean.yesNoList}" />
 									<p:ajax event="change" 
-										update="form:panelReminder form:panelTagetDateSubmissionConfirmation form:panelSupportingUnit" 
+										update="form:panelReminder form:panelSupportingUnit" 
 										listener="#{tmpCorrespondenceEditBean.onChangeFollowupStatus}" />
 								</h:selectOneMenu>
 								<p:message for="tmpCorrespondenceFollowup"/>
@@ -506,179 +506,161 @@
 												</tr>
 											</table>
 										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceTargetDate}" width="150">
+											<div class="form-group required calendar-style">
+												<p:calendar maxlength="11"  pattern="dd-MMM-yyyy" style="width:100px" 
+												    placeholder="#{msg.formTmpCorrespondenceTargetDate}"
+													value="#{voPic.targetDate}" autocomplete="off"
+													styleClass="form-control-datepicker-wrap" locale="en">
+													<p:ajax event="dateSelect" />
+												</p:calendar>
+											</div>
+										</p:column>
+										<p:column headerText="Status" width="150">
+										    <p:outputLabel value="#{voPic.statusPic.nameIn}"/>
+										</p:column>
+										<p:column headerText="Compliance Status" width="150">
+										    <p:outputLabel value="#{voPic.complianceStatus.nameIn}"/>
+										</p:column>
 									</p:dataTable>
 								</div>
 							</div>
 						</div>
 					</h:panelGroup>
 
-					<h:outputText value="&#160;" />
-					<h:panelGroup id="panelTagetDateSubmissionConfirmation">					
-						<div class="col-lg-12">						
-							<div class="form-group #{('Y' or 'N') eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp? 'required':''}">
-								<label for="targetDate" class="control-label tl-label"><h:outputText
-										value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
-								<p:calendar id="targetDateCalendar" styleClass="form-control-datepicker-wrap"
-									value="#{tmpCorrespondenceEditBean.tmpCorrespondence.targetDate}"
-									autocomplete="off" maxlength="11"
-									required="#{'Y' eq tmpCorrespondenceEditBean.tmpCorrespondence.followUp}" 
-									requiredMessage="#{msg.formTmpCorrespondenceTargetDate} #{msg.validateRequired}"
-									disabled="#{'Y' ne tmpCorrespondenceEditBean.tmpCorrespondence.followUp}"
-									pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
-							</div>
-							
-						</div>
-						<div class="col-lg-12">
-							<div class="form-group">
-								<label for="emailDate" class="control-label tl-label"><h:outputText
-										value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
-									for="emailDate" class="control-label tl-label"><h:outputText /></label>
-								<p:dataTable id="tableFollowupEmail" var="vo"
-									value="#{tmpCorrespondenceEditBean.tmpCorrespondence.tmpCorrespondencePicFollowupEmails}"
-									styleClass="noHeader" style="width:100%;">
-									<p:column styleClass="noHeader">
-										<h:outputText value="#{vo.emailDate}">
-											<f:convertDateTime
-												pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
-												locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
-											</f:convertDateTime>
-										</h:outputText>
-									</p:column>
-								</p:dataTable>
-							</div>
-						</div>
-					</h:panelGroup>
+					<!-- <h:outputText value="&#160;" />
+					<h:panelGroup id="panelTagetDateSubmissionConfirmation">
+					</h:panelGroup> -->
 
 					<h:panelGroup id="panelSupportingUnit">
-					<h:outputText value="&#160;" />
-
-					<h3>
-						<h:outputText value="#{msg.formTmpCorrespondenceSupportingUnit}" />
-					</h3>
-					<div class="col-lg-12">
-						<div id="mp-supporting-unit">
-							<h4 class="sub-header">
-								&nbsp;
-								<div class="box-tools">
-									<ul class="no-margin no-padding">
-										<li><p:commandLink
-												onclick="onAddNewSupportingUnit();">
-												<i class="fa fa-plus"></i>
-											</p:commandLink></li>
-										<li><p:commandLink
-												onclick="onDeleteRowSupportingUnit();">
-												<i class="fa fa-trash"></i>
-											</p:commandLink></li>
-									</ul>
+						<h:outputText value="&#160;" />	
+						<h3>
+							<h:outputText value="#{msg.formTmpCorrespondenceSupportingUnit}" />
+						</h3>
+						<div class="col-lg-12">
+							<div id="mp-supporting-unit">
+								<h4 class="sub-header">
+									&nbsp;
+									<div class="box-tools">
+										<ul class="no-margin no-padding">
+											<li><p:commandLink
+													onclick="onAddNewSupportingUnit();">
+													<i class="fa fa-plus"></i>
+												</p:commandLink></li>
+											<li><p:commandLink
+													onclick="onDeleteRowSupportingUnit();">
+													<i class="fa fa-trash"></i>
+												</p:commandLink></li>
+										</ul>
+									</div>
+								</h4>
+								<div class="table-wrapper table-responsive">
+									<p:dataTable id="tableSupportingUnitDetail" var="vo"
+										value="#{tmpCorrespondenceEditBean.tableSupportingUnitModel}"
+										rowIndexVar="statIndex" style="width:100%;"
+										selection="#{tmpCorrespondenceEditBean.selectedSupportingUnitData}"
+										rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+										
+										<p:ajax event="rowSelectCheckbox" process="@this" />
+										<p:ajax event="rowUnselectCheckbox" process="@this" />
+										
+										<p:ajax event="toggleSelect" process="@this" /> 
+										
+										<p:column selectionMode="multiple"
+											style="text-align:center; width:40px;" >
+										
+										</p:column>										
+										
+										<p:column headerText="#{msg.formTmpCorrespondenceDivision}"
+											style="width:200px;">
+											<div class="form-group" style="margin-top:15px;">
+												<h:selectOneMenu
+													styleClass="form-control s2 divisionCc#{statIndex}" 
+													style="margin-top:15px;height:38px;"
+													value="#{vo.divisionId}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{tmpCorrespondenceEditBean.divisionList}" />
+													<p:ajax event="change" update="form:tableSupportingUnitDetail"
+														listener="#{tmpCorrespondenceEditBean.onChangeDivision(statIndex)}"
+													 />
+												</h:selectOneMenu>
+											</div>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceEmailCc1}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															id="emailCc1#{statIndex}" styleClass="form-control"
+															value="#{vo.emailCcTemp1}" disabled="true" /></td>
+													<td style="width: 20%"><p:commandLink process="@this"
+															onstart="$('.hdnParamEmailCc1Option').val($('.divisionCc#{statIndex}').val());emailCc1Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlCc}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceEmailCc2}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 70%"><h:inputText
+															id="emailCc2#{statIndex}" styleClass="form-control"
+															value="#{vo.emailCcTemp2}" disabled="true" /></td>
+													<td style="width: 15%">
+														<p:commandLink process="@this"
+															onstart="$('.hdnParamEmailCc2Option').val($('.divisionCc#{statIndex}').val());emailCc2Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlCc}"
+																value="#{statIndex}" />
+														</p:commandLink>
+													</td>
+													<td style="width: 15%">	
+														<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
+															actionListener="#{tmpCorrespondenceEditBean.clearPicDetail2(statIndex)}"
+															update="form:panelSupportingUnit">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>															
+														</p:commandLink>													
+													</td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceEmailCc3}"
+											style="width:200px;">
+											<table>
+												<tr>
+													<td style="width: 70%">											
+													<h:inputText
+															id="emailCc3#{statIndex}" styleClass="form-control"
+															value="#{vo.emailCcTemp3}" disabled="true" /></td>
+													<td style="width: 15%">													
+														<p:commandLink process="@this"
+															onstart="$('.hdnParamEmailCc3Option').val($('.divisionCc#{statIndex}').val());emailCc3Dialog.show();">
+															<span><i class="fa fa-search ico-lg"></i></span>
+															<f:setPropertyActionListener
+																target="#{tmpCorrespondenceEditBean.indexDtlCc}"
+																value="#{statIndex}" />
+														</p:commandLink>
+													</td>
+													<td style="width: 15%">	
+														<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
+															actionListener="#{tmpCorrespondenceEditBean.clearPicDetail3(statIndex)}"
+															update="form:panelSupportingUnit">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>														
+														</p:commandLink>													
+													</td>
+												</tr>
+											</table>
+										</p:column>
+									</p:dataTable>
 								</div>
-							</h4>
-							<div class="table-wrapper table-responsive">
-								<p:dataTable id="tableSupportingUnitDetail" var="vo"
-									value="#{tmpCorrespondenceEditBean.tableSupportingUnitModel}"
-									rowIndexVar="statIndex" style="width:100%;"
-									selection="#{tmpCorrespondenceEditBean.selectedSupportingUnitData}"
-									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
-									
-									<p:ajax event="rowSelectCheckbox" process="@this" />
-									<p:ajax event="rowUnselectCheckbox" process="@this" />
-									
-									<p:ajax event="toggleSelect" process="@this" /> 
-									
-									<p:column selectionMode="multiple"
-										style="text-align:center; width:40px;" >
-									
-									</p:column>										
-									
-									<p:column headerText="#{msg.formTmpCorrespondenceDivision}"
-										style="width:200px;">
-										<div class="form-group" style="margin-top:15px;">
-											<h:selectOneMenu
-												styleClass="form-control s2 divisionCc#{statIndex}" 
-												style="margin-top:15px;height:38px;"
-												value="#{vo.divisionId}">
-												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-												<f:selectItems
-													value="#{tmpCorrespondenceEditBean.divisionList}" />
-												<p:ajax event="change" update="form:tableSupportingUnitDetail"
-													listener="#{tmpCorrespondenceEditBean.onChangeDivision(statIndex)}"
-												 />
-											</h:selectOneMenu>
-										</div>
-									</p:column>
-									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc1}"
-										style="width:200px;">
-										<table>
-											<tr>
-												<td style="width: 80%"><h:inputText
-														id="emailCc1#{statIndex}" styleClass="form-control"
-														value="#{vo.emailCcTemp1}" disabled="true" /></td>
-												<td style="width: 20%"><p:commandLink process="@this"
-														onstart="$('.hdnParamEmailCc1Option').val($('.divisionCc#{statIndex}').val());emailCc1Dialog.show();">
-														<span><i class="fa fa-search ico-lg"></i></span>
-														<f:setPropertyActionListener
-															target="#{tmpCorrespondenceEditBean.indexDtlCc}"
-															value="#{statIndex}" />
-													</p:commandLink></td>
-											</tr>
-										</table>
-									</p:column>
-									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc2}"
-										style="width:200px;">
-										<table>
-											<tr>
-												<td style="width: 70%"><h:inputText
-														id="emailCc2#{statIndex}" styleClass="form-control"
-														value="#{vo.emailCcTemp2}" disabled="true" /></td>
-												<td style="width: 15%">
-													<p:commandLink process="@this"
-														onstart="$('.hdnParamEmailCc2Option').val($('.divisionCc#{statIndex}').val());emailCc2Dialog.show();">
-														<span><i class="fa fa-search ico-lg"></i></span>
-														<f:setPropertyActionListener
-															target="#{tmpCorrespondenceEditBean.indexDtlCc}"
-															value="#{statIndex}" />
-													</p:commandLink>
-												</td>
-												<td style="width: 15%">	
-													<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
-														actionListener="#{tmpCorrespondenceEditBean.clearPicDetail2(statIndex)}"
-														update="form:panelSupportingUnit">
-														<span class="input-group-btn fa fa-trash btn btn-link"></span>															
-													</p:commandLink>													
-												</td>
-											</tr>
-										</table>
-									</p:column>
-									<p:column headerText="#{msg.formTmpCorrespondenceEmailCc3}"
-										style="width:200px;">
-										<table>
-											<tr>
-												<td style="width: 70%">											
-												<h:inputText
-														id="emailCc3#{statIndex}" styleClass="form-control"
-														value="#{vo.emailCcTemp3}" disabled="true" /></td>
-												<td style="width: 15%">													
-													<p:commandLink process="@this"
-														onstart="$('.hdnParamEmailCc3Option').val($('.divisionCc#{statIndex}').val());emailCc3Dialog.show();">
-														<span><i class="fa fa-search ico-lg"></i></span>
-														<f:setPropertyActionListener
-															target="#{tmpCorrespondenceEditBean.indexDtlCc}"
-															value="#{statIndex}" />
-													</p:commandLink>
-												</td>
-												<td style="width: 15%">	
-													<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
-														actionListener="#{tmpCorrespondenceEditBean.clearPicDetail3(statIndex)}"
-														update="form:panelSupportingUnit">
-														<span class="input-group-btn fa fa-trash btn btn-link"></span>														
-													</p:commandLink>													
-												</td>
-											</tr>
-										</table>
-									</p:column>
-								</p:dataTable>
 							</div>
 						</div>
-					</div>
 					</h:panelGroup>
 
 					<h:outputText value="&#160;" />

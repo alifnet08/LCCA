@@ -1,8 +1,10 @@
 package com.wo.module.trcCorrespondence.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.wo.module.common.model.BaseEntity;
+import com.wo.module.parameter.model.ParameterDetail;
 import com.wo.module.user.model.User;
 
 public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
@@ -19,12 +21,16 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private User user3;
 
 	private TrcCorrespondence trcCorrespondence;
+	private ParameterDetail statusPic;
+	private ParameterDetail complianceStatus;
 
 	private Integer sequence;
 
 	private String userName1;
 	private String userName2;
 	private String userName3;
+	
+	private Date targetDate;
 
 	public Long getCrpdcPicConfirmId() {
 		return crpdcPicConfirmId;
@@ -112,6 +118,30 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 
 	public void setUserName3(String userName3) {
 		this.userName3 = userName3;
+	}
+
+	public ParameterDetail getStatusPic() {
+		return statusPic;
+	}
+
+	public void setStatusPic(ParameterDetail statusPic) {
+		this.statusPic = statusPic;
+	}
+
+	public ParameterDetail getComplianceStatus() {
+		return complianceStatus;
+	}
+
+	public void setComplianceStatus(ParameterDetail complianceStatus) {
+		this.complianceStatus = complianceStatus;
+	}
+
+	public Date getTargetDate() {
+		return targetDate;
+	}
+
+	public void setTargetDate(Date targetDate) {
+		this.targetDate = targetDate;
 	}
 
 }

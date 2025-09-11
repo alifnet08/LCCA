@@ -335,37 +335,53 @@
 												</tr>
 											</table>
 										</p:column>
+										<p:column headerText="#{msg.formTmpCorrespondenceTargetDate}" width="150">
+											<div class="form-group calendar-style">
+												<p:calendar maxlength="11"  pattern="dd-MMM-yyyy" style="width:100px" 
+												    placeholder="#{msg.formTmpCorrespondenceTargetDate}" disabled="true"
+													value="#{vo.targetDate}" autocomplete="off"
+													styleClass="form-control-datepicker-wrap" locale="en">
+													<p:ajax event="dateSelect" />
+												</p:calendar>
+											</div>
+										</p:column>
+										<p:column headerText="Status" width="150">
+										    <p:outputLabel value="#{vo.statusPic.nameIn}"/>
+										</p:column>
+										<p:column headerText="Compliance Status" width="150">
+										    <p:outputLabel value="#{vo.complianceStatus.nameIn}"/>
+										</p:column>
 									</p:dataTable>
 								</div>
 							</div>
 						</div>
 					</h:panelGroup>
 					
-					<div class="col-lg-12">
+					<!-- <div class="col-lg-12">
 						<div class="form-group">
 							<label for="targetDate" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondenceTargetDate}" /></label>
+									value="msg.formTmpCorrespondenceTargetDate}" /></label>
 							<p:calendar styleClass="form-control-datepicker-wrap"
-								value="#{trcCorrespondenceApprovalEditBean.trcCorrespondence.targetDate}"
+								value="trcCorrespondenceApprovalEditBean.trcCorrespondence.targetDate}"
 								autocomplete="off"
-								pattern="#{trcCorrespondenceApprovalEditBean.inputDateFormat}"
-								locale="#{trcCorrespondenceApprovalEditBean.inputDateLocale}"
+								pattern="trcCorrespondenceApprovalEditBean.inputDateFormat}"
+								locale="trcCorrespondenceApprovalEditBean.inputDateLocale}"
 								disabled="true"></p:calendar>
 						</div>
 					</div>
 					<div class="col-lg-12">
 						<div class="form-group">
 							<label for="emailDate" class="control-label tl-label"><h:outputText
-									value="#{msg.formTmpCorrespondenceEmailDate}" /></label> <label
+									value="msg.formTmpCorrespondenceEmailDate}" /></label> <label
 								for="emailDate" class="control-label tl-label"><h:outputText /></label>
 							<p:dataTable id="tableFollowupEmail" var="vo"
-								value="#{trcCorrespondenceApprovalEditBean.trcCorrespondence.trcCorrespondencePicFollowupEmails}"
+								value="trcCorrespondenceApprovalEditBean.trcCorrespondence.trcCorrespondencePicFollowupEmails}"
 								styleClass="noHeader" style="width:100%;">
 								<p:column styleClass="noHeader">
 									<h:outputText value="#{vo.emailDate}">
 										<f:convertDateTime
-											pattern="#{trcCorrespondenceApprovalEditBean.inputDateFormat}"
-											locale="#{trcCorrespondenceApprovalEditBean.inputDateLocale}">
+											pattern="trcCorrespondenceApprovalEditBean.inputDateFormat}"
+											locale="trcCorrespondenceApprovalEditBean.inputDateLocale}">
 										</f:convertDateTime>
 									</h:outputText>
 								</p:column>
@@ -373,7 +389,7 @@
 						</div>
 					</div>
 
-					<h:outputText value="&#160;" />
+					<h:outputText value="&#160;" /> -->
 
 					<h3>
 						<h:outputText value="#{msg.formTmpCorrespondenceSupportingUnit}" />
