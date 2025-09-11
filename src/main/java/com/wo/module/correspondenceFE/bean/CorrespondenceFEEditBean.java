@@ -44,6 +44,7 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendanceTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.user.model.User;
@@ -93,6 +94,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", new Locale("id", "ID"));
 	
 	private String textWarningUpload;
+	private String picFollowupNote;
+	private String picFollowupStatus;
 	
 	private Integer testFirst;
 	
@@ -212,6 +215,23 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			}
 		}
 		
+		if(trcCorrespondence.getTrcCrpdcPicConfirms() !=null) {
+			for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+				TrcCrpdcPicConfirm picConfirmsData = (TrcCrpdcPicConfirm)trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
+				if(picConfirmsData !=null && picConfirmsData.getUser1() !=null) {
+					String nikData = picConfirmsData.getUser1().getNik();
+					if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
+						picFollowupNote = picConfirmsData.getPicFollowupNote();
+						if(picConfirmsData.getStatusPic() !=null && picConfirmsData.getStatusPic().getParameterDtlCode() !=null) {
+							picFollowupStatus = picConfirmsData.getStatusPic().getParameterDtlCode();
+						}
+						
+						break;
+					}
+				}
+			}
+		}
+		
 		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
 				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 		
@@ -301,7 +321,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		Boolean flag = false;
 		
 		if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-			if(trcCorrespondence.getFollowupStatus() == null || trcCorrespondence.getFollowupStatus().getParameterDtlCode() == null) {
+			//if(trcCorrespondence.getFollowupStatus() == null || trcCorrespondence.getFollowupStatus().getParameterDtlCode() == null) {
+			if(picFollowupStatus == null || StringUtils.isEmpty(picFollowupStatus)) { 
 				facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceAttedance") 
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
@@ -335,8 +356,10 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 					}
 				}
 			}
-			if(trcCorrespondence.getFollowupStatus() != null && trcCorrespondence.getFollowupStatus().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_NOT_ATTEND)) {
-				if(trcCorrespondence.getFollowupNote() == null || trcCorrespondence.getFollowupNote().equals("")) {
+			if(picFollowupStatus != null && StringUtils.isNotEmpty(picFollowupStatus) &&
+					picFollowupStatus.equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_NOT_ATTEND)) {
+				//if(trcCorrespondence.getFollowupNote() == null || trcCorrespondence.getFollowupNote().equals("")) {
+				if(picFollowupNote == null || StringUtils.isEmpty(picFollowupNote)) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpRmdInformation") + " " 
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
@@ -368,12 +391,16 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			
 			
 			if(!StringUtils.isEmpty(keterangan)){
-				trcCorrespondence.setFollowupNote(keterangan);
+				//trcCorrespondence.setFollowupNote(keterangan);
+				picFollowupNote =  keterangan;
 			}
 			
+			// ditutup berubag bisnis 20250911
+		   // ParameterDetail attendance = parameterDetailService.getParameterDetailByParamDtlCode(trcCorrespondence.getFollowupStatus().getParameterDtlCode());
+			//trcCorrespondence.setAttendance(attendance);
 			
-		    ParameterDetail attendance = parameterDetailService.getParameterDetailByParamDtlCode(trcCorrespondence.getFollowupStatus().getParameterDtlCode());
-			trcCorrespondence.setAttendance(attendance);
+			// baru logic
+			String correspondenAttendanceCode = trcCorrespondence.getCorrespondenceCode().getParameterDtlCode();
 			
 
 			if (!validate()) {
@@ -420,7 +447,56 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 						}
 					}
 					
-					trcCorrespondence.setConfirmationDate(new Date());
+					// bisnis baru 20250911
+					if(trcCorrespondence.getTrcCrpdcPicConfirms() !=null) {
+						for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+							TrcCrpdcPicConfirm dataPicDtl = (TrcCrpdcPicConfirm) trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
+							String nikData = dataPicDtl.getUser1().getNik();
+							if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
+								dataPicDtl.setTrcCorrespondence(trcCorrespondence);
+								
+								dataPicDtl.setPicFollowupDate(new Timestamp(new Date().getTime()));								
+								dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
+								
+								if(correspondenAttendanceCode.equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
+									if(picFollowupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
+									   ParameterDetail attendee = parameterDetailService.getParameterDetailByParamDtlCode(
+												ParameterDetail.PARAM_DET_I_ATTEND);
+									   dataPicDtl.setStatusPic(attendee);
+									}else {
+										ParameterDetail notAttendee = parameterDetailService.getParameterDetailByParamDtlCode(
+												ParameterDetail.PARAM_DET_NOT_ATTEND);
+										dataPicDtl.setStatusPic(notAttendee);
+									}
+									dataPicDtl.setPicFollowupNote(picFollowupNote);
+									
+									ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
+											ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);									
+									dataPicDtl.setComplianceBy(dataPicDtl.getUser1());
+									dataPicDtl.setComplianceStatus(complianceStatusClose);	
+									dataPicDtl.setComplianceDate(new Timestamp(new Date().getTime()));
+									
+								}else {
+									ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
+											ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
+									dataPicDtl.setStatusPic(followupStatus);
+								}					
+								
+								if (dataPicDtl.getCreatedBy() == null) {
+									dataPicDtl.setCreatedBy(facesUtil.retrieveUserLogin());
+									dataPicDtl.setCreationDate(new Timestamp(new Date().getTime()));
+								}
+
+								dataPicDtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
+								dataPicDtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
+								dataPicDtl.setDelId(new Long(0));
+								dataPicDtl.setEnabledFlag(Constants.CONSTANT_YES);
+							}
+						}
+					}
+					
+					// ditutup perubahan bisnis 20250911
+					/*trcCorrespondence.setConfirmationDate(new Date());
 					
 					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
 						if(  trcCorrespondence.getAttendance().getParameterDtlCode().equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
@@ -436,7 +512,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 						ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
 								ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
 						trcCorrespondence.setFollowupStatus(followupStatus);
-					}
+					}					
 					
 					User userData = userService.getUserByNik(facesUtil.retrieveUserLogin());
 					trcCorrespondence.setFollowupBy(userData);
@@ -453,6 +529,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 					}else {
 						trcCorrespondence.setComplianceStatus(null);
 					}
+					*/
 					
 					trcCorrespondence.setComplianceNote(null);
 					trcCorrespondence.setComplianceBy(null);
@@ -772,6 +849,22 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 
 	public void setFilesDocument(List<UploadedFileWO> filesDocument) {
 		this.filesDocument = filesDocument;
+	}
+
+	public String getPicFollowupNote() {
+		return picFollowupNote;
+	}
+
+	public void setPicFollowupNote(String picFollowupNote) {
+		this.picFollowupNote = picFollowupNote;
+	}
+
+	public String getPicFollowupStatus() {
+		return picFollowupStatus;
+	}
+
+	public void setPicFollowupStatus(String picFollowupStatus) {
+		this.picFollowupStatus = picFollowupStatus;
 	}		
 
 }

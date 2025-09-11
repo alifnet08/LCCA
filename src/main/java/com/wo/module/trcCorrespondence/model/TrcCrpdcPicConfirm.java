@@ -1,6 +1,7 @@
 package com.wo.module.trcCorrespondence.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import com.wo.module.common.model.BaseEntity;
@@ -14,24 +15,32 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private Long crpdcPicConfirmId;
 	private Long divisionId;
 
-	private String divisionName;
-
+	private Date targetDate;
+	
+	private Timestamp picConfirmationDate;
+	private Timestamp picFollowupDate;
+	private Timestamp complianceDate;
+	
+	private String picFollowupNote;	
+	private String complianceNote;
+		
 	private User user1;
 	private User user2;
 	private User user3;
-
+	private User complianceBy;
 	private TrcCorrespondence trcCorrespondence;
 	private ParameterDetail statusPic;
 	private ParameterDetail complianceStatus;
 
+	//helper
 	private Integer sequence;
-
+	
+	private String divisionName;
 	private String userName1;
 	private String userName2;
 	private String userName3;
 	
-	private Date targetDate;
-
+	
 	public Long getCrpdcPicConfirmId() {
 		return crpdcPicConfirmId;
 	}
@@ -142,6 +151,54 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 
 	public void setTargetDate(Date targetDate) {
 		this.targetDate = targetDate;
+	}
+
+	public Timestamp getPicConfirmationDate() {
+		return picConfirmationDate;
+	}
+
+	public void setPicConfirmationDate(Timestamp picConfirmationDate) {
+		this.picConfirmationDate = picConfirmationDate;
+	}
+
+	public Timestamp getPicFollowupDate() {
+		return picFollowupDate;
+	}
+
+	public void setPicFollowupDate(Timestamp picFollowupDate) {
+		this.picFollowupDate = picFollowupDate;
+	}
+
+	public Timestamp getComplianceDate() {
+		return complianceDate;
+	}
+
+	public void setComplianceDate(Timestamp complianceDate) {
+		this.complianceDate = complianceDate;
+	}
+
+	public String getPicFollowupNote() {
+		return picFollowupNote;
+	}
+
+	public void setPicFollowupNote(String picFollowupNote) {
+		this.picFollowupNote = picFollowupNote;
+	}
+
+	public String getComplianceNote() {
+		return complianceNote;
+	}
+
+	public void setComplianceNote(String complianceNote) {
+		this.complianceNote = complianceNote;
+	}
+
+	public User getComplianceBy() {
+		return complianceBy;
+	}
+
+	public void setComplianceBy(User complianceBy) {
+		this.complianceBy = complianceBy;
 	}
 
 }

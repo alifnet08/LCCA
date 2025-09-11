@@ -30,6 +30,18 @@
 		
 		<many-to-one name="complianceStatus" column="COMPLIANCE_STATUS_ID" fetch="join" 
 				class="com.wo.module.parameter.model.ParameterDetail" />
+				
+		<property name="picConfirmationDate" column="PIC_CONFIRMATION_DATE" type="timestamp" />		
+		<property name="picFollowupDate" column="PIC_FOLLOWUP_DATE" type="timestamp" />		
+			
+		<property name="picFollowupNote" column="PIC_FOLLOWUP_NOTE" type="string" />		
+		
+		<many-to-one name="complianceBy" column="COMPLIANCE_BY_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+	    
+	    <property name="complianceNote" column="COMPLIANCE_NOTE" type="string" />		
+	    
+	    <property name="complianceDate" column="COMPLIANCE_DATE" type="timestamp" />		
 								
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
