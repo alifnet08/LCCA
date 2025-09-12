@@ -96,6 +96,10 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	private String textWarningUpload;
 	private String picFollowupNote;
 	private String picFollowupStatus;
+	private String picNonFollowupNote;
+	private String picNonFollowupStatus;
+	
+	private Date picNonFollowupDate;
 	
 	private Integer testFirst;
 	
@@ -222,9 +226,13 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 					String nikData = picConfirmsData.getUser1().getNik();
 					if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
 						picFollowupNote = picConfirmsData.getPicFollowupNote();
+						picNonFollowupNote = picConfirmsData.getPicFollowupNote();
 						if(picConfirmsData.getStatusPic() !=null && picConfirmsData.getStatusPic().getParameterDtlCode() !=null) {
 							picFollowupStatus = picConfirmsData.getStatusPic().getParameterDtlCode();
+							picNonFollowupStatus = picConfirmsData.getStatusPic().getParameterDtlCode();
 						}
+						
+						picNonFollowupDate = picConfirmsData.getPicFollowupDate();
 						
 						break;
 					}
@@ -366,7 +374,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 				}
 			}
 		}else{
-			if (trcCorrespondence.getFollowupDate() == null) {
+			if (picNonFollowupDate == null) {
 				facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceFollowupDate") + " "
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
@@ -393,6 +401,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			if(!StringUtils.isEmpty(keterangan)){
 				//trcCorrespondence.setFollowupNote(keterangan);
 				picFollowupNote =  keterangan;
+				picNonFollowupNote = keterangan;
 			}
 			
 			// ditutup berubag bisnis 20250911
@@ -453,11 +462,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 							TrcCrpdcPicConfirm dataPicDtl = (TrcCrpdcPicConfirm) trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
 							String nikData = dataPicDtl.getUser1().getNik();
 							if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
-								dataPicDtl.setTrcCorrespondence(trcCorrespondence);
-								
-								dataPicDtl.setPicFollowupDate(new Timestamp(new Date().getTime()));								
-								dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
-								
+								dataPicDtl.setTrcCorrespondence(trcCorrespondence);							
 								if(correspondenAttendanceCode.equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
 									if(picFollowupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
 									   ParameterDetail attendee = parameterDetailService.getParameterDetailByParamDtlCode(
@@ -468,18 +473,23 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 												ParameterDetail.PARAM_DET_NOT_ATTEND);
 										dataPicDtl.setStatusPic(notAttendee);
 									}
-									dataPicDtl.setPicFollowupNote(picFollowupNote);
 									
+									dataPicDtl.setPicFollowupNote(picFollowupNote);									
 									ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
 											ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);									
 									dataPicDtl.setComplianceBy(dataPicDtl.getUser1());
 									dataPicDtl.setComplianceStatus(complianceStatusClose);	
 									dataPicDtl.setComplianceDate(new Timestamp(new Date().getTime()));
-									
+									dataPicDtl.setPicFollowupDate(new Timestamp(new Date().getTime()));								
+									dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
+																		
 								}else {
 									ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
 											ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
 									dataPicDtl.setStatusPic(followupStatus);
+									dataPicDtl.setPicFollowupDate(new Timestamp(picNonFollowupDate.getTime()));								
+									dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
+									dataPicDtl.setPicFollowupNote(picNonFollowupNote);
 								}					
 								
 								if (dataPicDtl.getCreatedBy() == null) {
@@ -865,6 +875,30 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 
 	public void setPicFollowupStatus(String picFollowupStatus) {
 		this.picFollowupStatus = picFollowupStatus;
+	}
+
+	public String getPicNonFollowupNote() {
+		return picNonFollowupNote;
+	}
+
+	public void setPicNonFollowupNote(String picNonFollowupNote) {
+		this.picNonFollowupNote = picNonFollowupNote;
+	}
+
+	public String getPicNonFollowupStatus() {
+		return picNonFollowupStatus;
+	}
+
+	public void setPicNonFollowupStatus(String picNonFollowupStatus) {
+		this.picNonFollowupStatus = picNonFollowupStatus;
+	}
+
+	public Date getPicNonFollowupDate() {
+		return picNonFollowupDate;
+	}
+
+	public void setPicNonFollowupDate(Date picNonFollowupDate) {
+		this.picNonFollowupDate = picNonFollowupDate;
 	}		
 
 }

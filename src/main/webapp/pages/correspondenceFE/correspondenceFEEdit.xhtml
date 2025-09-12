@@ -15,7 +15,7 @@
 }
 
 .ui-widget-content {
-	border: none;
+	border: none;                                                                                                                                          
 }
 
 .ui-widget .ui-widget {
@@ -153,7 +153,7 @@
 							</div>
 
 							<p:fileUpload styleClass="wo-fileupload-wrap"
-								rendered="#{correspondenceFEEditBean.trcCorrespondence.followupStatus == null || correspondenceFEEditBean.trcCorrespondence.followupStatus.parameterDtlCode ne 'PIC_DONE'}"
+								rendered="#{correspondenceFEEditBean.picNonFollowupStatus == null || correspondenceFEEditBean.picNonFollowupStatus ne 'PIC_DONE'}"
 								fileUploadListener="#{correspondenceFEEditBean.handleFileUploadEvidence}"
 								mode="advanced" dragDropSupport="false" multiple="true"
 								update="evidenceList"
@@ -190,7 +190,7 @@
 							<p:calendar id="searchPeriodStart" autocomplete="off"
 								maxlength="11"
 								styleClass="form-control-datepicker-wrap form-control-wrap"
-								value="#{correspondenceFEEditBean.trcCorrespondence.followupDate}"
+								value="#{correspondenceFEEditBean.picNonFollowupDate}"
 								pattern="#{correspondenceFEEditBean.inputDateFormat}"
 								locale="#{correspondenceFEEditBean.inputDateLocale}" />
 						</div>
@@ -201,7 +201,7 @@
 							<div class="label-form">Keterangan</div>
 							<input type="text" class="form-control upload-form"
 								id="keterangan"
-								value="#{correspondenceFEVerificationBean.trcCorrespondence.followupNote}" />
+								value="#{correspondenceFEEditBean.picNonFollowupNote}" />
 						</div>
 					</div>
 
@@ -318,7 +318,7 @@
 						<h:panelGroup
 							rendered="#{correspondenceFEEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'NONINVITATION' }">
 							<p:commandButton value="Submit" type="submit"
-								rendered="#{correspondenceFEEditBean.picFollowupStatus == null || correspondenceFEEditBean.trcCorrespondence.followupStatus.parameterDtlCode ne 'PIC_DONE'}"
+								rendered="#{correspondenceFEEditBean.picNonFollowupStatus == null || correspondenceFEEditBean.picNonFollowupStatus ne 'PIC_DONE'}"
 								styleClass="btn btn-mb-secondary"
 								onclick="onSave([{name:'keterangan', value:$('#keterangan').val()}]);"></p:commandButton>
 						</h:panelGroup>
