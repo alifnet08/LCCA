@@ -67,7 +67,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 	private TrcCorrespondencePicCompliance[] selectedPicComplianceData;
 	private TrcCorrespondenceSupportingUnit[] selectedSupportingUnitData;
 	private TrcCrpdcReffLetter[] selectedReferalLetterData;
-	private TrcCrpdcPicConfirm[] selectedSubPicConfirmData;
+	private TrcCrpdcPicConfirm[] selectedSubPicConfirmData;	
 
 	private SelectorInfo selectorUser1;
 	private SelectorInfo selectorUser2;
@@ -90,6 +90,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 	private Integer indexDtlCc;
 
 	private List<TrcCorrespondence> trcCorrespondenceList;
+	private List<TrcCrpdcPicConfirm> trcCrpdcPicConfirmList;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
 
@@ -330,6 +331,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 				}
 			}
 			
+			trcCrpdcPicConfirmList = new ArrayList<TrcCrpdcPicConfirm>();
 			if (trcCorrespondence.getTrcCrpdcPicConfirms() != null) {
 				for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
 					TrcCrpdcPicConfirm dtl = (TrcCrpdcPicConfirm) trcCorrespondence
@@ -346,6 +348,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 					if (dtl.getUser3() != null) {
 						dtl.setUserName3(dtl.getUser3().getName());
 					}
+					
+					trcCrpdcPicConfirmList.add(dtl);
 				}
 			}
 			
@@ -404,8 +408,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 			flag = true;
 		}*/
 		
-		
-		if(trcCorrespondenceList !=null && trcCorrespondenceList.size() > 0) {
+		// yang lama 20250912
+		/*if(trcCorrespondenceList !=null && trcCorrespondenceList.size() > 0) {
 			for(int i=0; i<trcCorrespondenceList.size(); i++) {
 				TrcCorrespondence trcCorrespondenceTemp = trcCorrespondenceList.get(i);
 				if (trcCorrespondenceTemp.getComplianceStatus() == null || 
@@ -426,11 +430,35 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 					}
 				}
 			}
+		}*/
+		
+		// baru 20250912
+		if(trcCorrespondence !=null && trcCorrespondence.getTrcCrpdcPicConfirms() !=null && 
+				trcCorrespondence.getTrcCrpdcPicConfirms().size() > 0) {
+			for(int i=0; i<trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+				TrcCrpdcPicConfirm trcCrpdcPicConfirmTmp = trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
+				if(trcCrpdcPicConfirmTmp !=null && trcCrpdcPicConfirmTmp.getStatusPic() !=null && 
+						trcCrpdcPicConfirmTmp.getStatusPic().getParameterDtlCode().equals("PIC_DONE")) {
+					if (trcCrpdcPicConfirmTmp.getComplianceStatusCode() == null || 
+							StringUtils.isEmpty(trcCrpdcPicConfirmTmp.getComplianceStatusCode())) {
+						facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceComplianceCheckerStatus") + " "
+								+ facesUtil.retrieveMessage("validateRequired"));
+						
+						flag = true;
+					}else {				
+						if(trcCrpdcPicConfirmTmp.getComplianceStatusCode() != null && 
+								trcCrpdcPicConfirmTmp.getComplianceStatusCode().equals(TrcCorrespondenceApprovalConstants.COMPLIANCE_STATUS_COMPLIANCE_OPEN)) {
+							if (StringUtils.isEmpty(trcCrpdcPicConfirmTmp.getComplianceNote())) {
+								facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceComplianceCheckerNote") + " "
+										+ facesUtil.retrieveMessage("validateRequired"));
+								
+								flag = true;
+							}
+						}
+					}
+				}
+			}
 		}
-		
-		
-
-		
 
 		return flag;
 	}
@@ -441,8 +469,39 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 				ParameterDetail pdReminderStatus = parameterDetailService
 						.getParameterDetailByParamDtlCode(trcCorrespondence.getReminderStatus().getParameterDtlCode());
 				trcCorrespondence.setReminderStatus(pdReminderStatus);
-
+				
+				// baru 20250912
 				if (trcCorrespondence.getCorrespondenceId() != null) {
+					if (trcCorrespondence.getTrcCrpdcPicConfirms() != null && trcCorrespondence.getTrcCrpdcPicConfirms().size() > 0) {
+						for (int i = 0; i < trcCorrespondenceList.size(); i++) {
+							TrcCrpdcPicConfirm trcCrpdcPicConfirmTmp = trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
+							if(!trcCrpdcPicConfirmTmp.isCanEdit()) {
+								ParameterDetail complianceStatus = parameterDetailService.getParameterDetailByParamDtlCode(
+										trcCrpdcPicConfirmTmp.getComplianceStatusCode());
+								trcCrpdcPicConfirmTmp.setComplianceStatus(complianceStatus);
+								trcCrpdcPicConfirmTmp.setComplianceBy(userService.getUserByNik(facesUtil.retrieveUserLogin()));
+								trcCrpdcPicConfirmTmp.setComplianceDate(new Timestamp(new Date().getTime()));
+	
+								if (ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_OPEN
+										.equals(complianceStatus.getParameterDtlCode())) {
+									ParameterDetail followupStatus = parameterDetailService
+											.getParameterDetailByParamDtlCode(
+													ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_INPROGRESS);
+									trcCrpdcPicConfirmTmp.setStatusPic(followupStatus);
+								}
+							}
+						}
+						
+						trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
+						trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));
+						trcCorrespondence.setDelId(new Long(0));
+						trcCorrespondence.setEnabledFlag(Constants.CONSTANT_YES);
+						trcCorrespondenceService.update(trcCorrespondence);
+					}
+				}
+
+				// yang lama 20250912
+				/*if (trcCorrespondence.getCorrespondenceId() != null) {
 					if (trcCorrespondenceList != null && trcCorrespondenceList.size() > 0) {
 						for (int i = 0; i < trcCorrespondenceList.size(); i++) {
 							TrcCorrespondence trcCorrespondenceTemp = trcCorrespondenceList.get(i);
@@ -468,7 +527,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 							trcCorrespondenceService.update(trcCorrespondence);
 						}
 					}
-				}
+				} */
 
 				facesUtil.redirect("/pages/trcCorrespondenceApproval/trcCorrespondenceApproval.faces");
 			}
@@ -862,6 +921,14 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 
 	public void setSdf(SimpleDateFormat sdf) {
 		this.sdf = sdf;
+	}
+
+	public List<TrcCrpdcPicConfirm> getTrcCrpdcPicConfirmList() {
+		return trcCrpdcPicConfirmList;
+	}
+
+	public void setTrcCrpdcPicConfirmList(List<TrcCrpdcPicConfirm> trcCrpdcPicConfirmList) {
+		this.trcCrpdcPicConfirmList = trcCrpdcPicConfirmList;
 	}
 
 	

@@ -120,7 +120,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 	private String divNameLogin;
 
 	// private List<TrcRmd> trcRmdList;
-	private List<TrcCorrespondence> trcCorrespondenceList;
+	//private List<TrcCorrespondence> trcCorrespondenceList;
+	private TrcCorrespondence trcCorrespondence;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
 
@@ -647,10 +648,10 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		lastSequenceOfReffLetter = 0;
 		lastSequenceOfPicConfirm = 0;
 
-		TrcCorrespondence trcCorrespondence = trcCorrespondenceService.findById(idLong);
+		trcCorrespondence = trcCorrespondenceService.findById(idLong);
 		if (trcCorrespondence != null) {
 
-			if (trcCorrespondence.getFollowupStatus() != null) {
+			/*if (trcCorrespondence.getFollowupStatus() != null) {
 				disabledFollowUpStatus = true;
 			} else {
 				disabledFollowUpStatus = false;
@@ -661,7 +662,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 			if (trcCorrespondenceList.get(0).getComplianceStatus() == null) {
 				trcCorrespondenceList.get(0).setComplianceStatus(new ParameterDetail());
-			}
+			}*/
 		} else {
 			disabledFollowUpStatus = false;
 		}
@@ -2265,12 +2266,12 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		this.trcCorrespondenceService = trcCorrespondenceService;
 	}
 
-	public List<TrcCorrespondence> getTrcCorrespondenceList() {
-		return trcCorrespondenceList;
+	public TrcCorrespondence getTrcCorrespondence() {
+		return trcCorrespondence;
 	}
 
-	public void setTrcCorrespondenceList(List<TrcCorrespondence> trcCorrespondenceList) {
-		this.trcCorrespondenceList = trcCorrespondenceList;
+	public void setTrcCorrespondence(TrcCorrespondence trcCorrespondence) {
+		this.trcCorrespondence = trcCorrespondence;
 	}
 
 	public FileUtil getFileUtil() {

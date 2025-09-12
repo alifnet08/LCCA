@@ -516,12 +516,6 @@
 												</p:calendar>
 											</div>
 										</p:column>
-										<p:column headerText="Status" width="150">
-										    <p:outputLabel value="#{voPic.statusPic.nameIn}"/>
-										</p:column>
-										<p:column headerText="Compliance Status" width="150">
-										    <p:outputLabel value="#{voPic.complianceStatus.nameIn}"/>
-										</p:column>
 									</p:dataTable>
 								</div>
 							</div>
@@ -700,14 +694,14 @@
 							<div id="mp-confirmation-status">
 								<div class="table-wrapper table-responsive">
 									<p:dataTable id="tableConfirmation" var="vo"
-										value="#{tmpCorrespondenceEditBean.trcCorrespondenceList}"
+										value="#{tmpCorrespondenceEditBean.trcCorrespondence.trcCrpdcPicConfirms}"
 										rowIndexVar="statIndex" style="width:100%;">
 	
 										<p:column
 											headerText="#{msg.formTmpCorrespondenceConfirmationEvidenceNotPIC}"
 											style="width:150px;">
 											<div class="form-group">
-											  <p:dataList value="#{vo.trcCorrespondencePicFollowupAttachments}" 
+											  <p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttachments}" 
 											  	emptyMessage=""
 											  	var="dtl">
 												<!-- <h:commandLink value="#{msg.textDownload}" /> -->
@@ -720,7 +714,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputLabel value="#{vo.followupStatus.name}" />
+													<h:outputLabel value="#{vo.statusPic.name}" />
 												</div>
 											</div>
 										</p:column>
@@ -729,7 +723,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupBy.name}" />
+													<h:outputText value="#{vo.user1.name}" />
 												</div>
 											</div>
 										</p:column>
@@ -738,7 +732,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.confirmationDate}">
+													<h:outputText value="#{vo.picConfirmationDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -751,7 +745,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupDate}">
+													<h:outputText value="#{vo.picFollowupDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -764,7 +758,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupNote}" />
+													<h:outputText value="#{vo.picFollowupNote}" />
 												</div>
 											</div>
 										</p:column>
@@ -773,7 +767,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupDate}">
+													<h:outputText value="#{vo.picFollowupDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -816,7 +810,7 @@
 							<div id="mp-confirmation-status">
 								<div class="table-wrapper table-responsive">
 									<p:dataTable id="tableConfirmationInvitation" var="vo"
-										value="#{tmpCorrespondenceEditBean.trcCorrespondenceList}"
+										value="#{tmpCorrespondenceEditBean.trcCorrespondence.trcCrpdcPicConfirms}"
 										rowIndexVar="statIndex" style="width:100%;">
 	
 										<p:column
@@ -824,7 +818,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputLabel value="#{vo.followupStatus.name}" />
+													<h:outputLabel value="#{vo.statusPic.name}" />
 												</div>
 											</div>
 										</p:column>
@@ -833,7 +827,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupBy.name}" />
+													<h:outputText value="#{vo.user1.name}" />
 												</div>
 											</div>
 										</p:column>
@@ -842,7 +836,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.confirmationDate}">
+													<h:outputText value="#{vo.picConfirmationDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -855,7 +849,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupDate}">
+													<h:outputText value="#{vo.picFollowupDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -869,7 +863,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupDate}">
+													<h:outputText value="#{vo.picFollowupDate}">
 														<f:convertDateTime
 															pattern="#{tmpCorrespondenceEditBean.inputDateFormat}"
 															locale="#{tmpCorrespondenceEditBean.inputDateLocale}">
@@ -882,14 +876,14 @@
 											style="width:150px;">
 											<div class="form-group">
 												<div class="input-group">
-													<h:outputText value="#{vo.followupNote}" />
+													<h:outputText value="#{vo.picFollowupNote}" />
 												</div>
 											</div>
 										</p:column>
 										<p:column
 											headerText="#{msg.formTmpCorrespondencePICAttendance}"
 											style="width:150px;">
-											<p:dataList value="#{vo.trcCorrespondencePicFollowupAttendance}"
+											<p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttendance}"
 												var="dtl">
 												<h:outputLabel value="#{dtl.userId.name}" title="#{dtl.userId.name}"/>
 											</p:dataList>

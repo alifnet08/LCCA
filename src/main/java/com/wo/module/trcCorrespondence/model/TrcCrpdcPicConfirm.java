@@ -39,6 +39,9 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private String userName1;
 	private String userName2;
 	private String userName3;
+	private String complianceStatusCode;
+	
+	private boolean isCanEdit;
 	
 	
 	public Long getCrpdcPicConfirmId() {
@@ -199,6 +202,29 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 
 	public void setComplianceBy(User complianceBy) {
 		this.complianceBy = complianceBy;
+	}
+
+	public boolean isCanEdit() {
+		boolean flag = false;
+		
+		if (complianceStatus != null) {
+			if (complianceStatus.getParameterDtlCode().equals("COMPLIANCE_CLOSE")) {
+				flag = true;
+			}
+		}
+		return flag;
+	}
+
+	public void setCanEdit(boolean isCanEdit) {
+		this.isCanEdit = isCanEdit;
+	}
+
+	public String getComplianceStatusCode() {
+		return complianceStatusCode;
+	}
+
+	public void setComplianceStatusCode(String complianceStatusCode) {
+		this.complianceStatusCode = complianceStatusCode;
 	}
 
 }
