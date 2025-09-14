@@ -110,10 +110,10 @@ public class CorrespondenceFEDaoImpl extends GenericDAOHibernate<TrcCorresponden
 		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd2 on pd2.parameter_dtl_id = wtcpc.STATUS_PIC_ID ");
 		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd3 on pd3.parameter_dtl_code = r1.correspondence_type ");
 		sb.append("        LEFT JOIN wo_mst_parameter_dtl pdCompliance on pdCompliance.parameter_dtl_id = wtcpc.COMPLIANCE_STATUS_ID ");		
-		sb.append("        AND r1.enabled_flag = 'Y' ");
-		sb.append("        AND r1.follow_up = 'Y' ");
-		
-		
+        sb.append("  WHERE 1=1 ");
+ 		sb.append("        AND r1.enabled_flag = 'Y' ");
+ 		sb.append("        AND r1.follow_up = 'Y' "); 
+ 		
 		/*sb.append(" and (r1.pic_followup_status is null) ");
 		sb.append(" and (r1.CORRESPONDENCE_TYPE = 'NONINVITATION' OR r1.pic_followup_status is null) ");*/
 		
@@ -142,16 +142,32 @@ public class CorrespondenceFEDaoImpl extends GenericDAOHibernate<TrcCorresponden
 			int first, int pageSize) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" SELECT distinct r1.correspondence_id, r1.letter_no, ");
-		sb.append("        pdSender.name_en as SENDER_NAME_EN, pdSender.name_in as SENDER_NAME_IN, ");
-		sb.append("        r1.letter_received_date, pd1.name_en as STATUS_NAME_EN, pd1.name_in as STATUS_NAME_IN, ");
-		sb.append("        pd2.name_en as FOLLOWUP_STATUS_NAME_EN, pd2.name_in as FOLLOWUP_STATUS_NAME_IN, ");
-		sb.append("        r1.confirmation_date, r1.followup_date, r1.followup_note, r1.compliance_date, ");
-		sb.append("        pdCompliance.name_en as COMPLIANCE_STATUS_NAME_EN, pdCompliance.name_in as COMPLIANCE_STATUS_NAME_IN, ");
-		sb.append("        r1.status, r1.followup_status, pic1.name as PIC_NAME_1, ");
-		sb.append("        pic2.name as PIC_NAME_2, pic3.name as PIC_NAME_3, ");
+		sb.append("        pdSender.name_en as SENDER_NAME_EN, ");
+		sb.append("		   pdSender.name_in as SENDER_NAME_IN, ");
+		sb.append("        r1.letter_received_date, ");
+		sb.append("		   pd1.name_en as STATUS_NAME_EN, ");
+		sb.append("		   pd1.name_in as STATUS_NAME_IN, ");
+		sb.append("        pd2.name_en as FOLLOWUP_STATUS_NAME_EN, ");
+		sb.append("		   pd2.name_in as FOLLOWUP_STATUS_NAME_IN, ");
+		sb.append("        wtcpc.pic_followup_date confirmation_date, ");
+		sb.append("		   wtcpc.followup_date, ");
+		sb.append("		   wtcpc.followup_note, ");
+		sb.append("		   wtcpc.compliance_date, ");
+		sb.append("        pdCompliance.name_en as COMPLIANCE_STATUS_NAME_EN, ");
+		sb.append("		   pdCompliance.name_in as COMPLIANCE_STATUS_NAME_IN, ");
+		sb.append("        r1.status, ");
+		sb.append("        pd2.parameter_dtl_code followup_status, ");
+		sb.append("		   pic1.name as PIC_NAME_1, ");
+		sb.append("        pic2.name as PIC_NAME_2, ");
+		sb.append("		   pic3.name as PIC_NAME_3, ");
 		sb.append("        TO_CHAR(wtcpc.target_date, 'dd FMMonth yyyy', 'nls_date_language=indonesian') targetDate, ");
-		sb.append("        r1.letter_date, r1.compliance_note, r1.correspondence_type, pdCompliance.parameter_dtl_code compliance_status, ");
-		sb.append("        r1.pic_followup_status, pd3.name_in correspndence_type_name, wtcpc.CRPDC_PIC_CONFIRM_ID ");
+		sb.append("        r1.letter_date, ");
+		sb.append("        r1.compliance_note, ");
+		sb.append("        r1.correspondence_type, ");
+		sb.append("		   pdCompliance.parameter_dtl_code compliance_status, ");
+		sb.append("        wtcpc.pic_followup, ");
+		sb.append("        pd3.name_in correspndence_type_name, ");
+		sb.append("        wtcpc.CRPDC_PIC_CONFIRM_ID ");
 		sb.append("   FROM wo_trc_correspondence r1 ");
 		sb.append("        INNER JOIN (SELECT d.* ");
 		sb.append("                      FROM wo_mst_parameter p ");

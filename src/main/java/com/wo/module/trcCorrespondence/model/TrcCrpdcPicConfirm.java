@@ -18,10 +18,12 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 
 	private Date targetDate;
 	
-	private Timestamp picConfirmationDate;
+	private Timestamp followupDate;
 	private Timestamp picFollowupDate;
 	private Timestamp complianceDate;
 	
+	private String followupNote;	
+	private String picFollowup;
 	private String picFollowupNote;	
 	private String complianceNote;
 		
@@ -29,7 +31,10 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private User user2;
 	private User user3;
 	private User complianceBy;
+	private User picUserFollowup;
+	
 	private TrcCorrespondence trcCorrespondence;
+	
 	private ParameterDetail statusPic;
 	private ParameterDetail complianceStatus;
 
@@ -41,6 +46,7 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private String userName2;
 	private String userName3;
 	private String complianceStatusCode;
+	private String picFollowupStatusCode;
 	
 	private boolean isCanEdit;
 	
@@ -159,13 +165,13 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	public void setTargetDate(Date targetDate) {
 		this.targetDate = targetDate;
 	}
-
-	public Timestamp getPicConfirmationDate() {
-		return picConfirmationDate;
+	
+	public Timestamp getFollowupDate() {
+		return followupDate;
 	}
 
-	public void setPicConfirmationDate(Timestamp picConfirmationDate) {
-		this.picConfirmationDate = picConfirmationDate;
+	public void setFollowupDate(Timestamp followupDate) {
+		this.followupDate = followupDate;
 	}
 
 	public Timestamp getPicFollowupDate() {
@@ -247,6 +253,38 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	public void setTrcCorrespondencePicFollowupAttendance(
 			List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance) {
 		this.trcCorrespondencePicFollowupAttendance = trcCorrespondencePicFollowupAttendance;
+	}
+
+	public String getFollowupNote() {
+		return followupNote;
+	}
+
+	public void setFollowupNote(String followupNote) {
+		this.followupNote = followupNote;
+	}
+	
+	public String getPicFollowup() {
+		return picFollowup;
+	}
+
+	public void setPicFollowup(String picFollowup) {
+		this.picFollowup = picFollowup;
+	}
+
+	public User getPicUserFollowup() {
+		return picUserFollowup;
+	}
+
+	public void setPicUserFollowup(User picUserFollowup) {
+		this.picUserFollowup = picUserFollowup;
+	}
+
+	public String getPicFollowupStatusCode() {
+		return picFollowupStatusCode;
+	}
+
+	public void setPicFollowupStatusCode(String picFollowupStatusCode) {
+		this.picFollowupStatusCode = picFollowupStatusCode;
 	}
 	
 }

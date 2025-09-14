@@ -65,7 +65,7 @@
             <div class="col">
               <div class="label-form">Bukti Konfirmasi PIC</div>
               <ul class="attachment-list">
-	          <ui:repeat value="#{correspondenceFEViewBean.trcCorrespondence.trcCorrespondencePicFollowupAttachments}" var="vo" >
+	          <ui:repeat value="#{correspondenceFEViewBean.trcCrpdcPicConfirm.trcCorrespondencePicFollowupAttachments}" var="vo" >
               <li>
               <i class="far fa-file-alt"></i><p:spacer/><p:commandLink title="#{vo.fileSize} KB" ajax="false" immediate="true" actionListener="#{correspondenceFEViewBean.downloadFile(vo.fileId,vo.attachmentFile,null)}" target="_blank">#{vo.attachmentFile}</p:commandLink>
               </li>
@@ -76,13 +76,13 @@
           <div class="form-row">
             <div class="col">
               <div class="label-form">Tanggal Tindak Lanjut</div>
-	          #{correspondenceFEViewBean.trcCorrespondence.followupDate!=null ? correspondenceFEViewBean.sdf.format(correspondenceFEViewBean.trcCorrespondence.followupDate): null}
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.followupDate!=null ? correspondenceFEViewBean.sdf.format(correspondenceFEViewBean.trcCrpdcPicConfirm.followupDate): null}
             </div>
           </div>
           <div class="form-row">
             <div class="col">
               <div class="label-form">Keterangan</div>
-               #{correspondenceFEViewBean.trcCorrespondence.followupNote}"  
+               #{correspondenceFEViewBean.trcCrpdcPicConfirm.followupNote}
             </div>
           </div>
 
@@ -95,16 +95,16 @@
           
           <div class="form-row">
             <div class="col">
-              <div class="label-form" style="#{correspondenceFEViewBean.trcCorrespondence.complianceStatus eq null ?'display:none':''}">Status Pengecekan</div>
-	          #{correspondenceFEViewBean.trcCorrespondence.complianceStatus!=null?correspondenceFEViewBean.trcCorrespondence.complianceStatus.nameIn:null}
+              <div class="label-form" style="#{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus eq null ?'display:none':''}">Status Pengecekan</div>
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus!=null?correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus.nameIn:null}
             </div>
           </div>
           
          
 		<div class="form-row">
             <div class="col">
-              <div class="label-form" style="#{correspondenceFEViewBean.trcCorrespondence.complianceNote eq null ?'display:none':''}">Catatan Pengecekan</div>
-	          #{correspondenceFEViewBean.trcCorrespondence.complianceNote}
+              <div class="label-form" style="#{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceNote eq null ?'display:none':''}">Catatan Pengecekan</div>
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceNote}
             </div>
           </div>
           

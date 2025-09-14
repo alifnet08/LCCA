@@ -24,7 +24,9 @@ import com.wo.module.lov.bean.SelectorModel;
 import com.wo.module.lov.bean.SelectorModel.SelectorInfo;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
+import com.wo.module.trcCorrespondence.service.TrcCrpdcPicConfirmService;
 import com.wo.module.user.service.UserService;
 
 public class CorrespondenceFEViewBean extends CommonBean implements  Serializable {
@@ -33,12 +35,14 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 	static Logger logger = Logger.getLogger(CorrespondenceFEViewBean.class);
 
 	private TrcCorrespondence trcCorrespondence;
+	private TrcCrpdcPicConfirm trcCrpdcPicConfirm;
 	
 	private FacesUtil facesUtil;
 	
 	private FileUtil fileUtil;
 	
 	private TrcCorrespondenceService trcCorrespondenceService;
+	private TrcCrpdcPicConfirmService trcCrpdcPicConfirmService;
 	
 	private UserService userService;
 	
@@ -68,9 +72,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 		fileUtil = FileUtil.getInstance();
 	}
 	
-	
-	
-	
 	private void handleEdit() {
 		try {
 		String editId = facesUtil.retrieveRequestParam("id");
@@ -80,6 +81,15 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 		}
 		Long idLong = Long.parseLong(editId);
 		trcCorrespondence = trcCorrespondenceService.findById(idLong);
+		
+		String editPicId = facesUtil.retrieveRequestParam("idPic");
+		String tokenPic = facesUtil.retrieveRequestParam("tokenPic");
+		if (StringUtils.isNotEmpty(tokenPic)) {
+			editPicId = Constants.decryptString(tokenPic);
+		}
+		
+		Long picConfirmId = Long.parseLong(editPicId);
+		trcCrpdcPicConfirm = trcCrpdcPicConfirmService.findById(picConfirmId);
 		
 		
 		} catch (Exception e) {
@@ -173,7 +183,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 	}
 	
 	
-	
 	public FacesUtil getFacesUtil() {
 		return facesUtil;
 	}
@@ -181,8 +190,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 	public void setFacesUtil(FacesUtil facesUtil) {
 		this.facesUtil = facesUtil;
 	}
-
-	
 
 	public TrcCorrespondenceService getTrcCorrespondenceService() {
 		return trcCorrespondenceService;
@@ -200,7 +207,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 		CorrespondenceFEEditBean.logger = logger;
 	}
 
-
 	public TrcCorrespondence getTrcCorrespondence() {
 		return trcCorrespondence;
 	}
@@ -213,7 +219,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 		return serialVersionUID;
 	}
 
-
 	public FileUtil getFileUtil() {
 		return fileUtil;
 	}
@@ -221,8 +226,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 	public void setFileUtil(FileUtil fileUtil) {
 		this.fileUtil = fileUtil;
 	}
-
-	
 
 	public UserService getUserService() {
 		return userService;
@@ -240,8 +243,6 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 		this.emailTemplateService = emailTemplateService;
 	}
 
-	
-
 	public SimpleDateFormat getSdf() {
 		return sdf;
 	}
@@ -257,12 +258,21 @@ public class CorrespondenceFEViewBean extends CommonBean implements  Serializabl
 	public void setTestFirst(Integer testFirst) {
 		this.testFirst = testFirst;
 	}
-	
 
-	
+	public TrcCrpdcPicConfirm getTrcCrpdcPicConfirm() {
+		return trcCrpdcPicConfirm;
+	}
 
-	
-	
-	
+	public void setTrcCrpdcPicConfirm(TrcCrpdcPicConfirm trcCrpdcPicConfirm) {
+		this.trcCrpdcPicConfirm = trcCrpdcPicConfirm;
+	}
 
+	public TrcCrpdcPicConfirmService getTrcCrpdcPicConfirmService() {
+		return trcCrpdcPicConfirmService;
+	}
+
+	public void setTrcCrpdcPicConfirmService(TrcCrpdcPicConfirmService trcCrpdcPicConfirmService) {
+		this.trcCrpdcPicConfirmService = trcCrpdcPicConfirmService;
+	}
+	
 }

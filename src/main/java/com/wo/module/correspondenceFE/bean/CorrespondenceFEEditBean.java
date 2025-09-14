@@ -98,12 +98,12 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", new Locale("id", "ID"));
 	
 	private String textWarningUpload;
-	private String picFollowupNote;
-	private String picFollowupStatus;
-	private String picNonFollowupNote;
-	private String picNonFollowupStatus;
+	private String followupNote;
+	private String followupStatus;
+	private String nonFollowupNote;
+	private String nonFollowupStatus;
 	
-	private Date picNonFollowupDate;
+	private Date followupDate;
 	
 	private Integer testFirst;
 	
@@ -182,13 +182,13 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		Long picConfirmId = Long.parseLong(editPicId);
 		trcCrpdcPicConfirm = trcCrpdcPicConfirmService.findById(picConfirmId);
 		
-		picFollowupNote = trcCrpdcPicConfirm.getPicFollowupNote();
-		picNonFollowupNote = trcCrpdcPicConfirm.getPicFollowupNote();
-		picNonFollowupDate = trcCrpdcPicConfirm.getPicFollowupDate();
+		followupNote = trcCrpdcPicConfirm.getFollowupNote();
+		nonFollowupNote = trcCrpdcPicConfirm.getFollowupNote();
+		followupDate = trcCrpdcPicConfirm.getFollowupDate();
 		
 		if(trcCrpdcPicConfirm.getStatusPic() !=null && trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode() !=null) {
-			picFollowupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
-			picNonFollowupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
+			followupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
+			nonFollowupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
 		}
 						
 		for(int i=0;i<trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size();i++){
@@ -333,7 +333,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		
 		if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
 			//if(trcCorrespondence.getFollowupStatus() == null || trcCorrespondence.getFollowupStatus().getParameterDtlCode() == null) {
-			if(picFollowupStatus == null || StringUtils.isEmpty(picFollowupStatus)) { 
+			if(followupStatus == null || StringUtils.isEmpty(followupStatus)) { 
 				facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceAttedance") 
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
@@ -367,17 +367,17 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 					}
 				}
 			}
-			if(picFollowupStatus != null && StringUtils.isNotEmpty(picFollowupStatus) &&
-					picFollowupStatus.equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_NOT_ATTEND)) {
+			if(followupStatus != null && StringUtils.isNotEmpty(followupStatus) &&
+					followupStatus.equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_NOT_ATTEND)) {
 				//if(trcCorrespondence.getFollowupNote() == null || trcCorrespondence.getFollowupNote().equals("")) {
-				if(picFollowupNote == null || StringUtils.isEmpty(picFollowupNote)) {
+				if(followupNote == null || StringUtils.isEmpty(followupNote)) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpRmdInformation") + " " 
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
 				}
 			}
 		}else{
-			if (picNonFollowupDate == null) {
+			if (followupDate == null) {
 				facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceFollowupDate") + " "
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
@@ -394,8 +394,6 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	}
 	
 	public void save() {
-		
-		
 		try {
 			
 			String keterangan = facesUtil.retrieveRequestParam("keterangan");
@@ -403,23 +401,17 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			
 			if(!StringUtils.isEmpty(keterangan)){
 				//trcCorrespondence.setFollowupNote(keterangan);
-				picFollowupNote =  keterangan;
-				picNonFollowupNote = keterangan;
+				followupNote =  keterangan;
+				nonFollowupNote = keterangan;
 			}
 			
-			// ditutup berubag bisnis 20250911
-		   // ParameterDetail attendance = parameterDetailService.getParameterDetailByParamDtlCode(trcCorrespondence.getFollowupStatus().getParameterDtlCode());
-			//trcCorrespondence.setAttendance(attendance);
-			
-			// baru logic
 			String correspondenAttendanceCode = trcCorrespondence.getCorrespondenceCode().getParameterDtlCode();
 			
 			if (!validate()) {
-				//if (trcCorrespondence.getCorrespondenceId() != null) { // 
 				if (trcCrpdcPicConfirm.getCrpdcPicConfirmId() != null) {		
 					if (correspondenAttendanceCode
 							.equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-						if (picFollowupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
+						if (followupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
 							ParameterDetail attendee = parameterDetailService
 									.getParameterDetailByParamDtlCode(ParameterDetail.PARAM_DET_I_ATTEND);
 							trcCrpdcPicConfirm.setStatusPic(attendee);
@@ -429,22 +421,21 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 							trcCrpdcPicConfirm.setStatusPic(notAttendee);
 						}
 
-						trcCrpdcPicConfirm.setPicFollowupNote(picFollowupNote);
+						trcCrpdcPicConfirm.setFollowupNote(followupNote);
+						trcCrpdcPicConfirm.setFollowupDate(new Timestamp(new Date().getTime()));
+						
 						ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
 								ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);
 						trcCrpdcPicConfirm.setComplianceBy(trcCrpdcPicConfirm.getUser1());
 						trcCrpdcPicConfirm.setComplianceStatus(complianceStatusClose);
 						trcCrpdcPicConfirm.setComplianceDate(new Timestamp(new Date().getTime()));
-						trcCrpdcPicConfirm.setPicFollowupDate(new Timestamp(new Date().getTime()));
-						trcCrpdcPicConfirm.setPicConfirmationDate(new Timestamp(new Date().getTime()));
 
 					} else {
 						ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
 								ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
 						trcCrpdcPicConfirm.setStatusPic(followupStatus);
-						trcCrpdcPicConfirm.setPicFollowupDate(new Timestamp(picNonFollowupDate.getTime()));
-						trcCrpdcPicConfirm.setPicConfirmationDate(new Timestamp(new Date().getTime()));
-						trcCrpdcPicConfirm.setPicFollowupNote(picNonFollowupNote);
+						trcCrpdcPicConfirm.setFollowupDate(new Timestamp(followupDate.getTime()));
+						trcCrpdcPicConfirm.setFollowupNote(nonFollowupNote);
 					}
 					
 					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {	
@@ -809,46 +800,38 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		this.filesDocument = filesDocument;
 	}
 
-	public String getPicFollowupNote() {
-		return picFollowupNote;
+	public String getFollowupNote() {
+		return followupNote;
 	}
 
-	public void setPicFollowupNote(String picFollowupNote) {
-		this.picFollowupNote = picFollowupNote;
+	public void setFollowupNote(String followupNote) {
+		this.followupNote = followupNote;
 	}
 
-	public String getPicFollowupStatus() {
-		return picFollowupStatus;
+	public String getFollowupStatus() {
+		return followupStatus;
 	}
 
-	public void setPicFollowupStatus(String picFollowupStatus) {
-		this.picFollowupStatus = picFollowupStatus;
+	public void setFollowupStatus(String followupStatus) {
+		this.followupStatus = followupStatus;
 	}
 
-	public String getPicNonFollowupNote() {
-		return picNonFollowupNote;
+	public String getNonFollowupNote() {
+		return nonFollowupNote;
 	}
 
-	public void setPicNonFollowupNote(String picNonFollowupNote) {
-		this.picNonFollowupNote = picNonFollowupNote;
+	public void setNonFollowupNote(String nonFollowupNote) {
+		this.nonFollowupNote = nonFollowupNote;
 	}
 
-	public String getPicNonFollowupStatus() {
-		return picNonFollowupStatus;
+	public String getNonFollowupStatus() {
+		return nonFollowupStatus;
 	}
 
-	public void setPicNonFollowupStatus(String picNonFollowupStatus) {
-		this.picNonFollowupStatus = picNonFollowupStatus;
+	public void setNonFollowupStatus(String nonFollowupStatus) {
+		this.nonFollowupStatus = nonFollowupStatus;
 	}
-
-	public Date getPicNonFollowupDate() {
-		return picNonFollowupDate;
-	}
-
-	public void setPicNonFollowupDate(Date picNonFollowupDate) {
-		this.picNonFollowupDate = picNonFollowupDate;
-	}
-
+	
 	public TrcCrpdcPicConfirm getTrcCrpdcPicConfirm() {
 		return trcCrpdcPicConfirm;
 	}
@@ -863,6 +846,14 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 
 	public void setTrcCrpdcPicConfirmService(TrcCrpdcPicConfirmService trcCrpdcPicConfirmService) {
 		this.trcCrpdcPicConfirmService = trcCrpdcPicConfirmService;
+	}
+
+	public Date getFollowupDate() {
+		return followupDate;
+	}
+
+	public void setFollowupDate(Date followupDate) {
+		this.followupDate = followupDate;
 	}		
 
 }

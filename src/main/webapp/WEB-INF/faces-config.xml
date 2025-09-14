@@ -6616,6 +6616,10 @@
 			<property-name>logAccessService</property-name>
 			<value>#{logAccessService}</value>
 		</managed-property>
+		<managed-property>
+			<property-name>trcCrpdcPicConfirmService</property-name>
+			<value>#{trcCrpdcPicConfirmService}</value>
+		</managed-property>
 	</managed-bean>
 	<!-- correspondenceFEVerification -->
 	
@@ -6648,6 +6652,10 @@
 			<property-name>logAccessService</property-name>
 			<value>#{logAccessService}</value>
 		</managed-property>
+		<managed-property>
+			<property-name>trcCrpdcPicConfirmService</property-name>
+			<value>#{trcCrpdcPicConfirmService}</value>
+		</managed-property>		
 	</managed-bean>
 	<!-- correspondenceFEVerification -->
 	

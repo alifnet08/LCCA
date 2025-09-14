@@ -183,11 +183,10 @@ public class TrcCorrespondenceApprovalDaoImpl extends GenericDAOHibernate<TrcCor
 		sb.append("      inner join wo_mst_user pic1 ON pic1.user_id = wtcpc.user_id_1 ");
 		sb.append("      left join wo_mst_parameter_dtl pd1 on pd1.parameter_dtl_code = r1.status ");
 		sb.append("      left join wo_mst_parameter_dtl pd2 on pd2.parameter_dtl_id = wtcpc.STATUS_PIC_ID ");
-		//sb.append(" 	 left join wo_mst_user picConfirmation on picConfirmation.user_id = wtcpc.followup_by_id ");
+		sb.append(" 	 left join wo_mst_user picConfirmation on picConfirmation.user_id = wtcpc.pic_followup_id ");
 		sb.append(" 	 left join wo_mst_parameter_dtl pdCompliance on pdCompliance.parameter_dtl_id = wtcpc.COMPLIANCE_STATUS_ID ");
 		sb.append("		 left join wo_mst_user pic2 on pic2.user_id = wtcpc.user_id_2 ");
-		sb.append("		 left join wo_mst_user pic3 on pic3.user_id = wtcpc.user_id_3 ");
-		
+		sb.append("		 left join wo_mst_user pic3 on pic3.user_id = wtcpc.user_id_3 ");		
 		sb.append(" where 1=1 ");
 		sb.append("       and r1.enabled_flag = 'Y' ");
 		sb.append("       and pd2.parameter_dtl_code = 'PIC_DONE' ");
@@ -217,14 +216,20 @@ public class TrcCorrespondenceApprovalDaoImpl extends GenericDAOHibernate<TrcCor
 			int first, int pageSize) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select r1.correspondence_id, r1.letter_no, ");
-		sb.append("        pdSender.name_en as SENDER_NAME_EN, pdSender.name_in as SENDER_NAME_IN, ");
+		sb.append("        pdSender.name_en as SENDER_NAME_EN, ");
+		sb.append(" 	   pdSender.name_in as SENDER_NAME_IN, ");
 		sb.append("        r1.letter_received_date, ");
-		sb.append("        pd1.name_en as STATUS_NAME_EN, pd1.name_in as STATUS_NAME_IN, ");
-		sb.append(" 	   pd2.name_en as FOLLOWUP_STATUS_NAME_EN, pd2.name_in as FOLLOWUP_STATUS_NAME_IN, ");
-		sb.append("        pic1.name as PIC_CONFIRMATION_NAME, wtcpc.PIC_CONFIRMATION_DATE confirmation_date, ");
-		sb.append("        wtcpc.PIC_FOLLOWUP_DATE followup_date, wtcpc.PIC_FOLLOWUP_NOTE followup_note, ");
+		sb.append("        pd1.name_en as STATUS_NAME_EN, ");
+		sb.append(" 	   pd1.name_in as STATUS_NAME_IN, ");
+		sb.append(" 	   pd2.name_en as FOLLOWUP_STATUS_NAME_EN, ");
+		sb.append(" 	   pd2.name_in as FOLLOWUP_STATUS_NAME_IN, ");
+		sb.append("        picConfirmation.name as PIC_CONFIRMATION_NAME, ");
+		sb.append("        wtcpc.PIC_FOLLOWUP_DATE confirmation_date, ");		
+		sb.append("        wtcpc.FOLLOWUP_DATE followup_date, ");
+		sb.append("        wtcpc.FOLLOWUP_NOTE followup_note, ");
 		sb.append("        wtcpc.compliance_date, ");
-		sb.append("        pdCompliance.name_en as COMPLIANCE_STATUS_NAME_EN, pdCompliance.name_in as COMPLIANCE_STATUS_NAME_IN, ");
+		sb.append("        pdCompliance.name_en as COMPLIANCE_STATUS_NAME_EN, ");
+		sb.append(" 	   pdCompliance.name_in as COMPLIANCE_STATUS_NAME_IN, ");
 		sb.append("        r1.status, pd2.parameter_dtl_code followup_status, ");
 		sb.append("        pic1.name as PIC_NAME_1 , pic2.name as PIC_NAME_2,  pic3.name as PIC_NAME_3, ");
 		sb.append("        wtcpc.target_date ");
@@ -237,11 +242,10 @@ public class TrcCorrespondenceApprovalDaoImpl extends GenericDAOHibernate<TrcCor
 		sb.append("      inner join wo_mst_user pic1 ON pic1.user_id = wtcpc.user_id_1 ");
 		sb.append("      left join wo_mst_parameter_dtl pd1 on pd1.parameter_dtl_code = r1.status ");
 		sb.append("      left join wo_mst_parameter_dtl pd2 on pd2.parameter_dtl_id = wtcpc.STATUS_PIC_ID ");
-		//sb.append(" 	 left join wo_mst_user picConfirmation on picConfirmation.user_id = wtcpc.followup_by_id ");
+		sb.append(" 	 left join wo_mst_user picConfirmation on picConfirmation.user_id = wtcpc.pic_followup_id ");
 		sb.append(" 	 left join wo_mst_parameter_dtl pdCompliance on pdCompliance.parameter_dtl_id = wtcpc.COMPLIANCE_STATUS_ID ");
 		sb.append("		 left join wo_mst_user pic2 on pic2.user_id = wtcpc.user_id_2 ");
 		sb.append("		 left join wo_mst_user pic3 on pic3.user_id = wtcpc.user_id_3 ");
-
 		sb.append(" where 1=1 ");
 		sb.append("       and r1.enabled_flag = 'Y' ");
 		sb.append("       and pd2.parameter_dtl_code = 'PIC_DONE' ");

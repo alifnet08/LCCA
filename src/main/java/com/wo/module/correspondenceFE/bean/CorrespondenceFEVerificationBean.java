@@ -36,7 +36,10 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendanceTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
+import com.wo.module.trcCorrespondence.service.TrcCrpdcPicConfirmService;
+import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
 
 public class CorrespondenceFEVerificationBean extends CommonBean implements  Serializable {
@@ -45,7 +48,8 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	static Logger logger = Logger.getLogger(CorrespondenceFEVerificationBean.class);
 
 	private TrcCorrespondence trcCorrespondence;
-	
+	private TrcCrpdcPicConfirm trcCrpdcPicConfirm;
+		
 	private List<UploadedFileWO> deletedFiles;
 	
 	private List<UploadedFileWO> uploadedFilesDocument;
@@ -75,6 +79,8 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	private UserService userService;
 	
 	private EmailTemplateService emailTemplateService;
+	
+	private TrcCrpdcPicConfirmService trcCrpdcPicConfirmService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", new Locale("id", "ID"));
 	
@@ -132,8 +138,17 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 		trcCorrespondence = trcCorrespondenceService.findById(idLong);
 		trcCorrespondence.setPicFollowupStatus(new ParameterDetail());
 		
-		//tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-		//		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		String editPicId = facesUtil.retrieveRequestParam("idPic");
+		String tokenPic = facesUtil.retrieveRequestParam("tokenPic");
+		if (StringUtils.isNotEmpty(tokenPic)) {
+			editPicId = Constants.decryptString(tokenPic);
+		}
+		
+		Long picConfirmId = Long.parseLong(editPicId);
+		trcCrpdcPicConfirm = trcCrpdcPicConfirmService.findById(picConfirmId);
+		
+		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,25 +201,25 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	}
 	
 	public void onDeleteRowPicAttendance() {
-		/*for (int i = 0; i < selectedPicAttendanceData.length; i++) {
-			trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
+		for (int i = 0; i < selectedPicAttendanceData.length; i++) {
+			trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
 		}
 		
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null
-				|| trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+		if (trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() == null
+				|| trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 			lastSequenceOfPicAttendance = 0;
 		}
 		
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
-		*/
+		tableAttedanceModel.setWrappedData(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
+		
 	}
 	
 	public void onAddNewPicAttendance() {
-		/*if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
-			trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
+		if (trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() == null) {
+			trcCrpdcPicConfirm.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
 			lastSequenceOfPicAttendance = 0;
 		} else {
-			if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+			if(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 				lastSequenceOfPicAttendance = 0;
 			}			
 		} 
@@ -212,16 +227,16 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 		TrcCorrespondencePicFollowupAttendance d = new TrcCorrespondencePicFollowupAttendance();
 		lastSequenceOfPicAttendance = lastSequenceOfPicAttendance + 1;
 		d.setSequence(lastSequenceOfPicAttendance);
-		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
-		*/
+		trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().add(d);
+		tableAttedanceModel.setWrappedData(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
+		
 	}
 	
 	public Boolean validate() {
 		Boolean flag = false;
 		
 		if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-			if(StringUtils.isEmpty(trcCorrespondence.getPicFollowupStatus().getParameterDtlCode())) {
+			if(StringUtils.isEmpty(trcCrpdcPicConfirm.getPicFollowup())) {
 				facesUtil.addErrMessage("Tindak Lanjut "+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
 			}
@@ -232,29 +247,18 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	}
 	
 	public void save() {
-		
-		
-		try {
-			
-			
-			String tindakLanjut = facesUtil.retrieveRequestParam("tindakLanjut");
-			
-		
-			
-			if(!StringUtils.isEmpty(tindakLanjut)){
-				ParameterDetail picFollowupStatus = parameterDetailService.getParameterDetailByParamDtlCode(tindakLanjut);
-				trcCorrespondence.setPicFollowupStatus(picFollowupStatus);
-			}
-
+		try {				
 			if (!validate()) {
-				if (trcCorrespondence.getCorrespondenceId() != null) {
-					trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
-					trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));
-					trcCorrespondence.setDelId(new Long(0));
-					trcCorrespondence.setEnabledFlag(Constants.CONSTANT_YES);
-					trcCorrespondenceService.update(trcCorrespondence);
-				}
-				
+				if (trcCrpdcPicConfirm.getCrpdcPicConfirmId() != null) {
+					trcCrpdcPicConfirm.setPicFollowupDate(new Timestamp(new Date().getTime()));
+					User user = userService.getUserByNik(facesUtil.retrieveUserLogin());
+					trcCrpdcPicConfirm.setPicUserFollowup(user);
+					trcCrpdcPicConfirm.setLastUpdateBy(facesUtil.retrieveUserLogin());
+					trcCrpdcPicConfirm.setLastUpdateDate(new Timestamp(new Date().getTime()));
+					trcCrpdcPicConfirm.setDelId(new Long(0));
+					trcCrpdcPicConfirm.setEnabledFlag(Constants.CONSTANT_YES);
+					trcCrpdcPicConfirmService.update(trcCrpdcPicConfirm);
+				}				
 
 				facesUtil.redirect("/pages/correspondenceFE/correspondenceFE.faces");
 			}
@@ -481,12 +485,21 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	public void setSdf(SimpleDateFormat sdf) {
 		this.sdf = sdf;
 	}
-	
 
-	
+	public TrcCrpdcPicConfirm getTrcCrpdcPicConfirm() {
+		return trcCrpdcPicConfirm;
+	}
 
-	
-	
-	
+	public void setTrcCrpdcPicConfirm(TrcCrpdcPicConfirm trcCrpdcPicConfirm) {
+		this.trcCrpdcPicConfirm = trcCrpdcPicConfirm;
+	}
+
+	public TrcCrpdcPicConfirmService getTrcCrpdcPicConfirmService() {
+		return trcCrpdcPicConfirmService;
+	}
+
+	public void setTrcCrpdcPicConfirmService(TrcCrpdcPicConfirmService trcCrpdcPicConfirmService) {
+		this.trcCrpdcPicConfirmService = trcCrpdcPicConfirmService;
+	}
 
 }
