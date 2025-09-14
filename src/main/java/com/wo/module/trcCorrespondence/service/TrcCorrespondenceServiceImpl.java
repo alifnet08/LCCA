@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.trcCorrespondence.dao.TrcCorrespondenceDao;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.vo.TrcCorrespondenceSearchVo;
 
 @Transactional
@@ -53,6 +55,18 @@ public class TrcCorrespondenceServiceImpl implements TrcCorrespondenceService {
 
 	public TrcCorrespondence findById(Long id) {
 		return trcCorrespondenceDao.getById(id);
+	}
+
+	@Override
+	public List<TrcCorrespondencePicFollowupAttendance> getDataPicFollowupAttendenceList(Long correspondenceId,
+			Long crpdcPicConfirmId) {
+		return trcCorrespondenceDao.getDataPicFollowupAttendenceList(correspondenceId, crpdcPicConfirmId);
+	}
+
+	@Override
+	public List<TrcCorrespondencePicFollowupAttachment> getDataPicFollowupAttachmentList(Long correspondenceId,
+			Long crpdcPicConfirmId) {
+		return trcCorrespondenceDao.getDataPicFollowupAttachmentList(correspondenceId, crpdcPicConfirmId);
 	}
 
 }

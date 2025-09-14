@@ -3,6 +3,7 @@ package com.wo.module.trcCorrespondence.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
 import com.wo.module.parameter.model.ParameterDetail;
@@ -42,6 +43,9 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 	private String complianceStatusCode;
 	
 	private boolean isCanEdit;
+	
+	private List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments;
+	private List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance;
 	
 	
 	public Long getCrpdcPicConfirmId() {
@@ -227,4 +231,22 @@ public class TrcCrpdcPicConfirm extends BaseEntity implements Serializable {
 		this.complianceStatusCode = complianceStatusCode;
 	}
 
+	public List<TrcCorrespondencePicFollowupAttachment> getTrcCorrespondencePicFollowupAttachments() {
+		return trcCorrespondencePicFollowupAttachments;
+	}
+
+	public void setTrcCorrespondencePicFollowupAttachments(
+			List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments) {
+		this.trcCorrespondencePicFollowupAttachments = trcCorrespondencePicFollowupAttachments;
+	}
+
+	public List<TrcCorrespondencePicFollowupAttendance> getTrcCorrespondencePicFollowupAttendance() {
+		return trcCorrespondencePicFollowupAttendance;
+	}
+
+	public void setTrcCorrespondencePicFollowupAttendance(
+			List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance) {
+		this.trcCorrespondencePicFollowupAttendance = trcCorrespondencePicFollowupAttendance;
+	}
+	
 }

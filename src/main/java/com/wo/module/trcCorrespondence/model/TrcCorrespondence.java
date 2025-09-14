@@ -50,13 +50,13 @@ public class TrcCorrespondence extends BaseEntity implements Serializable {
 	
 	private List<TrcCorrespondenceDocument> trcCorrespondenceDocuments;
 	private List<TrcCorrespondencePicCompliance> trcCorrespondencePicCompliances;
-	private List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments;
+	//private List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments;
 	private List<TrcCorrespondencePicFollowupEmail> trcCorrespondencePicFollowupEmails;
 	private List<TrcCorrespondenceSupportingUnit> trcCorrespondenceSupportingUnits;
 	private List<TrcCrpdcPicConfirm> trcCrpdcPicConfirms;
 	private List<TrcCrpdcReffLetter> trcCrpdcReffLetters;
 	
-	private List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance;
+	//private List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance;
 	
 	private String senderName;
 	private String senderNameIn;
@@ -342,14 +342,6 @@ public class TrcCorrespondence extends BaseEntity implements Serializable {
 		this.trcCorrespondenceSupportingUnits = trcCorrespondenceSupportingUnits;
 	}
 
-	public List<TrcCorrespondencePicFollowupAttachment> getTrcCorrespondencePicFollowupAttachments() {
-		return trcCorrespondencePicFollowupAttachments;
-	}
-
-	public void setTrcCorrespondencePicFollowupAttachments(List<TrcCorrespondencePicFollowupAttachment> trcCorrespondencePicFollowupAttachments) {
-		this.trcCorrespondencePicFollowupAttachments = trcCorrespondencePicFollowupAttachments;
-	}
-
 	public ParameterDetail getSender() {
 		return sender;
 	}
@@ -599,14 +591,6 @@ public class TrcCorrespondence extends BaseEntity implements Serializable {
 
 	public void setAttendance(ParameterDetail attendance) {
 		this.attendance = attendance;
-	}
-
-	public List<TrcCorrespondencePicFollowupAttendance> getTrcCorrespondencePicFollowupAttendance() {
-		return trcCorrespondencePicFollowupAttendance;
-	}
-
-	public void setTrcCorrespondencePicFollowupAttendance(List<TrcCorrespondencePicFollowupAttendance> trcCorrespondencePicFollowupAttendance) {
-		this.trcCorrespondencePicFollowupAttendance = trcCorrespondencePicFollowupAttendance;
 	}
 
 	public ParameterDetail getCorrespondenceCode() {

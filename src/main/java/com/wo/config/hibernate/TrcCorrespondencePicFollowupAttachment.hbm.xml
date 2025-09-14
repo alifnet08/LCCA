@@ -19,7 +19,9 @@
 			type="string" />
 		
 		<property name="fileId" column="FILE_ID" type="string" />
-		<property name="fileSize" column="file_size" type="long" />
+		
+		<property name="fileSize" column="file_size" type="long" />		
+		<property name="crpdcPicConfirmId" column="CRPDC_PIC_CONFIRM_ID" type="long" />
 		
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />

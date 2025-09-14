@@ -105,21 +105,33 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
 	public List<SendEmailVO> getListDataCorrespondence() {
 		List<SendEmailVO> listResult = new ArrayList<SendEmailVO>();
 		try {
-			String query = "select distinct u1.email pic1 ,u2.email pic2,u3.email pic3,e.email_date,'H' || (case when e.sla != 0 then to_char(e.sla_type) else '' end) || (case when e.sla != 0 then to_char(e.sla) else '' end) counter_type, COALESCE(d.email_to, 'REMINDER_PIC1') email_to, d.email_cc_1,d.email_cc_2, "
-					+ "dbms_lob.substr(c.perihal_in, 4000, 1 ) perihal_in, dbms_lob.substr(c.perihal_en, 4000, 1 ) perihal_en,c.target_date, c.letter_received_date,c.letter_no,c.letter_date,e.correspondence_id, e.crpdc_pic_fp_email_id,e.sla_type,e.sla, "
-					+ "(case when c.division_id is not null then (case when c.division_id = u1.division_id then u1.division_name when c.division_id = u2.division_id then u2.division_name when c.division_id = u3.division_id then u3.division_name end) else null end) division, "
-					+ "u1.name pic_1_name, u2.name pic_2_name, u3.name pic_3_name, "
-					+ "sender.name_in, sender.name_en, dbms_lob.substr(c.letter_summary, 4000, 1 ) letter_summary, sender.parameter_code sender_code " + "from wo_trc_correspondence c "
-					+ "inner join wo_trc_crpdc_pic_fp_email e on e.correspondence_id = c.correspondence_id "
-					+ "left join wo_mst_counter_type ct on ct.counter_type_id =c.counter_type_id and ct.enabled_flag = 'Y' "
-					+ "left join wo_mst_counter_type_dtl d on d.counter_type_id = ct.counter_type_id and e.sla_type = d.sla_type and e.sla = d.sla "
-					+ "left join wo_mst_user u1 on u1.user_id = c.user_id_1 "
-					+ "left join wo_mst_user u2 on u2.user_id = c.user_id_2 "
-					+ "left join wo_mst_user u3 on u3.user_id = c.user_id_3 "
-					+ "left join wo_mst_parameter_dtl sender on sender.parameter_code like 'SENDER%' and sender.parameter_dtl_code = c.sender_code "
-					+ "where (c.followup_status is null or c.followup_status NOT IN ('PIC_DONE', 'I_ATTEND', 'NOT_ATTEND')) and c.reminder_status = 'REMINDER_ACTIVE' and c.follow_up = 'Y'  "
-					+ "and e.email_date is not null "
-					+ "and c.enabled_flag = 'Y' and TO_CHAR(email_date,'dd-Mon-yyyy') = TO_CHAR(sysdate,'dd-Mon-yyyy')";
+			String query = "select distinct u1.email pic1 ,u2.email pic2,u3.email pic3,e.email_date,'H' || (case when e.sla != 0 then to_char(e.sla_type) else '' end) || (case when e.sla != 0 then to_char(e.sla) else '' end) counter_type, "
+					+ "            COALESCE(d.email_to, 'REMINDER_PIC1') email_to, d.email_cc_1,d.email_cc_2, "
+					+ "			   dbms_lob.substr(c.perihal_in, 4000, 1 ) perihal_in, dbms_lob.substr(c.perihal_en, 4000, 1 ) perihal_en, "
+					+ "            pc.target_date, c.letter_received_date,c.letter_no,c.letter_date,e.correspondence_id, e.crpdc_pic_fp_email_id,e.sla_type,e.sla, "
+					+ "			   (case when pc.division_id is not null "
+					+ "                  then (case when pc.division_id = u1.division_id then u1.division_name "
+					+ "                  when pc.division_id = u2.division_id then u2.division_name "
+					+ "                  when pc.division_id = u3.division_id then u3.division_name end) else null end) division, "
+					+ "            u1.name pic_1_name, u2.name pic_2_name, u3.name pic_3_name, "
+					+ "            sender.name_in, sender.name_en, dbms_lob.substr(c.letter_summary, 4000, 1 ) letter_summary, sender.parameter_code sender_code " 
+					+ "       from wo_trc_correspondence c "
+					+ "     	   inner join wo_trc_crpdc_pic_fp_email e on e.correspondence_id = c.correspondence_id "
+					+ "		       inner join WO_TRC_CRPDC_PIC_CONFIRM pc ON pc.correspondence_id = c.correspondence_id "
+					+ "	 	       left join wo_mst_counter_type ct on ct.counter_type_id =c.counter_type_id and ct.enabled_flag = 'Y' "
+					+ "		       left join wo_mst_counter_type_dtl d on d.counter_type_id = ct.counter_type_id and e.sla_type = d.sla_type and e.sla = d.sla "
+					+ "		       left join wo_mst_user u1 on u1.user_id = pc.user_id_1 "
+					+ "		       left join wo_mst_user u2 on u2.user_id = pc.user_id_2 "
+					+ "		       left join wo_mst_user u3 on u3.user_id = pc.user_id_3 "
+					+ "		       left join wo_mst_parameter_dtl sender on sender.parameter_code like 'SENDER%' and sender.parameter_dtl_code = c.sender_code "
+					+ "		       left join wo_mst_parameter_dtl pd on pd.parameter_dtl_id = pc.STATUS_PIC_ID "
+					//+ "where (c.followup_status is null or c.followup_status NOT IN ('PIC_DONE', 'I_ATTEND', 'NOT_ATTEND')) "
+					+ "      where (pd.parameter_dtl_code IS NULL OR pd.parameter_dtl_code NOT IN ('PIC_DONE', 'I_ATTEND', 'NOT_ATTEND')) "
+					+ "		       and c.reminder_status = 'REMINDER_ACTIVE' "
+					+ "		       and c.follow_up = 'Y'  "
+					+ "		       and e.email_date is not null "
+					+ "		       and c.enabled_flag = 'Y' "
+					+ "		       and TO_CHAR(email_date,'dd-Mon-yyyy') = TO_CHAR(sysdate,'dd-Mon-yyyy') ";
 
 			Query queryResult = getSession().createSQLQuery(query);
 

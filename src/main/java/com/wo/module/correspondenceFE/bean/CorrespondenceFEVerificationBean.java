@@ -132,8 +132,8 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 		trcCorrespondence = trcCorrespondenceService.findById(idLong);
 		trcCorrespondence.setPicFollowupStatus(new ParameterDetail());
 		
-		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		//tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
+		//		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,7 +186,7 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 	}
 	
 	public void onDeleteRowPicAttendance() {
-		for (int i = 0; i < selectedPicAttendanceData.length; i++) {
+		/*for (int i = 0; i < selectedPicAttendanceData.length; i++) {
 			trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
 		}
 		
@@ -196,10 +196,11 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 		}
 		
 		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		*/
 	}
 	
 	public void onAddNewPicAttendance() {
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
+		/*if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
 			trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
 			lastSequenceOfPicAttendance = 0;
 		} else {
@@ -213,7 +214,7 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 		d.setSequence(lastSequenceOfPicAttendance);
 		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
 		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
-
+		*/
 	}
 	
 	public Boolean validate() {

@@ -88,7 +88,8 @@
 													outcome="#{correspondenceFEBean.getNavigateEdit()}"
 													type="submit" ajax="false" >
 													<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
-													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" /> <span
+													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+													<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" /> <span
 													class="td-header #{vo.statusCode eq 'DATA_ACTIVE'?'':'obsolete'}  text-mb-secondary">#{vo.letterNo}</span><br />
 													<span class="td-detail text-mb-g4">Target Waktu :
 														#{vo.targetDateStr}</span>, <span class="td-detail text-mb-g4">Status
@@ -101,7 +102,8 @@
 													outcome="#{correspondenceFEBean.getNavigateEdit()}"
 													type="submit" ajax="false" >
 													<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
-													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" /> <span
+													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+													<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" /> <span
 													class="td-header #{vo.statusCode eq 'DATA_ACTIVE'?'':'obsolete'}  text-mb-secondary">#{vo.letterNo}</span><br />
 													<span class="td-detail text-mb-g4">Target Waktu :
 														#{vo.targetDateStr}</span>, <span class="td-detail text-mb-g4">Status
@@ -114,7 +116,8 @@
 													outcome="#{correspondenceFEBean.getNavigateVerify()}"
 													type="submit" ajax="false" >
 													<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
-													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" /> <span
+													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+													<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" /> <span
 													class="td-header #{vo.statusCode eq 'DATA_ACTIVE'?'':'obsolete'}  text-mb-secondary">#{vo.letterNo}</span><br />
 													<span class="td-detail text-mb-g4">Target Waktu :
 														#{vo.targetDateStr}</span>, <span class="td-detail text-mb-g4">Status
@@ -127,7 +130,8 @@
 													outcome="#{correspondenceFEBean.getNavigateView()}"
 													type="submit" ajax="false" >
 													<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
-													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" /> <span
+													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+													<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" /> <span
 													class="td-header #{vo.statusCode eq 'DATA_ACTIVE'?'':'obsolete'}  text-mb-secondary">#{vo.letterNo}</span><br />
 													<span class="td-detail text-mb-g4">Target Waktu :
 														#{vo.targetDateStr}</span>, <span class="td-detail text-mb-g4">Status
@@ -140,7 +144,8 @@
 													outcome="#{correspondenceFEBean.getNavigateView()}"
 													type="submit" ajax="false" >
 													<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
-													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" /> <span
+													<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+													<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" /> <span
 													class="td-header #{vo.statusCode eq 'DATA_ACTIVE'?'':'obsolete'}  text-mb-secondary">#{vo.letterNo}</span><br />
 													<span class="td-detail text-mb-g4">Target Waktu :
 														#{vo.targetDateStr}</span>, <span class="td-detail text-mb-g4">Status
@@ -159,6 +164,7 @@
 												type="submit" ajax="false" styleClass="text-mb-g5">
 												<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
 												<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+												<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" />
 												<i class="fas fa-external-link-alt"></i>
 											</p:link> 
 											<p:link title="Tindak Lanjut"
@@ -167,6 +173,7 @@
 												type="submit" ajax="false" styleClass="text-mb-g5">
 												<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
 												<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+												<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" />
 												<i class="fas fa-external-link-alt"></i>
 											</p:link> 
 											<p:link title="Verifikasi"
@@ -175,6 +182,7 @@
 												type="submit" ajax="false" styleClass="text-mb-g5">
 												<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
 												<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+												<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" />
 												<i class="fas fa-user-check"></i>
 											</p:link> 
 											<p:link title="Lihat"
@@ -183,6 +191,7 @@
 												type="submit" ajax="false" styleClass="text-mb-g5">
 												<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
 												<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+												<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" />
 												<i class="fas fa-info-circle"></i>
 											</p:link> 
 											<p:link title="Lihat"
@@ -191,6 +200,7 @@
 												type="submit" ajax="false" styleClass="text-mb-g5">
 												<f:param name="first" value="#{correspondenceFEBean.firstTemp}" />
 												<f:param name="token" value="#{correspondenceFEBean.toEncrypt(vo.correspondenceId)}" />
+												<f:param name="tokenPic" value="#{correspondenceFEBean.toEncrypt(vo.crpdcPicConfirmId)}" />
 												<i class="fas fa-info-circle"></i>
 											</p:link>
 											</td>

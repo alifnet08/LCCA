@@ -593,7 +593,7 @@
 											style="width:150px;">
 											<div class="form-group">
 												<!-- <h:commandLink value="#{msg.textDownload}" /> -->
-												<p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttachments}" 
+												<p:dataList value="#{vo.picFollowupAttachments}" 
 													emptyMessage=""
 													var="dtl">
 													<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" actionListener="#{trcCorrespondenceApprovalEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}" target="_blank">#{dtl.attachmentFile}</p:commandLink>

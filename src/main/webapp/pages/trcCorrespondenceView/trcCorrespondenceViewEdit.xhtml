@@ -680,7 +680,7 @@
 											style="width:250px;" styleClass="wr">
 											<div class="form-group">
 												<!-- <h:commandLink value="#{msg.textDownload}" /> -->
-												<p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttachments}" 
+												<p:dataList value="#{vo.trcCorrespondencePicFollowupAttachments}" 
 													emptyMessage=""
 													var="dtl">
 													<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" actionListener="#{trcCorrespondenceViewEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}" target="_blank">#{dtl.attachmentFile}</p:commandLink>
@@ -848,7 +848,7 @@
 										<p:column
 											headerText="#{msg.formTmpCorrespondencePICAttendance}"
 											style="width:150px;">
-											<p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttendance}"
+											<p:dataList value="#{vo.trcCorrespondencePicFollowupAttendance}"
 												var="dtl">
 												<h:outputLabel value="#{dtl.userId.name}" title="#{dtl.userId.name}"/>
 											</p:dataList>

@@ -10,6 +10,8 @@ public class TrcCorrespondencePicFollowupAttendance extends BaseEntity implement
 	private static final long serialVersionUID = 1802960745917916054L;
 	
 	private Long correspondencePicFollowupAttedanceId;
+	private Long crpdcPicConfirmId;
+	
 	private TrcCorrespondence trcCorrespondence;
 	private User userId;
 	
@@ -78,6 +80,14 @@ public class TrcCorrespondencePicFollowupAttendance extends BaseEntity implement
 
 	public void setSequence(int sequence) {
 		this.sequence = sequence;
+	}
+
+	public Long getCrpdcPicConfirmId() {
+		return crpdcPicConfirmId;
+	}
+
+	public void setCrpdcPicConfirmId(Long crpdcPicConfirmId) {
+		this.crpdcPicConfirmId = crpdcPicConfirmId;
 	}
 	
 }

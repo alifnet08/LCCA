@@ -61,6 +61,9 @@ import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetterTableModel;
 import com.wo.module.tmpCorrespondence.model.TmpReffDocument;
 import com.wo.module.tmpCorrespondence.service.TmpCorrespondenceService;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
+import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.user.model.Division;
 import com.wo.module.user.model.User;
@@ -649,7 +652,26 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 		lastSequenceOfPicConfirm = 0;
 
 		trcCorrespondence = trcCorrespondenceService.findById(idLong);
-		if (trcCorrespondence != null) {
+		/*if (trcCorrespondence != null) {			
+			for(int i=0; i<trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
+				TrcCrpdcPicConfirm picConfirm = (TrcCrpdcPicConfirm)trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
+				if (picConfirm != null) {
+					if (trcCorrespondence != null && trcCorrespondence.getCorrespondenceCode() != null
+							&& trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals("INVITATION")) {
+						List<TrcCorrespondencePicFollowupAttendance> dataAttenList = trcCorrespondenceService
+								.getDataPicFollowupAttendenceList(
+										picConfirm.getTrcCorrespondence().getCorrespondenceId(),
+										picConfirm.getCrpdcPicConfirmId());
+						picConfirm.setPicFollowupAttendances(dataAttenList);
+					} else {
+						List<TrcCorrespondencePicFollowupAttachment> dataAttachmentList = trcCorrespondenceService
+								.getDataPicFollowupAttachmentList(
+										picConfirm.getTrcCorrespondence().getCorrespondenceId(),
+										picConfirm.getCrpdcPicConfirmId());
+						picConfirm.setPicFollowupAttachments(dataAttachmentList);
+					}
+				}
+			}*/
 
 			/*if (trcCorrespondence.getFollowupStatus() != null) {
 				disabledFollowUpStatus = true;
@@ -662,10 +684,11 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 
 			if (trcCorrespondenceList.get(0).getComplianceStatus() == null) {
 				trcCorrespondenceList.get(0).setComplianceStatus(new ParameterDetail());
-			}*/
+			}
 		} else {
+			trcCorrespondence.setTrcCrpdcPicConfirms(new ArrayList<TrcCrpdcPicConfirm>());
 			disabledFollowUpStatus = false;
-		}
+		}*/
 
 		/*if (tmpCorrespondence.getUserId1() != null) {
 			tmpCorrespondence.setUserNameTemp1(tmpCorrespondence.getUserId1().getName());

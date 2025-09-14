@@ -2,14 +2,12 @@ package com.wo.module.correspondenceFE.vo;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
 import com.wo.module.counterType.model.CounterType;
 import com.wo.module.parameter.model.ParameterDetail;
-import com.wo.module.tmpComplianceReview.vo.StatusConfirmationVO;
 import com.wo.module.user.model.User;
 
 public class CorrespondenceFEVO  implements Serializable {
@@ -74,6 +72,8 @@ public class CorrespondenceFEVO  implements Serializable {
 	private String targetDateStr;
 	
 	private String picFollowupStatusCode;
+	
+	private Long crpdcPicConfirmId;
 
 	public CorrespondenceFEVO() {
 		super();
@@ -502,7 +502,13 @@ public class CorrespondenceFEVO  implements Serializable {
 	public void setCorrespondenceTypeName(String correspondenceTypeName) {
 		this.correspondenceTypeName = correspondenceTypeName;
 	}
-	
-	
+
+	public Long getCrpdcPicConfirmId() {
+		return crpdcPicConfirmId;
+	}
+
+	public void setCrpdcPicConfirmId(Long crpdcPicConfirmId) {
+		this.crpdcPicConfirmId = crpdcPicConfirmId;
+	}
 	
 }

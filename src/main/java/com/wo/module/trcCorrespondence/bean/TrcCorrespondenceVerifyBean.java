@@ -382,7 +382,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 
 		uploadedFilesEvidence = new ArrayList<UploadedFileWO>();
 
-		for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
+		/*for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
 			TrcCorrespondencePicFollowupAttachment ra = trcCorrespondence.getTrcCorrespondencePicFollowupAttachments()
 					.get(i);
 			UploadedFileWO uf = new UploadedFileWO();
@@ -392,12 +392,13 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 			uf.setFileSize(ra.getFileSize());
 			uploadedFilesEvidence.add(uf);
 		}
+		*/
 		
 		if(trcCorrespondence.getFollowupStatus()!=null){
 			trcCorrespondence.setAttendance(trcCorrespondence.getFollowupStatus());	
 		}
 		
-		if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance()!=null){
+		/*if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance()!=null){
 			for(int i=0; i<trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size();i++){
 				TrcCorrespondencePicFollowupAttendance dtl = trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(i);
 				dtl.setUserNIK(dtl.getUserId().getNik());
@@ -405,14 +406,14 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 				dtl.setUserEmail(dtl.getUserId().getEmail());
 			}
 		}
-		
+		*/
 		tableSupportingUnitModel = new TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit>(
 				trcCorrespondence.getTrcCorrespondenceSupportingUnits());
 		tablePicComplianceModel = new TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance>(
 				trcCorrespondence.getTrcCorrespondencePicCompliances());
 		
-		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+	//	tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
+		//		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 		
 		if (trcCorrespondence.getFollowupStatus() != null && trcCorrespondence.getFollowupStatus().getParameterDtlCode() != null
 				&& trcCorrespondence.getFollowupStatus().getParameterDtlCode().equals(ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE)) {
@@ -439,7 +440,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 				flag = true;
 			}
 			if(trcCorrespondence.getAttendance().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_I_ATTEND)) {
-				if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null ||
+				/*if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null ||
 						trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePICAttendance") + " "
 							+ facesUtil.retrieveMessage("validateRequired"));
@@ -465,7 +466,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 							}
 						}
 					}
-				}
+				}*/
 			}
 			if(trcCorrespondence.getAttendance().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_NOT_ATTEND)) {
 				if(trcCorrespondence.getFollowupNote() == null || trcCorrespondence.getFollowupNote().equals("")) {
@@ -615,7 +616,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 	}
 
 	public void onDeleteRowPicAttendance() {
-		for (int i = 0; i < selectedPicAttendanceData.length; i++) {
+		/*for (int i = 0; i < selectedPicAttendanceData.length; i++) {
 			trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
 		}
 		
@@ -625,10 +626,11 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 		}
 		
 		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		*/
 	}
 	
 	public void onAddNewPicAttendance() {
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
+	/*	if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
 			trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
 			lastSequenceOfPicAttendance = 0;
 		} else {
@@ -636,12 +638,13 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 				lastSequenceOfPicAttendance = 0;
 			}			
 		} 
+		*/
 		
 		TrcCorrespondencePicFollowupAttendance d = new TrcCorrespondencePicFollowupAttendance();
 		lastSequenceOfPicAttendance = lastSequenceOfPicAttendance + 1;
 		d.setSequence(lastSequenceOfPicAttendance);
-		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		//trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
+	//	tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 
 	}
 	
@@ -1027,7 +1030,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 			//User userPicCompliance = userService.findById(((BigInteger) objects[0]).longValue());
 			User userPicAttendee = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
 			if (userPicAttendee != null) {
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				/*trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserId(userPicAttendee);
 				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserNIK(userPicAttendee.getNik());
@@ -1037,6 +1040,7 @@ public class TrcCorrespondenceVerifyBean extends CommonBean implements  Selector
 						.setUserEmail(userPicAttendee.getEmail());
 
 				tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+				*/
 			}
 		}
 	}

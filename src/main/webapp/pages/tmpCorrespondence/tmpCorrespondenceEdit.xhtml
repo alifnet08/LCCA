@@ -701,7 +701,7 @@
 											headerText="#{msg.formTmpCorrespondenceConfirmationEvidenceNotPIC}"
 											style="width:150px;">
 											<div class="form-group">
-											  <p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttachments}" 
+											  <p:dataList value="#{vo.trcCorrespondencePicFollowupAttachments}" 
 											  	emptyMessage=""
 											  	var="dtl">
 												<!-- <h:commandLink value="#{msg.textDownload}" /> -->
@@ -883,7 +883,7 @@
 										<p:column
 											headerText="#{msg.formTmpCorrespondencePICAttendance}"
 											style="width:150px;">
-											<p:dataList value="#{vo.trcCorrespondence.trcCorrespondencePicFollowupAttendance}"
+											<p:dataList value="#{vo.trcCorrespondencePicFollowupAttendance}"
 												var="dtl">
 												<h:outputLabel value="#{dtl.userId.name}" title="#{dtl.userId.name}"/>
 											</p:dataList>

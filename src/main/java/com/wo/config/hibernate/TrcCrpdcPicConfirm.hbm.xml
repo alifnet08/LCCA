@@ -50,6 +50,21 @@
 			type="timestamp" />
 		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
 		<property name="delId" column="DEL_ID" type="long" />
+		
+		
+		<bag name="trcCorrespondencePicFollowupAttachments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="crspdc_pic_fp_atch_id asc">
+			<key column="CRPDC_PIC_CONFIRM_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment" />
+		</bag>
+		
+		<bag name="trcCorrespondencePicFollowupAttendance" inverse="true"
+			cascade="save-update, delete-orphan" order-by="crpdc_pic_fp_atdee_id asc">
+			<key column="CRPDC_PIC_CONFIRM_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance" />
+		</bag>
 
 	</class>
 </hibernate-mapping>

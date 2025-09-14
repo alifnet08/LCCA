@@ -47,6 +47,7 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttenda
 import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcReffLetter;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
+import com.wo.module.trcCorrespondence.service.TrcCrpdcPicConfirmService;
 import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
 
@@ -56,6 +57,7 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	static Logger logger = Logger.getLogger(CorrespondenceFEEditBean.class);
 
 	private TrcCorrespondence trcCorrespondence;
+	private TrcCrpdcPicConfirm trcCrpdcPicConfirm;
 	
 	private List<UploadedFileWO> deletedFiles;
 	
@@ -86,6 +88,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	private FileUtil fileUtil;
 	
 	private TrcCorrespondenceService trcCorrespondenceService;
+	
+	private TrcCrpdcPicConfirmService trcCrpdcPicConfirmService;
 	
 	private UserService userService;
 	
@@ -162,14 +166,33 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		if (StringUtils.isNotEmpty(token)) {
 			editId = Constants.decryptString(token);
 		}
+		
 		Long idLong = Long.parseLong(editId);
-		trcCorrespondence = trcCorrespondenceService.findById(idLong);
+		trcCorrespondence = trcCorrespondenceService.findById(idLong);		
 		trcCorrespondence.setNotes(trcCorrespondence.getNotesDecrypted());
 		
 		if(trcCorrespondence.getFollowupStatus() == null){trcCorrespondence.setFollowupStatus(new ParameterDetail());}
 		
-		for(int i=0;i<trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size();i++){
-			TrcCorrespondencePicFollowupAttendance vo = trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(i);
+		String editPicId = facesUtil.retrieveRequestParam("idPic");
+		String tokenPic = facesUtil.retrieveRequestParam("tokenPic");
+		if (StringUtils.isNotEmpty(tokenPic)) {
+			editPicId = Constants.decryptString(tokenPic);
+		}
+		
+		Long picConfirmId = Long.parseLong(editPicId);
+		trcCrpdcPicConfirm = trcCrpdcPicConfirmService.findById(picConfirmId);
+		
+		picFollowupNote = trcCrpdcPicConfirm.getPicFollowupNote();
+		picNonFollowupNote = trcCrpdcPicConfirm.getPicFollowupNote();
+		picNonFollowupDate = trcCrpdcPicConfirm.getPicFollowupDate();
+		
+		if(trcCrpdcPicConfirm.getStatusPic() !=null && trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode() !=null) {
+			picFollowupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
+			picNonFollowupStatus = trcCrpdcPicConfirm.getStatusPic().getParameterDtlCode();
+		}
+						
+		for(int i=0;i<trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size();i++){
+			TrcCorrespondencePicFollowupAttendance vo = trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().get(i);
 			if(vo.getUserId()!=null){
 				vo.setUserNIK(vo.getUserId().getNik()); 
 				vo.setUserName(vo.getUserId().getName());
@@ -178,8 +201,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		}
 		
 		uploadedFilesEvidence = new ArrayList<UploadedFileWO>();
-		for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
-			TrcCorrespondencePicFollowupAttachment ra = trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().get(i);
+		for (int i = 0; i < trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
+			TrcCorrespondencePicFollowupAttachment ra = trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttachments().get(i);
 			UploadedFileWO uf = new UploadedFileWO();
 			uf.setFileName(ra.getAttachmentFile());
 			uf.setFileId(ra.getFileId());
@@ -219,29 +242,9 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			}
 		}
 		
-		if(trcCorrespondence.getTrcCrpdcPicConfirms() !=null) {
-			for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
-				TrcCrpdcPicConfirm picConfirmsData = (TrcCrpdcPicConfirm)trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
-				if(picConfirmsData !=null && picConfirmsData.getUser1() !=null) {
-					String nikData = picConfirmsData.getUser1().getNik();
-					if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
-						picFollowupNote = picConfirmsData.getPicFollowupNote();
-						picNonFollowupNote = picConfirmsData.getPicFollowupNote();
-						if(picConfirmsData.getStatusPic() !=null && picConfirmsData.getStatusPic().getParameterDtlCode() !=null) {
-							picFollowupStatus = picConfirmsData.getStatusPic().getParameterDtlCode();
-							picNonFollowupStatus = picConfirmsData.getStatusPic().getParameterDtlCode();
-						}
-						
-						picNonFollowupDate = picConfirmsData.getPicFollowupDate();
-						
-						break;
-					}
-				}
-			}
-		}
-		
 		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
+	
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -296,23 +299,23 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 	
 	public void onDeleteRowPicAttendance() {
 		for (int i = 0; i < selectedPicAttendanceData.length; i++) {
-			trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
+			trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
 		}
 		
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null
-				|| trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+		if (trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() == null
+				|| trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 			lastSequenceOfPicAttendance = 0;
 		}
 		
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		tableAttedanceModel.setWrappedData(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
 	}
 	
 	public void onAddNewPicAttendance() {
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
-			trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
+		if (trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() == null) {
+			trcCrpdcPicConfirm.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
 			lastSequenceOfPicAttendance = 0;
 		} else {
-			if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+			if(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 				lastSequenceOfPicAttendance = 0;
 			}			
 		} 
@@ -320,8 +323,8 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 		TrcCorrespondencePicFollowupAttendance d = new TrcCorrespondencePicFollowupAttendance();
 		lastSequenceOfPicAttendance = lastSequenceOfPicAttendance + 1;
 		d.setSequence(lastSequenceOfPicAttendance);
-		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().add(d);
+		tableAttedanceModel.setWrappedData(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
 
 	}
 	
@@ -336,15 +339,15 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 				flag = true;
 			}
 			if(trcCorrespondence.getAttendance() != null && trcCorrespondence.getAttendance().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_I_ATTEND)) {
-				if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null ||
-						trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+				if(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() == null ||
+						trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePICAttendance") + " "
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
 				}else {
 					Set<Long> setUserAttendeeTemp = new HashSet<Long>();
-					for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
-						TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCorrespondence
+					for (int i = 0; i < trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
+						TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCrpdcPicConfirm
 								.getTrcCorrespondencePicFollowupAttendance().get(i);
 						
 						if(dtl.getUserNIK() == null) {
@@ -411,145 +414,90 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			// baru logic
 			String correspondenAttendanceCode = trcCorrespondence.getCorrespondenceCode().getParameterDtlCode();
 			
-
 			if (!validate()) {
-				if (trcCorrespondence.getCorrespondenceId() != null) {
-					if(uploadedFilesEvidence != null) {
-						trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().clear();
-						for (int i = 0; i < uploadedFilesEvidence.size(); i++) {
-							TrcCorrespondencePicFollowupAttachment evidence = new TrcCorrespondencePicFollowupAttachment();
-							UploadedFileWO uf = (UploadedFileWO) uploadedFilesEvidence.get(i);
-							evidence.setTrcCorrespondence(trcCorrespondence);
-	
-							evidence.setAttachmentFile(uf.getFileName());
-							evidence.setCreatedBy(facesUtil.retrieveUserLogin());
-							evidence.setCreationDate(new Timestamp(new Date().getTime()));
-							evidence.setDelId(new Long(0));
-							evidence.setEnabledFlag(Constants.CONSTANT_YES);
-							evidence.setFileId(uf.getFileId());
-							evidence.setFileSize(uf.getFileSize());
-							/*
-							 * if(uf.getContents()!=null) {
-							 * evidence.setFileId(CallApiManager.callUploadAPI(uf,
-							 * Constants.COMPLIANCE_DOC_TYPE_DOKUMEN_TINDAK_LANJUT_DARI_PIC,
-							 * parameterDetailService)); }else { evidence.setFileId(uf.getContentType()); }
-							 */						
-							trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().add(evidence);
+				//if (trcCorrespondence.getCorrespondenceId() != null) { // 
+				if (trcCrpdcPicConfirm.getCrpdcPicConfirmId() != null) {		
+					if (correspondenAttendanceCode
+							.equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
+						if (picFollowupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
+							ParameterDetail attendee = parameterDetailService
+									.getParameterDetailByParamDtlCode(ParameterDetail.PARAM_DET_I_ATTEND);
+							trcCrpdcPicConfirm.setStatusPic(attendee);
+						} else {
+							ParameterDetail notAttendee = parameterDetailService
+									.getParameterDetailByParamDtlCode(ParameterDetail.PARAM_DET_NOT_ATTEND);
+							trcCrpdcPicConfirm.setStatusPic(notAttendee);
 						}
-					}
-					
-					if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() != null) {
-						for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
-							TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCorrespondence
-									.getTrcCorrespondencePicFollowupAttendance().get(i);
-							
-							dtl.setTrcCorrespondence(trcCorrespondence);
-							if (dtl.getCreatedBy() == null) {
-								dtl.setCreatedBy(facesUtil.retrieveUserLogin());
-								dtl.setCreationDate(new Timestamp(new Date().getTime()));
-							}
 
-							dtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
-							dtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
-							dtl.setDelId(new Long(0));
-							dtl.setEnabledFlag(Constants.CONSTANT_YES);
-						}
-					}
-					
-					// bisnis baru 20250911
-					if(trcCorrespondence.getTrcCrpdcPicConfirms() !=null) {
-						for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
-							TrcCrpdcPicConfirm dataPicDtl = (TrcCrpdcPicConfirm) trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
-							String nikData = dataPicDtl.getUser1().getNik();
-							if(nikData !=null && nikData.equals(facesUtil.retrieveUserLogin())) {
-								dataPicDtl.setTrcCorrespondence(trcCorrespondence);							
-								if(correspondenAttendanceCode.equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-									if(picFollowupStatus.equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
-									   ParameterDetail attendee = parameterDetailService.getParameterDetailByParamDtlCode(
-												ParameterDetail.PARAM_DET_I_ATTEND);
-									   dataPicDtl.setStatusPic(attendee);
-									}else {
-										ParameterDetail notAttendee = parameterDetailService.getParameterDetailByParamDtlCode(
-												ParameterDetail.PARAM_DET_NOT_ATTEND);
-										dataPicDtl.setStatusPic(notAttendee);
-									}
-									
-									dataPicDtl.setPicFollowupNote(picFollowupNote);									
-									ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
-											ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);									
-									dataPicDtl.setComplianceBy(dataPicDtl.getUser1());
-									dataPicDtl.setComplianceStatus(complianceStatusClose);	
-									dataPicDtl.setComplianceDate(new Timestamp(new Date().getTime()));
-									dataPicDtl.setPicFollowupDate(new Timestamp(new Date().getTime()));								
-									dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
-																		
-								}else {
-									ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
-											ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
-									dataPicDtl.setStatusPic(followupStatus);
-									dataPicDtl.setPicFollowupDate(new Timestamp(picNonFollowupDate.getTime()));								
-									dataPicDtl.setPicConfirmationDate(new Timestamp(new Date().getTime()));
-									dataPicDtl.setPicFollowupNote(picNonFollowupNote);
-								}					
-								
-								if (dataPicDtl.getCreatedBy() == null) {
-									dataPicDtl.setCreatedBy(facesUtil.retrieveUserLogin());
-									dataPicDtl.setCreationDate(new Timestamp(new Date().getTime()));
-								}
+						trcCrpdcPicConfirm.setPicFollowupNote(picFollowupNote);
+						ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
+								ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);
+						trcCrpdcPicConfirm.setComplianceBy(trcCrpdcPicConfirm.getUser1());
+						trcCrpdcPicConfirm.setComplianceStatus(complianceStatusClose);
+						trcCrpdcPicConfirm.setComplianceDate(new Timestamp(new Date().getTime()));
+						trcCrpdcPicConfirm.setPicFollowupDate(new Timestamp(new Date().getTime()));
+						trcCrpdcPicConfirm.setPicConfirmationDate(new Timestamp(new Date().getTime()));
 
-								dataPicDtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
-								dataPicDtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
-								dataPicDtl.setDelId(new Long(0));
-								dataPicDtl.setEnabledFlag(Constants.CONSTANT_YES);
-							}
-						}
-					}
-					
-					// ditutup perubahan bisnis 20250911
-					/*trcCorrespondence.setConfirmationDate(new Date());
-					
-					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-						if(  trcCorrespondence.getAttendance().getParameterDtlCode().equals(ParameterDetail.PARAM_DET_I_ATTEND)) {
-							ParameterDetail attendee = parameterDetailService.getParameterDetailByParamDtlCode(
-									ParameterDetail.PARAM_DET_I_ATTEND);
-							trcCorrespondence.setFollowupStatus(attendee);
-						}else {
-							ParameterDetail notAttendee = parameterDetailService.getParameterDetailByParamDtlCode(
-									ParameterDetail.PARAM_DET_NOT_ATTEND);
-							trcCorrespondence.setFollowupStatus(notAttendee);
-						}
-					}else {
+					} else {
 						ParameterDetail followupStatus = parameterDetailService.getParameterDetailByParamDtlCode(
 								ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE);
-						trcCorrespondence.setFollowupStatus(followupStatus);
-					}					
-					
-					User userData = userService.getUserByNik(facesUtil.retrieveUserLogin());
-					trcCorrespondence.setFollowupBy(userData);
-					trcCorrespondence.setUserId1(userData);
-					
-					ParameterDetail complianceStatusClose = parameterDetailService.getParameterDetailByParamDtlCode(
-							ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);
-					
-					Date currentDate = new Date();
-					
-					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {
-						trcCorrespondence.setComplianceStatus(complianceStatusClose);
-						trcCorrespondence.setFollowupDate(currentDate);
-					}else {
-						trcCorrespondence.setComplianceStatus(null);
+						trcCrpdcPicConfirm.setStatusPic(followupStatus);
+						trcCrpdcPicConfirm.setPicFollowupDate(new Timestamp(picNonFollowupDate.getTime()));
+						trcCrpdcPicConfirm.setPicConfirmationDate(new Timestamp(new Date().getTime()));
+						trcCrpdcPicConfirm.setPicFollowupNote(picNonFollowupNote);
 					}
-					*/
 					
-					trcCorrespondence.setComplianceNote(null);
-					trcCorrespondence.setComplianceBy(null);
-					trcCorrespondence.setComplianceDate(null);
+					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {	
+						if(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance() != null) {
+							for (int i = 0; i < trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
+								TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCrpdcPicConfirm
+										.getTrcCorrespondencePicFollowupAttendance().get(i);
+								
+								dtl.setTrcCorrespondence(trcCorrespondence);
+								dtl.setCrpdcPicConfirmId(trcCrpdcPicConfirm.getCrpdcPicConfirmId());							
+								if (dtl.getCreatedBy() == null) {
+									dtl.setCreatedBy(facesUtil.retrieveUserLogin());
+									dtl.setCreationDate(new Timestamp(new Date().getTime()));
+								}
+	
+								dtl.setLastUpdateBy(facesUtil.retrieveUserLogin());
+								dtl.setLastUpdateDate(new Timestamp(new Date().getTime()));
+								dtl.setDelId(new Long(0));
+								dtl.setEnabledFlag(Constants.CONSTANT_YES);
+							}
+						}
+					}else{
+						if(uploadedFilesEvidence != null) {
+							trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttachments().clear();
+							for (int i = 0; i < uploadedFilesEvidence.size(); i++) {
+								TrcCorrespondencePicFollowupAttachment evidence = new TrcCorrespondencePicFollowupAttachment();
+								UploadedFileWO uf = (UploadedFileWO) uploadedFilesEvidence.get(i);
+								evidence.setTrcCorrespondence(trcCorrespondence);
+								evidence.setCrpdcPicConfirmId(trcCrpdcPicConfirm.getCrpdcPicConfirmId());							 
+								evidence.setAttachmentFile(uf.getFileName());
+								evidence.setCreatedBy(facesUtil.retrieveUserLogin());
+								evidence.setCreationDate(new Timestamp(new Date().getTime()));
+								evidence.setDelId(new Long(0));
+								evidence.setEnabledFlag(Constants.CONSTANT_YES);
+								evidence.setFileId(uf.getFileId());
+								evidence.setFileSize(uf.getFileSize());
+								trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttachments().add(evidence);
+							}
+						}
+					}
 					
-					trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
-					trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));
-					trcCorrespondence.setDelId(new Long(0));
-					trcCorrespondence.setEnabledFlag(Constants.CONSTANT_YES);
-					trcCorrespondenceService.update(trcCorrespondence);
+					if (trcCrpdcPicConfirm.getCreatedBy() == null) {
+						trcCrpdcPicConfirm.setCreatedBy(facesUtil.retrieveUserLogin());
+						trcCrpdcPicConfirm.setCreationDate(new Timestamp(new Date().getTime()));
+					}
+
+					trcCrpdcPicConfirm.setLastUpdateBy(facesUtil.retrieveUserLogin());
+					trcCrpdcPicConfirm.setLastUpdateDate(new Timestamp(new Date().getTime()));
+					trcCrpdcPicConfirm.setDelId(new Long(0));
+					trcCrpdcPicConfirm.setEnabledFlag(Constants.CONSTANT_YES);
+					
+					trcCrpdcPicConfirmService.update(trcCrpdcPicConfirm);
+					
 				}
 				
 				// this should be a singleton
@@ -659,16 +607,16 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 			//User userPicCompliance = userService.findById(((BigInteger) objects[0]).longValue());
 			User userPicAttendee = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
 			if (userPicAttendee != null) {
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserId(userPicAttendee);
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserNIK(userPicAttendee.getNik());
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserName(userPicAttendee.getName());
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserEmail(userPicAttendee.getEmail());
 
-				tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+				tableAttedanceModel.setWrappedData(trcCrpdcPicConfirm.getTrcCorrespondencePicFollowupAttendance());
 			}
 		}
 	}
@@ -899,6 +847,22 @@ public class CorrespondenceFEEditBean extends CommonBean implements SelectorList
 
 	public void setPicNonFollowupDate(Date picNonFollowupDate) {
 		this.picNonFollowupDate = picNonFollowupDate;
+	}
+
+	public TrcCrpdcPicConfirm getTrcCrpdcPicConfirm() {
+		return trcCrpdcPicConfirm;
+	}
+
+	public void setTrcCrpdcPicConfirm(TrcCrpdcPicConfirm trcCrpdcPicConfirm) {
+		this.trcCrpdcPicConfirm = trcCrpdcPicConfirm;
+	}
+
+	public TrcCrpdcPicConfirmService getTrcCrpdcPicConfirmService() {
+		return trcCrpdcPicConfirmService;
+	}
+
+	public void setTrcCrpdcPicConfirmService(TrcCrpdcPicConfirmService trcCrpdcPicConfirmService) {
+		this.trcCrpdcPicConfirmService = trcCrpdcPicConfirmService;
 	}		
 
 }

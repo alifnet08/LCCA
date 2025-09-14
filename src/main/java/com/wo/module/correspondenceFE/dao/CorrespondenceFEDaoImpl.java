@@ -107,10 +107,9 @@ public class CorrespondenceFEDaoImpl extends GenericDAOHibernate<TrcCorresponden
 		sb.append("        LEFT JOIN wo_mst_user pic2 on pic2.user_id = r1.user_id_2 ");
 		sb.append("        LEFT JOIN wo_mst_user pic3 on pic3.user_id = r1.user_id_3 ");
 		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd1 on pd1.parameter_dtl_code = r1.status ");
-		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd2 on pd2.parameter_dtl_code = r1.followup_status ");
+		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd2 on pd2.parameter_dtl_id = wtcpc.STATUS_PIC_ID ");
 		sb.append("        LEFT JOIN wo_mst_parameter_dtl pd3 on pd3.parameter_dtl_code = r1.correspondence_type ");
-		sb.append("        LEFT JOIN wo_mst_parameter_dtl pdCompliance on pdCompliance.parameter_dtl_code = r1.compliance_status ");	
-		sb.append("  WHERE 1=1 ");
+		sb.append("        LEFT JOIN wo_mst_parameter_dtl pdCompliance on pdCompliance.parameter_dtl_id = wtcpc.COMPLIANCE_STATUS_ID ");		
 		sb.append("        AND r1.enabled_flag = 'Y' ");
 		sb.append("        AND r1.follow_up = 'Y' ");
 		
@@ -152,7 +151,7 @@ public class CorrespondenceFEDaoImpl extends GenericDAOHibernate<TrcCorresponden
 		sb.append("        pic2.name as PIC_NAME_2, pic3.name as PIC_NAME_3, ");
 		sb.append("        TO_CHAR(wtcpc.target_date, 'dd FMMonth yyyy', 'nls_date_language=indonesian') targetDate, ");
 		sb.append("        r1.letter_date, r1.compliance_note, r1.correspondence_type, pdCompliance.parameter_dtl_code compliance_status, ");
-		sb.append("        r1.pic_followup_status, pd3.name_in correspndence_type_name ");
+		sb.append("        r1.pic_followup_status, pd3.name_in correspndence_type_name, wtcpc.CRPDC_PIC_CONFIRM_ID ");
 		sb.append("   FROM wo_trc_correspondence r1 ");
 		sb.append("        INNER JOIN (SELECT d.* ");
 		sb.append("                      FROM wo_mst_parameter p ");
@@ -216,6 +215,7 @@ public class CorrespondenceFEDaoImpl extends GenericDAOHibernate<TrcCorresponden
 				data.setComplianceStatusCode(obj[24]!=null?(String) obj[24]:null);
 				data.setPicFollowupStatusCode(obj[25]!=null?(String) obj[25]:null);
 				data.setCorrespondenceTypeName(obj[26]!=null?(String) obj[26]:null);
+				data.setCrpdcPicConfirmId(MathUtil.returnIdObjectToLong(obj[27]));
 				
 				vo.add(data);				
 			}

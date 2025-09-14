@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.SortOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.wo.module.common.dao.GenericDAOHibernate;
@@ -23,6 +24,8 @@ import com.wo.module.common.paging.SearchObject;
 import com.wo.module.common.util.MathUtil;
 import com.wo.module.trcCorrespondence.constant.TrcCorrespondenceConstants;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.vo.TrcCorrespondenceSearchVo;
 
 @Repository("trcCorrespondenceDao")
@@ -318,6 +321,68 @@ public class TrcCorrespondenceDaoImpl extends GenericDAOHibernate<TrcCorresponde
 		query.setMaxResults(pageSize);
 
 		return vo;
+	}
+	
+	@Override
+	public List<TrcCorrespondencePicFollowupAttendance> getDataPicFollowupAttendenceList (Long correspondenceId, Long crpdcPicConfirmId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT fa.CRPDC_PIC_FP_ATDEE_ID, mu.NIK USER_NIK, mu.NAME USER_NAME ");
+		sb.append("	  FROM WO_TRC_CRPDC_PIC_FP_ATDEE fa ");
+		sb.append("        INNER JOIN WO_MST_USER mu ON fa.USER_ID = mu.USER_ID ");
+		sb.append("  WHERE fa.CORRESPONDENCE_ID = :correspondenceId ");
+		sb.append("	       AND fa.CRPDC_PIC_CONFIRM_ID = :crpdcPicConfirmId ");
+		
+		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("correspondenceId", correspondenceId);
+		query.setParameter("crpdcPicConfirmId", crpdcPicConfirmId);
+		
+		
+		List quyerList = query.getResultList();
+		
+		List<TrcCorrespondencePicFollowupAttendance> picFollowupAttList = new ArrayList<TrcCorrespondencePicFollowupAttendance>();		
+		if(quyerList !=null && quyerList.size() > 0) {
+			for(int i=0; i<quyerList.size(); i++) {
+				Object[] objData = (Object[])quyerList.get(i);
+				TrcCorrespondencePicFollowupAttendance attenden = new TrcCorrespondencePicFollowupAttendance();
+				attenden.setCorrespondencePicFollowupAttedanceId(objData[0] !=null ? ((Number)objData[0]).longValue():null);
+				attenden.setUserNIK((String)objData[1]);
+				attenden.setUserName((String)objData[2]);
+				picFollowupAttList.add(attenden);
+			}
+		}
+		
+		return picFollowupAttList;
+	}
+	
+	@Override
+	public List<TrcCorrespondencePicFollowupAttachment> getDataPicFollowupAttachmentList (Long correspondenceId, Long crpdcPicConfirmId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT fa.CRSPDC_PIC_FP_ATCH_ID, fa.ATTACHMENT_FILE, fa.FILE_ID, fa.FILE_SIZE ");
+		sb.append("	  FROM WO_TRC_CRSPDC_PIC_FP_ATCH fa ");
+		sb.append("  WHERE fa.CORRESPONDENCE_ID = :correspondenceId ");
+		sb.append("	       AND fa.CRPDC_PIC_CONFIRM_ID = :crpdcPicConfirmId ");
+		
+		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("correspondenceId", correspondenceId);
+		query.setParameter("crpdcPicConfirmId", crpdcPicConfirmId);
+		
+		
+		List quyerList = query.getResultList();
+		
+		List<TrcCorrespondencePicFollowupAttachment> picFollowupAttList = new ArrayList<TrcCorrespondencePicFollowupAttachment>();		
+		if(quyerList !=null && quyerList.size() > 0) {
+			for(int i=0; i<quyerList.size(); i++) {
+				Object[] objData = (Object[])quyerList.get(i);
+				TrcCorrespondencePicFollowupAttachment attachmentData = new TrcCorrespondencePicFollowupAttachment();
+				attachmentData.setCorrespondencePicFollowupAttachmentId(objData[0] !=null ? ((Number)objData[0]).longValue():null);				
+				attachmentData.setAttachmentFile((String)objData[1]);				
+				attachmentData.setFileId((String)objData[2]);
+				attachmentData.setFileSize(objData[3] !=null ? ((Number)objData[3]).longValue():null);
+				picFollowupAttList.add(attachmentData);
+			}
+		}
+		
+		return picFollowupAttList;
 	}
 
 }

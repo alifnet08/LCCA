@@ -11,6 +11,7 @@ public class TrcCorrespondencePicFollowupAttachment extends BaseEntity implement
 	private static final long serialVersionUID = -7707945018477636612L;
 	
 	private Long correspondencePicFollowupAttachmentId;
+	private Long crpdcPicConfirmId;
 	
 	private TrcCorrespondence trcCorrespondence;
 	
@@ -77,5 +78,13 @@ public class TrcCorrespondencePicFollowupAttachment extends BaseEntity implement
 
 	public void setFileSizeKB(Long fileSizeKB) {
 		this.fileSizeKB = fileSizeKB;
+	}
+
+	public Long getCrpdcPicConfirmId() {
+		return crpdcPicConfirmId;
+	}
+
+	public void setCrpdcPicConfirmId(Long crpdcPicConfirmId) {
+		this.crpdcPicConfirmId = crpdcPicConfirmId;
 	}
 }

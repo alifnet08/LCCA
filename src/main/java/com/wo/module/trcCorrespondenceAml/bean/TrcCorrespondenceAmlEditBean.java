@@ -346,7 +346,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 
 		uploadedFilesEvidence = new ArrayList<UploadedFileWO>();
 
-		for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
+	/*	for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().size(); i++) {
 			TrcCorrespondencePicFollowupAttachment ra = trcCorrespondence.getTrcCorrespondencePicFollowupAttachments()
 					.get(i);
 			UploadedFileWO uf = new UploadedFileWO();
@@ -355,15 +355,15 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 			uf.setIsNew(false);
 			uf.setFileSize(ra.getFileSize());
 			uploadedFilesEvidence.add(uf);
-		}
+		}*/
 		
 		tableSupportingUnitModel = new TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit>(
 				trcCorrespondence.getTrcCorrespondenceSupportingUnits());
 		tablePicComplianceModel = new TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance>(
 				trcCorrespondence.getTrcCorrespondencePicCompliances());
 		
-		tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		//tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
+		//		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 		
 		if (trcCorrespondence.getFollowupStatus() != null && trcCorrespondence.getFollowupStatus().getParameterDtlCode() != null
 				&& trcCorrespondence.getFollowupStatus().getParameterDtlCode().equals(ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_DONE)) {
@@ -389,7 +389,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
 			}
-			if(trcCorrespondence.getAttendance().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_I_ATTEND)) {
+			/*if(trcCorrespondence.getAttendance().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_ATTENDEE_I_ATTEND)) {
 				if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null ||
 						trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 					facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePICAttendance") + " "
@@ -424,7 +424,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 							+ facesUtil.retrieveMessage("validateRequired"));
 					flag = true;
 				}
-			}
+			}*/
 		}else {
 			if (trcCorrespondence.getFollowupDate() == null) {
 				facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceFollowupDate") + " "
@@ -482,7 +482,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 			if (!validate()) {
 				if (trcCorrespondence.getCorrespondenceId() != null) {
 					if(uploadedFilesEvidence != null) {
-						trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().clear();
+						/*trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().clear();
 						for (int i = 0; i < uploadedFilesEvidence.size(); i++) {
 							TrcCorrespondencePicFollowupAttachment evidence = new TrcCorrespondencePicFollowupAttachment();
 							UploadedFileWO uf = (UploadedFileWO) uploadedFilesEvidence.get(i);
@@ -494,18 +494,12 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 							evidence.setDelId(new Long(0));
 							evidence.setEnabledFlag(Constants.CONSTANT_YES);
 							evidence.setFileId(uf.getFileId());
-							evidence.setFileSize(uf.getFileSize());
-							/*
-							 * if(uf.getContents()!=null) {
-							 * evidence.setFileId(CallApiManager.callUploadAPI(uf,
-							 * Constants.COMPLIANCE_DOC_TYPE_DOKUMEN_TINDAK_LANJUT_DARI_PIC,
-							 * parameterDetailService)); }else { evidence.setFileId(uf.getContentType()); }
-							 */						
+							evidence.setFileSize(uf.getFileSize());/						
 							trcCorrespondence.getTrcCorrespondencePicFollowupAttachments().add(evidence);
-						}
+						}*/
 					}
 					
-					if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() != null) {
+				/*	if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() != null) {
 						for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
 							TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCorrespondence
 									.getTrcCorrespondencePicFollowupAttendance().get(i);
@@ -521,7 +515,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 							dtl.setDelId(new Long(0));
 							dtl.setEnabledFlag(Constants.CONSTANT_YES);
 						}
-					}
+					}*/
 					
 					trcCorrespondence.setConfirmationDate(new Date());
 					
@@ -628,32 +622,32 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 
 	public void onDeleteRowPicAttendance() {
 		for (int i = 0; i < selectedPicAttendanceData.length; i++) {
-			trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
+		//	trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().remove(selectedPicAttendanceData[i]);
 		}
 		
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null
-				|| trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+	//	if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null
+	//			|| trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
 			lastSequenceOfPicAttendance = 0;
-		}
+	//	}
 		
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+		//tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 	}
 	
 	public void onAddNewPicAttendance() {
-		if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
-			trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
-			lastSequenceOfPicAttendance = 0;
-		} else {
-			if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
-				lastSequenceOfPicAttendance = 0;
-			}			
-		} 
+		//if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() == null) {
+		//	trcCorrespondence.setTrcCorrespondencePicFollowupAttendance(new ArrayList<TrcCorrespondencePicFollowupAttendance>());
+		//	lastSequenceOfPicAttendance = 0;
+	//	} else {
+		//	if(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size() == 0) {
+		//		lastSequenceOfPicAttendance = 0;
+		//	}			
+		//} 
 		
 		TrcCorrespondencePicFollowupAttendance d = new TrcCorrespondencePicFollowupAttendance();
 		lastSequenceOfPicAttendance = lastSequenceOfPicAttendance + 1;
 		d.setSequence(lastSequenceOfPicAttendance);
-		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
-		tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+	//	trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().add(d);
+	//	tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 
 	}
 	
@@ -1045,7 +1039,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 			//User userPicCompliance = userService.findById(((BigInteger) objects[0]).longValue());
 			User userPicAttendee = userService.findById(MathUtil.returnIdObjectToLong(objects[0]));
 			if (userPicAttendee != null) {
-				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
+				/*trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserId(userPicAttendee);
 				trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().get(indexDtlPicAttendance)
 						.setUserNIK(userPicAttendee.getNik());
@@ -1055,6 +1049,7 @@ public class TrcCorrespondenceAmlEditBean extends CommonBean implements Selector
 						.setUserEmail(userPicAttendee.getEmail());
 
 				tableAttedanceModel.setWrappedData(trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+				*/
 			}
 		}
 	}

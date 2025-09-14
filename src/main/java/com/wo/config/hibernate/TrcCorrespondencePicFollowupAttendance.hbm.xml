@@ -18,6 +18,8 @@
 		
 		<many-to-one name="userId" column="user_id" class="com.wo.module.user.model.User" fetch="join" />
 		
+		<property name="crpdcPicConfirmId" column="CRPDC_PIC_CONFIRM_ID" type="long" />
+		
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
 		<property name="createdBy" column="CREATED_BY" type="string" />

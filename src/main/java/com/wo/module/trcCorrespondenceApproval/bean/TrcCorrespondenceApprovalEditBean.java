@@ -35,6 +35,7 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceDocument;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicComplianceTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendanceTableModel;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnit;
@@ -82,7 +83,7 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 
 	private TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance> tablePicComplianceModel;
 	private TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit> tableSupportingUnitModel;
-	private TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance> tableAttedanceModel;
+	//private TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance> tableAttedanceModel;
 	private TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter> tableReferalLetterModel;
 	private TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm> tableSubPicConfirmModel;
 
@@ -348,22 +349,23 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 					if (dtl.getUser3() != null) {
 						dtl.setUserName3(dtl.getUser3().getName());
 					}
-					
+															
 					trcCrpdcPicConfirmList.add(dtl);
 				}
 			}
 			
-			if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() != null) {
-				for (int i = 0; i < trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
-					TrcCorrespondencePicFollowupAttendance dtl = (TrcCorrespondencePicFollowupAttendance) trcCorrespondence
-							.getTrcCorrespondencePicFollowupAttendance().get(i);
-					
-					if(dtl !=null && dtl.getUserId() !=null) {
-						dtl.setUserNIK(dtl.getUserId().getNik());
-						dtl.setUserName(dtl.getUserId().getName());
-					}
-				}
-			}
+			/*
+			 * if (trcCorrespondence.getTrcCorrespondencePicFollowupAttendance() != null) {
+			 * for (int i = 0; i <
+			 * trcCorrespondence.getTrcCorrespondencePicFollowupAttendance().size(); i++) {
+			 * TrcCorrespondencePicFollowupAttendance dtl =
+			 * (TrcCorrespondencePicFollowupAttendance) trcCorrespondence
+			 * .getTrcCorrespondencePicFollowupAttendance().get(i);
+			 * 
+			 * if(dtl !=null && dtl.getUserId() !=null) {
+			 * dtl.setUserNIK(dtl.getUserId().getNik());
+			 * dtl.setUserName(dtl.getUserId().getName()); } } }
+			 */
 						
 			uploadedFilesDocument = new ArrayList<UploadedFileWO>();
 			
@@ -381,8 +383,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 			tableSupportingUnitModel = new TrcCorrespondenceSupportingUnitTableModel<TrcCorrespondenceSupportingUnit>(
 					trcCorrespondence.getTrcCorrespondenceSupportingUnits());
 			tablePicComplianceModel = new TrcCorrespondencePicComplianceTableModel<TrcCorrespondencePicCompliance>(trcCorrespondence.getTrcCorrespondencePicCompliances());
-			tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
-					trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
+			//tableAttedanceModel = new TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance>(
+			//		trcCorrespondence.getTrcCorrespondencePicFollowupAttendance());
 			tableReferalLetterModel = new TrcCrpdcReffLetterTableModel<TrcCrpdcReffLetter>(
 					trcCorrespondence.getTrcCrpdcReffLetters());
 			tableSubPicConfirmModel = new TrcCrpdcPicConfirmTableModel<TrcCrpdcPicConfirm>(
@@ -906,14 +908,16 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 		this.tableSubPicConfirmModel = tableSubPicConfirmModel;
 	}
 
-	public TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance> getTableAttedanceModel() {
-		return tableAttedanceModel;
-	}
-
-	public void setTableAttedanceModel(
-			TrcCorrespondencePicFollowupAttendanceTableModel<TrcCorrespondencePicFollowupAttendance> tableAttedanceModel) {
-		this.tableAttedanceModel = tableAttedanceModel;
-	}
+	/*
+	 * public TrcCorrespondencePicFollowupAttendanceTableModel<
+	 * TrcCorrespondencePicFollowupAttendance> getTableAttedanceModel() { return
+	 * tableAttedanceModel; }
+	 * 
+	 * public void setTableAttedanceModel(
+	 * TrcCorrespondencePicFollowupAttendanceTableModel<
+	 * TrcCorrespondencePicFollowupAttendance> tableAttedanceModel) {
+	 * this.tableAttedanceModel = tableAttedanceModel; }
+	 */
 
 	public SimpleDateFormat getSdf() {
 		return sdf;

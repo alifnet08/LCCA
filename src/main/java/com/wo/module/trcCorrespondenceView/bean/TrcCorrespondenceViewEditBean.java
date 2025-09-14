@@ -34,6 +34,8 @@ import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceDocument;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicComplianceTableModel;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
+import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnit;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceSupportingUnitTableModel;
 import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
@@ -369,7 +371,7 @@ public class TrcCorrespondenceViewEditBean extends CommonBean implements Seriali
 
 				if (dtl.getUser3() != null) {
 					dtl.setUserName3(dtl.getUser3().getName());
-				}
+				}				
 			}
 		}
 
