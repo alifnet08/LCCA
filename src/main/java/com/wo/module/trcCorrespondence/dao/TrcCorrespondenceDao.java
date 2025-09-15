@@ -13,5 +13,8 @@ public interface TrcCorrespondenceDao extends  GenericDAO<TrcCorrespondence, Lon
 	
 	public List<TrcCorrespondencePicFollowupAttendance> getDataPicFollowupAttendenceList (Long correspondenceId, Long crpdcPicConfirmId);
 	public List<TrcCorrespondencePicFollowupAttachment> getDataPicFollowupAttachmentList (Long correspondenceId, Long crpdcPicConfirmId);
+	
+	public Integer checkComplianceCloseById (Long correspondenceId);
+	public Integer checkPicFollowupInvitationById (Long correspondenceId);
 
 }

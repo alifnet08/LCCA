@@ -31,6 +31,7 @@ import com.wo.module.parameter.model.ParameterHeader;
 import com.wo.module.rc.model.RC;
 import com.wo.module.rc.service.RCService;
 import com.wo.module.reportType.service.ReportTypeService;
+import com.wo.module.trcCorrespondence.constant.TrcCorrespondenceConstants;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondenceDocument;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicCompliance;
@@ -349,7 +350,8 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 					if (dtl.getUser3() != null) {
 						dtl.setUserName3(dtl.getUser3().getName());
 					}
-															
+				    
+					dtl.setComplianceStatusCode(dtl.getComplianceStatus() !=null?dtl.getComplianceStatus().getParameterDtlCode():null);
 					trcCrpdcPicConfirmList.add(dtl);
 				}
 			}
@@ -475,24 +477,41 @@ public class TrcCorrespondenceApprovalEditBean extends CommonBean implements Ser
 				// baru 20250912
 				if (trcCorrespondence.getCorrespondenceId() != null) {
 					if (trcCorrespondence.getTrcCrpdcPicConfirms() != null && trcCorrespondence.getTrcCrpdcPicConfirms().size() > 0) {
-						for (int i = 0; i < trcCorrespondenceList.size(); i++) {
+						for (int i = 0; i < trcCorrespondence.getTrcCrpdcPicConfirms().size(); i++) {
 							TrcCrpdcPicConfirm trcCrpdcPicConfirmTmp = trcCorrespondence.getTrcCrpdcPicConfirms().get(i);
 							if(!trcCrpdcPicConfirmTmp.isCanEdit()) {
-								ParameterDetail complianceStatus = parameterDetailService.getParameterDetailByParamDtlCode(
-										trcCrpdcPicConfirmTmp.getComplianceStatusCode());
-								trcCrpdcPicConfirmTmp.setComplianceStatus(complianceStatus);
-								trcCrpdcPicConfirmTmp.setComplianceBy(userService.getUserByNik(facesUtil.retrieveUserLogin()));
-								trcCrpdcPicConfirmTmp.setComplianceDate(new Timestamp(new Date().getTime()));
-	
-								if (ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_OPEN
-										.equals(complianceStatus.getParameterDtlCode())) {
-									ParameterDetail followupStatus = parameterDetailService
-											.getParameterDetailByParamDtlCode(
-													ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_INPROGRESS);
-									trcCrpdcPicConfirmTmp.setStatusPic(followupStatus);
+								if(trcCrpdcPicConfirmTmp.getComplianceStatusCode() !=null && 
+										StringUtils.isNotEmpty(trcCrpdcPicConfirmTmp.getComplianceStatusCode())) {
+									ParameterDetail complianceStatus = parameterDetailService.getParameterDetailByParamDtlCode(
+											trcCrpdcPicConfirmTmp.getComplianceStatusCode());
+									trcCrpdcPicConfirmTmp.setComplianceStatus(complianceStatus);
+									trcCrpdcPicConfirmTmp.setComplianceBy(userService.getUserByNik(facesUtil.retrieveUserLogin()));
+									trcCrpdcPicConfirmTmp.setComplianceDate(new Timestamp(new Date().getTime()));
+		
+									if (ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_OPEN
+											.equals(complianceStatus.getParameterDtlCode())) {
+										ParameterDetail followupStatus = parameterDetailService
+												.getParameterDetailByParamDtlCode(
+														ParameterDetail.PARAM_DET_CODE_PIC_FOLLOWUP_STATUS_PIC_INPROGRESS);
+										trcCrpdcPicConfirmTmp.setStatusPic(followupStatus);
+									}
 								}
 							}
 						}
+						
+						
+						Integer countComplianceStatus = trcCorrespondenceService
+								.checkComplianceCloseById(trcCorrespondence.getCorrespondenceId());
+						if (countComplianceStatus != null && countComplianceStatus > 0) {
+							ParameterDetail paramDtl = parameterDetailService.getParameterDetailByParamDtlCode(
+									ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_OPEN);
+							trcCorrespondence.setComplianceStatus(paramDtl);
+						} else {
+							ParameterDetail paramDtl = parameterDetailService.getParameterDetailByParamDtlCode(
+									ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE);
+							trcCorrespondence.setComplianceStatus(paramDtl);
+						}
+					
 						
 						trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
 						trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));

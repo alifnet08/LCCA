@@ -258,6 +258,25 @@ public class CorrespondenceFEVerificationBean extends CommonBean implements  Ser
 					trcCrpdcPicConfirm.setDelId(new Long(0));
 					trcCrpdcPicConfirm.setEnabledFlag(Constants.CONSTANT_YES);
 					trcCrpdcPicConfirmService.update(trcCrpdcPicConfirm);
+					
+					if(trcCorrespondence.getCorrespondenceCode().getParameterDtlCode().equals(TrcCorrespondenceConstants.PARAM_DETAIL_CORRESPONDEN_TYPE_INVITATION)) {	
+						Integer countPicFollowupStatus = trcCorrespondenceService.checkPicFollowupInvitationById(trcCorrespondence.getCorrespondenceId());		
+						if (countPicFollowupStatus != null && countPicFollowupStatus > 0) {
+							ParameterDetail paramDtl = new ParameterDetail();
+							paramDtl.setParameterDtlCode(Constants.CONSTANT_NO);
+							trcCorrespondence.setPicFollowupStatus(paramDtl);
+						} else {
+							ParameterDetail paramDtl = new ParameterDetail();
+							paramDtl.setParameterDtlCode(Constants.CONSTANT_YES);
+							trcCorrespondence.setPicFollowupStatus(paramDtl);
+						}
+						
+						trcCorrespondence.setLastUpdateBy(facesUtil.retrieveUserLogin());
+						trcCorrespondence.setLastUpdateDate(new Timestamp(new Date().getTime()));
+						trcCorrespondence.setDelId(new Long(0));
+						trcCorrespondence.setEnabledFlag(Constants.CONSTANT_YES);
+						trcCorrespondenceService.update(trcCorrespondence);
+				    }					
 				}				
 
 				facesUtil.redirect("/pages/correspondenceFE/correspondenceFE.faces");

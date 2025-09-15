@@ -325,7 +325,7 @@
 						<h:panelGroup
 							rendered="#{correspondenceFEEditBean.trcCorrespondence.correspondenceCode.parameterDtlCode eq 'INVITATION' }">
 							<p:commandButton value="Simpan" type="submit"
-								rendered="#{correspondenceFEEditBean.followupStatus == null}"
+								rendered="#{correspondenceFEEditBean.followupStatus == null || correspondenceFEEditBean.picFollowup == null}"
 								styleClass="btn btn-mb-secondary"
 								onclick="onSave([{name:'keterangan', value:$('#keterangan').val()}]);"></p:commandButton>
 						</h:panelGroup>

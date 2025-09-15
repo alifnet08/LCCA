@@ -26,4 +26,8 @@ public interface TrcCorrespondenceService extends RetrieverDataPage<TrcCorrespon
 
 	public List<TrcCorrespondencePicFollowupAttachment> getDataPicFollowupAttachmentList(Long correspondenceId,
 			Long crpdcPicConfirmId);
+	
+	public Integer checkComplianceCloseById (Long correspondenceId);
+	
+	public Integer checkPicFollowupInvitationById (Long correspondenceId);
 }

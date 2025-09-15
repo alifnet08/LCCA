@@ -384,5 +384,45 @@ public class TrcCorrespondenceDaoImpl extends GenericDAOHibernate<TrcCorresponde
 		
 		return picFollowupAttList;
 	}
-
+	
+	@Override
+	public Integer checkComplianceCloseById (Long correspondenceId) {
+		StringBuilder sb = new StringBuilder();		
+		sb.append(" SELECT COUNT(*) ");
+		sb.append("   FROM wo_trc_crpdc_pic_confirm pc ");
+		sb.append("  WHERE (pc.COMPLIANCE_STATUS_ID IS NULL ");
+		sb.append("        OR pc.COMPLIANCE_STATUS_ID <> ");
+		sb.append("              (SELECT parameter_dtl_id ");
+		sb.append("                FROM wo_mst_parameter_dtl ");
+		sb.append("                WHERE parameter_dtl_code = 'COMPLIANCE_CLOSE')) ");
+		sb.append("        and pc.correspondence_id = :correspondenceId");
+		
+		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("correspondenceId", correspondenceId);
+		
+		Number countData = ((Number) query.getSingleResult());
+		
+		
+		return countData!=null?countData.intValue():0;
+	}
+	
+	@Override
+	public Integer checkPicFollowupInvitationById (Long correspondenceId) {
+		StringBuilder sb = new StringBuilder();		
+		sb.append(" SELECT COUNT(*) ");
+		sb.append("   FROM wo_trc_crpdc_pic_confirm pc ");
+		sb.append("        INNER JOIN wo_trc_correspondence tc on pc.correspondence_id = tc.correspondence_id ");
+		sb.append("  WHERE (pc.PIC_FOLLOWUP IS NULL OR pc.PIC_FOLLOWUP = 'N') "); 
+		sb.append("	       and tc.CORRESPONDENCE_TYPE = 'INVITATION' ");
+		sb.append("        and tc.correspondence_id = :correspondenceId");
+		
+		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("correspondenceId", correspondenceId);
+		
+		Number countData = ((Number) query.getSingleResult());
+		
+		
+		return countData!=null?countData.intValue():0;
+	}
+	
 }

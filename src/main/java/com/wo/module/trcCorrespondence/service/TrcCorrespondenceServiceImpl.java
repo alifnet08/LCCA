@@ -69,4 +69,14 @@ public class TrcCorrespondenceServiceImpl implements TrcCorrespondenceService {
 		return trcCorrespondenceDao.getDataPicFollowupAttachmentList(correspondenceId, crpdcPicConfirmId);
 	}
 
+	@Override
+	public Integer checkComplianceCloseById(Long correspondenceId) {
+		return trcCorrespondenceDao.checkComplianceCloseById(correspondenceId);
+	}
+
+	@Override
+	public Integer checkPicFollowupInvitationById(Long correspondenceId) {
+		return trcCorrespondenceDao.checkPicFollowupInvitationById(correspondenceId);
+	}
+
 }
