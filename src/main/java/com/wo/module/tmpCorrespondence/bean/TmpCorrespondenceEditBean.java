@@ -924,7 +924,13 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePic1") + " "
 									+ facesUtil.retrieveMessage("validateRequired"));
 							flag = true;
-							break;
+						}
+						
+						if (dtl.getTargetDate() == null) {
+							facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceTargetDate") + " "
+									+ facesUtil.retrieveMessage("validateRequired"));
+							flag = true;
+
 						}
 					}
 				}
@@ -2082,7 +2088,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					}
 				}
 
-				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+				tableSubPicConfirmModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
 			}
 		}
 		
@@ -2100,7 +2106,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName3(user3.getName());
 				}
 				
-				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+				tableSubPicConfirmModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
 			}
 		}
 		
@@ -2112,7 +2118,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUser3(user3);
 				tmpCorrespondence.getTmpCrpdcPicConfirms().get(indexDtlPicConfirm).setUserName3(user3.getName());
 			
-				tableSupportingUnitModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
+				tableSubPicConfirmModel.setWrappedData(tmpCorrespondence.getTmpCrpdcPicConfirms());
 			}
 		}
 
