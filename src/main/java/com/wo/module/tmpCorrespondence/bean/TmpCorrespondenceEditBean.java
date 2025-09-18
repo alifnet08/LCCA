@@ -2063,6 +2063,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			   }
 				
 			   tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffDocumentList(dataList);		
+			   
+			   tableReferalLetterModel.setWrappedData(tmpCorrespondence.getTmpCrpdcReffLetters());
 			}
 				
 		}
