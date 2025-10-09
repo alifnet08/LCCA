@@ -412,7 +412,7 @@ public class TmpComplianceReviewEditBean extends CommonBean implements SelectorL
 			if (userAtasan != null) {
 				complianceTestingPICReview.setNameAtasanTemp(userAtasan.getName());
 			}
-			
+			lastSequenceOfPicPenguji = 1;
 			complianceTesting.getComplianceTestingPICReviews().add(complianceTestingPICReview);
 			tableModelComplianceTestingPICReview = new ComplianceTestingPICReviewTableModel<ComplianceTestingPICReview>(
 					complianceTestingPICReviews);
@@ -463,7 +463,7 @@ public class TmpComplianceReviewEditBean extends CommonBean implements SelectorL
 				}
 			}
 		}
-		
+		lastSequenceOfPicPenguji = complianceTesting.getComplianceTestingPICReviews().size();
 		tableModelComplianceTestingPICReview.setWrappedData(complianceTesting.getComplianceTestingPICReviews());
 		
 		if(complianceTesting.getComplianceTestingDtls()!=null && complianceTesting.getComplianceTestingDtls().size()>0) {
