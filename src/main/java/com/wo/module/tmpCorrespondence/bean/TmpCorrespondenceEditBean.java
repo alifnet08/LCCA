@@ -60,6 +60,7 @@ import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetter;
 import com.wo.module.tmpCorrespondence.model.TmpCrpdcReffLetterTableModel;
 import com.wo.module.tmpCorrespondence.model.TmpReffDocument;
 import com.wo.module.tmpCorrespondence.service.TmpCorrespondenceService;
+import com.wo.module.tmpCorrespondence.vo.TmpCorrespondenceEmailVo;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
@@ -946,7 +947,13 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondencePic1") + " "
 									+ facesUtil.retrieveMessage("validateRequired"));
 							flag = true;
-							break;
+						}
+											
+						if (dtl.getTargetDate() == null) {
+							facesUtil.addErrMessage(facesUtil.retrieveMessage("formTmpCorrespondenceTargetDate") + " "
+									+ facesUtil.retrieveMessage("validateRequired"));
+							flag = true;
+
 						}
 					}
 				}
@@ -1299,6 +1306,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			String emailUserInputerCc = "";
 			String emailAtasanUserInputerCc = "";
 			String emailCcSupporting = "";
+			
+			List<TmpCorrespondenceEmailVo> dataEmailToList = new ArrayList<TmpCorrespondenceEmailVo>();
 
 			ParameterDetail pdHostName = parameterDetailService
 					.getParameterDetailByParamDtlCode(Constants.HOST_NAME_APPLICATION);
@@ -1314,21 +1323,15 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 				String urlLink = "";
 				if (tmpCorrespondence.getFollowUp() != null
 						&& tmpCorrespondence.getFollowUp().equals(Constants.CONSTANT_YES)) {
-					menuId = Constants.encryptString(Constants.MENU_ID_FOLLOWUP_CONFIRMATION_CORRESPONDENCE);
-					urlLink = pdHostName.getNameIn().concat(
-							"pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token + "&menuId=" + menuId);
-				} /*
-					 * else if (tmpCorrespondence.getFollowUp() != null &&
-					 * tmpCorrespondence.getFollowUp().equals("N")) { menuId =
-					 * Constants.encryptString(Constants.MENU_ID_CORRESPONDENCE_VIEW); urlLink =
-					 * pdHostName.getNameIn().concat(
-					 * "pages/correspondenceFE/correspondenceFEView.faces?token="+token+"&menuId="+
-					 * menuId); }
-					 */
-
-				emailContent = emailTemplate.getEmailContent().replaceAll("target_date",
-						tmpCorrespondence.getTargetDate() != null ? sdf.format(tmpCorrespondence.getTargetDate()) : "");
-				emailContent = emailContent.replaceAll("perihal_in", tmpCorrespondence.getPerihalIn());
+					menuId = Constants.encryptString(Constants.MENU_ID_FOLLOWUP_CONFIRMATION_CORRESPONDENCE);		
+					//urlLink = pdHostName.getNameIn().concat(
+					//		"pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token + "&menuId=" + menuId + "&tokenPic=" + dataEmailTo.getCrpdcPicConfirmId());
+				}
+				
+				//emailContent = emailTemplate.getEmailContent().replaceAll("target_date",
+				//		tmpCorrespondence.getTargetDate() != null ? sdf.format(tmpCorrespondence.getTargetDate()) : "");	
+				//emailContent = emailContent.replaceAll("perihal_in", tmpCorrespondence.getPerihalIn());
+				emailContent = emailTemplate.getEmailContent().replaceAll("perihal_in", tmpCorrespondence.getPerihalIn());
 				emailContent = emailContent.replaceAll("perihal_en", tmpCorrespondence.getPerihalEn());
 				if (tmpCorrespondence.getSenderCode() != null
 						&& tmpCorrespondence.getSenderCode().getParameterDtlCode() != null) {
@@ -1409,7 +1412,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 								: "");
 				emailContent = emailContent.replaceAll("letter_date",
 						tmpCorrespondence.getLetterDate() != null ? sdf.format(tmpCorrespondence.getLetterDate()) : "");
-				emailContent = emailContent.replaceAll("url_link", urlLink);
+				//emailContent = emailContent.replaceAll("url_link", urlLink);
 
 				// add by dwi
 				emailContent = emailContent.replaceAll("summary_in", tmpCorrespondence.getLetterSummary());
@@ -1606,46 +1609,6 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						emailCc1 = cd.getEmailCc1();
 						emailCc2 = cd.getEmailCc2();
 						
-						/*
-						if (emailTo.equals(Constants.REMINDER_PIC1)) {
-							emailTo = tmpCorrespondence.getUserId1() != null ? tmpCorrespondence.getUserId1().getEmail()
-									: "";
-						} else if (emailTo.equals(Constants.REMINDER_PIC2)) {
-							emailTo = tmpCorrespondence.getUserId2() != null ? tmpCorrespondence.getUserId2().getEmail()
-									: "";
-						} else if (emailTo.equals(Constants.REMINDER_PIC3)) {
-							emailTo = tmpCorrespondence.getUserId3() != null ? tmpCorrespondence.getUserId3().getEmail()
-									: "";
-						}
-
-						if (emailCc1 != null && emailCc1.equals(Constants.REMINDER_PIC1)) {
-							emailCc1 = tmpCorrespondence.getUserId1() != null
-									? tmpCorrespondence.getUserId1().getEmail()
-									: "";
-						} else if (emailCc1 != null && emailCc1.equals(Constants.REMINDER_PIC2)) {
-							emailCc1 = tmpCorrespondence.getUserId2() != null
-									? tmpCorrespondence.getUserId2().getEmail()
-									: "";
-						} else if (emailCc1 != null && emailCc1.equals(Constants.REMINDER_PIC3)) {
-							emailCc1 = tmpCorrespondence.getUserId3() != null
-									? tmpCorrespondence.getUserId3().getEmail()
-									: "";
-						}
-
-						if (emailCc2 != null && emailCc2.equals(Constants.REMINDER_PIC1)) {
-							emailCc2 = tmpCorrespondence.getUserId1() != null
-									? tmpCorrespondence.getUserId1().getEmail()
-									: "";
-						} else if (emailCc2 != null && emailCc2.equals(Constants.REMINDER_PIC2)) {
-							emailCc2 = tmpCorrespondence.getUserId2() != null
-									? tmpCorrespondence.getUserId2().getEmail()
-									: "";
-						} else if (emailCc2 != null && emailCc2.equals(Constants.REMINDER_PIC3)) {
-							emailCc2 = tmpCorrespondence.getUserId3() != null
-									? tmpCorrespondence.getUserId3().getEmail()
-									: "";
-						}*/
-						
 						String emailToConcate = "";
 						String emailCc1Concate = "";
 						String emailCc2Concate = "";
@@ -1690,7 +1653,12 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 									tmpData.getUser3() != null ) {
 								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser3().getEmail()))
 										: emailCc2Concate.concat(tmpData.getUser3().getEmail());
-							}	
+							}
+							
+							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
+							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
+							dataEmailVo.setEmailTo(emailToConcate);
+							dataEmailToList.add(dataEmailVo);
 						}
 						
 						emailTo = emailToConcate;
@@ -1698,14 +1666,6 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						emailCc2 = emailCc2Concate;						
 
 					} else {
-						/*
-						 * emailTo = tmpCorrespondence.getUserId1() != null ?
-						 * tmpCorrespondence.getUserId1().getEmail() : ""; emailCc1 =
-						 * tmpCorrespondence.getUserId2() != null ?
-						 * tmpCorrespondence.getUserId2().getEmail() : ""; emailCc2 =
-						 * tmpCorrespondence.getUserId3() != null ?
-						 * tmpCorrespondence.getUserId3().getEmail() : "";
-						 */
 						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
 							if (tmpData.getUser1() != null ) {
 								emailTo = emailTo != "" ? (emailTo.concat(",").concat(tmpData.getUser1().getEmail()))
@@ -1718,7 +1678,12 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							if (tmpData.getUser3() != null ) {
 								emailCc2 = emailCc2 != "" ? (emailCc2.concat(",").concat(tmpData.getUser3().getEmail()))
 										: emailCc2.concat(tmpData.getUser3().getEmail());
-							}	
+							}
+							
+							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
+							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
+							dataEmailVo.setEmailTo(emailTo);
+							dataEmailToList.add(dataEmailVo);
 						}
 					}
 					
@@ -1762,25 +1727,27 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						emailTo = emailCcSupporting;
 					}*/
 					
-					// 20250903 diganti
-					if (tmpCorrespondence.getTmpCrpdcPicConfirms() == null && StringUtils.isNotEmpty(emailCcSupporting)) {
-						emailTo = emailCcSupporting;
-					}
-
 					final String subject = emailSubject;
-					final String content = emailContent;
-					final String to = emailTo;
+					//final String content = emailContent;
+					//final String to = emailTo;
+					String content = "";
+					String to = "";					
 					final String cc = emailCc;
-
-					System.out.println("subject==" + subject);
-					System.out.println("content==" + content);
-					System.out.println("to==" + to);
-					System.out.println("cc==" + cc);
-
-					if (emailTo != null && !emailTo.isEmpty()) {
-						CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_CORESPONDENCE", "true",
-								parameterDetailService);
+					
+					//if (emailTo != null && !emailTo.isEmpty()) {
+					if(dataEmailToList !=null && dataEmailToList.size() > 0) {
+						for(TmpCorrespondenceEmailVo dataEmailTo : dataEmailToList) {
+							urlLink = pdHostName.getNameIn().concat(
+									"pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token + "&menuId=" + menuId + "&tokenPic=" + dataEmailTo.getCrpdcPicConfirmId());
+							emailContent = emailContent.replaceAll("target_date",
+									tmpCorrespondence.getTargetDate() != null ? sdf.format(tmpCorrespondence.getTargetDate()) : "");
+							emailContent = emailContent.replaceAll("url_link", urlLink);
+							to = dataEmailTo.getEmailTo();
+							content = emailContent;
+							CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_CORESPONDENCE", "true", parameterDetailService);
+						}
 					}
+					//}
 				}
 
 			}
@@ -2127,6 +2094,8 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			   }
 				
 			   tmpCorrespondence.getTmpCrpdcReffLetters().get(indexDtlRefLetter).setReffDocumentList(dataList);		
+			   
+			   tableReferalLetterModel.setWrappedData(tmpCorrespondence.getTmpCrpdcReffLetters());
 			}
 				
 		}
