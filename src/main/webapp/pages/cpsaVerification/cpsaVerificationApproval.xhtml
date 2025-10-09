@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo">
+
+	<p:growl id="msgs" rendered="true" />
+	<div class="box box-solid">
+		<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label class="tl-label" tl="cpsaType"> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentType}"
+								for="cpsaType" />
+						</label>
+						<h:selectOneMenu id="cpsaType" styleClass="form-control s2"
+							disabled="true"
+							value="#{cpsaVerificationEditBean.cpsa.cpsaType.parameterDtlCode}">
+							<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+							<f:selectItems value="#{cpsaVerificationEditBean.cpsaTypeList}" />
+						</h:selectOneMenu>
+					</div>
+				</div>
+				
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label class="tl-label" tl="cpsaBranchSubBranch"> <p:outputLabel
+								value="Branch / Sub Branch"
+								for="cpsaBranchSubBranch" />
+						</label>
+						<p:inputText autocomplete="off" style="width:100%"
+							value="#{cpsaVerificationEditBean.cpsa.cpsaBranchSubBranch}"
+							styleClass="form-control" id="cpsaBranchSubBranch" disabled="true" />
+					</div>
+				</div>
+
+				<div class="col-lg-12 div-css-margin-bottom">
+					<div class="form-group">
+						<label class="tl-label" tl=""> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentPeriod}" />
+						</label>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label><h:outputText
+								value="#{msg.formCompliancePlanSelfAssessmentStartDate}" /></label>
+						<p:calendar styleClass="form-control-datepicker-wrap"
+							placeholder="Tanggal Mulai" maxlength="11" id="startDatePeriod"
+							value="#{cpsaVerificationEditBean.cpsa.periodFrom}"
+							disabled="true" autocomplete="off" pattern="dd-MMM-yyyy"
+							locale="en">
+						</p:calendar>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label><h:outputText
+								value="#{msg.formCompliancePlanSelfAssessmentEndDate}" /></label>
+						<p:calendar styleClass="form-control-datepicker-wrap"
+							placeholder="Tanggal Akhir" maxlength="11" id="endaDatePeriod"
+							value="#{cpsaVerificationEditBean.cpsa.periodTo}"
+							disabled="true" autocomplete="off" pattern="dd-MMM-yyyy"
+							locale="en">
+						</p:calendar>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label class="tl-label" tl="letterNo"> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentLetterNo}"
+								for="letterNo" />
+						</label>
+						<p:inputText autocomplete="off" style="width:100%"
+							value="#{cpsaVerificationEditBean.cpsa.letterNo}"
+							styleClass="form-control" id="letterNo" disabled="true" />
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label><p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentLetterDate}"
+								for="letterDate" /></label>
+						<p:calendar styleClass="form-control-datepicker-wrap"
+							placeholder="Tanggal Memorandum" maxlength="11" id="letterDate"
+							autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+							disabled="true"
+							value="#{cpsaVerificationEditBean.cpsa.letterDate}">
+						</p:calendar>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label class="tl-label" tl=""> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentLetterAbout}"
+								for="letterAbout" />
+						</label>
+						<p:inputText autocomplete="off" style="width:100%"
+							styleClass="form-control" id="letterAbout" disabled="true"
+							value="#{cpsaVerificationEditBean.cpsa.letterAbout}" />
+					</div>
+				</div>
+
+				<div class="col-lg-12 div-css-margin-bottom">
+					<div class="form-group">
+						<label class="tl-label" tl=""> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentDocMail}" />
+						</label>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label class="tl-label"><h:outputText
+								value="#{msg.formCompliancePlanSelfAssessmentEntryDoc}" /> <br />
+								</label>
+						<p:dataList value="#{cpsaVerificationEditBean.uploadedFiles}"
+							emptyMessage="" var="vo" id="attachment" rowIndexVar="index">
+							<table>
+								<tr>
+									<td style="width: 80%"><p:commandLink
+											title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+											actionListener="#{cpsaVerificationEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+											target="_blank">#{vo.fileName}</p:commandLink></td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+				</div>
+
+				<div class="col-lg-12 div-css-margin-bottom">
+					<div class="form-group">
+						<label class="tl-label" tl=""> <p:outputLabel
+								value="#{msg.formCompliancePlanSelfAssessmentCPSAQuestion}" />
+						</label>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+					<div class="form-group">
+						<p:remoteCommand name="onCompleteUploadCpsa"
+							update="attachmentCpsa"></p:remoteCommand>
+						<label class="tl-label"><h:outputText
+								value="#{msg.formCompliancePlanSelfAssessmentCPSADoc}" />
+						</label>
+						<p:dataList value="#{cpsaVerificationEditBean.uploadedFileCpsas}"
+							emptyMessage="" var="vo" id="attachmentCpsa" rowIndexVar="index">
+							<table>
+								<tr>
+									<td style="width: 80%"><p:commandLink
+											title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+											actionListener="#{cpsaVerificationEditBean.downloadFileCpsa(vo.fileId,vo.fileName,null)}"
+											target="_blank">#{vo.fileName}</p:commandLink></td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+				</div>
+
+				<h:panelGroup id="panelPicTindakLanjut">
+					<h3>
+						<h:outputText
+							value="#{msg.formCompliancePlanSelfAssessmentPICFollowup}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-tindak-lanjut-cpsa">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTablePicCpsa" var="data"
+									value="#{cpsaVerificationEditBean.tableModelCpsaPic}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex">
+
+									<p:column
+										headerText="#{msg.formCompliancePlanSelfAssessmentWorkUnit}"
+										width="200">
+										<h:selectOneMenu
+											styleClass="form-control s2 divisionCc#{statIndex}"
+											disabled="#{!data.isEditableTemp}"
+											value="#{data.divisionId}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems
+												value="#{cpsaVerificationEditBean.unitKerjas}" />
+										</h:selectOneMenu>
+									</p:column>
+									
+									<p:column headerText="Branch/Sub Branch" width="200">												
+										<h:inputText id="branchName" styleClass="form-control"
+											  value="#{data.branchName}" readonly="true" />											
+									</p:column>
+
+									<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC1}" width="250">
+										<h:inputText styleClass="form-control user1#{statIndex}"
+											id="userName1" value="#{data.user1.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC2}" width="250">
+										<h:inputText styleClass="form-control user2" id="userName2"
+											  value="#{data.user2.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC3}" width="250">
+										<h:inputText styleClass="form-control user3" id="userName3"
+											value="#{data.user3.name}" readonly="true" />
+									</p:column>
+									<p:column
+										headerText="#{msg.formCompliancePlanSelfAssessmentTargetDate}"
+										width="150">
+										<p:calendar maxlength="11" style="width:100px"
+											placeholder="Target Waktu" value="#{data.targetDate}"
+											styleClass="form-control-datepicker-wrap" autocomplete="off"
+											pattern="dd MMM yyyy" locale="en">
+										</p:calendar>
+									</p:column>
+									<p:column headerText="#{msg.formCompliancePlanSelfAssessmentStatus}" width="150">
+										<p:outputLabel value="#{data.cpsaStatus.nameIn}" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<div class="col-lg-12">
+					<h3>
+						<h:outputLabel
+							value="#{msg.formPICFollowupConfirmationStatusConfirmation}" />
+					</h3>
+				</div>
+
+				<div class="col-lg-12">
+					<div id="mp-confirmation-status">
+						<div class="top-scroller">
+							<div class="div-wrapper"></div>
+						</div>
+						<div class="table-wrapper table-responsive">
+							<p:dataTable id="dataTableVerification" var="data"
+								value="#{cpsaVerificationEditBean.cpsa.cpsaPics}"
+								rowIndexVar="statIndex">
+
+								<p:column style="text-align:center;" width="150">
+									<p:commandLink id="viewData" value="#{msg.buttonView}" styleClass="tl-label"
+									    actionListener="#{cpsaVerificationEditBean.getShowAnswerPic}" 
+									    type="submit" ajax="false" update="form:approvalManager form:showPic">
+										<f:param name="cpsaId" value="#{data.cpsa.cpsaId}" />
+										<f:param name="userId1" value="#{data.user1.userId}" />
+										<f:param name="userApprovalId" value="#{data.user3.userId}" />
+									</p:commandLink>
+									<h:outputText value=" | " />
+									<p:commandLink id="downloadData" value="#{msg.buttonDownload}" styleClass="tl-label"
+											type="submit" ajax="false">
+										<f:param name="cpsaId" value="#{data.cpsa.cpsaId}" />
+										<f:param name="userIdData1" value="#{data.user1.userId}" />
+										<p:fileDownload value="#{cpsaVerificationEditBean.downloadExcel}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="Status Approval" width="80">
+									<h:outputLabel
+										value="#{data.statusPic.nameIn}" />
+								</p:column>
+
+								<p:column headerText="Tangal Approval" width="100">
+									<h:outputLabel
+										value="#{data.approvalDateStr}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC1}" width="150">
+									<h:outputLabel value="#{data.user1.name}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC2}" width="150">
+									<h:outputLabel value="#{data.user2.name}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formCompliancePlanSelfAssessmentCpsaStatus}" width="120">
+									<div class="form-group">
+										<div class="input-group" style="width:100px">
+											<h:selectOneMenu styleClass="form-control s2" value="#{data.cpsaStatusTemp}"
+												disabled="#{data.disabledStatusCompliance}">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems value="#{cpsaVerificationEditBean.complianceStatusList}" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formCompliancePlanSelfAssessmentVerificationDate}"
+									width="120">
+									<p:calendar id="verificationDate"
+										styleClass="form-control-datepicker-wrap" autocomplete="off"
+										disabled="true"
+										pattern="#{cpsaVerificationEditBean.inputDateFormat}"
+										maxlength="11"
+										locale="#{cpsaVerificationEditBean.inputDateLocale}"></p:calendar>
+								</p:column>
+
+								<p:column width="250" headerText="#{msg.formCompliancePlanSelfAssessmentNote}">
+									<div class="form-group">
+										<div class="input-group">
+											<h:inputTextarea styleClass="form-control" rows="3"
+												cols="33" value="#{data.cpsaNote}" 
+												disabled="#{data.cpsaStatus.parameterDtlCode eq 'CPSA_VERIFICATION'}"/>
+										</div>
+									</div>
+								</p:column>
+
+								<p:column headerText="Status" width="100">
+									<h:outputLabel value="#{data.cpsaStatus.nameIn}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<p:commandButton style="margin-right:2px" value="Submit" type="submit"
+					styleClass="btn btn-success pull-left" update="form:dataTableVerification form:messages"
+					actionListener="#{cpsaVerificationEditBean.submit()}">
+				</p:commandButton>
+				<p:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left" update="form:dataTableVerification form:messages"
+					actionListener="#{cpsaVerificationEditBean.save()}">
+				</p:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{cpsaVerificationEditBean.cancel()}"
+					immediate="true" styleClass="btn btn-default pull-right tl-label">
+				</h:commandLink>
+			</div>
+		</div>			
+	</div>
+</ui:composition>

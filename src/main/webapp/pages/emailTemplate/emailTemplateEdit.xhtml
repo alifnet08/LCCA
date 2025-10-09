@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formEmailTemplateTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-emailTemplate">
+					<h:outputText value="#{msg.formEmailTemplateTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<p:growl id="messages" rendered="true" />
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="nameList" class="control-label tl-label"
+								tl="name-list"><p:outputLabel
+									value="#{msg.formEmailTemplateEmailTemplateName}"
+									for="emailTemplateName" /></label>
+							<h:selectOneMenu id="emailTemplateName" required="true"
+								requiredMessage="#{msg.formEmailTemplateEmailTemplateName} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								disabled="#{emailTemplateEditBean.emailTemplate.emailTemplateId ne null}"
+								value="#{emailTemplateEditBean.emailTemplate.emailTemplate.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{emailTemplateEditBean.templateNameList}" />
+							</h:selectOneMenu>
+							<p:message for="emailTemplateName" />
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="emailSubject" class="control-label tl-label"
+								tl="emailSubject"><h:outputText
+									value="#{msg.formEmailTemplateSubjectEmail}" /></label>
+							<div class="form-group">
+							<p:inputTextarea widgetVar="editorSubject" styleClass="form-control"
+								value="#{emailTemplateEditBean.emailTemplate.emailSubject}" rows="5" />
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="emailContent" class="control-label tl-label"
+								tl="emailContent"><h:outputText
+									value="#{msg.formEmailTemplateBodyEmail}" /></label>
+							<pe:ckEditor widgetVar="editorContent" width="100%"
+								value="#{emailTemplateEditBean.emailTemplate.emailContent}"
+								height="300" style="margin-bottom:10px" />
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{emailTemplateEditBean.save()}"></h:commandButton>
+					
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{emailTemplateEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

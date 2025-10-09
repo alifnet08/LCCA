@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcCorrespondence.model">
+	<class name="TrcCorrespondencePicFollowupAttendance" table="wo_trc_crpdc_pic_fp_atdee">
+		<id name="correspondencePicFollowupAttedanceId" column="crpdc_pic_fp_atdee_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TRC_CRPDC_PC_FP_ATDEE_SQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcCorrespondence"
+			column="correspondence_id"
+			class="com.wo.module.trcCorrespondence.model.TrcCorrespondence"
+			fetch="join" />
+		
+		<many-to-one name="userId" column="user_id" class="com.wo.module.user.model.User" fetch="join" />
+		
+		<property name="crpdcPicConfirmId" column="CRPDC_PIC_CONFIRM_ID" type="long" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+
+	</class>
+</hibernate-mapping>

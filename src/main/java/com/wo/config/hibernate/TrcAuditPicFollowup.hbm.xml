@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcAudit.model">
+	<class name="TrcAuditPicFollowup" table="wo_trc_audit_pic_followup">
+		<id name="auditPicFollowupId" column="audit_pic_followup_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_audit_pic_followup_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcAuditPicFollowupBankCommitment" column="aud_pc_fp_bank_cmitmt_id"
+			class="com.wo.module.trcAudit.model.TrcAuditPicFollowupBankCommitment"
+			fetch="join" />
+			
+		<many-to-one name="trcAuditPicFollowupRec" column="AUDIT_PIC_FOLLOWUP_REC_ID"
+			class="com.wo.module.trcAudit.model.TrcAuditPicFollowupRec"
+			fetch="join" />
+
+		<property name="divisionId" column="division_id" type="long" />
+
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="target_date" type="date" />
+		<property name="rescheduleReason" column="reschedule_reason" type="string" />
+		<property name="isExtension" column="EXTENSION_FLAG" type="string" />
+		<property name="notes" column="notes" type="string" />
+		
+		<many-to-one name="followupStatus" property-ref="parameterDtlCode"
+			column="followup_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<many-to-one name="followupBy" column="followup_by_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="confirmationDate" column="confirmation_date"
+			type="date" />
+		<property name="followupDate" column="followup_date" type="date" />
+		<property name="followupNote" column="followup_note" type="string" />
+		
+		<many-to-one name="complianceStatus" property-ref="parameterDtlCode"
+			column="compliance_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<!-- <property name="complianceStatus" column="compliance_status" type="string" 
+			/> -->
+		<property name="complianceNote" column="compliance_note"
+			type="string" />
+		<many-to-one name="complianceBy" column="compliance_by_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="complianceDate" column="compliance_date"
+			type="date" />
+			
+		<bag name="trcAuditPicFollowupEmails" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_followup_email_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupEmail" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupAttachment" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_followup_atch_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupAttachment" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupExt" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_followup_ext_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupExt" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupRecs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="audit_pic_followup_rec_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupRec" />
+		</bag>
+		
+		<!--
+		<bag name="trcAuditPicFollowupAuditFindings" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pic_fp_aud_fdgs_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupAuditFindings" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupBankCommitments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pc_fp_bank_cmitmt_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupBankCommitment" />
+		</bag>
+		
+		<bag name="trcAuditPicFollowupBankResponses" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pic_fp_bank_rsps_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupBankResponse" />
+		</bag>
+		 -->
+		
+		<bag name="trcAuditPicFollowupSupportingUnits" inverse="true"
+			cascade="save-update, delete-orphan" order-by="aud_pic_fp_supp_unit_id asc">
+			<key column="audit_pic_followup_id" />
+			<one-to-many
+				class="com.wo.module.trcAudit.model.TrcAuditPicFollowupSupportingUnit" />
+		</bag>
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

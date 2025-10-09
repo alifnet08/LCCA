@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.documentType.model">
+	<class name="DocumentType" table="wo_mst_document_type">
+		<id name="documentTypeId" column="document_type_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_document_type_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="parameterDetail" property-ref="parameterDtlCode"
+			column="jenis_ketentuan_code" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<property name="documentTypeIn" column="document_type_in"
+			type="string" />
+
+		<property name="documentTypeEn" column="document_type_en"
+			type="string" />
+
+		<property name="typeDescription" column="type_description"
+			type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+
+	</class>
+</hibernate-mapping>

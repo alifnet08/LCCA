@@ -1,0 +1,956 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:pe2="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}	
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    -webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.form-control[disabled]{
+			    font-size: 13px;
+			    font-family: 'Montserrat';
+			    color: #444444;
+			}
+			.input-group {
+			    margin-top: 15px;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-family: 'Montserrat';
+			}
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationReportingTitle}" />
+	</ui:define>
+
+ 
+	  <ui:define name="content">
+		<p:growl id="messages" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-rmd">
+					<h:outputText value="#{msg.formRegulationReportingAddTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="reportType"><h:outputText
+									value="#{msg.formTmpRmdReportType}" /></label>
+							<h:selectOneMenu id="tmpRmdReport"
+								styleClass="form-control s2"
+								value="#{tmpRmdEditBean.tmpRmd.reportType.reportTypeId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpRmdEditBean.reportTypeList}" />
+								<p:ajax event="change" update="form:panelDueDate form:panelRecurringType" 
+									listener="#{tmpRmdEditBean.onChangeReportTypeNow}"
+									 />
+							</h:selectOneMenu>
+							<p:message for="tmpRmdReport" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpRmdReportName}" />
+							</label>
+							<p:inputText id="tmpRmdReportNameIn" required="true"  maxlength="500"
+								requiredMessage="#{msg.formTmpRmdReportName} #{msg.validateRequired}"
+								styleClass="form-control form-required"
+								value="#{tmpRmdEditBean.tmpRmd.reportNameIn}" autocomplete="off"></p:inputText>
+							<p:message for="tmpRmdReportNameIn" />
+						</div>
+					</div>
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpRmdReportName}" />&#160;&#160;<span
+								class="label label-warning"> <h:outputLabel
+										value="#{msg.english}" />
+							</span></label>
+							<p:inputText styleClass="form-control" maxlength="500"
+								value="#{tmpRmdEditBean.tmpRmd.reportNameEn}" autocomplete="off"></p:inputText>
+						</div>
+					</div> -->
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="role" class="control-label tl-label" tl="role-list"><h:outputText
+									value="#{msg.formTmpRmdDescription}" /></label>		
+							<p:inputTextarea id="description" styleClass="form-control"  
+							value="#{tmpRmdEditBean.tmpRmd.description}" />
+								<p:message for="description"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label for="status" class="control-label tl-label"
+								tl="status-list"><h:outputText
+									value="#{msg.formTmpRmdReminderType}" /></label>
+							<h:selectOneMenu id="tmpRmdReminderType" required="true"
+								requiredMessage="#{msg.formTmpRmdReminderType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{tmpRmdEditBean.tmpRmd.counterType.counterTypeId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpRmdEditBean.counterTypeList}" />
+							</h:selectOneMenu>
+							<p:message for="tmpRmdReminderType" />
+						</div>
+					</div>
+					<h:panelGroup id="panelRecurringType">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<div class="label-form" style="text-align:left">Tipe Recurring</div>
+							<h:selectOneMenu disabled="true" 
+							style="font-size:13px;font-weight:normal;"
+							styleClass="form-control s2"
+							value="#{tmpRmdEditBean.tmpRmd.recurringType}">
+							<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+							<f:selectItems value="#{tmpRmdEditBean.recurringTypeList}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					</h:panelGroup>
+					<div class="col-lg-12">
+						<div class="form-group required">
+						<div class="label-form" style="text-align:left">Start Target Date</div>
+						<p:calendar styleClass="form-control-datepicker-wrap" required="true"
+							requiredMessage="Start Target Date #{msg.validateRequired}"
+						  value="#{tmpRmdEditBean.tmpRmd.recurringStartDate}"
+						  autocomplete="off" 
+						  pattern="dd-MMM-yyyy" locale="en" >
+						  <p:ajax event="dateSelect" update="@this" process="@this"  />
+					    </p:calendar>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+						<div class="label-form" style="text-align:left">End Target Date</div>
+						<p:calendar styleClass="form-control-datepicker-wrap" required="true"
+						  requiredMessage="End Target Date #{msg.validateRequired}"
+						  value="#{tmpRmdEditBean.tmpRmd.recurringEndDate}"
+						  autocomplete="off" 
+						  pattern="dd-MMM-yyyy" locale="en" >
+						  <p:ajax event="dateSelect" update="@this" process="@this" oncomplete="hitungTargetDate()" />
+					    </p:calendar>
+					    
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelDueDate">
+					<div class="col-lg-12">
+						<div id="mp-due-date">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink 
+												onclick="onAddNewTmpRmdDueDate();"
+												rendered="true">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink 
+												onclick="onDeleteRowTmpRmdDueDate();"
+												rendered="true">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<p:dataTable id="tableDueDateDetail" var="vo"
+								value="#{tmpRmdEditBean.tableRmdDueDateModel}"
+								rowIndexVar="statIndex" style="width:100%;"
+								selection="#{tmpRmdEditBean.selectedRmdDueDateData}"
+								rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+								
+								<p:ajax event="rowSelectCheckbox" process="@this" />
+								<p:ajax event="rowUnselectCheckbox" process="@this" />
+								<p:ajax event="toggleSelect" process="@this" /> 
+
+								<p:column selectionMode="multiple"
+									style="text-align:center; width:40px;" />
+									
+
+								<p:column headerText="#{msg.formTmpRmdDueDate}"
+									style="width:300px;">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										value="#{vo.dueDate}" autocomplete="off"
+										pattern="dd-MMM-yyyy" locale="en">
+										<p:ajax event="dateSelect"></p:ajax>
+									</p:calendar>
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+					</h:panelGroup>
+
+					<h:panelGroup id="panelSubmissionConfirmation">
+					<div class="col-lg-12">
+						<h3>
+							<h:outputText value="#{msg.formTmpRmdSubmissionConfirmation}" />
+						</h3>
+						<div class="form-group">
+							<label for="divison" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpRmdDivision}" /></label>
+							<h:selectOneMenu styleClass="form-control s2 divId"
+								value="#{tmpRmdEditBean.tmpRmd.divisionId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{tmpRmdEditBean.divisionList}" />
+								<p:ajax event="change" update="form:panelSubmissionConfirmation"
+									listener="#{tmpRmdEditBean.onChangeDivisionSingle}"
+								 />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic1" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpRmdPic1}" />&nbsp;&nbsp;&nbsp;<p:commandLink
+									process="@this"
+									onstart="$('.hdnParamPic1Option').val($('.divId').val());pic1Dialog.show();">
+									<i class="fa fa-search ico-lg"></i>
+								</p:commandLink>
+															
+							</label>
+							<p:inputText id="inputPic1" styleClass="form-control"
+								value="#{tmpRmdEditBean.tmpRmd.userNameTemp1}" readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic2" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpRmdPic2}" />&nbsp;&nbsp;&nbsp;<p:commandLink
+									process="@this"
+									onstart="$('.hdnParamPic2Option').val($('.divId').val());pic2Dialog.show();">
+									<i class="fa fa-search ico-lg"></i>
+								</p:commandLink>
+								<p:commandLink immediate="true"
+									actionListener="#{tmpRmdEditBean.clearPic2}"
+									update="form:inputPic2">
+									<span class="input-group-btn fa fa-trash btn btn-link"></span>	
+								</p:commandLink>
+							</label>
+							<p:inputText id="inputPic2" styleClass="form-control"
+								value="#{tmpRmdEditBean.tmpRmd.userNameTemp2}" readonly="true" />
+
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic3" class="control-label tl-label"><h:outputText
+									value="#{msg.formTmpRmdPic3}" />&nbsp;&nbsp;&nbsp;<p:commandLink
+									process="@this"
+									onstart="$('.hdnParamPic3Option').val($('.divId').val());pic3Dialog.show();">
+									<i class="fa fa-search ico-lg"></i>
+								</p:commandLink>
+								<p:commandLink immediate="true"
+									actionListener="#{tmpRmdEditBean.clearPic3}"
+									update="form:inputPic3">
+									<span class="input-group-btn fa fa-trash btn btn-link"></span>	
+								</p:commandLink>
+							</label>
+							<p:inputText id="inputPic3" styleClass="form-control"
+								value="#{tmpRmdEditBean.tmpRmd.userNameTemp3}" readonly="true" />
+						</div>
+					</div>
+					
+					</h:panelGroup>
+
+					<h3>
+						<h:outputText value="#{msg.formTmpRmdSupportingUnit}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-supporting-unit">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewTmpRmdSupportingUnit();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowTmpRmdSupportingUnit();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableSupportingUnitDetail" var="vo"
+									value="#{tmpRmdEditBean.tableRmdSupportingUnitModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpRmdEditBean.selectedRmdSupportingUnitData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" /> 
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="#{msg.formTmpRmdDivision}"
+										style="width:200px;">
+										<div class="form-group" style="margin-top:15px;">
+											<h:selectOneMenu value="#{vo.divisionId}" 
+												styleClass="form-control s2 divisionCc#{statIndex}">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems value="#{tmpRmdEditBean.divisionList}" />
+												<p:ajax event="change" update="form:tableSupportingUnitDetail"
+													listener="#{tmpRmdEditBean.onChangeDivision(statIndex)}"
+												 />
+											</h:selectOneMenu>
+										</div>
+										
+										
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdEmailCc1}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														id="emailCc1#{statIndex}" styleClass="form-control"
+														value="#{vo.emailCcTemp1}" disabled="true" /></td>
+												<td style="width: 20%"><p:commandLink process="@this"
+														onstart="$('.hdnParamEmailCc1Option').val($('.divisionCc#{statIndex}').val());emailCc1Dialog.show();">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpRmdEditBean.indexDtlCc}"
+															value="#{statIndex}" />
+													</p:commandLink></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdEmailCc2}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 70%"><h:inputText
+														id="emailCc2#{statIndex}" styleClass="form-control"
+														value="#{vo.emailCcTemp2}" disabled="true" /></td>
+												<td style="width: 15%"><p:commandLink process="@this"
+														onstart="$('.hdnParamEmailCc2Option').val($('.divisionCc#{statIndex}').val());emailCc2Dialog.show();">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpRmdEditBean.indexDtlCc}"
+															value="#{statIndex}" />
+													</p:commandLink>
+												</td>
+												<td style="width: 15%">	
+													<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
+														actionListener="#{tmpRmdEditBean.clearPicDetail2(statIndex)}"
+														update="form:tableSupportingUnitDetail">
+														<span class="input-group-btn fa fa-trash btn btn-link"></span>															
+													</p:commandLink>													
+												</td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdEmailCc3}"
+										style="width:200px;">
+										<table>
+											<tr>
+												<td style="width: 70%"><h:inputText
+														id="emailCc3#{statIndex}" styleClass="form-control"
+														value="#{vo.emailCcTemp3}" disabled="true" /></td>
+												<td style="width: 15%"><p:commandLink process="@this"
+														onstart="$('.hdnParamEmailCc3Option').val($('.divisionCc#{statIndex}').val());emailCc3Dialog.show();">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpRmdEditBean.indexDtlCc}"
+															value="#{statIndex}" />
+													</p:commandLink>
+												</td>
+												<td style="width: 15%">	
+													<p:commandLink immediate="true"	style="float:left;margin-left:-10px;"												
+														actionListener="#{tmpRmdEditBean.clearPicDetail3(statIndex)}"
+														update="form:tableSupportingUnitDetail">
+														<span class="input-group-btn fa fa-trash btn btn-link"></span>															
+													</p:commandLink>												
+												</td>
+											</tr>
+										</table>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+					<h3>
+						<h:outputText value="#{msg.formTmpRmdRegulation}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-regulation">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewTmpRmdRegulation();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowTmpRmdRegulation();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableRegulationDetail" var="vo"
+									value="#{tmpRmdEditBean.tableRmdRegulationModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpRmdEditBean.selectedRmdRegulationData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="#{msg.formTmpRmdRegulationTitleLink}"
+										style="width:300px;">
+
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputHidden
+														value="#{vo.regulationMst.regulationId}"></h:inputHidden>
+													<p:inputText styleClass="form-control"
+														value="#{vo.regulationMst.nameTemp}" disabled="true" />
+												</td>
+												<td style="width: 20%"><p:commandLink 
+														onclick="$('.hdnParamRegulationOption').val('1'); regulationDialog.show()" process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpRmdEditBean.indexDtl}" value="#{statIndex}" />
+													</p:commandLink>
+												</td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdRegulationNo}"
+										style="width:300px;">
+										<div class="form-group" style="margin-top:15px;">
+											<p:inputText styleClass="form-control"
+												value="#{vo.regulationMst.documentNo}" disabled="true" />
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdAttachment}"
+										style="width:300px;">
+										<div class="form-group">
+											<div class="input-group">
+												<p:dataList value="#{vo.regulationMst.regulationAttachments}" 
+														emptyMessage=""
+														var="dtl">
+													<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{tmpRmdEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+														target="_blank">#{dtl.attachmentFile}</p:commandLink>
+												</p:dataList>
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdNote}"
+										style="width:300px;">
+										<div class="form-group" style="margin-top:15px;">
+											<p:dataList value="#{vo.regulationMst.regulationTrackRecords}"
+												emptyMessage=""
+												var="dtl2" >#{dtl2.trackNote}</p:dataList>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdDocumentCategory}"
+										style="width:300px;">
+										<div class="form-group" style="margin-top:15px;">
+											<p:inputText styleClass="form-control"
+												value="#{vo.regulationMst.documentCategory.documentCategory}" 
+												disabled="true" />
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					<h:outputText value="&#160;" />
+					<h3>
+						<h:outputText value="#{msg.formTmpRmdCorrespondence}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-regulation">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewTmpRmdCorrespondence();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowTmpRmdCorrespondence();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableCorrespondenceDetail" var="vo"
+									value="#{tmpRmdEditBean.tableRmdCorrespondenceModel}"
+									rowIndexVar="statIndex" style="width:100%;"
+									selection="#{tmpRmdEditBean.selectedRmdCorrespondenceData}"
+									rowKey="#{vo.sequence}" rowSelectMode="checkbox">
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+									<p:column headerText="#{msg.formTmpRmdCorrespondenceLetterNo}"
+										style="width:300px;">
+
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputHidden
+														value="#{vo.trcCorrespondence.correspondenceId}"></h:inputHidden>
+													<p:inputText styleClass="form-control"
+														value="#{vo.trcCorrespondence.letterNo}" disabled="true" />
+												</td>
+												<td style="width: 20%"><p:commandLink 
+														onclick="$('.hdnParamCorrespondenceOption').val('1'); correspondenceDialog.show()" process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{tmpRmdEditBean.indexCorrespondenceDtl}" value="#{statIndex}" />
+													</p:commandLink>
+												</td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdCorrespondenceSender}"
+										style="width:300px;">
+										<div class="form-group" style="margin-top:15px;">
+											<p:inputText styleClass="form-control"
+												value="#{vo.trcCorrespondence.sender.name}" 
+												disabled="true" />
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdAttachment}"
+										style="width:300px;">
+										<div class="form-group">
+											<div class="input-group">
+												<p:dataList value="#{vo.trcCorrespondence.trcCorrespondenceDocuments}" 
+														emptyMessage=""
+														var="dtl">
+													<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" immediate="true"
+														actionListener="#{tmpRmdEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+														target="_blank">#{dtl.attachmentFile}</p:commandLink>
+												</p:dataList>
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpCorrespondencePerihal}"
+										style="width:300px;">
+										<div class="form-group" style="margin-top:15px;">
+											<p:inputText styleClass="form-control"
+												value="#{vo.trcCorrespondence.perihal}" 
+												disabled="true" />
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					<h:outputText value="&#160;" />
+					
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="submittedTo"><h:outputText
+									value="#{msg.formTmpRmdDedicatedTo}" /></label>
+							<p:inputText styleClass="form-control" maxlength="250"
+								value="#{tmpRmdEditBean.tmpRmd.dedicatedTo}" autocomplete="off"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="sanctions"><h:outputText
+									value="#{msg.formTmpRmdSanction}" /></label>
+					<!--<p:inputText styleClass="form-control" maxlength="500"
+								value="#{tmpRmdEditBean.tmpRmd.sanctions}" autocomplete="off"></p:inputText>-->
+									<pe:ckEditor widgetVar="editorContentIn" width="100%" id="sanctions" 
+							height="300" style="margin-bottom:10px" value="#{tmpRmdEditBean.tmpRmd.sanctions}"/>
+							
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="note"><h:outputText
+									value="#{msg.formTmpRmdNote}" /></label>
+							<p:inputText styleClass="form-control" maxlength="500"
+								value="#{tmpRmdEditBean.tmpRmd.note}" autocomplete="off"></p:inputText>
+						</div>
+					</div>
+
+
+					<h:outputText value="&#160;" />
+					<h3>
+						<h:outputText value="#{msg.formTmpRmdConfirmationStatus}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-confirmation-status">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="tableConfirmation" var="vo"
+									value="#{tmpRmdEditBean.trcRmdPicFollowupList}" rowIndexVar="statIndex"
+									style="width:100%;">
+
+									<p:column headerText="#{msg.formTmpRmdPicConfirmationEvidence}"
+										style="width:150px;">
+										<div class="form-group">
+											<p:dataList value="#{vo.picFollowupAttachmentDetails}" 
+												emptyMessage=""
+												var="dtl">
+												<p:commandLink title="#{dtl.fileSizeKB} KB" ajax="false" immediate="true"
+													actionListener="#{tmpRmdEditBean.downloadFile(dtl.fileId,dtl.attachmentFile,null)}"
+													target="_blank">#{dtl.attachmentFile}</p:commandLink>
+											</p:dataList>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdPicFollowupStatus}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputLabel value="#{vo.followupStatus.name}" />
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdPicConfirmation}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupBy.name}" />
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdTargetDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.targetDate}">
+													<f:convertDateTime
+														pattern="#{tmpRmdEditBean.inputDateFormat}"
+														locale="#{tmpRmdEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdFollowupDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupDate}">
+													<f:convertDateTime
+														pattern="#{tmpRmdEditBean.inputDateFormat}"
+														locale="#{tmpRmdEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									<p:column headerText="#{msg.formTmpRmdConfirmationDate}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.confirmationDate}">
+													<f:convertDateTime
+														pattern="#{tmpRmdEditBean.inputDateFormat}"
+														locale="#{tmpRmdEditBean.inputDateLocale}">
+													</f:convertDateTime>
+												</h:outputText>
+											</div>
+										</div>
+									</p:column>
+									
+									<p:column headerText="#{msg.formTmpRmdInformation}"
+										style="width:150px;">
+										<div class="form-group">
+											<div class="input-group">
+												<h:outputText value="#{vo.followupNote}" />
+											</div>
+										</div>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<h:outputText value="&#160;" />
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formTmpRmdStatus}" /></label>
+							<h:selectOneRadio
+								value="#{tmpRmdEditBean.tmpRmd.reminderStatus.parameterDtlCode}">
+								<f:selectItems value="#{tmpRmdEditBean.reminderStatusList}" />
+							</h:selectOneRadio>
+
+						</div>
+					</div>
+					
+					<!--
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="PIC Compliance" /></label>
+												<p:inputText id="tmpRmdUserInputer" disabled="true"
+								styleClass="form-control" autocomplete="off"
+								value="#{tmpRmdEditBean.tmpRmd.userNameInputer}"></p:inputText>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="Atasan PIC Compliance" /></label>
+												<p:inputText id="tmpRmdAtasanUserInputer" disabled="true"
+								styleClass="form-control" autocomplete="off"
+								value="#{tmpRmdEditBean.tmpRmd.userNameAtasanInputer}"></p:inputText>
+						</div>
+					</div> -->
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic1" class="control-label tl-label"><h:outputText
+									value="PIC Compliance" />&nbsp;&nbsp;&nbsp;<p:commandLink
+									process="@this"
+									onstart="picComplianceDialog.show();">
+									<i class="fa fa-search ico-lg"></i>
+								</p:commandLink>
+															
+							</label>
+							<p:inputText id="inputPicCompliance" styleClass="form-control"
+								value="#{tmpRmdEditBean.tmpRmd.picComplianceTemp}" readonly="true" />
+
+						</div>
+					</div>
+					
+				
+				<div class="col-lg-12">
+						<div class="form-group">
+							<label for="pic2" class="control-label tl-label"><h:outputText
+									value="Atasan PIC Compliance" />&nbsp;&nbsp;&nbsp;<p:commandLink
+									process="@this"
+									onstart="picComplianceSuperiorDialog.show();">
+									<i class="fa fa-search ico-lg"></i>
+								</p:commandLink>
+								<p:commandLink immediate="true"
+									actionListener="#{tmpRmdEditBean.clearPicComplianceSuperior}"
+									update="form:inputPicComplianceSuperior">
+									<span class="input-group-btn fa fa-trash btn btn-link"></span>	
+								</p:commandLink>
+							</label>
+							<p:inputText id="inputPicComplianceSuperior" styleClass="form-control"
+								value="#{tmpRmdEditBean.tmpRmd.picComplianceSuperiorTemp}" readonly="true" />
+						</div>			
+					</div>
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<p:commandButton value="#{msg.buttonSave}" update="messages"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{tmpRmdEditBean.save()}"></p:commandButton>
+
+
+				<h:commandLink value="#{msg.buttonCancel}" immediate="true"
+					actionListener="#{tmpRmdEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+				<p:remoteCommand action="#{tmpRmdEditBean.hitungTargetDate}" name="hitungTargetDate" 
+					update="tableDueDateDetail" process="@this tableDueDateDetail"></p:remoteCommand>
+				<p:remoteCommand action="#{tmpRmdEditBean.onAddNewTmpRmdDueDate}" name="onAddNewTmpRmdDueDate" 
+					update="tableDueDateDetail" process="@this tableDueDateDetail"></p:remoteCommand>
+				<p:remoteCommand action="#{tmpRmdEditBean.onDeleteRowTmpRmdDueDate}" name="onDeleteRowTmpRmdDueDate"
+					update="tableDueDateDetail" process="@this tableDueDateDetail"></p:remoteCommand>
+
+				<p:remoteCommand action="#{tmpRmdEditBean.onAddNewTmpRmdRegulation}"
+					immediate="true" name="onAddNewTmpRmdRegulation" process="@this"
+					update="tableRegulationDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpRmdEditBean.onDeleteRowTmpRmdRegulation}"
+					immediate="true" name="onDeleteRowTmpRmdRegulation"
+					update="tableRegulationDetail"></p:remoteCommand>
+
+				<p:remoteCommand
+					action="#{tmpRmdEditBean.onAddNewTmpRmdSupportingUnit}"
+					immediate="true" name="onAddNewTmpRmdSupportingUnit"
+					update="tableSupportingUnitDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpRmdEditBean.onDeleteRowTmpRmdSupportingUnit}"
+					immediate="true" name="onDeleteRowTmpRmdSupportingUnit"
+					update="tableSupportingUnitDetail"></p:remoteCommand>
+					
+				<p:remoteCommand action="#{tmpRmdEditBean.onAddNewTmpRmdCorrespondence}"
+					immediate="true" name="onAddNewTmpRmdCorrespondence" process="@this"
+					update="tableCorrespondenceDetail"></p:remoteCommand>
+				<p:remoteCommand
+					action="#{tmpRmdEditBean.onDeleteRowTmpRmdCorrespondence}"
+					immediate="true" name="onDeleteRowTmpRmdCorrespondence"
+					update="tableCorrespondenceDetail"></p:remoteCommand>
+			</div>
+		</div>
+
+
+		<!-- <div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formTmpRmdApprovalHistory}" />
+				</h3>
+			</div>
+
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="table-wrapper table-responsive">
+							<p:dataTable id="tableApproval" var="vo"
+								value="#{tmpRmdEditBean.tmpRmd.approvalDetails}"
+								rowIndexVar="statIndex" style="width:100%;">
+
+								<p:column headerText="#{msg.formTmpRmdApprovalBy}"
+									style="width:200px;">
+									<div class="form-group">
+										<div class="input-group">
+											<h:outputLabel value="#{vo.user.name}" />
+										</div>
+									</div>
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdApprovalStatus}"
+									style="width:200px; text-align:center;">
+									<h:outputLabel
+										rendered="#{vo.approvalStatus.parameterDtlCode eq 'STATUS_APPROVED'}">
+										<span class="label label-success"><h:outputLabel
+												value="#{msg.formApprove}" /></span>
+									</h:outputLabel>
+									<h:outputLabel
+										rendered="#{vo.approvalStatus.parameterDtlCode eq 'STATUS_REVISE'}">
+										<span class="label label-danger"><h:outputLabel
+												value="#{msg.formRevisi}" /></span>
+									</h:outputLabel>
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdApprovalDate}"
+									style="width:200px; text-align:center;">									
+									<h:outputText value="#{vo.approvalDate}" style="text-align:center" >
+										<f:convertDateTime
+											pattern="#{tmpRmdEditBean.inputDateFormat}"
+											locale="#{tmpRmdEditBean.inputDateLocale}">
+										</f:convertDateTime>
+									</h:outputText>										
+								</p:column>
+								<p:column headerText="#{msg.formTmpRmdApprovalNote}"
+									style="width:300px;">
+									<div class="form-group">
+										<div class="input-group">
+											<h:outputText value="#{vo.approvalNote}" />
+										</div>
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		
+		<wo:selectorCorrespondence id="CorrespondenceOptionDummy" height="450" width="750"
+			title="LOV #{msg.formTmpRmdCorrespondence}" widgetVar="correspondenceDummyDialog"
+			selectorInfo="#{tmpRmdEditBean.selectorCorrespondence}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableCorrespondenceDetail" />
+			
+		<wo:selectorCorrespondence id="CorrespondenceOption" height="450" width="750"
+			title="LOV #{msg.formTmpRmdCorrespondence}" widgetVar="correspondenceDialog"
+			selectorInfo="#{tmpRmdEditBean.selectorCorrespondence}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableCorrespondenceDetail" />
+			
+		<wo:selectorRegulationMst id="RegulationOption" height="450" width="750"
+			title="LOV #{msg.formTmpRmdRegulation}" widgetVar="regulationDialog"
+			selectorInfo="#{tmpRmdEditBean.selectorRegulation}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableRegulationDetail" />
+			
+		<wo:selector id="Pic1Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdPic1}" widgetVar="pic1Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUser1}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
+
+		<wo:selector id="Pic2Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdPic2}" widgetVar="pic2Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUser2}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
+
+		<wo:selector id="Pic3Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdPic3}" widgetVar="pic3Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUser3}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:inputPic1 form:inputPic2 form:inputPic3" />
+			
+		<wo:selector id="PicComplianceOption" height="450" width="550"
+			title="LOV #{msg.formTmpRmdPICCompliance}"
+			widgetVar="picComplianceDialog"
+			selectorInfo="#{tmpRmdEditBean.selectorPicCompliance}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:inputPicCompliance" />
+			
+	    <wo:selector id="PicComplianceSuperiorOption" height="450" width="550"
+			title="LOV #{msg.formTmpRmdPICCompliance}"
+			widgetVar="picComplianceSuperiorDialog"
+			selectorInfo="#{tmpRmdEditBean.selectorPicComplianceSuperior}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:inputPicComplianceSuperior" />
+
+			
+		<wo:selector id="EmailCc1Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdUser1}" widgetVar="emailCc1Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUserCc1}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableSupportingUnitDetail" />
+
+		<wo:selector id="EmailCc2Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdUser2}" widgetVar="emailCc2Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUserCc2}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableSupportingUnitDetail" />
+
+		<wo:selector id="EmailCc3Option" height="450" width="550"
+			title="LOV #{msg.formTmpRmdUser3}" widgetVar="emailCc3Dialog"
+			selectorInfo="#{tmpRmdEditBean.selectorUserCc3}"
+			bean="#{tmpRmdEditBean}"
+			updateOnSelected="form:tableSupportingUnitDetail" />
+			
+		
+
+	</ui:define> 
+	
+</ui:composition>

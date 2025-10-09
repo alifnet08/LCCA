@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly] {;
+				font-family: 'Montserrat';
+				color: #444444;
+			    margin: -4px 0px 0px;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}	
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRegulationSocializationApprovalTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:messages id="messages" />
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText
+						value="#{msg.formRegulationSocializationApprovalTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="jenis_ketentuan" class="control-label tl-label"><h:outputText
+									value="#{msg.formRegulationSocializationApprovalProvType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regulationSocializationApprovalEditBean.socializationTmp.jenisKetentuan.parameterDtlCode}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regulationSocializationApprovalEditBean.provTypes}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+
+					<h3>
+						<h:outputText
+							value="#{msg.formRegulationSocializationApprovalRegTitle}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTable" var="data"
+									value="#{regulationSocializationApprovalEditBean.tableModel}"
+									rowIndexVar="statIndex">
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalRegNo}"
+										width="190">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentNo}" title="#{data.regulation.documentNo}"
+											value="#{data.regulation.documentNo}" readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalLinkJudul}"
+										width="300">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control temp-no-peraturan" alt="#{data.regulation.name}" title="#{data.regulation.name}"
+														value="#{data.regulation.name}" readonly="true" /></td>
+
+											</tr>
+										</table>
+
+									</p:column>
+									
+									<p:column headerText="#{msg.formRegulationSocializationNote}"
+										style="width:300px;">										
+										<p:dataList value="#{data.regulation.regulationTrackRecords}"
+											emptyMessage=""
+											var="dtl2" >#{dtl2.trackNote}</p:dataList>										
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalRegulationType}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentType.documentType}" title="#{data.regulation.documentType.documentType}"
+											value="#{data.regulation.documentType.documentType}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalPublishedDate}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.publishedDate}" title="#{data.regulation.publishedDate}"
+											value="#{data.regulation.publishedDate!=null?regulationSocializationApprovalEditBean.sdf.format(data.regulation.publishedDate):''}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalEffectiveDate}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.effectiveDate!=null?regulationSocializationApprovalEditBean.sdf.format(data.regulation.effectiveDate):''}" 
+											title="#{data.regulation.effectiveDate!=null?regulationSocializationApprovalEditBean.sdf.format(data.regulation.effectiveDate):''}"
+											value="#{data.regulation.effectiveDate!=null?regulationSocializationApprovalEditBean.sdf.format(data.regulation.effectiveDate):''}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalExpiredDate}"
+										width="150">
+										<h:inputText styleClass="form-control"  alt="#{data.regulation.expiredDate}" title="#{data.regulation.expiredDate}"
+											value="#{data.regulation.expiredDate!=null?regulationSocializationApprovalEditBean.sdf.format(data.regulation.expiredDate):''}"
+											readonly="true" />
+									</p:column>
+									
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalRegulationCategory}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentCategory.documentCategory}" title="#{data.regulation.documentCategory.documentCategory}"
+											value="#{data.regulation.documentCategory.documentCategory}"
+											readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalRegulationTopic}"
+										width="300">
+										<h:inputText styleClass="form-control" alt="#{data.regulation.documentTopic.documentTopic}" title="#{data.regulation.documentTopic.documentTopic}"
+											value="#{data.regulation.documentTopic.documentTopic}"
+											readonly="true" />
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					&nbsp;
+					<h3>
+						<h:outputText 
+							value="#{msg.formRegulationSocializationApprovalPICCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{regulationSocializationApprovalEditBean.tableModelCompliance}"
+									rowIndexVar="statIndex">
+
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalNIK}"
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control temp-no-peraturan"
+														value="#{data.user.nik}" readonly="true" /></td>
+
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalName}"
+										width="200">
+										<h:inputText styleClass="form-control" alt="#{data.user.name}" title="#{data.user.name}"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalEmail}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.user.email}" title="#{data.user.email}"
+											value="#{data.user.email}" readonly="true" />
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top:15px;">
+							<label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationSocializationApprovalFollowup}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regulationSocializationApprovalEditBean.socializationTmp.followUp}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regulationSocializationApprovalEditBean.followUps}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="jenis_ketentuan" class="control-label tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationSocializationApprovalNote}" /></label>
+							<p:inputTextarea styleClass="form-control" title="#{regulationSocializationApprovalEditBean.socializationTmp.notes}"
+								value="#{regulationSocializationApprovalEditBean.socializationTmp.notes}"
+								disabled="true"></p:inputTextarea>
+						</div>
+					</div>
+
+					<h3>
+						<h:outputText
+							value="#{msg.formRegulationSocializationApprovalPICAndWorkUnit}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-rekam-jejak">
+							<h4 class="sub-header">&nbsp;</h4>
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableFollowup" var="data"
+									value="#{regulationSocializationApprovalEditBean.tableModelFollowup}"
+									rowIndexVar="statIndex">
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationNote}"
+										width="150">
+										<h:outputText value="#{data.notes}" title="#{data.notes}" />
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalDivision}"
+										width="200">
+
+
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{data.divisionId}" disabled="true">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems
+												value="#{regulationSocializationApprovalEditBean.divisions}" />
+										</h:selectOneMenu>
+
+
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalPIC1}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control user1#{statIndex}" alt="#{data.user1.name}" title="#{data.user1.name}"
+														id="userName1#{statIndex}" value="#{data.user1.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalPIC2}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.user2.name}" title="#{data.user2.name}"
+														styleClass="form-control user2" value="#{data.user2.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalPIC3}"
+										width="250">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText alt="#{data.user3.name}" title="#{data.user3.name}"
+														styleClass="form-control user3" value="#{data.user3.name}"
+														readonly="true" /></td>
+
+											</tr>
+										</table>
+									</p:column>
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalTargetDate}"
+										width="150">
+										<p:calendar style="width:100px" value="#{data.targetDate}" disabled="true"
+											styleClass="form-control-datepicker-wrap" maxlength="11" alt="#{data.targetDate}" title="#{data.targetDate}"
+											pattern="dd MMM yyyy" locale="en" />
+									</p:column>
+									<p:column rendered="#{regulationSocializationApprovalEditBean.socializationTmp.lastUpdateBy ne null
+										and regulationSocializationApprovalEditBean.socializationTmp.lastUpdateBy ne ''}"
+										headerText="#{msg.formRegulationSocializationRescheduleReason}"
+										width="150">
+										<p:inputTextarea disabled="true"
+											id="rescheduleReason" 
+											styleClass="form-control"
+											value="#{data.rescheduleReason}"
+											maxlength="500"></p:inputTextarea>
+									</p:column>
+									<p:column
+										headerText="#{msg.formRegulationSocializationApprovalEmailDate}"
+										width="150">
+										<p:dataList value="#{data.socializationPICFollowupEmailTmps}"
+											emptyMessage=""
+											var="dtl">#{dtl.emailDate!=null?regulationSocializationApprovalEditBean.sdf.format(dtl.emailDate):''}</p:dataList>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-12" style="margin-top:15px;">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+										value="#{msg.formFaqAttachment}"/></label>
+									<p:dataList value="#{regulationSocializationApprovalEditBean.uploadFiles}" 
+									emptyMessage=""
+									var="vo" id="attachment" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{regulationSocializationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top:15px;">
+							<label for="jenis_ketentuan" class="control-label tl-label"><h:outputText
+									value="#{msg.formRegulationSocializationApprovalReminderType}" /></label>
+							<h:selectOneMenu styleClass="form-control s2"
+								value="#{regulationSocializationApprovalEditBean.counterTypeId}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{regulationSocializationApprovalEditBean.counterTypes}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-top:15px;">
+							<label class="tl-label" tl=""><h:outputText
+									value="#{msg.formRegulationSocializationApprovalReminderStatus}" /></label>
+							<h:selectOneRadio
+								value="#{regulationSocializationApprovalEditBean.socializationTmp.reminderStatus}"
+								disabled="true">
+								<f:selectItems
+									value="#{regulationSocializationApprovalEditBean.reminderStatusList}" />
+							</h:selectOneRadio>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+		             <div class="form-group required">
+		             	<label class="tl-label"><h:outputText value="#{msg.textApprovalStatus}" /></label>
+			          	<h:selectOneMenu styleClass="form-control s2" value="#{regulationSocializationApprovalEditBean.approvalStat}">
+			                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+						    <f:selectItems value="#{regulationSocializationApprovalEditBean.approvalStatus}" />
+			            </h:selectOneMenu>
+		             </div>
+		           </div>
+	           
+					<div class="col-lg-12">
+						<h3> <h:outputText value="#{msg.formExternalRegulationApprovalNote}"/></h3>
+						<div class="form-group">
+							<p:inputTextarea styleClass="form-control"
+								value="#{regulationSocializationApprovalEditBean.note}"></p:inputTextarea>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<p:commandButton value="#{msg.buttonSave}" actionListener="#{regulationSocializationApprovalEditBean.save}"
+					styleClass="btn btn-success pull-left tl-label" update="msgs"></p:commandButton>
+				
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{regulationSocializationApprovalEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+
+	</ui:define>
+
+
+</ui:composition>

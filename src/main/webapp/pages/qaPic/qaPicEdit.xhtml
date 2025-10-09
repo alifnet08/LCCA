@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formQAPICTitle}" />
+	</ui:define>
+	
+	<ui:define name="head">
+	<style>
+		.ui-chips-container {
+	     width:100%!important;
+	     }
+     </style>
+	</ui:define>
+	
+	<ui:define name="content">
+	<p:growl id="messages" rendered="true" />
+	<div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title tl-label" tl="new-master-document-type"><h:outputText value="#{msg.formQAPICAddTitle}" /></h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+        <div class="col-lg-12">
+              <div class="form-group">
+                <label  class="control-label tl-label" ><p:outputLabel value="#{msg.formQAQuestionedBy}" /></label>
+				<p:inputText styleClass="form-control"  value="#{qaPICEditBean.questionedBy}" readonly="true"/>
+                
+              </div>
+            </div>
+        	<div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><p:outputLabel value="#{msg.formQAQuestionedDate}" /></label>
+                <p:calendar styleClass="form-control-datepicker-wrap"
+										maxlength="11"
+										autocomplete="off"
+										value="#{qaPICEditBean.qa.qDate}"
+										pattern="#{qaPICEditBean.inputDateFormat}"
+										locale="#{qaPICEditBean.inputDateLocale}"
+										disabled="true"></p:calendar>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group required">
+                <label for="question" class="control-label tl-label" tl="question"><p:outputLabel value="#{msg.formQAQuestion}" /></label>
+                <p:textEditor value="#{qaPICEditBean.qa.question}" rows="7" style="width:100%" 
+                id="question" styleClass="text-area" readonly="true" height="150"></p:textEditor>
+                <p:message for="question"/>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group required">
+                <label for="answer" class="control-label tl-label" tl="answer"><p:outputLabel value="#{msg.formQAAnswer}" /></label>
+                <p:textEditor value="#{qaPICEditBean.qa.answer}" rows="7" style="width:100%" 
+                id="answer" styleClass="text-area" required="true" height="150"
+                requiredMessage="#{msg.formQAAnswer} #{msg.validateRequired}"></p:textEditor>
+                <p:message for="answer"/>
+              </div>
+            </div>
+            <p:outputPanel rendered="#{qaPICEditBean.qa.readFlag eq 'Y'}">
+            <div class="col-lg-12">
+              <div class="form-group required">
+                <label for="threadStatus" class="control-label tl-label" tl="threadStatus"><p:outputLabel value="#{msg.formQACloseThread}" /></label>
+                <h:selectOneMenu styleClass="form-control s2" id="threadStatus" 
+									value="#{qaPICEditBean.qa.threadStatus}">
+									<f:selectItems value="#{qaPICEditBean.closeTypes}" />
+				</h:selectOneMenu>	
+                <p:message for="threadStatus"/>
+              </div>
+            </div>
+            </p:outputPanel>
+            
+          </div>
+      </div>
+      <div class="box-footer">
+        <h:commandButton value="#{msg.buttonSubmit}" type="submit" rendered="#{qaPICEditBean.qa.qStatus eq 'QNA_STATUS_IP' and qaPICEditBean.qa.aUser.userId eq qaPICEditBean.userIdLogin}"
+							styleClass="btn btn-primary pull-left"
+							actionListener="#{qaPICEditBean.save()}"></h:commandButton>
+		<h:commandButton value="#{msg.buttonSubmit}" type="submit" rendered="#{qaPICEditBean.qa.qStatus eq 'QNA_STATUS_CLOSE' and qaPICEditBean.qa.readFlag eq 'Y' and qaPICEditBean.qa.threadStatus == null}"
+							styleClass="btn btn-primary pull-left"
+							actionListener="#{qaPICEditBean.close()}"></h:commandButton>
+        <h:commandLink value="#{msg.buttonCancel}" actionListener="#{qaPICEditBean.cancel()}" immediate="true"
+							styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+      </div>
+    </div>
+			
+	</ui:define>
+</ui:composition>

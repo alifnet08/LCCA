@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpAudit.model">
+	<class name="TmpAuditPicFollowupRecEmail" table="WO_TMP_AUDIT_PIC_FP_REC_EMAIL">
+		<id name="auditPicFollowupEmailRecId" column="ADT_PIC_FP_REC_EMAIL_ID"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_AUDIT_PIC_FP_REC_E_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="TmpAuditPicFollowupRec" column="audit_pic_followup_rec_id"
+			class="com.wo.module.tmpAudit.model.TmpAuditPicFollowupRec"
+			fetch="join" />
+
+		<property name="emailDate" column="EMAIL_DATE" type="date" />
+		<property name="slaType" column="SLA_TYPE" type="string" />
+		<property name="sla" column="SLA" type="long" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

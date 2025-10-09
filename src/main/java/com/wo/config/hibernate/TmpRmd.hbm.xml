@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpRmd.model">
+	<class name="TmpRmd" table="wo_tmp_rmd">
+		<id name="rmdId" column="RMD_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_rmd_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="reportType" column="REPORT_TYPE_ID"
+			class="com.wo.module.reportType.model.ReportType" fetch="join">
+		</many-to-one>
+
+		<property name="reportNameIn" column="REPORT_NAME_IN" type="string" />
+		<property name="reportNameEn" column="REPORT_NAME_EN" type="string" />
+		<property name="description" column="DESCRIPTION" type="string" />
+
+		<many-to-one name="counterType" column="COUNTER_TYPE_ID"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+
+		<property name="divisionId" column="DIVISION_ID" type="long" />
+
+		<many-to-one name="user1" column="USER_ID_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<many-to-one name="user2" column="USER_ID_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<many-to-one name="user3" column="USER_ID_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+			
+		<many-to-one name="picCompliance" column="PIC_COMPLIANCE"
+			class="com.wo.module.user.model.User" fetch="join" />
+			
+		<many-to-one name="picComplianceSuperior" column="PIC_COMPLIANCE_SUPERIOR"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="TARGET_DATE" type="date" />
+		<property name="dedicatedTo" column="DEDICATED_TO" type="string" />
+		<property name="sanctions" column="SANCTIONS" type="string" />
+		<property name="note" column="NOTE" type="string" />
+		
+		<property name="recurringType" column="recurring_type" type="string" />
+		<property name="recurringStartDate" column="recurring_start_date" type="date" />
+		<property name="recurringEndDate" column="recurring_end_date" type="date" />
+
+		<many-to-one name="reminderStatus" property-ref="parameterDtlCode"
+			column="REMINDER_STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="status" property-ref="parameterDtlCode"
+			column="STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<bag name="dueDateDetails" inverse="true" cascade="save-update, delete-orphan"
+			order-by="RMD_DUE_DATE_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdDueDate" />
+		</bag>
+
+		<bag name="regulationDetails" inverse="true" cascade="save-update, delete-orphan"
+			order-by="RMD_REGULATION_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdRegulation" />
+		</bag>
+		
+		<bag name="correspondenceDetails" inverse="true" cascade="save-update, delete-orphan"
+			order-by="RMD_CORRESPONDENCE_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdCorrespondence" />
+		</bag>
+
+		<bag name="supportingUnitDetails" inverse="true"
+			cascade="save-update, delete-orphan" order-by="RMD_SUPPORTING_UNIT_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdSupportingUnit" />
+		</bag>
+
+		<bag name="picFollowupEmailDetails" inverse="true" cascade="save-update, delete-orphan"
+			 order-by="RMD_PIC_FOLLOWUP_EMAIL_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdPicFollowupEmail" />
+		</bag>
+
+		<bag name="picFollowupRescheduleDetails" inverse="true"
+			cascade="delete-orphan" order-by="RMD_PIC_FOLLOWUP_RESCHDULE_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdPicFollowupReschedule" />
+		</bag>
+
+		<bag name="approvalDetails" inverse="true" cascade="save-update, delete-orphan"
+			order-by="RMD_APPROVAL_ID asc">
+			<key column="RMD_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpRmd.model.TmpRmdApproval" />
+		</bag>
+		
+		<bag name="picFollowupDetails" inverse="true"
+			cascade="delete-orphan" order-by="rmd_pic_followup_id asc">
+			<key column="rmd_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcRmd.model.TrcRmdPicFollowup" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+		<style>
+			.ui-datalist-data{
+				list-style-type: none;
+				margin-left: -40px;
+			}
+			.ui-widget-content{
+				border: none;
+			}
+			.ui-widget .ui-widget{
+				color: lightseagreen;
+			}
+		</style>
+		
+		<div class="row brdcrumb">
+			 <nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+			 	<div class=" navbar-collapse " id="collapsibleNavbar">
+			 		<ul class="navbar-nav">
+			 			<li class="nav-item">
+			 				<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+			 				<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+			 				<a class="nav-link disabled" href="#">VIEW - Sosialisasi</a>
+			 			</li>
+			 		</ul>
+			 	</div>
+			 </nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">VIEW - Sosialisasi</div>
+			<h:form class="internal-form" style="margin-top:20px;" id="form">
+				<p:growl id="messages" severity="error"/>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Jenis Peraturan</div>
+						<div class="value-form">#{socializationFEViewBean.judulPeraturan}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Terbit Ketentuan</div>
+						<div class="value-form"><h:outputText value="#{socializationFEViewBean.tanggalTerbitKetentuan}"><f:convertDateTime pattern="dd MMM yyyy" locale="id" /></h:outputText></div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Nomor Dokumen</div>
+						<div class="value-form">#{socializationFEViewBean.nomorDokumen}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Efektif</div>
+						<div class="value-form"><h:outputText value="#{socializationFEViewBean.tanggalEfektif}"><f:convertDateTime pattern="dd MMM yyyy" locale="id" /></h:outputText></div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Judul Peraturan</div>
+						<div class="value-form">#{socializationFEViewBean.judulPeraturan}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Tanggal Ulasan</div>
+						<div class="value-form"><h:outputText value="#{socializationFEViewBean.targetDate}"><f:convertDateTime pattern="dd MMM yyyy" locale="id" /></h:outputText></div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Tipe Peraturan</div>
+						<div class="value-form">#{socializationFEViewBean.tipePeraturan}</div>
+					</div>
+					<div class="col">
+						<div class="label-form">Lampiran</div>
+						<ul class="attachment-list">
+							<ui:repeat
+								value="#{socializationFEViewBean.uploadedFileAttachs}"
+								emptyMessage="" var="vo">
+								<li><i class="far fa-file-alt"></i>
+									<p:spacer/>
+									<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" 
+									actionListener="#{socializationFEViewBean.downloadFile(vo.fileId,vo.fileName,null)}" 
+									target="_blank">#{vo.fileName}</p:commandLink></li>
+							</ui:repeat>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Catatan</div>
+						<div class="value-form">#{socializationFEViewBean.catatan}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Bukti Konfirmasi PIC</div>
+						<ul class="attachment-list">
+							<ui:repeat
+								value="#{socializationFEViewBean.uploadedFiles}"
+								var="vo">
+								<li><i class="far fa-file-alt"></i><p:spacer/>
+									<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+									actionListener="#{socializationFEViewBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink></li>
+							</ui:repeat>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Tanggal Tindak Lanjut</div>
+						<div class="value-form"><h:outputText value="#{socializationFEViewBean.followupDate}"><f:convertDateTime pattern="dd MMM yyyy" locale="id" /></h:outputText></div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Keterangan</div>
+						<div class="value-form">#{socializationFEViewBean.followupNote}</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{socializationFEViewBean.cancel}"
+							name="cancel" immediate="true"/>
+						<button type="button" class="btn btn-outline-secondary" onclick="cancel()">Kembali</button>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form" style="#{socializationFEViewBean.socializationPICFollowupTrc.complianceStatus eq null ?'display:none':''}">Status Pengecekan</div>
+						<div class="value-form">#{socializationFEViewBean.socializationPICFollowupTrc.complianceStatus.nameIn}</div> 
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form" style="#{socializationFEViewBean.socializationPICFollowupTrc.complianceNote eq null ?'display:none':''}">Catatan Pengecekan</div>
+						<div class="value-form">#{socializationFEViewBean.socializationPICFollowupTrc.complianceNote}</div> 
+					</div>
+				</div>
+				
+			</h:form>
+		</div>
+		
+	</ui:define>
+</ui:composition>

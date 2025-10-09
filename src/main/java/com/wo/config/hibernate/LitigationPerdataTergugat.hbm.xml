@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.litigation.model">
+	<class name="LitigationPerdataTergugat" table="wo_mst_liti_perdata_tergugat">
+		<id name="litigationId" column="LITIGATION_ID" type="long">
+			<generator class="foreign">
+				<param name="property">litigation</param>
+			</generator>
+		</id>
+		
+		<one-to-one name="litigation" cascade="all" />
+			
+		<property name="debitur" column="DEBITUR" type="string" />
+		<property name="caseYear" column="CASE_YEAR" type="integer" />
+		<property name="caseNumber" column="CASE_NUMBER" type="string" />
+		
+		<many-to-one name="courtType" property-ref="parameterDtlCode"
+			column="COURT_TYPE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="courtDomicile" column="COURT_DOMICILE" type="string" />
+		<property name="kuasaHukumPenggugat" column="KUASA_HUKUM_PLAINTIFF" type="string" />
+		<property name="kuasaHukumTergugat" column="KUASA_HUKUM_DEFENDANT" type="string" />
+
+		<many-to-one name="caseHandler" property-ref="parameterDtlCode"
+			column="CASE_HANDLER" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="attorneyOfficeName" column="ATTORNEY_OFFICE_NAME" type="string" />
+		<property name="hearingDate" column="HEARING_DATE" type="date" />
+		
+		<many-to-one name="caseMainTopic" property-ref="parameterDtlCode"
+			column="CASE_MAIN_TOPIC" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<many-to-one name="caseSubTopic" property-ref="parameterDtlCode"
+			column="CASE_SUB_TOPIC" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="caseClaimsPosition" column="CASE_CLAIMS_POSITION" type="string" />
+		<property name="maybankLegalPosition" column="MAYBANK_LEGAL_POSITION" type="string" />
+		<property name="plaintiffDemand" column="PLAINTIFF_DEMAND" type="string" />
+		<property name="claimsValueMaterialIdr" column="CLAIMS_VALUE_MATERIAL_IDR" type="double" />
+		<property name="claimsValueImmaterialIdr" column="CLAIMS_VALUE_IMMATERIAL_IDR" type="double" />
+		<property name="totalClaimsValueIdr" column="TOTAL_CLAIMS_VALUE_IDR" type="double" />
+		
+		<many-to-one name="foreignCurrencyType" property-ref="parameterDtlCode"
+			column="FOREIGN_CURRENCY_TYPE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="claimsValueMaterialValasStr" column="CLAIMS_VALUE_MATERIAL_VALAS" type="string" />
+		<property name="potentialLossCessieValue" column="POTENTIAL_LOSS_CESSIE_VALUE" type="double" />
+		<property name="potentialLossOthers" column="POTENTIAL_LOSS_OTHERS" type="double" />
+		<property name="courtDecision" column="COURT_DECISION" type="string" />
+		<property name="lastProgress" column="LAST_PROGRESS" type="string" />
+		
+		<many-to-one name="decisionStatus" property-ref="parameterDtlCode"
+				column="DECISION_STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+				fetch="join" />
+				
+		<one-to-one name="litigationPerdataInspectLevel" cascade="all" />
+				
+		<property name="finishDate" column="FINISH_DATE" type="date" />
+			
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE" type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

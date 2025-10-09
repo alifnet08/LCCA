@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			 td.optionDisabled .ui-chkbox{
+				display: none;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+		</style>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formComplianceReviewDocumentViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formComplianceReviewDocumentViewTitle}" />
+				</h3>
+			</div>
+			
+			<div class="box-body">
+				<div class="row">
+				
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label"><p:outputLabel
+									value="#{msg.formComplianceReviewDocumentType}" /></label>
+							<h:selectOneMenu disabled="true"
+								styleClass="form-control s2"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.documentType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{complianceReviewDocumentViewEditBean.documentTypes}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formComplianceReviewReceivedDate}" /></label>
+							<p:calendar disabled="true"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.receivedDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><p:outputLabel
+									value="#{msg.formComplianceReviewCompleteDate}" /></label>
+							<p:calendar disabled="true"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.completeDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label"><p:outputLabel
+									value="#{msg.formComplianceReviewHUKNo}" /></label>
+							<h:inputText styleClass="form-control" 
+								autocomplete="off" maxlength="200"
+								disabled="true"
+								title="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.documentNo}"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.documentNo}"/>
+						</div>
+					</div>
+					
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label"><p:outputLabel
+									for="materi"
+									value="#{msg.formComplianceReviewMateri}" /></label>
+							<p:inputText id="materi" styleClass="form-control" 
+								autocomplete="off" maxlength="5000"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.materi}" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label"><p:outputLabel
+									value="#{msg.formComplianceReviewProposerWorkUnit}" /></label>
+							<h:selectOneMenu disabled="true" styleClass="form-control s2"
+								value="#{complianceReviewDocumentViewEditBean.complianceReviewDocumentView.divisionId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{complianceReviewDocumentViewEditBean.divisions}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputText value="#{msg.formComplianceReviewPicCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{complianceReviewDocumentViewEditBean.tableModelCompliance}"
+									selection="#{complianceReviewDocumentViewEditBean.selectedDataCompliance}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex" rowSelectMode="checkbox" >
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+									
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentNIK}"
+										width="150">
+										<h:inputText id="picCompliance#{statIndex}" alt="#{data.user.nik}" title="#{data.user.nik}"
+											styleClass="form-control" value="#{data.user.nik}"
+											disabled="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentName}"
+										width="200">
+										<h:inputText styleClass="form-control" alt="#{data.user.name}" title="#{data.user.name}"
+											value="#{data.user.name}" disabled="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentEmail}"
+										width="150">
+										<h:inputText styleClass="form-control" alt="#{data.user.email}" title="#{data.user.email}"
+											value="#{data.user.email}" disabled="true" />
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+							
+							<h3>
+								<h:outputText
+									value="#{msg.formComplianceReviewDocumentLetterTitle}" />
+							</h3>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									
+									<p:remoteCommand name="onCompleteUpload" update="documentMemoList"></p:remoteCommand>
+									<label class="tl-label"><h:outputText
+										value="#{msg.formComplianceReviewDocumentLetterSubTitle}"/></label>
+									<p:dataList value="#{complianceReviewDocumentViewEditBean.uploadFilesDocumentMemo}" 
+									emptyMessage=""
+									var="vo" id="documentMemoList" >
+								    	<p:commandLink title="#{vo.fileSize} KB" ajax="false" actionListener="#{complianceReviewDocumentViewEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+								</p:dataList>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					
+					<div class="box-footer">
+						<h:commandLink value="#{msg.buttonCancel}"
+							actionListener="#{complianceReviewDocumentViewEditBean.cancel()}"
+							styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>
+</ui:composition>

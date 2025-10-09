@@ -1,0 +1,229 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/templateFrontEnd.xhtml">
+
+	<ui:define name="ajaxLoading"></ui:define>
+	<ui:define name="content">
+		
+		<style>
+			.ui-inputfield{
+				width: 100%;
+				-webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.ui-selectonemenu{
+				width: 100%;
+			}
+			
+			.ui-fileupload-content, .ui-widget-content, .ui-corner-bottom{
+				border: 0 !important;
+				margin-bottom: -20px;
+			}
+			
+			.div-class-upload{
+				margin-top: 5px;
+			}
+						
+			.div-class-pertanyaan{
+				margin-top: 35px;
+			}
+			
+		</style>
+		
+		
+		
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+				<div class=" navbar-collapse " id="collapsibleNavbar">
+					 <ul class="navbar-nav">
+					 	<li class="nav-item">
+					 		<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+					 		<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+					 		<a class="nav-link disabled" href="#">Konsultasi</a>
+					 	</li>
+					 </ul>
+				</div>
+			</nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">Tanya Kami</div>
+			<div class="sidebar-title" style="font-size: 14px;color: #FF0000;">
+				<!-- <h:outputText value="qaFEBertanyaBean.qnaWarning" escape="false" /> -->
+			</div>
+			<h:form styleClass="wo-search-form" id="form">
+				<p:growl id="messages" severity="error"/>
+				
+				<div class="form-row">
+					<div class="col form-group">
+						<div class="label-form">Unit Kerja</div>
+						  <p:inputText value="#{qaFEBertanyaBean.user.divisionName}" style="background:#eeeeee !important;"  autocomplete="off" styleClass="form-control" disabled="true" />
+					</div>
+				</div>
+							
+				<div class="form-row">
+					<div class="col form-group">
+						<div class="label-form">Kategori</div>
+							<p:selectOneMenu id="searchStatus" widgetVar="selectStatus"  styleClass="form-control"
+								value="#{qaFEBertanyaBean.categoryType}">
+								<f:selectItem itemLabel="Pilih" itemValue="" />
+								<f:selectItems value="#{qaFEBertanyaBean.categoryTypeList}" />
+							</p:selectOneMenu>
+					</div>
+				</div>
+				
+				<div class="form-row" style="margin-bottom: -10px;">
+					<div class="col form-group">
+						<div class="label-form">Judul</div>
+						<div class="value-form">
+							<p:inputText value="#{qaFEBertanyaBean.title}" autocomplete="off" styleClass="form-control" />
+						</div>
+					</div>
+				</div>
+
+				<div class="form-row div-class-upload">
+					<div class="col">
+						<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+						<label class="label-form"><h:outputText
+								value="#{msg.formDBComplianceAttachment}" /> <br /> <h:outputText
+								style="color: #dd4b39"
+								value="#{qaFEBertanyaBean.textWarningUpload}" /> </label>
+						<p:fileUpload
+							fileUploadListener="#{qaFEBertanyaBean.handleFileUpload}"
+							oncomplete="onCompleteUpload()"
+							value="qaFEBertanyaBean.uploadFiles" mode="advanced" auto="true"
+							dragDropSupport="false" multiple="true"
+							sizeLimit="#{qaFEBertanyaBean.standardAttachmentSize}"
+							update="messages" />
+						<p:dataList value="#{qaFEBertanyaBean.uploadFiles}"
+							emptyMessage="" var="vo" id="attachment" rowIndexVar="index">
+							<table class="ui-panelgrid">
+								<tr>
+									<td style="width: 80%"><p:commandLink
+											style="color:#F3750B;" title="#{vo.fileSizeKB} KB"
+											ajax="false" immediate="true"
+											actionListener="#{qaFEBertanyaBean.downloadFile(vo.fileId,vo.fileName,null)}"
+											target="_blank">#{vo.fileName} </p:commandLink></td>
+									<td><span> | </span> <p:commandLink immediate="true" style="color:#F3750B;"
+											actionListener="#{qaFEBertanyaBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}"
+											update="attachment">#{msg.buttonDelete}</p:commandLink></td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+				</div>
+
+				<div class="form-row div-class-pertanyaan">
+					<div class="col">
+						<div class="label-form">Pertanyaan</div>
+						<div class="value-form">
+							<p:textEditor id="logEditor" widgetVar="logEditor" styleClass="question" height="150" value="#{qaFEBertanyaBean.question}"  style="margin-bottom:10px" />
+							
+						</div>
+					</div>
+				</div>
+				
+				<h:panelGroup id="dataList">
+				<div class="table-responsive" style="#{(qaFEBertanyaBean.listData == null || qaFEBertanyaBean.listData.size() ==  0)? 'display:none' : ''}">
+					<table class="table table-hover table-bordered wo-table" style="min-width: 500px;">
+						<thead>
+							<tr>
+								
+								<th>Pertanyaan</th>
+								<th>Jawaban</th>
+								<th>No Tiket</th>
+								
+								
+							</tr>
+						</thead>
+						<tbody>
+							<ui:repeat value="#{qaFEBertanyaBean.listData}" var="vo" varStatus="status">
+								<tr>
+									
+									<td style="width:40%">
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'QA'}">
+											<span class=""><h:outputText escape="false" value="#{vo.question}"/></span>
+									</p:link>
+									<p:link 
+											outcome="/pages/faqFE/faqFE.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'FAQ'}">
+											<span class=""><h:outputText escape="false" value="#{vo.question}"/></span>
+									</p:link>
+									</td>
+									<td style="width:40%">
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'QA'}">
+											<span class=""><h:outputText escape="false" value="#{vo.answer}"/></span>
+									</p:link>
+									<p:link 
+											outcome="/pages/faqFE/faqFE.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'FAQ'}">
+											<span class=""><h:outputText escape="false" value="#{vo.answer}"/></span>
+									</p:link>
+									</td>
+									<td style="width:20%">
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'QA'}">
+											<span class="">#{vo.ticketNo}</span>
+									</p:link>
+									<p:link 
+											outcome="/pages/faqFE/faqFE.faces?token=#{qaFEBean.toEncrypt(vo.qaId)}"
+											rendered="#{vo.dataType == 'FAQ'}">
+											<span class="">#{vo.ticketNo}</span>
+									</p:link>
+									</td>
+									
+									
+									
+								</tr>
+								
+							</ui:repeat>
+							<tr style="#{(qaFEBertanyaBean.listData.size() ==  0)? '' : 'display:none'}">
+								<td colspan="2">#{msg.textNodata}</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				<h:outputText id="textHidden" styleClass="textHidden" value="#{qaFEBertanyaBean.question}" escape="false" style="display:none;"/>
+				
+			</h:panelGroup>
+				
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{qaFEBertanyaBean.cancel}"
+							name="cancel" immediate="true"/>
+						<p:remoteCommand name="questionOnkeydown" action="#{qaFEBertanyaBean.search()}"  update="dataList textHidden" ></p:remoteCommand>
+					
+					     <p:remoteCommand name="save" action="#{qaFEBertanyaBean.save}"  update="form:messages dialogSuccess"></p:remoteCommand>
+						 <p:commandButton value="Simpan"
+							styleClass="btn btn-mb-secondary" onclick="save()" />
+						<button type="button" class="btn btn-outline-secondary" onclick="cancel()">Batal</button>
+					</div>
+				</div>
+			<script>
+			
+		    PF('logEditor').editor.on('text-change',function(){
+					questionOnkeydown([{name: 'QUESTION', value:$('.textHidden').text()}]);
+			});
+		
+		</script>
+			</h:form>
+		</div>
+		<p:dialog id="dialogSuccess" widgetVar="dlg1" modal="true" position="center" styleClass="wo-dialog"
+			width="400" height="130">
+			<h:panelGrid columns="1" >
+		    <h:outputText value="Data Berhasil disimpan dengan nomor tiket : #{qaFEBertanyaBean.qa.ticketNo}" />
+		    <p:commandButton value="OK" onclick="cancel()" style="text-align:center"></p:commandButton>
+		    </h:panelGrid>
+		</p:dialog>   
+		
+	</ui:define>
+</ui:composition>

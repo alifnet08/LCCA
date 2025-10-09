@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<composite:interface>
+		<composite:attribute name="bean" required="true"/>
+		<composite:attribute name="header" default="Dialog Box" displayName="Header of the dialog box. Default is 'Dialog Box'" />
+		<composite:attribute name="widgetVar" default="dialog" displayName="Javascript id of this dialog box, default is dialog" />
+		<composite:attribute name="modal" default="true" displayName="To lock or unlock the parent window. Default lock" />
+		<composite:attribute name="width" default="500" displayName="Width of dialog box, default 500" />
+		<composite:attribute name="height" default="500" displayName="Height of dialog box, default 500" />
+		<composite:attribute name="position" default="center" displayName="Position of the dialog box. Default is center" />
+		<composite:attribute name="parameters" displayName="Parameters to be passed to the query" />
+		<composite:attribute name="update" required="true" displayName="Component to be updated after processed" />
+		<composite:attribute name="query" type="java.lang.String" required="true" displayName="Query of the dialog box" />
+		<composite:attribute name="componentToUpdate" type="java.lang.String" displayName="Java attribute identifier to be updated. Used when several attribute of Java's instance to be updated on a single page. Used inside the predefined method 'select'" />
+		<composite:attribute name="columns" type="java.lang.String" required="true" displayName="Columns to be displayed" />
+		<composite:attribute name="selectListener" method-signature="void select(javax.faces.event.ActionEvent)" required="true" displayName="The action listener (method) to be run after the selection of row(s)." />
+		<composite:attribute name="addButtonMsg" displayName="Display message for additional button" />
+		<composite:attribute name="addUpdate" displayName="Component to be updated after processed for additional button" />
+		<composite:attribute name="additionListener" method-signature="void additionSelect(javax.faces.event.ActionEvent)" displayName="The action listener (method) to be run for additional button." />
+		<composite:attribute name="addBtnImmediate" default="true" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<h:form id="tableOfValuesForm" onsubmit="return false;">
+		<p:dialog header="#{cc.attrs.header}" widgetVar="#{cc.attrs.widgetVar}" modal="#{cc.attrs.modal}" 
+				  position="#{cc.attrs.position}" width="#{cc.attrs.width}" height="#{cc.attrs.height}">
+			<table>
+				<tr>
+					<td>
+						<h:inputHidden id="hdnQuery" value="#{cc.attrs.query}" binding="#{cc.attrs.bean.hdnQuery}" />
+						<h:inputHidden id="componentToUpdate" value="#{cc.attrs.componentToUpdate}" binding="#{cc.attrs.bean.componentToUpdate}" />
+						<h:inputHidden id="hdnColumns" value="#{cc.attrs.columns}" binding="#{cc.attrs.bean.hdnColumns}" />
+						<h:inputHidden id="hdnParameters" value="#{cc.attrs.parameters}" binding="#{cc.attrs.bean.hdnParameters}" />
+						<h:inputText id="txtKeyword" value="#{cc.attrs.bean.keyword}" maxlength="50" size="50" />
+						<span style="padding-left: 10px" />
+						<p:commandButton id="btnFind" actionListener="#{cc.attrs.bean.doFind}" update="tblValues btnSelect" value="#{msg.buttonSearch}" 
+							process="txtKeyword @this" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:dataTable id="tblValues" value="#{cc.attrs.bean.listValues}" var="row" paginator="true" 
+							rows="#{cc.attrs.bean.paging}" selection="#{cc.attrs.bean.selectedTableOfValue}"
+							rowKey="#{row.column_id}" tableStyle="table-layout: auto;">
+							<p:column selectionMode="single" />
+							<p:column headerText="#{cc.attrs.bean.column2}" rendered="#{cc.attrs.bean.showCol2}">
+								<h:outputText value="#{row.column_02}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column3}" rendered="#{cc.attrs.bean.showCol3}">
+								<h:outputText value="#{row.column_03}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column4}" rendered="#{cc.attrs.bean.showCol4}">
+								<h:outputText value="#{row.column_04}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column5}" rendered="#{cc.attrs.bean.showCol5}">
+								<h:outputText value="#{row.column_05}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column6}" rendered="#{cc.attrs.bean.showCol6}">
+								<h:outputText value="#{row.column_06}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column7}" rendered="#{cc.attrs.bean.showCol7}">
+								<h:outputText value="#{row.column_07}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column8}" rendered="#{cc.attrs.bean.showCol8}">
+								<h:outputText value="#{row.column_08}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column9}" rendered="#{cc.attrs.bean.showCol9}">
+								<h:outputText value="#{row.column_09}" />
+							</p:column>
+							<p:column headerText="#{cc.attrs.bean.column10}" rendered="#{cc.attrs.bean.showCol10}">
+								<h:outputText value="#{row.column_10}" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td align="right">
+					<p:outputPanel rendered="#{cc.attrs.addButtonMsg ne null and  cc.attrs.addButtonMsg ne ''}">
+						<p:commandButton id="btnCustom" value="#{cc.attrs.addButtonMsg}"
+								  	actionListener="#{cc.attrs.additionListener}" update="tblValues #{cc.attrs.addUpdate}" 
+								  	onsuccess="#{cc.attrs.widgetVar}.hide()" process="tblValues @this" immediate="#{cc.attrs.addBtnImmediate}" />
+						<p:spacer width="8px"></p:spacer>
+					</p:outputPanel>
+								  <p:commandButton id="btnSelect" value="#{msg.buttonSubmit}"
+								  	actionListener="#{cc.attrs.selectListener}" update="tblValues #{cc.attrs.update}" 
+								  	onsuccess="PF('#{cc.attrs.widgetVar}').hide()" process="tblValues @this"
+								  	disabled="#{!cc.attrs.bean.showSubmitButton}" />
+				</td>
+			</tr>
+		</table>
+		</p:dialog>
+		</h:form>
+	</composite:implementation>
+</html>

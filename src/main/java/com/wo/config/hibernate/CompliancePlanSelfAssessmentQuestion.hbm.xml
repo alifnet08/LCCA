@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.cpsa.model">
+	<class name="CompliancePlanSelfAssessmentQuestion" table="wo_mst_cpsa_question">
+		<id name="cpsaQuestionId" column="CPSA_QUESTION_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_cpsa_question_seq</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="cpsa" column="CPSA_ID" fetch="join" 
+				class="com.wo.module.cpsa.model.CompliancePlanSelfAssessment" />
+		
+		<property name="cpsaQuestionNo" column="CPSA_QUESTION_NO" type="string" />
+		<property name="cpsaQuestion" column="CPSA_QUESTION" type="string" />
+		<property name="cpsaParentQuestion" column="CPSA_PARENT_QUESTION" type="long" />
+										
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+	</class>
+</hibernate-mapping>

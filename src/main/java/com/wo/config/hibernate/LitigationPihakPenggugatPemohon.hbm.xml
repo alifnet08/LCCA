@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.litigation.model">
+	<class name="LitigationPihakPenggugatPemohon" table="WO_MST_LITI_PIHAK_P">
+		<id name="litiPihakPenggugatPemohonId" column="LITI_PIHAK_P_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_MST_LITI_PHK_P_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="litigation" column="LITIGATION_ID" fetch="join" 
+				class="com.wo.module.litigation.model.LitigationNew" />
+		<property name="penggugatPemohon" column="PENGGUGAT_PEMOHON" type="string" />
+		
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

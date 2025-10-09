@@ -1,0 +1,24 @@
+<hibernate-mapping package="com.wo.module.runningNumber.model">
+	<class name="RunningNumber" table="WO_MST_RUNNING_NUMBER">
+		<id name="runningNumberId" column="RUNNING_NUMBER_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_running_number_seq</param>
+			</generator>
+		</id>
+
+		<property name="runningNumberNo" column="RUNNING_NUMBER_NO" type="string" />
+		<property name="runningNumberReset" column="RUNNING_NUMBER_RESET" type="string" />		
+		<property name="runningNumberType" column="RUNNING_NUMBER_TYPE" type="string" />
+		
+		<property name="runningNumberSeq" column="RUNNING_NUMBER_SEQ" type="integer" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

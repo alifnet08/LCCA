@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.log.model">
+	<class name="LogLogin" table="wo_log_login">
+		<id name="loginId" type="long">
+			<column name="LOG_LOGIN_ID" />
+			<generator class="sequence">
+				 <param name="sequence_name">WO_LOG_LOGIN_SEQ</param>
+			</generator>
+		</id>
+
+		<property name="username" column="USERNAME" type="string" />
+		<property name="sourceIp" column="SOURCE_IP" type="string" />
+		<property name="accessTime" column="ACCESS_TIME" type="timestamp" />
+		<property name="retryAttempt" column="RETRY_ATTEMPT" type="int" />
+		<many-to-one name="user" column="USER_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="lastLogin" column="LAST_LOGIN" type="timestamp" />
+		<property name="lastLogout" column="LAST_LOGOUT" type="timestamp" />
+	</class>
+</hibernate-mapping>

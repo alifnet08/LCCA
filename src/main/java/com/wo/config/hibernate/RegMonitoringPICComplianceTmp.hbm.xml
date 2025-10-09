@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+	package="com.wo.module.regulationMonitoring.model">
+	<class name="RegMonitoringPICComplianceTmp"
+		table="WO_TMP_REG_MONITOR_PIC_CMPLC">
+		<id name="regMonitoringPicComplianceTmpId"
+			column="REG_MONITOR_PIC_CMPLC_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_REG_MONITOR_PIC_CMP_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="regMonitoringTmp"
+			column="REG_MONITORING_ID"
+			class="com.wo.module.regulationMonitoring.model.RegMonitoringTmp"
+			fetch="join" />
+
+		<many-to-one name="user" column="user_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

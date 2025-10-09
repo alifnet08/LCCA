@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			.ui-chips-container {
+		     width:100%!important;
+		     background-color: rgba(245, 131, 34, 0.25);
+		     }
+			
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formDiscussionTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-discussion">
+					<h:outputText value="#{msg.formDiscussionTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="nameThread"><p:outputLabel
+									value="#{msg.formDiscussionNameThread}" for="nameThread" /></label>								
+							<p:inputText id="nameThread"  required="true" requiredMessage="#{msg.formDiscussionNameThread} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{discussionEditBean.discussion.threadNameIn}"
+								></p:inputText>
+							<p:message for="nameThread"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="threadType"><p:outputLabel
+									value="#{msg.formDiscussionThreadType}" for="threadType" /></label>								
+							<h:selectOneMenu id="threadType" required="true" requiredMessage="#{msg.formDiscussionThreadType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{discussionEditBean.discussion.threadType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{discussionEditBean.threadTypeList}"/>
+							</h:selectOneMenu>
+							<p:message for="threadType"/>
+						</div>
+					</div>
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="contentIn"><p:outputLabel
+									value="#{msg.formDiscussionContent}" for="contentIn" />
+								&#160;&#160; </label>
+							<pe:ckEditor widgetVar="editorContentIn" width="100%"
+								id="contentIn" value="#{discussionEditBean.discussion.threadContentIn}"
+								height="300" style="margin-bottom:10px" />
+							<p:message for="contentIn" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="status"><p:outputLabel
+									value="#{msg.formDiscussionStatus}" for="status" />
+								&#160;&#160; </label>
+							<h:selectOneRadio id="status"
+								value="#{discussionEditBean.discussion.threadCloseStatus}"
+								>
+								<f:selectItems
+									value="#{discussionEditBean.statusList}"
+									 />
+							</h:selectOneRadio>
+							<p:message for="status" />
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+			<p:dataView var="vo" value="#{discussionEditBean.discussion.discussionPosts}" rows="12" paginator="true" rowsPerPageTemplate="6,12,16" rendered="#{discussionEditBean.discussion.discussionPosts != null}"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                gridIcon="pi pi-th-large" listIcon="pi pi-bars">
+ 
+		        <p:dataViewGridItem>
+		            <p:panel header="#{vo.discussionPostId}" style="text-align:center">
+		                <h:panelGrid columns="1" style="width:100%">
+		 
+		                    <h:outputText value="#{vo.postedComment}" />
+		 					<p:rating value="#{vo.rating}" readonly="true" />
+		                   
+		                </h:panelGrid>
+		            </p:panel>
+		        </p:dataViewGridItem>
+		        
+		      </p:dataView>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{discussionEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{discussionEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

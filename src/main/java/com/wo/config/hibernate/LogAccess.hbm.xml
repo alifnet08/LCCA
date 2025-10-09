@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.logAccess.model">
+	<class name="LogAccess" table="wo_log_access">
+		<id name="logAccessId" column="LOG_ACCESS_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_log_access_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="user" 
+			column="USER_ID" class="com.wo.module.user.model.User"
+			fetch="join" />
+			
+		<property name="sourceIp" column="SOURCE_IP" type="string" />
+		<property name="accessTime" column="ACCESS_TIME" type="timestamp" />
+		<property name="accessAction" column="ACCESS_ACTION" type="string" />
+		<property name="accessId" column="ACCESS_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

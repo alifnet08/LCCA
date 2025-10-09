@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.internalRegulationPenerbitan.model">
+	<class name="InternalRegulationPenerbitanPicTpgEmail" table="wo_trc_irg_pic_tpg_email">
+		<id name="irgPicTpgEmailId" column="irg_pic_tpg_email_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_irg_pic_tpg_email_seq</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="internalRegulationPenerbitanPicTpg" column="irg_pic_id" fetch="join" 
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpg" />
+		
+		<property name="emailDate" column="email_date" type="timestamp" />
+		<property name="slaType" column="sla_type" type="string" />
+		<property name="sla" column="sla" type="int" />
+		<property name="emailStatus" column="email_status" type="string" />
+		<property name="emailSubject" column="email_subject" type="string" />
+		<property name="emailContent" column="email_content" type="string" />
+		<property name="resendCount" column="resend_count" type="int" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE" type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />		
+				
+	</class>
+</hibernate-mapping>

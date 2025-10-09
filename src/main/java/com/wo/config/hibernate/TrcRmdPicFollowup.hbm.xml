@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcRmd.model">
+	<class name="TrcRmdPicFollowup" table="wo_trc_rmd_pic_followup">
+		<id name="rmdPicFollowupId" column="rmd_pic_followup_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_rmd_pic_followup_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcRmd" column="RMD_ID"
+			class="com.wo.module.trcRmd.model.TrcRmd" fetch="join" />
+
+		<property name="targetDate" column="TARGET_DATE" type="date" />
+
+		<many-to-one name="followupStatus" property-ref="parameterDtlCode"
+			column="followup_status" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<!-- <property name="followupStatus" column="followup_status" type="string" 
+			/> -->
+		<many-to-one name="followupBy" column="followup_by_id"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<property name="confirmationDate" column="confirmation_date"
+			type="date" />
+		<property name="followupDate" column="followup_date" type="date" />
+		<property name="followupNote" column="followup_note" type="string" />
+
+		<bag name="picFollowupAttachmentDetails" inverse="true"
+			cascade="save-update, delete-orphan" order-by="RMD_PIC_FOLLOWUP_ATTACHMENT_ID asc">
+			<key column="RMD_PIC_FOLLOWUP_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcRmd.model.TrcRmdPicFollowupAttachment" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

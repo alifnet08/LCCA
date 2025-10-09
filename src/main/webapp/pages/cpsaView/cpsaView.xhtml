@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.div-css-margin-bottom {
+	margin-bottom: -20px !important;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formCompliancePlanSelfAssesmentViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"> <h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentType}" />
+								</label>
+								<h:selectOneMenu id="searchCpsaType"
+									styleClass="form-control s2"
+									value="#{cpsaViewBean.searchCpsaType}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{cpsaViewBean.cpsaTypeList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"> <h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentLetterNo}" />
+								</label>
+								<p:inputText id="searchCpsaNoSurat" styleClass="form-control"
+									autocomplete="off" value="#{cpsaViewBean.searchLetterNo}" />
+							</div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"> <h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentLetterDate}" />
+								</label>
+								<p:calendar id="searchLetterDate" autocomplete="off"
+									placeholder="#{msg.formCompliancePlanSelfAssessmentLetterDate}"
+									maxlength="11" styleClass="form-control-datepicker-wrap"
+									pattern="#{cpsaViewBean.inputDateFormat}"
+									locale="#{cpsaViewBean.inputDateLocale}"
+									value="#{cpsaViewBean.searchLetterDate}" />
+							</div>
+						</div>
+
+						<div class="col-lg-12 div-css-margin-bottom">
+							<div class="form-group">
+								<label class="tl-label" tl=""> <p:outputLabel
+										value="#{msg.formCompliancePlanSelfAssessmentPeriod}" />
+								</label>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentStartDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="startDate" placeholder="#{msg.from}" maxlength="11"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+										value="#{cpsaViewBean.searchPeriodStartFrom}">
+									</p:calendar>
+									<span class="input-group-addon plain">-</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="endDate" placeholder="#{msg.to}" maxlength="11"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+										value="#{cpsaViewBean.searchPeriodStartTo}">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentEndDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="startDate2" placeholder="#{msg.from}" maxlength="11"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+										value="#{cpsaViewBean.searchPeriodEndFrom}">
+									</p:calendar>
+									<span class="input-group-addon plain">-</span>
+									<p:calendar styleClass="form-control-datepicker-wrap"
+										id="endDate2" placeholder="#{msg.to}" maxlength="11"
+										autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+										value="#{cpsaViewBean.searchPeriodEndTo}">
+									</p:calendar>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentWorkUnit}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{cpsaViewBean.searchWorkingUnit}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{cpsaViewBean.workingUnits}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label><h:outputText value="Branch/Sub Branch" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{cpsaViewBean.searchBranch}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{cpsaViewBean.branchs}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"> <h:outputText value="PIC 1" />
+								</label>
+								<p:inputText id="searchPIC1" styleClass="form-control"
+									autocomplete="off" value="#{cpsaViewBean.searchPic1}" />
+							</div>
+						</div>
+
+
+					</h:panelGroup>
+
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="dataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{cpsaViewBean.search}">
+									</p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="dataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{cpsaViewBean.reset}">
+									</p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="dataTable" paginator="true" var="vo"
+								value="#{cpsaViewBean.cpsaPicTableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{cpsaViewBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:columnGroup type="header">
+									<p:row>
+
+										<p:column rowspan="2" width="100"
+											headerText="#{msg.formAction}" style="text-align:center;" />
+										<p:column rowspan="2" width="80" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssessmentType}" />
+										<p:column colspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssessmentPeriod}" />
+										<p:column rowspan="2" width="100" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssessmentLetterNo}" />
+										<p:column rowspan="2" width="80" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssessmentLetterDate}" />
+										<p:column rowspan="2" width="130" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssessmentLetterAbout}" />
+										<p:column rowspan="2" width="180" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewWorkingUnit}" />
+										<p:column rowspan="2" width="130" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewBranch}" />
+										<p:column rowspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewPic1}" />
+										<p:column rowspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewPic2}" />
+										<p:column rowspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewPic3}" />
+										<p:column rowspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewPicAdmin}" />
+										<p:column rowspan="2" width="150" style="text-align:center;"
+											headerText="#{msg.formCompliancePlanSelfAssesmentViewStatus}" />
+									</p:row>
+									<p:row>
+										<p:column
+											headerText="#{msg.formCompliancePlanSelfAssessmentStartDate}" />
+										<p:column
+											headerText="#{msg.formCompliancePlanSelfAssessmentEndDate}" />
+									</p:row>
+								</p:columnGroup>
+
+								<p:column style="text-align:center;">
+									<p:commandLink id="edit" value="#{msg.buttonView}"
+										action="#{cpsaViewBean.getNavigateDetail()}" ajax="false"
+										styleClass="tl-label">
+										<f:param name="editId"
+											value="#{vo.cpsaId}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column groupRow="true" width="100">
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="text-align:center;display:none;" />
+									<h:outputLabel value="#{vo.cpsa.cpsaType}" />
+								</p:column>
+
+								<p:column groupRow="true" style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsa.periodeFromStr}" 
+										title="#{vo.cpsa.periodeFromStr}"  />
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="display:none;" />
+								</p:column>
+
+								<p:column groupRow="true" style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsa.periodeToStr}" 
+										title="#{vo.cpsa.periodeToStr}" />
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="display:none;" />
+								</p:column>
+
+								<p:column groupRow="true" style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsa.letterNo}" 
+										title="#{vo.cpsa.letterNo}"/>
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="display:none;" />
+								</p:column>
+								<p:column groupRow="true" style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsa.letterDateStr}"
+										title="#{vo.cpsa.letterDate}" />
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="vertical-align: middle;display:none;" />
+								</p:column>
+								<p:column groupRow="true" style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsa.letterAbout}"
+										title="#{vo.cpsa.letterAbout}"  />
+									<h:outputLabel value="#{vo.cpsa.compliancePlanSelfAssessmentId}"
+										style="display:none;" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.divisionName}"
+											title="#{vo.divisionName}" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.branchName}"
+											title="#{vo.branchName}"/>
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.userName1}"
+											title="#{vo.userName1}" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.userName2}"
+											title="#{vo.userName2}"/>
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.userName3}"
+											title="#{vo.userName3}"/>
+								</p:column>
+								<p:column  style="text-align:center;">
+									<h:outputLabel value="#{vo.picAdmin}"
+											title="#{vo.picAdmin}"/>
+								</p:column>
+								<p:column  style="text-align:center;">
+									<h:outputLabel value="#{vo.cpsaStatusName}"
+											title="#{vo.cpsaStatusName}"/>
+								</p:column>
+								
+
+							</p:dataTable>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<wo:selector id="BranchOption" height="450" width="550"
+			title="LOV Branch" widgetVar="branchDialog"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorBranch}"
+			bean="#{compliancePlanSelfAssessmentEditBean}" />
+
+	</ui:define>
+</ui:composition>

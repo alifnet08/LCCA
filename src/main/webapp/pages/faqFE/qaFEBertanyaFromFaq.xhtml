@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		
+		<style>
+			.ui-inputfield{
+				width: 100%;
+				-webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.ui-selectonemenu{
+				width: 100%;
+			}
+		</style>
+		
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+				<div class=" navbar-collapse " id="collapsibleNavbar">
+					 <ul class="navbar-nav">
+					 	<li class="nav-item">
+					 		<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+					 		<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+					 		<a class="nav-link disabled" href="#">Konsultasi</a>
+					 	</li>
+					 </ul>
+				</div>
+			</nav>
+		</div>
+		
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">Tanya Kami</div>
+			<h:form class="internal-form" style="margin-top:20px;" id="form">
+				<p:growl id="messages" severity="error"/>
+						
+			
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Kategori</div>
+						<div class="value-form">
+							<p:selectOneMenu id="searchStatus" widgetVar="selectStatus"  styleClass="form-control"
+								value="#{qaFEBertanyaBean.categoryType}">
+								<f:selectItem itemLabel="Pilih" itemValue="" />
+								<f:selectItems value="#{qaFEBertanyaBean.categoryTypeList}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Judul</div>
+						<div class="value-form">
+							<p:inputText value="#{qaFEBertanyaBean.title}" autocomplete="off" styleClass="form-control" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-row">
+					<div class="col">
+						<div class="label-form">Pertanyaan</div>
+						<div class="value-form">
+							<p:inputTextarea id="question" value="#{qaFEBertanyaBean.question}" onkeypress="questionOnkeydown([{name: 'QUESTION', value:$('.question').val()}]);" autoResize="false" styleClass="form-control question" />
+						</div>
+					</div>
+				</div>
+				
+				<h:panelGroup id="dataList">
+				<div class="table-responsive" style="#{(qaFEBertanyaBean.listData == null || qaFEBertanyaBean.listData.size() ==  0)? 'display:none' : ''}">
+					<table class="table table-hover table-bordered wo-table" style="min-width: 500px;">
+						<thead>
+							<tr>
+								
+								<th>Judul</th>
+								<th>Pertanyaan</th>
+								
+								
+							</tr>
+						</thead>
+						<tbody>
+							<ui:repeat value="#{qaFEBertanyaBean.listData}" var="vo">
+								<tr>
+									<td>
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBertanyaBean.toEncrypt(vo.qaId)}" 
+											rendered="#{vo.dataType == 'QA'}">
+											<span class="td-header text-mb-secondary">#{vo.qTitle}</span>
+										</p:link> <p:link 
+											outcome="/pages/faq/faqEdit.faces?token=#{qaFEBertanyaBean.toEncrypt(vo.qaId)}" 
+											rendered="#{vo.dataType == 'FAQ'}">
+											<span class="td-header text-mb-secondary">#{vo.qTitle}</span>
+										</p:link>
+									</td>
+									<td>
+									<p:link 
+											outcome="/pages/qaFE/qaFEEdit.faces?token=#{qaFEBertanyaBean.toEncrypt(vo.qaId)}" 
+											rendered="#{vo.dataType == 'QA'}">
+											<span
+										class="td-header text-mb-secondary">#{vo.question}</span>
+										</p:link> <p:link 
+											outcome="/pages/faq/faqEdit.faces?token=#{qaFEBertanyaBean.toEncrypt(vo.qaId)}" 
+											rendered="#{vo.dataType == 'FAQ'}">
+											<span
+										class="td-header text-mb-secondary">#{vo.question}</span>
+										</p:link>
+									
+									</td>
+									
+									
+								</tr>
+							</ui:repeat>
+							<tr style="#{(qaFEBertanyaBean.listData.size() ==  0)? '' : 'display:none'}">
+								<td colspan="2">#{msg.textNodata}</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				
+				
+			</h:panelGroup>
+				
+				<div class="form-row">
+					<div class="col">
+						<p:remoteCommand action="#{qaFEBertanyaBean.cancel}"
+							name="cancel" immediate="true"/>
+						 <p:remoteCommand name="questionOnkeydown" action="#{qaFEBertanyaBean.search()}" update="dataList" ></p:remoteCommand>
+					     <p:remoteCommand name="save" action="#{qaFEBertanyaBean.save}"  update="dialogSuccess" oncomplete="PF('dlg1').show();"></p:remoteCommand>
+						 <p:commandButton value="Simpan" 
+							styleClass="btn btn-mb-secondary" onclick="save()"/>
+						<button type="button" class="btn btn-outline-secondary" onclick="cancel()">Batal</button>
+					</div>
+				</div>
+
+			</h:form>
+		</div>
+		<p:dialog id="dialogSuccess" widgetVar="dlg1" modal="true" position="center" styleClass="wo-dialog">
+			<h:panelGrid columns="1" >
+		    <h:outputText value="Data Berhasil disimpan dengan nomor tiket : #{qaFEBertanyaBean.qa.ticketNo}" />
+		    <p:commandButton value="OK" onclick="cancel()" style="text-align:center"></p:commandButton>
+		    </h:panelGrid>
+		</p:dialog>   
+	</ui:define>
+</ui:composition>

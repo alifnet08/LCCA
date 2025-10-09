@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpAudit.model">
+	<class name="TmpAuditPicFollowupReschedule" table="wo_tmp_audit_pc_fp_reschedule">
+		<id name="auditPicFollowupRescheduleId" column="audit_pc_fp_reschedule_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_ADT_PC_FP_RESCHEDULE_SQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpAuditPicFollowup" column="audit_pic_followup_id"
+			class="com.wo.module.tmpAudit.model.TmpAuditPicFollowup"
+			fetch="join" />
+
+		<property name="oldTargetDate" column="OLD_TARGET_DATE" type="date" />
+		<property name="newTargetDate" column="NEW_TARGET_DATE" type="date" />
+		<property name="rescheduleReason" column="reschedule_reason" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

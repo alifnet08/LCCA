@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-datatable .ui-datatable-data td {
+				vertical-align: top
+			}
+			
+			.ui-state-default.form-control {
+				background: #F7F8F8;
+		    }
+		    
+		    .txt-no-referensi {
+		      padding: 9px 12px;
+		    }
+		</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formInternalRegulationPenerbitanReportTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="deletedMessage" globalOnly="true" />
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<h:panelGroup id="panelNoReferensi">
+								<div class="form-group">
+									<label class="tl-label">
+										<h:outputText value="#{msg.formInternalRegulationPenerbitanReportReferenceNo}" />
+									</label>
+									<p:inputText styleClass="form-control txt-no-referensi" autocomplete="off"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.referenceNo}"></p:inputText>
+								</div>
+							</h:panelGroup>
+						</div>
+						
+						<div class="col-lg-4">
+							<h:panelGroup id="panelDirektoratTpg">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formInternalRegulationPenerbitanReportDirTpg}" /></label>
+									<h:selectOneMenu styleClass="form-control s2"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.directorateTpg}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{internalRegulationPenerbitanReportBean.direktoratTpgs}" />									
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>
+						
+						<div class="col-lg-4">
+							<h:panelGroup id="panelUnitKerjaTpg">
+								<div class="form-group">
+									<label class="tl-label size-font"><h:outputText
+											value="#{msg.formInternalRegulationPenerbitanReportWorkUnitTpg}" /></label>
+									<h:selectOneMenu id="docType" styleClass="form-control s2"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.workUnitTpgCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{internalRegulationPenerbitanReportBean.unitKerjaTpgs}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						 </div>
+						 
+						 <div class="col-lg-4">
+							<h:panelGroup id="panelJudul">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formInternalRegulationPenerbitanReportRegulationTitle}" /></label>
+									<p:inputText styleClass="form-control txt-no-referensi" autocomplete="off"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.irgTitle}"/>									
+								</div>
+							</h:panelGroup>
+						</div>
+						
+						<div class="col-lg-4">
+							<h:panelGroup id="panelTypeRegulation">
+								<div class="form-group">
+									<label class="tl-label size-font"><h:outputText
+											value="#{msg.formInternalRegulationPenerbitanReportRegulationType}" /></label>
+									<h:selectOneMenu id="typeRegulation"
+										styleClass="form-control s2"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.regulationTypeCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{internalRegulationPenerbitanReportBean.typeRegulations}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>
+												
+						<div class="col-lg-4">
+							<h:panelGroup id="panelStatusRegulation">
+								<div class="form-group">
+									<label class="tl-label size-font"><h:outputText
+											value="#{msg.formInternalRegulationPenerbitanReportRegulationStatus}" /></label>
+									<h:selectOneMenu id="statusRegulation"
+										styleClass="form-control s2"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.regulationStatusCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{internalRegulationPenerbitanReportBean.statusRegulations}" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</div>						
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationPenerbitanReportRegulationNo}" /></label>
+								<p:inputText styleClass="form-control txt-no-referensi" autocomplete="off"
+										value="#{internalRegulationPenerbitanReportBean.irgReport.regulationNo}" />								
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationPenerbitanReportPICIrg}" /></label>
+								<h:selectOneMenu id="picIrg" styleClass="form-control s2"
+									value="#{internalRegulationPenerbitanReportBean.irgReport.picIrg}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationPenerbitanReportBean.picIrgs}" />
+								</h:selectOneMenu>
+							</div>
+						</div>					
+					</h:panelGroup>
+					<div class="col-lg-6">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="irgTables"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{internalRegulationPenerbitanReportBean.search}"/>
+								<p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="irgTables panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{internalRegulationPenerbitanReportBean.resetData}"/>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-6">
+					   <div class="filter-tools" style="text-align: right;">
+							<ul class="no-margin no-padding pull-right">
+								<p:remoteCommand name="onclickDownload" update="@form"></p:remoteCommand>
+								<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload(); PF('statusDialog').hide();">
+									<i class="fa fa-table"></i> &nbsp;
+	        							<h:outputText
+										value="#{msg.formComplianceReviewExportExcel}" />	
+									<p:fileDownload value="#{internalRegulationPenerbitanReportBean.downloadExcel}" />		
+								</h:commandLink></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+							<div class="div-wrapper"></div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="irgTables" paginator="true" var="vo"
+								value="#{internalRegulationPenerbitanReportBean.tableModel}"
+								dynamic="true" lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{internalRegulationPenerbitanReportBean.paging}"
+								rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+								
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportReferenceNo}" width="150">
+									<h:outputLabel value="#{vo.referenceNo}" title="" />
+								</p:column>								
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportRegulationTitle}" width="150">
+									<h:outputLabel value="#{vo.irgTitle}" title="" />
+								</p:column>								
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportRegulationNo}" width="150">
+									<h:outputLabel value="#{vo.regulationNo}" title="" />
+								</p:column>
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportRegulationType}" width="150">
+									<h:outputLabel value="#{vo.regulationTypeName}" title="" />
+								</p:column>
+								<!-- <p:column headerText="msg.formInternalRegulationPenerbitanReportPICTpg}" width="150">
+									<h:outputLabel value="vo.picTpg}" title="" />
+								</p:column> -->
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportDirTpg}" width="150">
+									<h:outputLabel value="#{vo.directorateTpg}" title="" />
+								</p:column>
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportWorkUnitTpg}" width="150">
+									<h:outputLabel value="#{vo.workUnitTpgName}" title="" />
+								</p:column>			
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportPICIrg}" width="150">
+									<h:outputLabel value="#{vo.picIrg}" title="" />
+								</p:column>
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanReportRegulationStatus}" width="150">
+									<h:outputLabel value="#{vo.regulationStatusName}" title="" />
+								</p:column>
+								<p:column headerText="#{msg.formInternalRegulationPenerbitanProcessStatus}" width="150">
+									<h:outputLabel value="#{vo.processStatusName}" title="" />
+								</p:column>
+								
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

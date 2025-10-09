@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+	
+	<ui:define name="head">
+		<style>			
+			.div-css-margin-bottom {
+				margin-bottom: -20px !important;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formCompliancePlanSelfAssessmentTitle}" />
+	</ui:define>
+	
+	<ui:define name="buttonAdd">
+		<ul class="action list-inline">
+			<li>
+				<h:commandLink action="#{compliancePlanSelfAssessmentBean.getNavigateEdit()}"
+					type="submit" process="@this" ajax="false" styleClass="tl-label">
+					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+					<h:outputText value="#{msg.buttonAdd}" />
+				</h:commandLink>
+			</li>
+		</ul>
+	</ui:define>
+	
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentType}" />
+								</label>
+								<h:selectOneMenu id="searchCpsaType"
+									styleClass="form-control s2"
+									value="#{compliancePlanSelfAssessmentBean.searchCpsaType}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{compliancePlanSelfAssessmentBean.cpsaTypeList}"/>
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formCompliancePlanSelfAssessmentLetterNo}" />
+								</label>
+								<p:inputText id="searchCpsaNoSurat" styleClass="form-control"
+									autocomplete="off" value="#{compliancePlanSelfAssessmentBean.searchLetterNo}" />
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formCompliancePlanSelfAssessmentLetterDate}" />
+								</label>
+								<p:calendar id="searchLetterDate" autocomplete="off" placeholder="#{msg.formCompliancePlanSelfAssessmentLetterDate}"
+									maxlength="11" styleClass="form-control-datepicker-wrap"
+									pattern="#{compliancePlanSelfAssessmentBean.inputDateFormat}"
+									locale="#{compliancePlanSelfAssessmentBean.inputDateLocale}" 
+									value="#{compliancePlanSelfAssessmentBean.searchLetterDate}"/>
+							</div>
+						</div>
+						
+						<div class="col-lg-12 div-css-margin-bottom">
+							<div class="form-group">
+								<label class="tl-label" tl=""> 
+								   <p:outputLabel value="#{msg.formCompliancePlanSelfAssessmentPeriod}" />
+								</label>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label><h:outputText value="#{msg.formCompliancePlanSelfAssessmentStartDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap" id="startDate"
+											placeholder="#{msg.from}" maxlength="11" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en"  
+											value="#{compliancePlanSelfAssessmentBean.searchPeriodStartFrom}">
+								    </p:calendar>	
+								    <span class="input-group-addon plain">-</span> 
+									<p:calendar styleClass="form-control-datepicker-wrap" id="endDate"
+											placeholder="#{msg.to}" maxlength="11" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en" 
+											value="#{compliancePlanSelfAssessmentBean.searchPeriodStartTo}">
+									</p:calendar>			
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label><h:outputText value="#{msg.formCompliancePlanSelfAssessmentEndDate}" /></label>
+								<div class="input-group">
+									<p:calendar styleClass="form-control-datepicker-wrap" id="startDate2"
+											placeholder="#{msg.from}" maxlength="11" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en" 
+											value="#{compliancePlanSelfAssessmentBean.searchPeriodEndFrom}">
+								    </p:calendar>	
+								    <span class="input-group-addon plain">-</span> 
+									<p:calendar styleClass="form-control-datepicker-wrap" id="endDate2"
+											placeholder="#{msg.to}" maxlength="11" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en" 
+											value="#{compliancePlanSelfAssessmentBean.searchPeriodEndTo}">
+									</p:calendar>			
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formCompliancePlanSelfAssessmentBranchSubBranch}" />
+								</label>
+								<p:inputText styleClass="form-control" id="searchBranchSubBranch"
+									autocomplete="off" value="#{compliancePlanSelfAssessmentBean.searchBranchSubBranch}" />
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formCompliancePlanSelfAssessmentStatus}" />
+								</label>
+								<h:selectOneMenu id="searchStatus"
+									styleClass="form-control s2"
+									value="#{compliancePlanSelfAssessmentBean.searchStatus}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{compliancePlanSelfAssessmentBean.cpsaStatusList}"/>
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li>
+									<p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="dataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{compliancePlanSelfAssessmentBean.search}">
+									</p:commandButton>
+								</li>
+								<li>
+									<p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="dataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{compliancePlanSelfAssessmentBean.reset}">
+									</p:commandButton>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<!-- <div class="top-scroller">
+							<div class="div-wrapper"></div>
+						</div> -->
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="dataTable" paginator="true" var="vo"
+								value="#{compliancePlanSelfAssessmentBean.cpsaTableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{compliancePlanSelfAssessmentBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:columnGroup type="header">
+					                <p:row>
+					                    <p:column rowspan="2" width="100" headerText="#{msg.formAction}" 
+					                        style="text-align:center;"/>
+					                     <p:column rowspan="2" width="80" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentType}"/> 
+					                     <p:column rowspan="2" width="100" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentBranchSubBranch}"/> 
+					                     <p:column colspan="2" width="150" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentPeriod}"/>   	 
+					                     <p:column rowspan="2" width="250" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentLetterNo}"/>  
+					                     <p:column rowspan="2" width="80" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentLetterDate}"/>
+					                     <p:column rowspan="2" width="130" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentLetterAbout}"/>
+					                     <p:column rowspan="2" width="80" style="text-align:center;"
+					                     	headerText="#{msg.formCompliancePlanSelfAssessmentStatus}"/>
+					                     <p:column rowspan="2" width="100" style="text-align:center;"
+					                     	headerText="#{msg.textDownload}"/>
+					                </p:row>
+					                <p:row>
+					                    <p:column headerText="#{msg.formCompliancePlanSelfAssessmentStartDate}"/>
+					                    <p:column headerText="#{msg.formCompliancePlanSelfAssessmentEndDate}"/>
+					                </p:row>					                
+					            </p:columnGroup>	
+					            
+					            <p:column style="text-align:center;">
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{compliancePlanSelfAssessmentBean.getNavigateEdit()}"
+										ajax="false" styleClass="tl-label">
+										<f:param name="editId" value="#{vo.compliancePlanSelfAssessmentId}" />
+									</p:commandLink>
+									<h:outputLabel value="&#160;"/>
+									<h:outputLabel value="|" />
+									<h:outputLabel value="&#160;"/>
+									<p:commandLink id="delete"
+										value="#{msg.buttonDelete}" styleClass="tl-label"
+										update="form:deletedMessage dataTable"
+										action="#{compliancePlanSelfAssessmentBean.delete(vo.compliancePlanSelfAssessmentId)}">
+										<p:confirm header="Konfirmasi" 
+											message="#{msg.formDeleteMessage}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column>
+									<h:outputLabel value="#{vo.cpsaType}" />
+								</p:column>
+								
+								<p:column>
+									<h:outputLabel value="#{vo.cpsaBranchSubBranch}" />
+								</p:column>
+								
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.periodeFromStr}" title="#{vo.periodeFromStr}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.periodeToStr}" title="#{vo.periodeToStr}"
+										style="vertical-align: top;" />
+								</p:column>
+									
+								<p:column>
+									<h:outputLabel value="#{vo.letterNo}" title="#{vo.letterNo}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<h:outputLabel value="#{vo.letterDateStr}" title="#{vo.letterDate}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column>
+									<h:outputLabel value="#{vo.letterAbout}" title="#{vo.letterAbout}"
+										style="vertical-align: top;" />
+								</p:column>
+								<p:column>
+								   <h:outputLabel value="#{vo.cpsaStatusNameTemp}" title="#{vo.cpsaStatusNameTemp}" style="vertical-align: top;" />
+								</p:column>
+								<p:column style="text-align:center;">
+									<p:commandLink ajax="false" value="#{msg.formCompliancePlanSelfAssessmentStatusDownloadProcess}" rendered="#{vo.statusDownload == null}"
+										update="@form"
+										immediate="true" actionListener="#{compliancePlanSelfAssessmentBean.generateZipInBackgroundJob(vo.compliancePlanSelfAssessmentId)}">
+									</p:commandLink>
+									<p:outputLabel rendered="#{vo.statusDownload == 'IN_PROGRESS'}">
+										<i class="fa fa-hourglass-start" aria-hidden="true"></i>
+										<h:outputLabel value="#{msg.formCompliancePlanSelfAssessmentStatusDownloadInProgress}" 
+											title="#{msg.formCompliancePlanSelfAssessmentStatusDownloadInProgress}">
+										</h:outputLabel>
+									</p:outputLabel>
+									<h:commandLink rendered="#{vo.statusDownload eq 'SUCCESS'}"
+										styleClass="tl-label">
+										<i class="fa fa-fw fa-cloud-download" aria-hidden="true"></i>
+										<h:outputText value="Download" />
+										<p:fileDownload value="#{compliancePlanSelfAssessmentBean.downloadFile(vo.compliancePlanSelfAssessmentId)}"></p:fileDownload>
+									</h:commandLink>
+									<h:outputLabel value="|" rendered="#{vo.statusDownload eq 'SUCCESS'}">
+									</h:outputLabel>
+									<p:commandLink ajax="false" rendered="#{vo.statusDownload eq 'FAILED' or vo.statusDownload eq 'SUCCESS'}"
+										update="@form"
+										immediate="true" actionListener="#{compliancePlanSelfAssessmentBean.generateZipInBackgroundJob(vo.compliancePlanSelfAssessmentId)}">
+										<i class="fa fa-recycle" aria-hidden="true"></i>
+										<h:outputText value="#{msg.formCompliancePlanSelfAssessmentStatusDownloadReProcess}" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			widgetVar="deleteConfirm" hideEffect="fade">
+			<p:commandButton value="#{msg.textYes}" type="button"
+				update="messages" styleClass="ui-confirmdialog-yes"
+				icon="pi pi-check" />
+			<p:commandButton value="#{msg.textNo}" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

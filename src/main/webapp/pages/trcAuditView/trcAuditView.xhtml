@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+.ui-datatable .ui-datatable-data td {
+	vertical-align: top
+}
+.ui-state-default.form-control {
+	background: #F7F8F8;
+}
+</style>
+	</ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formAuditViewTitle}" />
+	</ui:define>
+
+	<ui:define name="buttonAdd">
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<p:growl id="deletedMessage" globalOnly="true" />
+		<div class="box box-solid">
+			<div class="box-body">
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="row">
+							<div class="col-lg-4">
+								<h:panelGroup id="panelAuditTemplateName">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditViewTemplateName}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchAuditTemplateName}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems
+												value="#{trcAuditViewBean.selectAuditTemplateName}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							<div class="col-lg-4">
+								<h:panelGroup id="panelAuditFollowUp">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditViewType}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchAuditFollowUp}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems
+												value="#{trcAuditViewBean.selectAuditFollowUp}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							<div class="col-lg-4">
+								<h:panelGroup id="panelAuditFinding">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditViewFindingsName}" /></label>
+										<p:inputText id="auditFinding" styleClass="form-control"
+											value="#{trcAuditViewBean.searchFindingName}"
+											autocomplete="off"></p:inputText>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-4">
+								<h:panelGroup id="panelAuditObject">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditViewObject}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchAuditObject}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems value="#{trcAuditViewBean.selectAuditObject}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label" tl=""><h:outputText
+											value="#{msg.formAuditViewStatus}" /></label>
+									<h:selectOneMenu styleClass="form-control s2"
+										value="#{trcAuditViewBean.searchStatusCode}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{trcAuditViewBean.status}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label><h:outputText
+											value="#{msg.formAuditViewPeriode}" /></label>
+									<div class="input-group">
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.from}" maxlength="11"
+											value="#{trcAuditViewBean.searchAuditPeriodFrom}"
+											autocomplete="off"
+											pattern="#{trcAuditViewBean.inputDateFormat}"
+											locale="#{trcAuditViewBean.inputDateLocale}"></p:calendar>
+										<span class="input-group-addon plain">-</span>
+
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.to}" maxlength="11"
+											value="#{trcAuditViewBean.searchAuditPeriodTo}"
+											autocomplete="off"
+											pattern="#{trcAuditViewBean.inputDateFormat}"
+											locale="#{trcAuditViewBean.inputDateLocale}"></p:calendar>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label><h:outputText
+											value="#{msg.formAuditViewTargetDate}" /></label>
+									<div class="input-group">
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.from}" maxlength="11"
+											value="#{trcAuditViewBean.searchAuditTargetFrom}"
+											autocomplete="off"
+											pattern="#{trcAuditViewBean.inputDateFormat}"
+											locale="#{trcAuditViewBean.inputDateLocale}"></p:calendar>
+										<span class="input-group-addon plain">-</span>
+
+										<p:calendar styleClass="form-control-datepicker-wrap"
+											placeholder="#{msg.to}" maxlength="11"
+											value="#{trcAuditViewBean.searchAuditTargetTo}"
+											autocomplete="off"
+											pattern="#{trcAuditViewBean.inputDateFormat}"
+											locale="#{trcAuditViewBean.inputDateLocale}"></p:calendar>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-4">
+								<h:panelGroup id="panelAuditDivisiPic">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditPICAndWorkUnitDivision}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchDivision}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItems value="#{trcAuditViewBean.selectDivisions}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							<div class="col-lg-2">
+								<h:panelGroup id="panelAuditFollowupStatus">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditPICFollowupStatus}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchFollowupStatus}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItem itemLabel="#{msg.formNA}" itemValue="x" />
+											<f:selectItems
+												value="#{trcAuditViewBean.selectFollowupStatus}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+
+							<div class="col-lg-2">
+								<h:panelGroup id="panelAuditVerificationStatus">
+									<div class="form-group">
+										<label class="tl-label" tl=""><h:outputText
+												value="#{msg.formAuditPICStatusConfirmation}" /></label>
+										<h:selectOneMenu styleClass="form-control s2"
+											value="#{trcAuditViewBean.searchComplianceStatus}">
+											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+											<f:selectItem itemLabel="#{msg.formNA}" itemValue="x" />
+											<f:selectItems
+												value="#{trcAuditViewBean.selectComplianceStatus}" />
+										</h:selectOneMenu>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tmpAuditDataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{trcAuditViewBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="tmpAuditDataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{trcAuditViewBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="top-scroller">
+							<div class="div-wrapper"></div>
+						</div>
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="tmpAuditDataTable" paginator="true" var="vo"
+								value="#{trcAuditViewBean.tableModel}" dynamic="true"
+								lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{trcAuditViewBean.paging}" rowIndexVar="statIndex"
+								styleClass="table table-striped table-hover"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column width="100" headerText="#{msg.formAction}"
+									style="text-align:center;">
+									<p:commandLink id="viewId" value="#{msg.buttonView}"
+										action="#{trcAuditViewBean.getNavigateView()}" ajax="false"
+										styleClass="tl-label">
+										<f:param name="id" value="#{vo.auditId}" />
+										<f:param name="viewId" value="#{vo.auditId}" />
+									</p:commandLink>
+								</p:column>
+								
+								<p:column headerText="#{msg.formAuditViewTemplateName}" width="100">
+									<h:outputLabel value="#{vo.auditTemplateName}" title="#{vo.auditTemplateName}"
+										style="vertical-align: top;" />
+								</p:column>
+								
+								<p:column headerText="#{msg.formAuditViewType}" width="100">
+									<h:outputLabel value="#{vo.auditor}" title="#{vo.auditor}"
+										style="vertical-align: top;" />
+								</p:column>
+
+								<p:column headerText="#{msg.formAuditFindingName}"
+									width="150">
+									<h:outputLabel value="#{vo.findingNameIn}"
+										title="#{vo.findingNameIn}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formAuditViewObject}" width="150">
+									<h:outputLabel value="#{vo.auditObject}"
+										title="#{vo.auditObject}" />
+								</p:column>
+
+								<!-- <p:column
+									headerText="#{msg.formAuditViewTopic}"
+									width="150">
+									<h:outputLabel value="#{vo.auditTopic}" title="#{vo.auditTopic}"/>
+								</p:column> -->
+
+								<p:column headerText="#{msg.formAuditViewCategory}" width="100">
+									<h:outputLabel value="#{vo.auditCategory}"
+										title="#{vo.auditCategory}" style="vertical-align: top;" />
+								</p:column>
+
+								<p:column headerText="#{msg.formAuditViewPeriode}" width="150">
+									<h:outputLabel value="#{vo.auditDateFrom} - #{vo.auditDateTo}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formAuditViewScope}" width="150">
+									<h:outputLabel value="#{vo.scope}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formAuditViewStatus}" width="150"
+									style="text-align:center;">
+
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_ACTIVE'}">
+										<span class="label label-success"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_INACTIVE'}">
+										<span class="label label-danger"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_NEW'}">
+										<span class="label label-info"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.statusCd eq 'DATA_REVISE'}">
+										<span class="label label-warning"> <h:outputText
+												value="#{vo.status}" />
+										</span>
+									</h:outputLabel>
+								</p:column>
+
+								<!-- <p:column headerText="#{msg.formRegulationSocializationTargetDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.targetDate}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationFollowupStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupStatus}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationPICConfirmation}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupBy}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationConfirmationDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.confirmationDate}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationFollowupDate}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.followupDate}</p:dataList>
+								</p:column>
+								
+								<p:column
+									headerText="#{msg.formRegulationSocializationComplianceCheckStatus}"
+									width="150">
+									<p:dataList value="#{vo.statusList}" 
+										emptyMessage=""
+										var="dtl" >#{dtl.complianceStatus}</p:dataList>
+								</p:column>
+
+								<p:column
+									headerText="#{msg.formRegulationSocializationCategory}"
+									width="150">
+									<h:outputLabel value="#{vo.kategori}" title="#{vo.kategori}"/>
+								</p:column>
+
+								<p:column headerText="#{msg.formRegulationSocializationTopic}"
+									width="150">
+									<h:outputLabel value="#{vo.topik}" title="#{vo.topik}"/>
+								</p:column> -->
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

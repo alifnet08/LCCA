@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcComplianceReview.model">
+	<class name="TrcComplianceReviewDocument" table="wo_trc_compliance_review_doc">
+		<id name="complianceReviewAttachmentId" column="compliance_review_atch_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_compliance_revw_doc_sq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcComplianceReview"
+			column="compliance_review_id"
+			class="com.wo.module.trcComplianceReview.model.TrcComplianceReview"
+			fetch="join" />
+
+		<property name="attachmentFile" column="ATTACHMENT_FILE" type="string" />
+		<property name="fileId" column="FILE_ID" type="string" />
+		<property name="fileSize" column="file_size" type="long" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

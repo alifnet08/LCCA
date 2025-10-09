@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			.ui-chips-container {
+		     width:100%!important;
+		     background-color: rgba(245, 131, 34, 0.25);
+		     }
+			
+		</style>
+		<script>
+	
+		
+		function setPin(x,y){
+			console.log('x'+x);
+			console.log('y'+y);
+			PF('pinX').jq.val(x);
+		    PF('pinY').jq.val(y);
+			$('#form\\:marker').css('left', x-5).css('top', y-25).show();
+		}
+		
+		
+		
+		
+		</script>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formMstProvinceLocationTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-aboutUs">
+					<h:outputText value="#{msg.formMstProvinceLocationAddTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label" tl="province"><p:outputLabel
+									value="#{msg.formMstProvinceLocationProvince}" for="province" /></label>								
+							<p:inputText style="width:100%" styleClass="form-control" id="province" 
+									value="#{mstProvinceLocationEditBean.mstProvinceLocation.province}"  
+									autocomplete="off"/>
+							<p:message for="province"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group" style="margin-botom:0; position: relative; width: 1245.5px; height: 905.33px; overflow-x: scroll">
+									
+							
+							<p:graphicImage id="marker" value="/resources/assets/images/pin-asset.svg" style="display: none; position: absolute; width:2%" />				
+							<p:graphicImage id="map" value="/resources/assets/images/map-full-fix.svg" />
+							<pe:imageAreaSelect id="areaSelect" for="map" handles="true" >
+							<p:ajax event="selectEnd" listener="#{mstProvinceLocationEditBean.selectEndListener}" update="msgs"  ></p:ajax>
+							</pe:imageAreaSelect>
+							<p:inputText type="hidden" widgetVar="pinX" id="x" value="#{mstProvinceLocationEditBean.mstProvinceLocation.pinTop}"></p:inputText>
+							<p:inputText type="hidden" widgetVar="pinY" id="y" value="#{mstProvinceLocationEditBean.mstProvinceLocation.pinLeft}"></p:inputText>
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{mstProvinceLocationEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{mstProvinceLocationEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+			
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+	<link href="#{request.contextPath}/resources/css/quill.snow.css" rel="stylesheet" type="text/css" />
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+
+			<div class=" navbar-collapse " id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+						<a class="nav-link"><i
+							class="fa fa-sm fa-bold fa-chevron-right"
+							style="margin-top: -5px; color: #FFC600;"></i></a> <a
+						class="nav-link disabled" href="#">FAQ</a></li>
+
+				</ul>
+			</div>
+			</nav>
+		</div>
+
+		<div class="container-fluid faq-content">
+			<div class="sidebar-title font-weight-bold">Frequently Asked
+				Questions</div>
+			<h:panelGroup rendered="#{faqFEBean.isAdmin eq '0' }">
+				<div class="sidebar-title" style="font-size: 14px;">
+					<span>Tidak menemukan jawaban? Tanya kami di </span>
+					<p:link id="sini"
+						outcome="/pages/qaFE/qaFEBertanya.faces"
+						type="submit" ajax="true" styleClass="text-mb-g5">
+						<span class="td-header text-mb-secondary">sini</span>
+					</p:link>
+				</div>		
+			</h:panelGroup>
+			<h:form styleClass="wo-search-form">
+				<p:remoteCommand name="onSearch" process="@this dataList searchCategory"
+					update="dataList" action="#{faqFEBean.search()}"></p:remoteCommand>
+
+				<div class="form-row">	
+					<div class="col-md-6 form-group">
+								<p:selectOneMenu styleClass="form-control s2" id="searchCategory" 
+								onchange="onSearch([{name: 'SEARCH_VAL', value:$('#searchVal').val()}])"
+									value="#{faqFEBean.category}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{faqFEBean.categoryList}" />
+								</p:selectOneMenu>
+				    </div>
+					<div class="col-6 has-search form-group">
+						<input id="searchVal" class="form-control cari-input" type="search"
+							placeholder="CARI FAQ . . ." aria-label="Search" />
+						<div class="input-group-append">
+							<i
+								class=" fa fa-lg fa-search input-group-text d-flex align-items-center"
+								onclick="onSearch([{name: 'SEARCH_VAL', value:$('#searchVal').val()}])"></i>
+						</div>
+					</div>
+				</div>
+			</h:form>
+			<div id="accordion">
+				<p:remoteCommand name="dataOnclick" action="#{faqFEBean.dataOnClick()}"></p:remoteCommand>
+				<h:panelGroup id="dataList">
+					<ui:repeat value="#{faqFEBean.institutionVO}" var="ins" varStatus="statusIns">
+						<div class="card">
+							<div class="card-header" style="">
+								<a
+									class="collapsed card-link d-flex justify-content-between align-items-center"
+									data-toggle="collapse" href="#{faqFEBean.id}collapseThree-#{statusIns.index}">
+									#{ins.institution} <i class="align-middle fa fa-chevron-down"></i>
+								</a>
+							</div>
+							<div id="collapseThree-#{statusIns.index}" class="collapse" data-parent="#accordion"
+								style="">
+								<div class="card-body">
+
+
+									<ui:repeat value="#{ins.categoryFaq}" var="vo" varStatus="statusCategory">
+
+										<div class="card-header" style="">
+											<a
+												class="collapsed card-link d-flex justify-content-between align-items-center"
+												data-toggle="collapse" href="#{faqFEBean.id}collapseThree-#{statusIns.index}-#{statusCategory.index}">
+												#{vo.faqCategory} <i class="align-middle fa fa-chevron-down"></i>
+											</a>
+										</div>
+										<div id="collapseThree-#{statusIns.index}-#{statusCategory.index}" class="collapse collapse-1"
+											data-parent="#{faqFEBean.id}collapseThree-#{statusIns.index}" style="">
+											<div class="card-body">
+
+												<ui:repeat value="#{vo.listFaq}" var="faq" varStatus="statusFaq">
+													<div class="card">
+														<div class="card-header has-copy">
+														   <input type="hidden" value="#{faq.faqId}" id="faqId-#{statusIns.index}-#{statusCategory.index}-#{statusFaq.index}"></input>
+														   <a class="collapsed card-link" title="#{faqFEBean.toEncrypt(faq.faqId)}" alt="#{faqFEBean.toEncrypt(faq.faqId)}" data-toggle="collapse" onclick="dataOnclick([{name: 'faqId', value:$('#faqId-#{statusIns.index}-#{statusCategory.index}-#{statusFaq.index}').val()},{name: 'flag', value:$('#collapseThree-#{statusIns.index}-#{statusCategory.index}-#{statusFaq.index}').hasClass('show')}])"
+																href="#{faqFEBean.id}collapseThree-#{statusIns.index}-#{statusCategory.index}-#{statusFaq.index}"> <i
+																class="align-middle fa fa-plus-circle"></i> #{faq.questionIn}<p:spacer/> 
+															</a>
+															<p:button id="btnNonAjax"  icon="fa fa-copy" onclick="return false;" />
+											        		<pe:clipboard  id="clipContextCopy" trigger="btnNonAjax" action="copy" text="#{faqFEBean.toEncrypt(faq.faqId)}" />
+														</div>
+														<div id="collapseThree-#{statusIns.index}-#{statusCategory.index}-#{statusFaq.index}" class="collapse collapse-2"
+															data-parent="#{faqFEBean.id}collapseThree-#{statusIns.index}-#{statusCategory.index}">
+															<div class="card-body escape-body"><p:outputLabel value="#{faq.answerIn}" escape="false"/></div>
+														</div>
+													</div>
+													<!-- <p:contextMenu>  
+											            <p:menuitem id="mnuCopy" value="Copy Link FAQ" url="javascript:void(0)" icon="fa fa-copy" />  
+											        </p:contextMenu> -->
+											        
+												</ui:repeat>
+
+											</div>
+										</div>
+
+									</ui:repeat>
+								</div>
+							</div>
+						</div>
+					</ui:repeat>
+				</h:panelGroup>
+
+
+
+			</div>
+		</div>
+
+
+
+	</ui:define>
+</ui:composition>

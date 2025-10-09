@@ -1,0 +1,210 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formUserTitle}" />
+	</ui:define>
+
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserUsername}" /></label>
+									<p:inputText id="searchUsername" styleClass="form-control"
+										autocomplete="off" value="#{userBean.searchUsername}"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserName}" /></label>
+									<p:inputText id="searchName" styleClass="form-control"
+										autocomplete="off" value="#{userBean.searchName}"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserDivisionName}" /></label>
+									<p:inputText id="searchDivision" styleClass="form-control"
+										autocomplete="off" value="#{userBean.searchDivision}"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserEmail}" /></label>
+									<p:inputText id="searchEmail" styleClass="form-control"
+										autocomplete="off" value="#{userBean.searchEmail}"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserPosition}" /></label>
+									<p:inputText id="searchPosition" styleClass="form-control"
+										autocomplete="off" value="#{userBean.searchPosition}"></p:inputText>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><h:outputText
+											value="#{msg.formUserRole}" /></label>
+									<h:selectOneMenu id="userRole" styleClass="form-control s2"
+										value="#{userBean.searchRole}">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItem itemLabel="Empty" itemValue="Empty" />
+										<f:selectItems value="#{userBean.roleList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+					</h:panelGroup>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{userBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="tableSearch panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{userBean.reset}"></p:commandButton></li>
+							</ul>
+
+							<ul class="no-margin no-padding pull-right">
+								<li><h:commandLink styleClass="btn btn-warning tl-label"
+										actionListener="#{userBean.syncUser}"
+										onclick="statusDialog.show();"
+										oncomplete="statusDialog.hide();"
+										onerror="statusDialog.hide();">
+										<i class="fa fa-user"></i>&nbsp;
+										<h:outputLabel value="#{msg.formUserSynchronize}" />
+									</h:commandLink></li>
+							</ul>
+
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{userBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{userBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;"
+									headerText="#{msg.formAction}">
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{userBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.userId}" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="#{msg.formUserUsername}">
+									<h:outputLabel value="#{vo.nik}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formUserName}">
+									<h:outputLabel value="#{vo.name}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formUserEmail}" width="250px;">
+									<h:outputLabel value="#{vo.email}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formUserDivisionName}">
+									<h:outputLabel value="#{vo.divisionName}" />
+								</p:column>
+								<p:column headerText="#{msg.formUserPosition}">
+									<h:outputLabel value="#{vo.positionName}" />
+								</p:column>
+								<p:column headerText="#{msg.formUserRole}">
+									<h:outputLabel value="#{vo.roleName}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formUserPUKNik}">
+									<h:outputLabel value="#{vo.pukNik}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formUserStatus}"
+									style="text-align:center;">
+									<h:outputLabel rendered="#{vo.status eq 'Y'}">
+										<span class="label label-success"> <h:outputText
+												value="#{msg.formUserActive}" />
+										</span>
+									</h:outputLabel>
+									<h:outputLabel rendered="#{vo.status eq 'N'}">
+										<span class="label label-danger"> <h:outputText
+												value="#{msg.formUserInactive}" />
+										</span>
+									</h:outputLabel>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formUserConfrimDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formUserDelete}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formUserConfrimDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+</ui:composition>

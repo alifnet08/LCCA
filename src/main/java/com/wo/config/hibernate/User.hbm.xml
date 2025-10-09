@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.user.model">
+	<class name="User" table="wo_mst_user">
+		<id name="userId" column="USER_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_user_seq</param>
+			</generator>
+		</id>
+		<!-- <many-to-one name="employee"
+			class="com.btpn.erec.module.mst.employee.model.Employee" column="EMPLOYEE_NUMBER"
+			property-ref="npk" fetch="join" insert="false" update="false" /> -->
+		<property name="nik" column="NIK" type="string" />
+		<property name="name" column="NAME" type="string" />
+		<property name="email" column="EMAIL" type="string" />
+		
+		<property name="jobId" column="JOB_ID" type="long" />
+		<property name="jobName" column="JOB_NAME" type="string" />
+		<property name="positionId" column="POSITION_ID" type="long" />
+		<property name="positionName" column="POSITION_NAME" type="string" />
+		<property name="pukNik" column="PUK_NIK" type="string" />
+		<property name="branchCode" column="BRANCH_CODE" type="string" />
+		<property name="divisionId" column="DIVISION_ID" type="long" />
+		<property name="divisionName" column="DIVISION_NAME" type="string" />
+		<property name="responsibilityId" column="RESPONSIBILITY_ID" type="long" />
+		
+		<property name="status" column="STATUS" type="string" />
+		<property name="branch" column="BRANCH_NAME" type="string" />
+		<property name="subBranch" column="SUB_BRANCH_NAME" type="string" />
+		<property name="region" column="REGION_NAME" type="string" />
+		<property name="directorate" column="DIRECTORATE_NAME" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

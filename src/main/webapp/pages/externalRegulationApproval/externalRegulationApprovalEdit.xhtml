@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[disabled] {
+			    cursor: not-allowed;
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formExternalRegulationApprovalTitle}" />
+	</ui:define>
+	
+	<ui:define name="content">
+	<p:growl id="messages"  rendered="true"/>
+	<div class="box box-solid">
+      <div class="box-header with-border">
+        <h3 class="box-title tl-label"><h:outputText value="#{msg.formExternalRegulationApprovalAddTitle}" /></h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label for="jenis_ketentuan" class="control-label tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalProvType}" /></label>
+                <h:selectOneMenu styleClass="form-control s2" value="#{externalRegulationApprovalEditBean.regulation.jenisKetentuan.parameterDtlCode}" disabled="true">
+                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+			    <f:selectItems value="#{externalRegulationApprovalEditBean.provTypes}" />
+                </h:selectOneMenu>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+              	<label class="tl-label"><h:outputText value="#{msg.formExternalRegulationApprovalRegulationType}" /></label>
+	          	<h:selectOneMenu styleClass="form-control s2" value="#{externalRegulationApprovalEditBean.docTypeId}" disabled="true">
+	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+				    <f:selectItems value="#{externalRegulationApprovalEditBean.docTypes}" />
+	            </h:selectOneMenu>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label"><h:outputText value="#{msg.formExternalRegulationApprovalRegulationCategory}" /></label>
+	          	<h:selectOneMenu styleClass="form-control s2" value="#{externalRegulationApprovalEditBean.docCategoryId}" disabled="true">
+	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+				    <f:selectItems value="#{externalRegulationApprovalEditBean.docCategories}" />
+	            </h:selectOneMenu>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+              	<label class="tl-label"><h:outputText value="#{msg.formExternalRegulationApprovalRegulationTopic}" /></label>
+	            <h:selectOneMenu styleClass="form-control s2" value="#{externalRegulationApprovalEditBean.docTopicId}" disabled="true">
+	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+				    <f:selectItems value="#{externalRegulationApprovalEditBean.docTopics}" />
+	            </h:selectOneMenu>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalDocNo}" /></label>
+               <h:inputText styleClass="form-control" value="#{externalRegulationApprovalEditBean.regulation.documentNo}" 
+               	title="#{externalRegulationApprovalEditBean.regulation.documentNo}"
+               	disabled="true"></h:inputText>
+               
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalRegTitle}" /></label>
+                <h:inputText styleClass="form-control" value="#{externalRegulationApprovalEditBean.regulation.nameIn}" disabled="true"
+                	title="#{externalRegulationApprovalEditBean.regulation.nameIn}"
+                ></h:inputText>
+              </div>
+            </div>
+            
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalPublishedDate}" /></label>
+                <!-- <input type="text" class="form-control date_picker" id="publishedDate" 
+                          value="#{externalRegulationApprovalEditBean.regulation.publishedDateStr}" readonly="true"/> -->
+                   <p:calendar styleClass="form-control-datepicker-wrap form-required" id="publishedDate" disabled="true"
+						value="#{externalRegulationApprovalEditBean.regulation.publishedDate}"
+						autocomplete="off" pattern="dd-MMM-yyyy" locale="en" >
+				   </p:calendar>         
+              </div>
+            </div>
+           <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" >
+                	<h:outputText value="#{msg.formExternalRegulationApprovalDescriptionRegulation}" />
+                </label>
+                <pe:ckEditor id="descriptionRegulation" widgetVar="editorContent" width="100%" required="true"
+								requiredMessage="#{msg.formExternalRegulationDecriptionRegulation} #{msg.validateRequired}"
+								value="#{externalRegulationEditBean.regulation.descriptionIn}" readonly="true"
+								height="300" style="margin-bottom:10px" />
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group ">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalReviewDate}" /></label>
+                <!-- <input type="text" class="form-control date_picker" id="expiredDate" 
+                     value="#{externalRegulationApprovalEditBean.regulation.expiredDateStr}" readonly="true"/> -->
+					<p:calendar styleClass="form-control-datepicker-wrap" id="expiredDate" disabled="true"
+						value="#{externalRegulationApprovalEditBean.regulation.expiredDate}"
+						autocomplete="off" pattern="dd-MMM-yyyy" locale="en" >
+					</p:calendar>
+				</div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group ">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalEffDate}" /></label>
+                <!-- <input type="text" class="form-control date_picker" id="effectiveDate" 
+                             value="#{externalRegulationApprovalEditBean.regulation.effectiveDateStr}" readonly="true"/> -->
+					<p:calendar styleClass="form-control-datepicker-wrap" id="effectiveDate" disabled="true"
+					       value="#{externalRegulationApprovalEditBean.regulation.effectiveDate}"
+						autocomplete="off" pattern="dd-MMM-yyyy" locale="en" >
+					</p:calendar>
+				</div>
+            </div>
+            
+            
+            <h3><h:outputText value="#{msg.formExternalRegulationApprovalAttachmentPeraturan}" /></h3>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <p:remoteCommand name="onCompleteUpload" update="peraturanIdList summaryList peraturanPenjelasanList peraturanFAQList peraturanLampiranList peraturanMateriList"></p:remoteCommand>
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalPeraturanUtuh}" /></label>
+               
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesPeraturanId}" 
+                	emptyMessage=""
+                	var="vo" id="peraturanIdList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalSummary}" /></label>
+                
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesSummary}" 
+                	emptyMessage=""
+                	var="vo" id="summaryList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalPenjelasan}" /></label>
+                
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesPenjelasan}" 
+                	emptyMessage=""
+                	var="vo" id="peraturanPenjelasanList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalFAQ}" /></label>
+                
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesFAQ}" 
+                	emptyMessage=""
+                	var="vo" id="peraturanFAQList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalLampiran}" /></label>
+                
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesLampiran}" 
+                	emptyMessage=""
+                	var="vo" id="peraturanLampiranList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="tl-label" ><h:outputText value="#{msg.formExternalRegulationApprovalMateriSosialisasi}" /></label>
+                
+                <p:dataList value="#{externalRegulationApprovalEditBean.uploadedFilesMateri}" 
+                	emptyMessage=""
+                	var="vo" id="peraturanMateriList">
+			        <p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" actionListener="#{externalRegulationApprovalEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+			    </p:dataList>
+              </div>
+            </div>
+            
+            
+            <h3><h:outputText value="#{msg.formExternalRegulationApprovalRekamJejak}" /></h3>
+              <div class="col-lg-12">
+                <div id="mp-rekam-jejak">
+                  
+                  <div class="table-wrapper table-responsive">
+                  <p:dataTable id="dataTable" var="data" value="#{externalRegulationApprovalEditBean.tableModel}" 
+                  selection="#{externalRegulationApprovalEditBean.selectedData}" 
+                  rowKey="#{data.sequence}"
+                  rowIndexVar="statIndex">
+                  		<p:ajax event="rowSelectCheckbox" process="@this"/>
+                        <p:ajax event="rowUnselectCheckbox" process="@this"/>
+                        <p:ajax event="toggleSelect" process="@this"/>
+                    <!-- <p:column selectionMode="multiple" style="text-align:center; width:40px;"/> -->
+				    <p:column headerText="#{msg.formExternalRegulationApprovalRekamJejak}">
+				        <h:selectOneMenu styleClass="form-control s2" value="#{data.trackCode}" disabled="true">
+			                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+						    <f:selectItems value="#{externalRegulationApprovalEditBean.trackCodes}" />
+			            </h:selectOneMenu>
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formExternalRegulationRegNo}">
+				    	<div class="input-group">
+				        <h:inputHidden value="#{data.regulationLinkId}" ></h:inputHidden>
+				        <h:inputText  styleClass="form-control temp-no-peraturan" value="#{data.regulationLinkName}" disabled="true" alt="#{data.regulationLinkName}" title="#{data.regulationLinkName}"/>
+                        <span class="input-group-btn">
+                              <p:commandLink  styleClass="btn btn-link"  onclick="jdlPeraturanDialog.show()"><i class="fa fa-search"> </i>
+                              <f:setPropertyActionListener
+											target="#{externalRegulationApprovalEditBean.indexDtl}"
+											value="#{statIndex}" />
+                              </p:commandLink>
+                        </span>
+                        </div>
+                        
+				    </p:column>
+				 
+				    <p:column headerText="#{msg.formExternalRegulationApprovalKetMencabut}">
+				        <h:inputText styleClass="form-control" value="#{data.trackNote}" disabled="true" alt="#{data.trackNote}" title="#{data.trackNote}"/>
+				    </p:column>
+				    
+				    <p:column headerText="#{msg.formInactive}" style="text-align:center; width:80px;">
+						<h:selectBooleanCheckbox value="#{data.inActive}" styleClass="icheckbox_square-grey"
+						rendered="#{data.trackCode eq 'RECORD_CHANGE'}"
+						disabled="true" />
+					</p:column>
+	
+				</p:dataTable>
+				</div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+	             <div class="form-group">
+	             	<label class="tl-label"><h:outputText value="#{msg.textApprovalStatus}" /></label>
+		          	<h:selectOneMenu styleClass="form-control s2" value="#{externalRegulationApprovalEditBean.approvalStat}">
+		                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+					    <f:selectItems value="#{externalRegulationApprovalEditBean.approvalStatus}" />
+		            </h:selectOneMenu>
+	             </div>
+	           </div>
+              <div class="col-lg-12">
+	              <h3>#{msg.formExternalRegulationApprovalNote}</h3>
+	              <div class="form-group">
+	                <textarea id="note" class="form-control" rows="5"></textarea>
+	              </div>
+            	</div>
+          </div>
+      </div>
+      <div class="box-footer">
+      	<p:commandButton value="#{msg.buttonSave}" 
+      	                    rendered="#{externalRegulationApprovalEditBean.regulation.status eq 'DATA_NEW'}"
+							styleClass="btn btn-success pull-left tl-label"
+							onclick="saveOnClick([{name: 'NOTE', value:$('#note').val()}])"></p:commandButton>
+      	
+		<p:commandButton value="#{msg.buttonCancel}" actionListener="#{externalRegulationApprovalEditBean.cancel()}" 
+							styleClass="btn btn-default pull-right tl-label"></p:commandButton>
+		<p:remoteCommand action="#{externalRegulationApprovalEditBean.save}" update="messages"
+                 name="saveOnClick" process="@form" />
+        
+      </div>
+    </div>
+    
+	</ui:define>
+	
+	
+</ui:composition>

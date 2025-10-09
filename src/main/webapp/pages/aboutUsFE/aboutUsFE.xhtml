@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/templateFrontEnd.xhtml">
+
+
+	<ui:define name="content">
+		<link href="#{request.contextPath}/resources/css/quill.snow.css" rel="stylesheet" type="text/css" />
+		<style>
+			.ui-widget {
+			    font-family: lato;
+			}
+			.ui-datalist-data {
+			    list-style-type: none;
+			}
+			
+			.container-fluid {
+			    width:auto;
+			    overflow-x:scroll;
+			}
+			
+			.content {
+			   width: 100%;
+			   display: flex;
+			   flex-direction: row;
+			   flex-wrap: wrap;
+			   justify-content: center;
+			   align-items: center;
+			}
+			
+			/*
+			.cke_top
+		    {
+		        display: none !important;
+		    }
+		    
+		    .cke_bottom
+		    {
+		        display: none !important;
+		    }
+		    
+		  
+		     
+		     .cke_reset { 
+		    	border-style: hidden !important ; 
+		    	border: none;
+		     }
+			*/
+			
+		    
+		     
+		</style>
+		
+		
+		<div class="row brdcrumb">
+			<nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+				<div class=" navbar-collapse " id="collapsibleNavbar">
+					 <ul class="navbar-nav">
+					 	<li class="nav-item">
+					 		<a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+					 		<a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+					 		<a class="nav-link disabled" href="#">Tentang LCCA</a>
+					 	</li>
+					 </ul>
+				</div>
+			</nav>
+		</div>
+		<div class="container-fluid faq-content">
+			<!-- <div class="sidebar-title font-weight-bold">Tentang LCCA</div> -->
+			<div class="content">
+				<div class="escape-body">
+						<h:outputText value="#{aboutUsFEBean.content}" escape="false" ></h:outputText>
+				</div>
+			</div>
+			<div style="font-size: 14px;color:#7D7D7D;"></div>
+			<h:form styleClass="form-group has-search my-2 my-lg-5">
+				
+				<p:organigram id="organigram" widgetVar="organigram"
+					value="#{aboutUsFEBean.rootNode}" var="node"
+					leafNodeConnectorHeight="#{aboutUsFEBean.leafNodeConnectorHeight}"
+					autoScrollToSelection="#{aboutUsFEBean.autoScrollToSelection}"
+					zoom="#{aboutUsFEBean.zoom}"
+					selection="#{aboutUsFEBean.selection}"
+					style="width: fit-content;height:fit-contents">
+					
+					<p:organigramNode >
+						<h:outputText value="#{node.data}" />
+					</p:organigramNode>
+
+					<p:organigramNode type="employee" style="width:auto" skipLeafHandling="true" >
+						<p:dataList id="people" var="vo" value="#{node.data}" rowIndexVar="statIndex">
+							<div class="profile-card">
+								<div class="profile-left float-left w-50">
+								<h:graphicImage styleClass="profile-photo" id="zoomImage" value="/img?filePath=#{aboutUsFEBean.filePath}#{vo.fileId}"/>
+						           <img id="img" class="profile-photo" src="#{request.contextPath}/img?filePath=#{aboutUsFEBean.encryptFilePath(aboutUsFEBean.filePath.concat(vo.fileId))}"/>
+						        </div>
+								<div class="profile-right float-left w-50">
+									<div class="profile-name">#{vo.ourName}</div>
+									<div class="profile-position">#{vo.ourJob}</div>
+									<div class="profile-contact">#{vo.email}</div>
+									<!-- <div class="profile-contact">EXT : #{vo.ext}</div> -->
+								</div>
+							</div>
+							
+						</p:dataList>
+					</p:organigramNode>
+
+				</p:organigram>
+				
+				
+			</h:form>
+			
+			
+		</div>
+		<script>
+		$(document).ready(()=> {
+		let outerContent = $('.target');
+		
+		let innerContent = $('.container-fluid');
+		innerContent.scrollTop(0);
+		
+		let contentSize = $('.escape-body').width();
+		$(".content").width(outerContent.width());
+		$(".escape-body").width(contentSize);
+		$(".content").css("position","relative");
+	    
+		let size = ($(".content").width()-contentSize)/2
+		innerContent.scrollLeft(size);
+	    
+		});
+		
+		</script>
+	</ui:define>
+</ui:composition>

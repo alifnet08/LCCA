@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.litigation.model">
+	<class name="LitigationPailitPkpu" table="WO_MST_LITI_PAILIT_PKPU">
+		<id name="litigationId" column="LITIGATION_ID" type="long">
+			<generator class="foreign">
+				<param name="property">litigation</param>
+			</generator>
+		</id>
+
+		<one-to-one name="litigation" cascade="all" />
+		
+		<property name="caseYear" column="CASE_YEAR" type="integer" />
+		<property name="caseNumber" column="CASE_NUMBER" type="string" />
+		
+		<many-to-one name="countryCourt" column="RC_ID" 
+				class="com.wo.module.rc.model.RC" fetch="join" />
+		
+		<many-to-one name="commercialCourt" property-ref="parameterDtlCode"
+			column="COMMERCIAL_COURT" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="hearingDate" column="HEARING_DATE" type="date" />
+		
+		<many-to-one name="judgementWarning" property-ref="parameterDtlCode"
+			column="JUDGEMENT_WARNING" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="invoiceValuePkpu" column="INVOICE_VALUE_PKPU" type="double" />
+		<property name="invoiceValuePailit" column="INVOICE_VALUE_PAILIT" type="double" />
+		<property name="keterangan" column="KETERANGAN" type="string" />
+		<property name="attorney" column="ATTORNEY" type="string" />
+		
+		<many-to-one name="caseHandler" property-ref="parameterDtlCode"
+			column="CASE_HANDLER" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<property name="attorneyOfficeName" column="ATTORNEY_OFFICE_NAME" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

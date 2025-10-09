@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpCorrespondence.model">
+	<class name="TmpCrpdcPicConfirm" table="WO_TMP_CRPDC_PIC_CONFIRM">
+		<id name="crpdcPicConfirmId" column="CRPDC_PIC_CONFIRM_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_CRPDC_PIC_CONFIRM_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="tmpCorrespondence" column="CORRESPONDENCE_ID" fetch="join" 
+				class="com.wo.module.tmpCorrespondence.model.TmpCorrespondence" />
+		
+		<property name="divisionId" column="division_id" type="long" />
+				
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+			
+		<property name="targetDate" column="TARGET_DATE" type="date" />
+				
+		<many-to-one name="statusPic" column="STATUS_PIC_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />
+		
+		<many-to-one name="complianceStatus" column="COMPLIANCE_STATUS_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />
+				
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

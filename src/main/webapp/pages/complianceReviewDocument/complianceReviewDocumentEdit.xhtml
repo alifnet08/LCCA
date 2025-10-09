@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.form-control[readonly]{
+			    font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+			}
+			 td.optionDisabled .ui-chkbox{
+				display: none;
+			}
+			.form-control-datepicker-wrap input.hasDatepicker {
+			    font-family: 'Montserrat';
+			}
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-autocomplete-dropdown
+			{
+				background-color: rgba(245, 131, 34, 0.1) !important;
+			}
+			.ui-autocomplete-multiple-container, .ui-autocomplete-dd-multiple-container 
+			{
+				font-family: 'Montserrat';
+			    font-size: 13px;
+			    color: #444444;
+				background-color: rgba(245, 131, 34, 0.25);
+				width: -webkit-fill-available;
+				min-height: 37.5px;
+    			max-height: 100px;
+			}
+			
+			
+		</style>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formComplianceReviewDocumentTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label">
+					<h:outputText value="#{msg.formComplianceReviewDocumentTitle}" />
+				</h3>
+			</div>
+			
+			<div class="box-body">
+				<div class="row">
+				
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label"><p:outputLabel
+									for="documentType"
+									value="#{msg.formComplianceReviewDocumentType}" /></label>
+							<h:selectOneMenu id="documentType" required="true"
+								requiredMessage="#{msg.formComplianceReviewDocumentType} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.documentType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{complianceReviewDocumentEditBean.documentTypes}" />
+								
+							</h:selectOneMenu>
+							<p:message for="documentType" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="receivedDate"
+									value="#{msg.formComplianceReviewReceivedDate}" /></label>
+							<p:calendar id="receivedDate" required="true" 
+								requiredMessage="#{msg.formComplianceReviewReceivedDate} #{msg.validateRequired}"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.receivedDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="receivedDate" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label"><p:outputLabel for="completeDate"
+									value="#{msg.formComplianceReviewCompleteDate}" /></label>
+							<p:calendar id="completeDate" required="true" 
+								requiredMessage="#{msg.formComplianceReviewCompleteDate} #{msg.validateRequired}"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.completeDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="completeDate" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label"><p:outputLabel
+									for="HUKNumber"
+									value="#{msg.formComplianceReviewHUKNo}" /></label>
+							<p:inputText id="HUKNumber" styleClass="form-control" required="true" 
+								requiredMessage="#{msg.formComplianceReviewHUKNo} #{msg.validateRequired}"
+								autocomplete="off" maxlength="200" disabled="false" placeholder="000/REVIEW/YYYY"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.documentNo}"></p:inputText>
+							<p:message for="HUKNumber" />	
+						</div>
+					</div>
+					
+					
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label"><p:outputLabel
+									for="materi"
+									value="#{msg.formComplianceReviewMateri}" /></label>
+							<p:inputText id="materi" styleClass="form-control" 
+								autocomplete="off" maxlength="5000"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.materi}" />
+						</div>
+					</div>
+					
+					<!--<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label"><p:outputLabel
+									for="proposerWorkUnitSingleSelect"
+									value="#{msg.formComplianceReviewProposerWorkUnit}" /></label>
+							<h:selectOneMenu id="proposerWorkUnitOld" required="true"
+								requiredMessage="#{msg.formComplianceReviewProposerWorkUnit} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{complianceReviewDocumentEditBean.complianceReviewDocument.divisionId}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{complianceReviewDocumentEditBean.divisions}" />
+							</h:selectOneMenu>
+							<p:message for="proposerWorkUnitSingleSelect" />
+						</div>
+					</div>-->
+					
+					<!-- <div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label"><p:outputLabel
+									for="proposerWorkUnitCheckboxMenu"
+									value="#{msg.formComplianceReviewProposerWorkUnit}" /></label>
+							<p:selectCheckboxMenu id="proposerWorkUnitCheckboxMenu" required="true"
+								requiredMessage="#{msg.formComplianceReviewProposerWorkUnit} #{msg.validateRequired}"
+								styleClass="form-control" converter="#{divisionConverter}" multiple="true"
+								value="#{complianceReviewDocumentEditBean.selectedDivisionObj}">
+								<f:selectItems
+									value="#{complianceReviewDocumentEditBean.divisions}" />
+							</p:selectCheckboxMenu>
+							<p:message for="proposerWorkUnitCheckboxMenu" />
+						</div>
+					</div> -->
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label"><p:outputLabel
+									for="proposerWorkUnitAuto"
+									value="#{msg.formComplianceReviewProposerWorkUnit}" /></label>
+							
+							<p:autoComplete id="proposerWorkUnitAuto" multiple="true" 
+								value = "#{complianceReviewDocumentEditBean.selectedDivisionObj}" style="width: -webkit-fill-available;"
+								requiredMessage="#{msg.formComplianceReviewProposerWorkUnit} #{msg.validateRequired}"
+								required = "true" forceSelection="true" converter="#{divisionConverter}"
+								var = "division" itemLabel = "#{division.divisionName}" itemValue = "#{division}"
+								completeMethod="#{complianceReviewDocumentEditBean.completeDivision}"
+								 dropdown="true" scrollHeight="250" unique="true">
+							</p:autoComplete>
+							<p:message for="proposerWorkUnitAuto" />
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputText value="#{msg.formComplianceReviewPicCompliance}" />
+					</h3>
+					<div class="col-lg-12">
+						<div id="mp-pic-compliance">
+							<h4 class="sub-header">
+								&nbsp;
+								<div class="box-tools">
+									<ul class="no-margin no-padding">
+										<li><p:commandLink
+												onclick="onAddNewRowPicCompliance();">
+												<i class="fa fa-plus"></i>
+											</p:commandLink></li>
+										<li><p:commandLink
+												onclick="onDeleteRowPicCompliance();">
+												<i class="fa fa-trash"></i>
+											</p:commandLink></li>
+									</ul>
+								</div>
+							</h4>
+							
+							<div class="table-wrapper table-responsive">
+								<p:dataTable id="dataTableCompliance" var="data"
+									value="#{complianceReviewDocumentEditBean.tableModelCompliance}"
+									selection="#{complianceReviewDocumentEditBean.selectedDataCompliance}"
+									rowKey="#{data.sequence}" rowIndexVar="statIndex" rowSelectMode="checkbox" >
+									
+									<p:ajax event="rowSelectCheckbox" process="@this" />
+									<p:ajax event="rowUnselectCheckbox" process="@this" />
+									<p:ajax event="toggleSelect" process="@this" />
+									
+									<p:column selectionMode="multiple"
+										style="text-align:center; width:40px;" />
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentNIK}"
+										width="150">
+										<table>
+											<tr>
+												<td style="width: 80%"><h:inputText
+														styleClass="form-control temp-no-peraturan required"
+														required="true" 
+														value="#{data.user.nik}" readonly="true" /></td>
+												<td style="width: 20%"><p:commandLink
+														onclick="picComplianceDialog.show()" process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{complianceReviewDocumentEditBean.indexDtlCompliance}"
+															value="#{statIndex}" />
+
+													</p:commandLink></td>
+											</tr>
+										</table>
+
+									</p:column>
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentName}"
+										width="200">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.name}" readonly="true" />
+									</p:column>
+
+									<p:column headerText="#{msg.formComplianceReviewDocumentEmail}"
+										width="150">
+										<h:inputText styleClass="form-control"
+											value="#{data.user.email}" readonly="true" />
+									</p:column>
+
+
+								</p:dataTable>
+							</div>
+							
+							<h3>
+								<h:outputText
+									value="#{msg.formComplianceReviewDocumentLetterTitle}" />
+							</h3>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									
+									<p:remoteCommand name="onCompleteUpload" update="documentMemoList"></p:remoteCommand>
+									<label class="tl-label">
+										<!-- <h:outputText
+										value="#{msg.formComplianceReviewDocumentLetterSubTitle}"/> -->
+										<h:outputText style="color: #dd4b39" value="#{complianceReviewDocumentEditBean.textWarningUpload}"/>
+									</label>
+									<p:fileUpload fileUploadListener="#{complianceReviewDocumentEditBean.handleFileUploadDocumentMemo}"
+									oncomplete="onCompleteUpload()"
+									value="complianceReviewDocumentEditBean.uploadFilesDocumentMemo"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{complianceReviewDocumentEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{complianceReviewDocumentEditBean.uploadFilesDocumentMemo}" 
+									emptyMessage=""
+									var="vo" id="documentMemoList" rowIndexVar="index">
+									<table>
+								    	<tr>
+								    	<td style="width:80%; padding-right:10px">
+								        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{trcCorrespondenceEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+								        </td>
+								        <td>
+								        	<p:commandLink  immediate="true" actionListener="#{complianceReviewDocumentEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="documentMemoList">#{msg.buttonDelete}</p:commandLink>
+								        </td>
+							        	</tr>
+							        </table>
+								</p:dataList>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					
+					<div class="box-footer">
+						<h:commandButton value="#{msg.buttonSave}" type="submit"
+							styleClass="btn btn-primary pull-left"
+							actionListener="#{complianceReviewDocumentEditBean.save()}"></h:commandButton>
+							
+						<h:commandLink value="#{msg.buttonCancel}" immediate="true"
+							actionListener="#{complianceReviewDocumentEditBean.cancel()}"
+							styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+					
+						<p:remoteCommand
+							action="#{complianceReviewDocumentEditBean.onAddNewRowPicCompliance}" process="@this"
+							immediate="true" name="onAddNewRowPicCompliance"
+							update="dataTableCompliance"></p:remoteCommand>
+						<p:remoteCommand
+							action="#{complianceReviewDocumentEditBean.onDeleteRowPicCompliance}" process="@this"
+							immediate="true" name="onDeleteRowPicCompliance"
+							update="dataTableCompliance"></p:remoteCommand>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<wo:selector id="ComplianceDummy" height="450" width="550"
+			title="LOV #{msg.formComplianceReviewPicCompliance}"
+			widgetVar="picComplianceDialogDummy"
+			selectorInfo="#{complianceReviewDocumentEditBean.selectorCompliance}"
+			bean="#{complianceReviewDocumentEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+		<wo:selector id="Compliance" height="450" width="550"
+			title="LOV #{msg.formComplianceReviewPicCompliance}"
+			widgetVar="picComplianceDialog"
+			selectorInfo="#{complianceReviewDocumentEditBean.selectorCompliance}"
+			bean="#{complianceReviewDocumentEditBean}"
+			updateOnSelected="form:dataTableCompliance" />
+		
+	</ui:define>
+
+
+</ui:composition>

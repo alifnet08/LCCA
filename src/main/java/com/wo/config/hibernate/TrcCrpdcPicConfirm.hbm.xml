@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcCorrespondence.model">
+	<class name="TrcCrpdcPicConfirm" table="WO_TRC_CRPDC_PIC_CONFIRM">
+		<id name="crpdcPicConfirmId" column="CRPDC_PIC_CONFIRM_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TRC_CRPDC_PIC_CONFIRM_SEQ</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="trcCorrespondence" column="CORRESPONDENCE_ID" fetch="join" 
+				class="com.wo.module.trcCorrespondence.model.TrcCorrespondence" />
+		
+		<property name="divisionId" column="division_id" type="long" />
+		
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+			
+		<property name="targetDate" column="TARGET_DATE" type="date" />
+				
+		<many-to-one name="statusPic" column="STATUS_PIC_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />
+				
+		<property name="followupNote" column="FOLLOWUP_NOTE" type="string" />
+		
+		<many-to-one name="picUserFollowup" column="PIC_FOLLOWUP_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+				
+		<property name="followupDate" column="FOLLOWUP_DATE" type="timestamp" />		
+		
+		<property name="picFollowupDate" column="PIC_FOLLOWUP_DATE" type="timestamp" />		
+		
+		<property name="picFollowup" column="PIC_FOLLOWUP" type="string" />
+									
+		<property name="picFollowupNote" column="PIC_FOLLOWUP_NOTE" type="string" />		
+		
+		<many-to-one name="complianceBy" column="COMPLIANCE_BY_ID"
+			class="com.wo.module.user.model.User" fetch="join" />
+			
+		<many-to-one name="complianceStatus" column="COMPLIANCE_STATUS_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />	
+	    
+	    <property name="complianceNote" column="COMPLIANCE_NOTE" type="string" />		
+	    
+	    <property name="complianceDate" column="COMPLIANCE_DATE" type="timestamp" />		
+								
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		
+		<bag name="trcCorrespondencePicFollowupAttachments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="crspdc_pic_fp_atch_id asc">
+			<key column="CRPDC_PIC_CONFIRM_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment" />
+		</bag>
+		
+		<bag name="trcCorrespondencePicFollowupAttendance" inverse="true"
+			cascade="save-update, delete-orphan" order-by="crpdc_pic_fp_atdee_id asc">
+			<key column="CRPDC_PIC_CONFIRM_ID" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.internalRegulationPenerbitan.model">
+	<class name="InternalRegulationPenerbitan" table="wo_trc_irg">
+		<id name="irgId" column="IRG_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_irg_seq</param>
+			</generator>
+		</id>
+		
+		<property name="referenceNo" column="REFERENCE_NO" type="string" />
+		<property name="irgTitle" column="IRG_TITLE" type="string" />
+				
+		<many-to-one name="regulationType" column="REGULATION_TYPE"
+				fetch="join"  class="com.wo.module.parameter.model.ParameterDetail" />
+				
+		<property name="regulationInDate" column="REGULATION_IN_DATE" type="date" />
+		
+		<many-to-one name="regulationStatus" column="REGULATION_STATUS" 
+				fetch="join" class="com.wo.module.parameter.model.ParameterDetail" />
+										
+  		<property name="workUnitTpg" column="WORK_UNIT_TPG" type="long" />
+  		
+  		<property name="directorateTpg" column="DIRECTORATE_TPG" type="string" />
+  		
+  		<many-to-one name="counterType" column="COUNTER_TYPE_ID"
+				class="com.wo.module.counterType.model.CounterType" fetch="join" />
+			
+		<property name="finalIrgDate" column="FINAL_IRG_DATE" type="date" />
+		<property name="approvalSpvDate" column="APPROVAL_SPV_DATE" type="date" />		
+		<property name="approvalPukDate" column="APPROVAL_PUK_DATE" type="date" />
+		<property name="signOffDate" column="SIGN_OFF_DATE" type="date" />
+		
+		<many-to-one name="processStatus" column="PROCESS_STATUS" 
+				fetch="join" class="com.wo.module.parameter.model.ParameterDetail" />
+		
+		<property name="regulationNo" column="REGULATION_NO" type="string" />
+		
+		<property name="effectiveDate" column="EFFECTIVE_DATE" type="date" />
+		<property name="emailBlastDate" column="EMAIL_BLAST_DATE" type="date" />		
+		<property name="uploadBlastDate" column="UPLOAD_BLAST_DATE" type="date" />
+		
+		<many-to-one name="regObsoleteType" column="REG_OBSOLETE_TYPE" 
+				fetch="join" class="com.wo.module.parameter.model.ParameterDetail" />
+		
+		<property name="obsoleteInfo" column="OBSOLETE_INFO" type="string" />
+		<property name="emailGroupTpk" column="EMAIL_GROUP_TPK" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="irgPicIrgs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="irg_pic_id asc">
+			<key column="irg_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicIrg" />
+		</bag>
+		
+		<bag name="irgPicTpgs" inverse="true"
+			cascade="save-update, delete-orphan" order-by="irg_pic_id asc">
+			<key column="irg_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpg" />
+		</bag>
+		
+		<bag name="irgPicTpks" inverse="true"
+			cascade="save-update, delete-orphan" order-by="irg_pic_id asc">
+			<key column="irg_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpk" />
+		</bag>
+		
+		<bag name="irgAttachmentList" inverse="true"
+			cascade="save-update, delete-orphan" order-by="irg_attachment_id asc">
+			<key column="irg_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanAttachment" />
+		</bag>
+		
+	</class>
+</hibernate-mapping>
+                   
+                 
+  
+  

@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			
+			.ui-chips-container {
+		     width:100%!important;
+		     background-color: rgba(245, 131, 34, 0.25);
+		     }
+			
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formFaqTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-faq">
+					<h:outputText value="#{msg.formFaqTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="subject"><p:outputLabel
+									value="#{msg.formFaqKeyword}" for="subject" /></label>								
+							<p:chips style="width:100%" styleClass="" id="subject" value="#{faqEditBean.keywords}"  required="true" requiredMessage="#{msg.formFaqSubject} #{msg.validateRequired}"/>
+							<p:message for="subject"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="institution"><p:outputLabel
+									value="#{msg.formFaqInstitution}" for="institution" /></label>								
+							<h:selectOneMenu id="institution" required="true" requiredMessage="#{msg.formFaqInstitution} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{faqEditBean.tmpFaq.institution.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{faqEditBean.institutionList}"/>
+							</h:selectOneMenu>
+							<p:message for="institution"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="category"><p:outputLabel
+									value="#{msg.formFaqCategory}" for="category" /></label>								
+							<h:selectOneMenu id="category" required="true" requiredMessage="#{msg.formFaqCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{faqEditBean.tmpFaq.faqCategory.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{faqEditBean.categoryList}"/>
+							</h:selectOneMenu>
+							<p:message for="category"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="question"><p:outputLabel
+									value="#{msg.formFaqQuestion}" for="question" /></label>								
+							<p:inputTextarea id="question" styleClass="form-control" required="true" requiredMessage="#{msg.formFaqQuestion} #{msg.validateRequired}" 
+							value="#{faqEditBean.tmpFaq.questionIn}" />
+							<p:message for="question"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="answer"><p:outputLabel
+									value="#{msg.formFaqAnswer}" for="answer" /></label>								
+							<p:textEditor id="answer"  widgetVar="logEditor"  value="#{faqEditBean.tmpFaq.answerIn}" height="150"   style="margin-bottom:10px" />
+							<p:message for="answer"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="uploadDate"><p:outputLabel
+									value="#{msg.formFaqUploadDate}" for="uploadDate" /></label>								
+							<p:calendar id="uploadDate"
+								styleClass="form-control-datepicker-wrap" maxlength="11"
+								value="#{faqEditBean.tmpFaq.uploadDate}"
+								autocomplete="off"
+								pattern="dd-MMM-yyyy" locale="en" ></p:calendar>
+							<p:message for="uploadDate"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+										value="#{msg.formFaqAttachment}"/>
+								<br/>
+								<h:outputText style="color: #dd4b39" value="#{faqEditBean.textWarningUpload}"/>
+							</label>
+							<p:fileUpload fileUploadListener="#{faqEditBean.handleFileUpload}" rendered="#{faqEditBean.isAdmin}"
+									oncomplete="onCompleteUpload()"
+									value="faqEditBean.uploadFiles"
+									mode="advanced" auto="true" dragDropSupport="false" multiple="true"
+									sizeLimit="#{faqEditBean.standardAttachmentSize}"
+									update="msgs" />
+									<p:dataList value="#{faqEditBean.uploadFiles}" 
+									emptyMessage=""
+									var="vo" id="attachment" rowIndexVar="index">
+										<table>
+									    	<tr>
+									    	<td style="width:80%">
+									        	<p:commandLink title="#{vo.fileSizeKB} KB" ajax="false" immediate="true" actionListener="#{faqEditBean.downloadFile(vo.fileId,vo.fileName,null)}" target="_blank">#{vo.fileName}</p:commandLink>
+									        </td>
+									        <td>
+									        	<p:commandLink  immediate="true" actionListener="#{faqEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}" update="attachment">#{msg.buttonDelete}</p:commandLink>
+									        </td>
+								        	</tr>
+								        </table>
+									</p:dataList>
+	
+						</div>		
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" ><p:outputLabel
+									value="Hits "  /></label>	
+							<br></br>							
+							<p:outputLabel
+									value="#{faqEditBean.hits} kali"  />
+						</div>
+					</div>
+					
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit" rendered="#{faqEditBean.isAdmin}"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{faqEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}" actionListener="#{faqEditBean.cancel()}"
+					onclick="window.history.back();" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

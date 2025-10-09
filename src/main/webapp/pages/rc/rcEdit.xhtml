@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    box-shadow: none;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-weight: normal;
+			    height: 38px;
+			    margin-left: 200px;
+    			margin-top: -37px;
+			}
+			.select2-container {
+    			width: 100px !important;
+			}
+			/* .ui-widget-content .ui-inputfield {
+			    margin-right: 110px;
+			} */
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formRCTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-rc">
+					<h:outputText value="#{msg.formRCTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="rcRegionCode"><p:outputLabel
+									value="#{msg.formRCRegionCode}" for="rcRegionCode" /></label>								
+							<p:inputText id="rcRegionCode" maxlength="100" required="true" requiredMessage="#{msg.formRCRegionCode} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{rcEditBean.rc.regionCode}"
+								></p:inputText>
+							<p:message for="rcRegionCode"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="rcWorkingUnit"><p:outputLabel
+									value="#{msg.formRCWorkingUnit}" for="rcWorkingUnit" /></label>								
+							<p:inputText id="rcWorkingUnit" maxlength="100" required="true" requiredMessage="#{msg.formRCWorkingUnit} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{rcEditBean.rc.workingUnit}"
+								></p:inputText>
+							<p:message for="rcWorkingUnit"/>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="rcRegion"><p:outputLabel
+									value="#{msg.formRCRegion}" for="rcRegion" /></label>								
+							<p:inputText id="rcRegion" maxlength="100" required="true" requiredMessage="#{msg.formRCRegion} #{msg.validateRequired}"
+								autocomplete="off" styleClass="form-control form-required"
+								value="#{rcEditBean.rc.region}"
+								></p:inputText>
+							<p:message for="rcRegion"/>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<h:commandButton value="#{msg.buttonSave}" type="submit"
+					styleClass="btn btn-primary pull-left"
+					actionListener="#{rcEditBean.save()}"></h:commandButton>
+				<h:commandLink value="#{msg.buttonCancel}"
+					actionListener="#{rcEditBean.cancel()}" immediate="true"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

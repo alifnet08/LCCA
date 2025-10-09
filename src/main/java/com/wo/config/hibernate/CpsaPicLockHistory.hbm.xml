@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.cpsaPicLockHistory.model">
+	<class name="CpsaPicLockHistory" table="WO_MST_CPSA_PIC_LOCK_HISTORY">
+		<id name="cpsaPicLockHistoryId" column="CPSA_PIC_LOCK_HISTORY_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_MST_CPSA_PIC_LOCK_HIS_SEQ</param>
+			</generator>
+		</id>
+
+
+		<property name="cpsaPicId" column="CPSA_PIC_ID" type="long" />
+		<property name="cpsaId" column="CPSA_ID" type="long" />
+		<property name="lockStatus" column="LOCK_STATUS" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		
+		
+	</class>
+</hibernate-mapping>

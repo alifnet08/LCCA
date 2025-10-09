@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.faq.model">
+	<class name="Faq" table="wo_mst_faq">
+		<id name="faqId" column="FAQ_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_faq_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="faqCategory" property-ref="parameterDtlCode"
+			column="FAQ_CATEGORY" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="institution" property-ref="parameterDtlCode"
+			column="INSTITUTION" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="questionIn" column="QUESTION_IN" type="string" />
+		<property name="questionEn" column="QUESTION_EN" type="string" />
+		<property name="answerIn" column="ANSWER_IN" type="string" />
+		<property name="answerEn" column="ANSWER_EN" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="faqKeywords" inverse="true"
+			cascade="save-update, delete-orphan" order-by="faq_keyword_id asc">
+			<key column="faq_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.faq.model.FaqKeyword" />
+		</bag>
+		
+		<bag name="faqDocuments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="faq_document_id asc">
+			<key column="faq_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.faq.model.FaqDocument" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

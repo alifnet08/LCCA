@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:wo="http://java.sun.com/jsf/composite/wo"
+                template="../templates/templateFrontEnd.xhtml">
+
+	     
+  <ui:define name="content">
+  	
+	  	<div class="row brdcrumb">
+        <nav class="navbar navbar-expand-sm bg-light navbar-light w-100">
+          
+          <div class=" navbar-collapse " id="collapsibleNavbar">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/dashboard/dashboardFrontEnd.faces">BERANDA</a>
+                <a class="nav-link"><i class="fa fa-sm fa-bold fa-chevron-right" style="margin-top:-5px;color: #FFC600;"></i></a>
+                <a class="nav-link disabled" href="#">VIEW - SURAT MASUK</a>
+              </li> 
+            </ul>
+          </div>  
+        </nav>
+      </div>
+      
+  	  <div class="container-fluid faq-content">
+        <div class="sidebar-title font-weight-bold">VIEW - SURAT MASUK</div>
+       
+        <h:form class="internal-form" style="margin-top:20px;" id="form">
+        <p:growl id="messages" severity="error"/>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Pengirim</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.sender.nameIn}</div>
+            </div>
+            <div class="col">
+              <div class="label-form">Tanggal Diterima Surat</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.letterReceivedDate!=null?correspondenceFEViewBean.sdf.format(correspondenceFEViewBean.trcCorrespondence.letterReceivedDate):null}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Perihal</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.perihalIn}</div>
+            </div>
+			<div class="col">
+              <div class="label-form">Tanggal Surat</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.letterDate!=null?correspondenceFEViewBean.sdf.format(correspondenceFEViewBean.trcCorrespondence.letterDate):null}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Tipe Surat</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.correspondenceCode.nameIn}</div>
+            </div>
+            <div class="col">
+              <div class="label-form">Catatan</div>
+              <div class="value-form">#{correspondenceFEViewBean.trcCorrespondence.notesDecrypted}</div>
+            </div>
+          </div>
+      
+          
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Bukti Konfirmasi PIC</div>
+              <ul class="attachment-list">
+	          <ui:repeat value="#{correspondenceFEViewBean.trcCrpdcPicConfirm.trcCorrespondencePicFollowupAttachments}" var="vo" >
+              <li>
+              <i class="far fa-file-alt"></i><p:spacer/><p:commandLink title="#{vo.fileSize} KB" ajax="false" immediate="true" actionListener="#{correspondenceFEViewBean.downloadFile(vo.fileId,vo.attachmentFile,null)}" target="_blank">#{vo.attachmentFile}</p:commandLink>
+              </li>
+              </ui:repeat>
+              </ul>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Tanggal Tindak Lanjut</div>
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.followupDate!=null ? correspondenceFEViewBean.sdf.format(correspondenceFEViewBean.trcCrpdcPicConfirm.followupDate): null}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form">Keterangan</div>
+               #{correspondenceFEViewBean.trcCrpdcPicConfirm.followupNote}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col">
+              <p:remoteCommand action="#{correspondenceFEViewBean.cancel}" name="cancel" immediate="true"></p:remoteCommand>
+              <button type="button" class="btn btn-outline-secondary" onclick="cancel()">Kembali</button>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="col">
+              <div class="label-form" style="#{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus eq null ?'display:none':''}">Status Pengecekan</div>
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus!=null?correspondenceFEViewBean.trcCrpdcPicConfirm.complianceStatus.nameIn:null}
+            </div>
+          </div>
+          
+         
+		<div class="form-row">
+            <div class="col">
+              <div class="label-form" style="#{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceNote eq null ?'display:none':''}">Catatan Pengecekan</div>
+	          #{correspondenceFEViewBean.trcCrpdcPicConfirm.complianceNote}
+            </div>
+          </div>
+          
+        </h:form>
+
+        
+      </div>
+      
+    
+			
+  </ui:define>
+</ui:composition>

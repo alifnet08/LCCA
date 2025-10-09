@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.litigation.model">
+	<class name="LitigationNew" table="wo_mst_litigation">
+		<id name="litigationId" column="LITIGATION_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_litigation_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="caseType" property-ref="parameterDtlCode"
+			column="CASE_TYPE" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="caseTypeDtl" property-ref="parameterDtlCode"
+			column="CASE_TYPE_DTL" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<property name="divisionOrBranchOffice" column="DIV_NAME_OR_BRANCH_OFFICE" type="string" />
+		<property name="segment" column="SEGMENT" type="string" />
+		<property name="description" column="DESCRIPTION" type="string" />
+		
+		<one-to-one name="litigationPerdataPenggugat" cascade="all" />
+		<one-to-one name="litigationPerdataTergugat" cascade="all" />
+		<one-to-one name="litigationPailitPkpu" cascade="all" />
+		<one-to-one name="litigationPidanaPelapor" cascade="all" />
+		<one-to-one name="litigationPidanaTerlapor" cascade="all" />
+		
+		<bag name="litigationPics" inverse="true"
+			cascade="save-update, delete-orphan" order-by="litigation_pic_id asc">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationPic" />
+		</bag>
+		
+		<many-to-one name="caseTeamHandler" property-ref="parameterDtlCode"
+			column="CASE_TEAM_HANDLER" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		
+		<property name="selectedPicName" column="PIC_NAME" type="string"/>
+		<!-- <many-to-one name="pic" column="PIC_ID" fetch="join" 
+				class="com.wo.module.user.model.User" /> -->
+		
+		<property name="picDescription" column="PIC_DESCRIPTION" type="string" />
+		
+		<!-- one to many Pihak Tergugat Termohon -->
+		<bag name="listPihakTergugatTermohon" inverse="true"
+			cascade="save-update, delete-orphan" order-by="LITI_PIHAK_T_ID ASC">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationPihakTergugatTermohon" />
+		</bag>
+		
+		<!-- one to many Pihak Penggugat Pemohon -->
+		<bag name="listPihakPenggugatPemohon" inverse="true"
+			cascade="save-update, delete-orphan" order-by="LITI_PIHAK_P_ID ASC">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationPihakPenggugatPemohon" />
+		</bag>
+		
+		<!-- one to many Pihak Kurator Turut Tergugat -->
+		<bag name="listPihakKuratorTurutTergugat" inverse="true"
+			cascade="save-update, delete-orphan" order-by="LITI_PIHAK_KTT_ID ASC">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationPihakKuratorTurutTergugat" />
+		</bag>
+		
+		<!-- one to many Progress Perkara -->
+		<bag name="listProgresPerkara" inverse="true"
+			cascade="save-update, delete-orphan" order-by="LITI_PROGRESS_PERKARA_ID ASC">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationProgressPerkara" />
+		</bag>
+		
+		<!-- one to many Putusan Pengadilan -->
+		<bag name="listPutusanPengadilan" inverse="true"
+			cascade="save-update, delete-orphan" order-by="LITI_PUTUSAN_PNGADILAN_ID ASC">
+			<key column="litigation_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.litigation.model.LitigationPutusanPengadilan" />
+		</bag>
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

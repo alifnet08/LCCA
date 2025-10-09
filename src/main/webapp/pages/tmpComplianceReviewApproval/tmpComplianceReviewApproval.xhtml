@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+    <ui:define name="head">
+    <style>
+    .ui-datatable .ui-datatable-data td {
+	    vertical-align : top
+	}
+    </style>
+    </ui:define>
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formTmpComplianceReviewApprovalTitle}" />
+	</ui:define>
+	
+	<ui:define name="buttonAdd">
+		
+	</ui:define>
+	
+	<ui:define name="content">
+	
+	<div class="box box-solid">
+    
+    <div class="box-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="table-responsive">
+           <p:dataTable id="tableSearch" paginator="true" var="vo"
+							value="#{tmpComplianceReviewApprovalBean.tableModel}" dynamic="true" lazy="true"
+							emptyMessage="#{msg.textNodata}" rows="#{tmpComplianceReviewApprovalBean.paging}"
+							rowIndexVar="statIndex" styleClass="table table-striped table-hover"
+							rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							>
+
+							<p:column width="100" style="text-align:center;"
+								headerText="#{msg.formAction}">
+								<p:commandLink id="edit" value="#{msg.buttonEdit}" action="#{tmpComplianceReviewApprovalBean.getNavigateEdit()}"  ajax="false" styleClass="tl-label">
+									<f:param name="id" value="#{vo.complianceReviewId}" />
+								</p:commandLink>
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalReviewCategory}" width="100" >
+								<h:outputLabel value="#{vo.reviewCategory}" title="#{vo.reviewCategory}" style="vertical-align: top;"/>
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalReviewedBranch}" width="100" >
+								<h:outputLabel value="#{vo.reviewedBranch}" title="#{vo.reviewedBranch}" style="vertical-align: top;"/>
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalAssessmentDocumentNumber}" width="150">
+								<h:outputLabel value="#{vo.documentNo}" title="#{vo.documentNo}" />
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalDateofAssessmentDocument}" width="180">
+								<h:outputLabel value="#{vo.documentDateStr}" title="#{vo.documentDateStr}" />
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalPerihal}" width="150" >
+								<h:outputLabel value="#{vo.perihalIn}" title="#{vo.perihalIn}" style="vertical-align: top;"/>
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalPICName}" width="200">
+								<p:dataList value="#{vo.statusList}" 
+									emptyMessage=""
+									var="dtl">#{dtl.pic1} <br/> #{dtl.pic2} <br/> #{dtl.pic3}</p:dataList>
+							</p:column>
+							
+							<p:column headerText="#{msg.formTmpComplianceReviewApprovalStatus}" width="100"
+								style="text-align:center;">
+								<h:outputLabel value="#{vo.status}" class="label label-info"/>
+							</p:column>
+						</p:dataTable>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+   
+	</ui:define>
+</ui:composition>

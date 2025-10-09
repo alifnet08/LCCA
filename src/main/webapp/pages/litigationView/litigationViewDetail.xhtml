@@ -1,0 +1,1859 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+		.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}	
+			.ui-inputfield, .ui-widget-content .ui-inputfield{
+			    -webkit-box-shadow: none;
+			    box-shadow: none;
+			}
+			.form-control[disabled]{
+			    font-size: 13px;
+			    font-family: 'Montserrat';
+			    color: #444444;
+			}
+			.input-group {
+			    margin-top: 15px;
+			}
+			.ui-widget-content .ui-inputfield {
+			    font-family: 'Montserrat';
+			}
+			
+			input#form\:picPerdataTergugat {
+				margin-right: 10px;
+			    width: 310px;
+			}
+			
+		</style>
+		<script>
+			$('form').on('focus', 'input[type=number]', function (e) {
+			  $(this).on('wheel.disableScroll', function (e) {
+			    e.preventDefault()
+			  })
+			})
+			$('form').on('blur', 'input[type=number]', function (e) {
+			  $(this).off('wheel.disableScroll')
+			})
+		</script>
+	</ui:define>
+	
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formLitigationViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+	<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-litigation">
+					<h:outputText value="#{msg.formLitigationTitle}" />
+				</h3>
+			</div>
+			<div class="box-body">
+			<p:growl id="messages" rendered="true" />
+				<div class="row">
+				
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="category"><p:outputLabel
+									value="#{msg.formLitigationCaseType}" for="caseType" /></label>								
+							<h:selectOneMenu id="caseType" required="true" requiredMessage="#{msg.formLitigationCategory} #{msg.validateRequired}"
+								styleClass="form-control s2"
+								value="#{litigationViewDetailBean.litigationNew.selectCaseType}" disabled="true"> 
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems value="#{litigationViewDetailBean.caseTypeList}"/>
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					<h3>
+						<h:outputLabel value="LOB"/>
+					</h3>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="branchOffice"><p:outputLabel
+									value="#{msg.formLitigationBranchOffice}" for="branchOffice" /></label>								
+							<p:inputText autocomplete="off" style="width:100%" styleClass="form-control" id="branchOffice" 
+									value="#{litigationViewDetailBean.litigationNew.divisionOrBranchOffice}" 
+									required="true" requiredMessage="#{msg.formLitigationBranchOffice} #{msg.validateRequired}" disabled="true"/>
+							<p:message for="branchOffice"/>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="control-label tl-label" tl="segment"><p:outputLabel
+									value="#{msg.formLitigationSegment}" for="segment" /></label>								
+							<p:inputText autocomplete="off" style="width:100%" styleClass="form-control" id="segment" 
+									value="#{litigationViewDetailBean.litigationNew.segment}" 
+									required="true" requiredMessage="#{msg.formLitigationSegment} #{msg.validateRequired}" disabled="true"/>
+							<p:message for="segment"/>
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelCaseTypePerdata" style="#{litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PERDATA' ? '':'display:none'}">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label" tl="category"><p:outputLabel
+										value="#{msg.formLitigationCaseTypeMaybankAs}" for="caseTypeDtlPerdata" /></label>								
+								<h:selectOneMenu id="caseTypeDtlPerdata"
+										styleClass="form-control s2"
+										value="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtlPerdata}" disabled="true">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewDetailBean.caseTypePerdataDtlList}"/>
+								</h:selectOneMenu>
+								<p:message for="caseTypeDtlPerdata"/>
+							</div>
+						</div>
+						
+						<h:panelGroup id="panelCaseTypeDtlPerdataTergugat" style="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtlPerdata eq 'CASE_TYPE_DTL_PERDATA_TERGUGAT' and litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PERDATA' ? '':'display:none'}">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="control-label tl-label" tl="debitur"><p:outputLabel
+											value="#{msg.formLitigationDebitur}"/></label>								
+									<p:inputText autocomplete="off" style="width:100%" styleClass="form-control" id="debitur" 
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.debitur}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseRegistration}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseYear}"/></label>
+									<p:inputText id="tahunPerkaraPerdataTergugat" styleClass="form-control" type="number" maxlength="4"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.caseYear}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseNumber}" /></label>
+									<p:inputText id="nomorPerkaraPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.caseNumber}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtType}"/></label>
+									<h:selectOneMenu id="tipePengadilanPerdataTergugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectCourtType}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.courtTypeList}" />
+									</h:selectOneMenu> 
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtDomicile}"/></label>
+									<p:inputText id="domisiliPengadilanPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.courtDomicile}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationParaPihak}"/>
+							</h3>
+							<!-- DTL PENGGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationPenggugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPicTableWarpPerdataTergugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakPenggugatPerdataTergugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakPenggugatPemohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationPenggugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.penggugatPemohon}" disabled="true">
+														<p:ajax event="valueChange" />
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<!-- DTL TERGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTergugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPicTableWarpPerdataTergugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTergugatPerdataTergugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakTergugatTermohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												<p:column headerText="#{msg.formLitigationTergugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.tergugatTermohon}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- DTL TURUT TERGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTurutTergugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTurutTergugatTableWarpPerdataTergugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTurutTergugatPerdataTergugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakKuratorTurutTergugat}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												<p:column headerText="#{msg.formLitigationTurutTergugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.kuratorTurutTergugat}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationAttorney}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationPenggugat}" for="penggugatKuasaHukumPerdataTergugat" /></label>
+									<p:inputText id="penggugatKuasaHukumPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.kuasaHukumPenggugat}" disabled="true"/>
+									<p:message for="penggugatKuasaHukumPerdataTergugat"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationTergugat}" for="tipeTergugatKuasaHukumPerdataTergugat" /></label>
+									<h:selectOneMenu id="tipeTergugatKuasaHukumPerdataTergugat"  styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectCaseHandler}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseHandlerList}" />
+									</h:selectOneMenu> 
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationAttorneyOfficeName}" for="tergugatKuasaHukumPerdataTergugat" /></label>
+									<p:inputText id="tergugatKuasaHukumPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.attorneyOfficeName}" disabled="true"/>
+								</div>
+							</div>
+							
+							<!-- DTL PENANGANAN TIM -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTeamHandler}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTimPerkaraPerdataTergugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePerkaraTimPerdataTergugat"
+													value="#{litigationViewDetailBean.litigationNew}">
+												<p:column headerText="#{msg.formLitigationTeamHandler}" width="150">
+													<h:selectOneMenu id="caseTeamHandlerPerdataTergugat" styleClass="form-control s2" immediate="true"
+															value="#{litigationViewDetailBean.litigationNew.selectCaseTeamHandlerPerdataTer}" disabled="true">
+														<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+														<f:selectItems value="#{litigationViewDetailBean.caseTeamHandlerList}" />
+														<p:ajax event="change" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPic}" width="200">
+													<table>
+														<tr>
+															<td style="width: 100%">
+																<p:inputText id="picPerdataTergugat" styleClass="form-control" disabled="true"
+																	value="#{litigationViewDetailBean.litigationNew.selectedPicName}">
+																</p:inputText>
+															</td>
+														</tr>
+													</table>	
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPicDescription}" width="250">
+													<p:inputTextarea id="picKeteranganPerdataTergugat" styleClass="form-control" 
+															value="#{litigationViewDetailBean.litigationNew.picDescPerdataTer}" disabled="true">
+														<p:ajax event="change"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+								
+							</h:panelGroup>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"> 
+										<p:outputLabel value="#{msg.formLitigationHearingDate}" />
+									</label>
+									<p:calendar id="courtDatePerdataTergugat" styleClass="form-control-datepicker-wrap" 
+											maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.hearingDate}" disabled="true">
+									</p:calendar>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseMainTopic}" /></label>
+									<h:selectOneMenu id="pokokPerkaraPerdataTergugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectCaseMainTopic}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseMainTopicList}" />
+									</h:selectOneMenu>
+								</div>	
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseSubTopic}"/></label>
+									<h:selectOneMenu id="subPokokPerkaraPerdataTergugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectCaseSubTopic}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseSubTopicList}" />
+									</h:selectOneMenu>
+								</div>	
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseClaimsPosition}" /></label>
+									<p:inputTextarea id="kasusPosisiGugatanPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.caseClaimsPosition}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationMaybankLegalPosition}" /></label>
+									<p:inputTextarea id="kedudukanHukumMaybankPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.maybankLegalPosition}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationPlaintiffDemand}" /></label>
+									<p:inputTextarea id="tuntutatPenggugatPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.plaintiffDemand}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseDerivativeValue}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationMaterialIdr}" /></label>
+									<p:inputNumber id="materialIdrNilaiTurunanPerkaraPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.claimsValueMaterialIdr}" disabled="true">
+									</p:inputNumber>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationImmaterial}"/></label>
+									<p:inputNumber id="immaterialNilaiTurunanPerkaraPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.claimsValueImmaterialIdr}" disabled="true">
+									</p:inputNumber>
+								</div>	
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationTotalClaimsValue}"/></label>
+									<p:inputNumber id="totalTuntutanNilaiTurunanPerkaraPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.totalClaimsValueIdr}"
+											disabled="true" />
+								</div>	
+							</div>
+							
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationForeignCurrencyType}"/></label>
+									<h:selectOneMenu id="tipeMaterialValasNilaiTuntutanPerkaraPerdataTergugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectForeignCurrency}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.foreignCurrencyList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationMaterialValas}"/></label>
+									<p:inputText id="materialValasNilaiTurunanPerkaraPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.claimsValueMaterialValasStr}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationPotentialLoss}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCessieValue}" /></label>
+									<p:inputNumber id="totalNilaiRugiPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.potentialLossCessieValue}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationPotentialLossOther}" /></label>
+									<p:inputNumber id="rugiLainPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.potentialLossOthers}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtDecision}" /></label>
+									<p:inputTextarea id="putusanPengadilanPerdataTergugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.courtDecision}" disabled="true"/>
+								</div>
+							</div>
+							
+							<!-- DTL PROGRESS/PERKEMBANGAN PERKARA -->
+							<h:panelGroup>
+								<h3>
+									<h:outputText value="#{msg.formLitigationCaseProgression}" />
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPicTableWarpPerdataTergugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableProgressPerkaraPerdataTergugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationProgressPerkara}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDate}" width="150">
+													<p:calendar styleClass="form-control-datepicker-wrap" 
+															maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+															value="#{data.progressDate}" disabled="true">
+														<p:ajax event="dateSelect" />
+													</p:calendar>
+												</p:column>
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDesc}" width="150">
+													<p:inputTextarea styleClass="form-control" value="#{data.progressDesc}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationDecisionStatus}" for="resultStatusPerdataTergugat" /></label>								
+									<h:selectOneMenu id="resultStatusPerdataTergugat" styleClass="form-control s2" 
+											immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.selectDecisionStatus}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.decisionStatusList}"/>
+									</h:selectOneMenu>
+									<p:message for="resultStatusPerdataTergugat"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseInspectLevel}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationOngoingCase}"/></label>	
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationBani}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingBaniFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPt}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingPtFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPtun}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingPtunFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPa}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingPaFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPtAgama}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingPtAgamaFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaKasasi}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingMaKasasiFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaPk}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseOngoingMaPkFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+									
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationTotalCaseOngoing}" for="totalPerkaraBerjalanPerdataTergugat"/></label>	
+									<p:inputText id="totalPerkaraBerjalanPerdataTergugat" styleClass="form-control" disabled="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.totalOngoingCase}" />
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationTotalCaseFinished}" for="totalPerkaraSelesaiPerdataTergugat"/></label>	
+									<p:inputText id="totalPerkaraSelesaiPerdataTergugat" styleClass="form-control" disabled="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.totalFinishedCase}" />
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationFinishedCase}"/></label>	
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationBani}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedBaniFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPt}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedPtFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPtun}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedPtunFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPa}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedPaFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaKasasi}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedMaKasasiFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaPk}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.litigationPerdataInspectLevel.caseFinishedMaPkFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"> 
+										<p:outputLabel value="#{msg.formLitigationFinishDate}" />
+									</label>
+									<p:calendar id="finishDatePerdataTergugat" styleClass="form-control-datepicker-wrap" 
+											maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataTergugat.finishDate}" disabled="true">
+									</p:calendar>
+								</div>
+							</div>
+						</h:panelGroup>
+											
+						
+						<h:panelGroup id="panelCaseTypeDtlPerdataPenggugat" style="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtlPerdata eq 'CASE_TYPE_DTL_PERDATA_PENGGUGAT' and litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PERDATA' ? '':'display:none'}"> 
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseRegistration}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseYear}" for="tahunPerkaraPerdataPenggugat" /></label>
+									<p:inputText id="tahunPerkaraPerdataPenggugat" styleClass="form-control" type="number" maxlength="4"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseYear}" disabled="true"/>
+									<p:message for="tahunPerkaraPerdataPenggugat"/>		
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseNumber}" for="nomorPerkaraPerdataPenggugat" /></label>
+									<p:inputText id="nomorPerkaraPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseNumber}" disabled="true"/>
+									<p:message for="nomorPerkaraPerdataPenggugat"/>	
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtType}"/></label>
+									<h:selectOneMenu id="pengadilanNegeriPerdataPenggugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.selectCourtType}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.courtTypeList}"/>
+									</h:selectOneMenu>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtDomicile}"/></label>
+									<p:inputText id="domisiliPengadilanPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.courtDomicile}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationParaPihak}"/>
+							</h3>
+							
+							<!-- DTL PENGGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationPenggugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationParaPihakPenggugatTableWarpPerdataPenggugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakPenggugatPerdataPenggugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakPenggugatPemohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+
+												<p:column headerText="#{msg.formLitigationPenggugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.penggugatPemohon}" disabled="true">
+														<p:ajax event="valueChange" />
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<!-- DTL TERGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTergugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationParaPihakTergugatTableWarpPerdataPenggugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTergugatPerdataPenggugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakTergugatTermohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationTergugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.tergugatTermohon}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<!-- DTL TURUT TERGUGAT -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTurutTergugat}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTurutTergugatTableWarpPerdataPenggugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTurutTergugatPerdataPenggugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakKuratorTurutTergugat}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationTurutTergugat}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.kuratorTurutTergugat}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationAttorney}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationPenggugat}" /></label>
+									<p:inputText id="penggugatKuasaHukumPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.kuasaHukumPenggugat}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationTergugat}"/></label>
+									<h:selectOneMenu id="tipeTergugatKuasaHukumPerdataPenggugat"  styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.selectCaseHandler}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseHandlerList}" />
+									</h:selectOneMenu> 
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationAttorneyOfficeName}"/></label>
+									<p:inputText id="tergugatKuasaHukumPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.attorneyOfficeName}" disabled="true"/>
+								</div>
+							</div>
+							
+							<!-- DTL TIM PERKARA -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTeamHandler}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTimPerkaraPerdataPenggugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePerkaraTimPerdataPenggugat"
+													value="#{litigationViewDetailBean.litigationNew}">
+												<p:column headerText="#{msg.formLitigationTeamHandler}" width="150">
+													<h:selectOneMenu id="caseTeamHandlerPerdataPenggugat" styleClass="form-control s2" immediate="true"
+															value="#{litigationViewDetailBean.litigationNew.selectCaseTeamHandlerPerdataPeng}" disabled="true">
+														<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+														<f:selectItems value="#{litigationViewDetailBean.caseTeamHandlerList}" />
+														<p:ajax event="change" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPic}" width="200">
+													<table>
+														<tr>
+															<td style="width: 100%">
+																<p:inputText id="picPerdataPenggugat" styleClass="form-control"
+																	value="#{litigationViewDetailBean.litigationNew.selectedPicName}" disabled="true">
+																</p:inputText>
+															</td>
+														</tr>
+													</table>	
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPicDescription}" width="250">
+													<p:inputTextarea id="picKeteranganPerdataPenggugat" styleClass="form-control" 
+															value="#{litigationViewDetailBean.litigationNew.picDescPerdataPeng}" disabled="true">
+														<p:ajax event="change"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+								
+							</h:panelGroup>
+							
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseMainTopic}" /></label>
+									<h:selectOneMenu id="pokokPerkaraPerdataPenggugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.selectCaseMainTopic}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseMainTopicList}" />
+									</h:selectOneMenu>
+								</div>	
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseSubTopic}"/></label>
+									<h:selectOneMenu id="subPokokPerkaraPerdataPenggugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.selectCaseSubTopic}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseSubTopicList}" />
+									</h:selectOneMenu>
+								</div>	
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationPlaintiffDemand}" /></label>
+									<p:inputTextarea id="tuntutatPenggugatPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.plaintiffDemand}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseDerivativeValue}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationMaterialIdr}"/></label>
+									<p:inputNumber id="materialIdrNilaiTurunanPerkaraPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.claimsValueMaterialIdr}" disabled="true">
+									</p:inputNumber>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationImmaterial}"/></label>
+									<p:inputNumber id="immaterialNilaiTurunanPerkaraPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.claimsValueImmaterialIdr}" disabled="true">
+									</p:inputNumber>
+								</div>	
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationTotalClaimsValue}"/></label>
+									<p:inputNumber id="totalTuntutanNilaiTurunanPerkaraPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.totalClaimsValueIdr}"
+											disabled="true" />
+								</div>	
+							</div>
+							
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationForeignCurrencyType}"/></label>
+									<h:selectOneMenu id="tipeMaterialValasNilaiTuntutanPerkaraPerdataPenggugat" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.selectForeignCurrency}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.foreignCurrencyList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationMaterialValas}"/></label>
+									<p:inputText id="materialValasNilaiTurunanPerkaraPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.claimsValueMaterialValasStr}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCourtDecision}"/></label>
+									<p:inputTextarea id="putusanPengadilanPerdataPenggugat" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.courtDecision}" disabled="true"/>
+								</div>
+							</div>
+							
+							<!-- DTL PROGRESS/PERKEMBANGAN PERKARA -->
+							<h:panelGroup>
+								<h3>
+									<h:outputText value="#{msg.formLitigationCaseProgression}" />
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationProgressPerkaraTableWarpPerdataPenggugat">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableProgressPerkaraPerdataPenggugat" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationProgressPerkara}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												<p:column headerText="#{msg.formLitigationCaseProgressDate}" width="150">
+													<p:calendar styleClass="form-control-datepicker-wrap" 
+															maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+															value="#{data.progressDate}" disabled="true">
+														<p:ajax event="dateSelect"/>
+													</p:calendar>
+												</p:column>
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDesc}" width="150">
+													<p:inputTextarea styleClass="form-control" value="#{data.progressDesc}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<!-- TODO Checkbox for Perkara Berjalan -->
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseInspectLevel}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationOngoingCase}"/></label>	
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationBani}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseOngoingBaniFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseOngoingPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPt}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseOngoingPtFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaKasasi}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseOngoingMaKasasiFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaPk}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseOngoingMaPkFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+									
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationTotalCaseOngoing}" for="totalPerkaraBerjalanPerdataPenggugat"/></label>	
+									<p:inputText id="totalPerkaraBerjalanPerdataPenggugat" styleClass="form-control" disabled="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.totalOngoingCase}" />
+								</div>
+							</div>
+							<!-- TODO Checkbox for Perkara Selesai -->
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationTotalCaseFinished}" for="totalPerkaraSelesaiPerdataPenggugat"/></label>	
+									<p:inputText id="totalPerkaraSelesaiPerdataPenggugat" styleClass="form-control" disabled="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.totalFinishedCase}" />
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category"><p:outputLabel
+											value="#{msg.formLitigationFinishedCase}"/></label>	
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationBani}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseFinishedBaniFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseFinishedPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationPt}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseFinishedPtFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaKasasi}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseFinishedMaKasasiFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationMaPk}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.caseFinishedMaPkFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"> 
+										<p:outputLabel value="#{msg.formLitigationFinishDate}" />
+									</label>
+									<p:calendar id="finishDatePerdataPenggugat" styleClass="form-control-datepicker-wrap" 
+											maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+											value="#{litigationViewDetailBean.litigationNew.litigationPerdataPenggugat.finishDate}" disabled="true">
+									</p:calendar>
+								</div>
+							</div>
+							
+						</h:panelGroup>
+						
+					</h:panelGroup>
+					
+					
+					
+					<h:panelGroup id="panelCaseTypePailitPkpu" style="#{litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PAILIT_PKPU' ? '':'display:none'}">
+						
+						<h3>
+							<h:outputLabel value="#{msg.formLitigationCaseRegistration}"/>
+						</h3>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationCaseYear}" for="tahunPerkaraPailitPkpu" /></label>
+								<p:inputText id="tahunPerkaraPailitPkpu" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.caseYear}" disabled="true"/>
+								<p:message for="tahunPerkaraPailitPkpu"/>		
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationCaseNumber}" for="nomorPerkaraPailitPkpu" /></label>
+								<p:inputText id="nomorPerkaraPailitPkpu" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.caseNumber}" disabled="true"/>
+								<p:message for="nomorPerkaraPailitPkpu"/>	
+							</div>
+						</div>
+						
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationCommercialCourt}"/></label>
+								<h:selectOneMenu id="tipePengadilanPailitPkpu" styleClass="form-control s2" immediate="true"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.selectCommercialCourt}" disabled="true">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewDetailBean.commercialCourtList}" />
+								</h:selectOneMenu> 
+							</div>
+						</div>
+
+						<!-- <div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="" /></label>
+								<p:inputText id="pengadilanNiaga" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.commercialCourt}" disabled="true"/>	
+							</div>
+						</div> -->
+						
+						<h3>
+							<h:outputLabel value="#{msg.formLitigationParaPihak}"/>
+						</h3>
+						
+						<!-- DTL PEMOHON -->
+						<h:panelGroup>
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationPemohon}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div id="litigationParaPihakPemohonTableWarpPailitPkpu">
+									<div class="table-wrapper table-responsive">
+										<p:dataTable id="dataTablePihakPemohonPailitPkpu" var="data"
+												value="#{litigationViewDetailBean.tableModelLitigationPihakPenggugatPemohon}"
+												rowKey="#{data.sequence}" rowIndexVar="statIndex"
+												rowSelectMode="checkbox">
+											
+											<p:column headerText="#{msg.formLitigationPemohon}" width="500">
+												<p:inputText styleClass="form-control" value="#{data.penggugatPemohon}" disabled="true">
+													<p:ajax event="valueChange" />
+												</p:inputText>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+						
+						
+						<!-- DTL TERMOHON -->
+						<h:panelGroup>
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationTermohon}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div id="litigationParaPihakTermohonTableWarpPailitPkpu">
+									<div class="table-wrapper table-responsive">
+										<p:dataTable id="dataTablePihakTermohonPailitPkpu" var="data"
+												value="#{litigationViewDetailBean.tableModelLitigationPihakTergugatTermohon}"
+												rowKey="#{data.sequence}" rowIndexVar="statIndex"
+												rowSelectMode="checkbox">
+											
+											<p:column headerText="#{msg.formLitigationTermohon}" width="500">
+												<p:inputText styleClass="form-control" value="#{data.tergugatTermohon}" disabled="true">
+													<p:ajax event="valueChange" />
+												</p:inputText>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+					
+						<!-- DTL PUTUSAN PENGADILAN -->
+						<div class="col-lg-12">
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationCourtDecision}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPutusanPengadilanTableWarpPailitPkpu">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePutusanPengadilanPailitPkpu" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPutusanPengadilan}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationDecisionDate}" width="250">
+													<p:calendar id="finalDecisionDatePailitPkpu" styleClass="form-control-datepicker-wrap" 
+															maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en" 
+															value="#{data.hearingDate}" disabled="true">
+													</p:calendar>
+												</p:column>
+												
+												<p:column headerText="#{msg.formLitigationJudgementWarning}" width="250">
+													<h:selectOneMenu id="amarPutusanPailitPkpu" styleClass="form-control s2" 
+															immediate="true"
+															value="#{data.selectJudgementWarning}" disabled="true">
+														<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+														<f:selectItems value="#{litigationViewDetailBean.judgementWarningList}" />
+													</h:selectOneMenu>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+						
+						<!-- DTL KURATOR/PENGURUS -->
+						<div class="col-lg-12">
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationCurator}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationKuratorTableWarpPailitPkpu">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableKuratorPailitPkpu" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakKuratorTurutTergugat}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationCurator}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.kuratorTurutTergugat}" disabled="true">
+														<p:ajax evnt="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+						
+						
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationCaseHandler}"/></label>
+								<h:selectOneMenu id="penangananPerkaraPailitPkpu"  styleClass="form-control s2" immediate="true"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.selectCaseHandler}" disabled="true">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewDetailBean.caseHandlerList}" />
+								</h:selectOneMenu> 
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationAttorneyOfficeName}"/></label>
+								<p:inputText id="namaKantorHukumPailitPkpu" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.attorneyOfficeName}" disabled="true"/>
+							</div>
+						</div>
+						
+						<!-- DTL PROGRESS/PERKEMBANGAN PERKARA -->
+						<h:panelGroup>
+							<h3>
+								<h:outputText value="#{msg.formLitigationCaseProgression}" />
+							</h3>
+							<div class="col-lg-12">
+								<div id="litigationProgressPerkaraTableWarpPailitPkpu">
+									<div class="table-wrapper table-responsive">
+										<p:dataTable id="dataTableProgressPerkaraPailitPkpu" var="data"
+												value="#{litigationViewDetailBean.tableModelLitigationProgressPerkara}"
+												rowKey="#{data.sequence}" rowIndexVar="statIndex"
+												rowSelectMode="checkbox">
+											
+											<p:column headerText="#{msg.formLitigationCaseProgressDate}" width="150">
+												<p:calendar styleClass="form-control-datepicker-wrap" 
+														maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+														value="#{data.progressDate}" disabled="true">
+												</p:calendar>
+											</p:column>
+											
+											<p:column headerText="#{msg.formLitigationCaseProgressDesc}" width="150">
+												<p:inputTextarea styleClass="form-control" value="#{data.progressDesc}" disabled="true"/>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+						
+						<h3>
+							<h:outputLabel value="#{msg.formLitigationMaybankBillValue}"/>
+						</h3>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationPkpu}" for="nilaiTagihanPKPU" /></label>
+								<p:inputNumber id="nilaiTagihanPKPU" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.invoiceValuePkpu}" disabled="true"/>
+								<p:message for="nilaiTagihanPKPU"/>	
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationKepailitan}" for="nilaiTagihanKepailitan" /></label>
+								<p:inputNumber id="nilaiTagihanKepailitan" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.invoiceValuePailit}" disabled="true"/>
+								<p:message for="nilaiTagihanKepailitan"/>	
+							</div>
+						</div>
+						
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationDescription}" for="keteranganPailitPkpu" /></label>
+								<p:inputTextarea id="keteranganPailitPkpu" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.keterangan}" disabled="true"/>
+								<p:message for="keteranganPailitPkpu"/>	
+							</div>
+						</div>
+						
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label"><p:outputLabel
+										value="#{msg.formLitigationMaybankLegalPosition}" for="kedudukanHukumMaybankPailitPkpu" /></label>
+								<p:inputText id="kedudukanHukumMaybankPailitPkpu" styleClass="form-control"
+										value="#{litigationViewDetailBean.litigationNew.litigationPailitPkpu.attorney}" disabled="true"/>
+								<p:message for="kedudukanHukumMaybankPailitPkpu"/>	
+							</div>
+						</div>
+						
+						<!-- DTL PENANGANAN TIM -->
+						<h:panelGroup>
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationTeamHandler}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div id="litigationTimPerkaraPailitPkpu">
+									<div class="table-wrapper table-responsive">
+										<p:dataTable id="dataTablePerkaraTimPailitPkpu"
+												value="#{litigationViewDetailBean.litigationNew}">
+											<p:column headerText="#{msg.formLitigationTeamHandler}" width="150">
+												<h:selectOneMenu id="caseTeamHandlerPailitPkpu" styleClass="form-control s2" immediate="true"
+														value="#{litigationViewDetailBean.litigationNew.selectCaseTeamHandlerPailitPkpu}" disabled="true">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems value="#{litigationViewDetailBean.caseTeamHandlerList}" />
+													<p:ajax event="change" />
+												</h:selectOneMenu>
+											</p:column>
+											<p:column headerText="#{msg.formLitigationPic}" width="200">
+												<table>
+													<tr>
+														<td style="width: 100%">
+															<p:inputText id="picPailitPkpu" styleClass="form-control"
+																value="#{litigationViewDetailBean.litigationNew.selectedPicName}" disabled="true">
+															</p:inputText>
+														</td>
+													</tr>
+												</table>	
+											</p:column>
+											<p:column headerText="#{msg.formLitigationPicDescription}" width="250">
+												<p:inputTextarea id="picKeteranganPailitPkpu" styleClass="form-control" 
+														value="#{litigationViewDetailBean.litigationNew.picDescPailitPkpu}" disabled="true">
+													<p:ajax event="change"/>
+												</p:inputTextarea>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+						
+						
+					</h:panelGroup>
+					
+					
+					<h:panelGroup id="panelCaseTypePidana" style="#{litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PIDANA' ? '':'display:none'}">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label" tl="category"><p:outputLabel
+										value="#{msg.formLitigationCaseTypeMaybankAs}" for="caseTypeDtlPidana" /></label>								
+								<h:selectOneMenu id="caseTypeDtlPidana"
+										styleClass="form-control s2"
+										value="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtl}" disabled="true">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewDetailBean.caseTypePidanaDtlList}"/>
+								</h:selectOneMenu>
+								<p:message for="caseTypeDtlPidana"/>
+							</div>
+						</div>
+						
+						<h:panelGroup id="panelCaseTypeDtlPidanaTerlapor" style="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtl eq 'CASE_TYPE_DTL_PIDANA_TERLAPOR' and litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PIDANA' ? '':'display:none'}"> 
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseRegistration}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseYear}" /></label>
+									<p:inputText id="tahunPerkaraPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.caseYear}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationReportNumber}" /></label>
+									<p:inputText id="nomorPerkaraPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.caseNumber}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCriminalOffense}" /></label>
+									<p:inputTextarea id="tindakPidanaPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.tindakPidana}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCasePosition}" for="kasusPosisiPidanaTerlapor" /></label>
+									<p:inputTextarea id="kasusPosisiPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.casePosition}" disabled="true"/>
+									<p:message for="kasusPosisiPidanaTerlapor"/>	
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationExaminingAgency}" for="instansiPemeriksaPidanaTerlapor" /></label>
+									<p:inputText id="instansiPemeriksaPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.examiningAgency}" disabled="true"/>
+									<p:message for="instansiPemeriksaPidanaTerlapor"/>	
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationParaPihak}"/>
+							</h3>
+							<!-- DTL PELAPOR -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationPelapor}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPihakPelaporTableWarpPidanaTerlapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakPelaporPidanaTerlapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakPenggugatPemohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationPelapor}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.penggugatPemohon}" disabled="true">
+														<p:ajax event="valueChange" />
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<!-- DTL TERLAPOR -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTerlapor}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPihakTerlaporTableWarpPidanaTerlapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTerlaporPidanaTerlapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakTergugatTermohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationTerlapor}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.tergugatTermohon}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- DTL PENANGANAN TIM -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTeamHandler}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTimPerkaraPidanaTerlapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePerkaraTimPidanaTerlapor"
+													value="#{litigationViewDetailBean.litigationNew}">
+												<p:column headerText="#{msg.formLitigationTeamHandler}" width="150">
+													<h:selectOneMenu id="caseTeamHandlerPidanaTerlapor" styleClass="form-control s2" immediate="true"
+															value="#{litigationViewDetailBean.litigationNew.selectCaseTeamHandlerPidanaTer}" disabled="true">
+														<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+														<f:selectItems value="#{litigationViewDetailBean.caseTeamHandlerList}" />
+														<p:ajax event="change" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPic}" width="200">
+													<table>
+														<tr>
+															<td style="width: 100%">
+																<p:inputText id="picPidanaTerlapor" styleClass="form-control"
+																	value="#{litigationViewDetailBean.litigationNew.selectedPicName}" disabled="true">
+																</p:inputText>
+															</td>
+														</tr>
+													</table>	
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPicDescription}" width="250">
+													<p:inputTextarea id="picKeteranganPidanaTerlapor" styleClass="form-control" 
+															value="#{litigationViewDetailBean.litigationNew.picDescPidanaTer}" disabled="true">
+														<p:ajax event="change"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+								
+							</h:panelGroup>
+							
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseHandler}"/></label>
+									<h:selectOneMenu id="caseHandlerPidanaTerlapor"  styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.selectCaseHandler}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseHandlerList}" />
+									</h:selectOneMenu> 
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationAttorneyOfficeName}"/></label>
+									<p:inputText id="tergugatKuasaHukumPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.attorneyOfficeName}" disabled="true" />
+								</div>
+							</div>
+							
+							<!-- DTL PROGRESS/PERKEMBANGAN PERKARA -->
+							<h:panelGroup>
+								<h3>
+									<h:outputText value="#{msg.formLitigationCaseProgression}" />
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationProgressPerkaraTableWarpPidanaTerlapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableProgressPerkaraPidanaTerlapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationProgressPerkara}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDate}" width="150">
+													<p:calendar styleClass="form-control-datepicker-wrap" 
+															maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+															value="#{data.progressDate}" disabled="true">
+														<p:ajax event="dateSelect"/>
+													</p:calendar>
+												</p:column>
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDesc}" width="150">
+													<p:inputTextarea styleClass="form-control" value="#{data.progressDesc}" disabled="true">
+														<p:ajax event="valueChange" />
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseValue}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseValueIdr}"/></label>
+									<p:inputNumber id="nilaiIdrPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.caseValueIdr}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationForeignCurrencyType}"/></label>
+									<h:selectOneMenu id="tipeValasPidanaTerlapor" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.selectForeignCurrency}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.foreignCurrencyList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseValueValas}"/></label>
+									<p:inputText id="nilaiValasPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.caseValueValas}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category">
+										<p:outputLabel value="#{msg.formLitigationInspectLevel}" />
+									</label>								
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelPol}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.inspectionLevelPolFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.inspectionLevelPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelJaksa}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.inspectionLevelJaksaFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelFinished}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.inspectionLevelFinishedFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+							</div>
+							
+							<!-- <div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="Kuasa Hukum Maybank" for="kuasaHukumMaybankPidanaTerlapor" /></label>
+									<p:inputText id="kuasaHukumMaybankPidanaTerlapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaTerlapor.attorney}" disabled="true"/>
+								</div>
+							</div> -->
+							
+						</h:panelGroup>
+						
+						
+						
+						<h:panelGroup id="panelCaseTypeDtlPidanaPelapor" style="#{litigationViewDetailBean.litigationNew.selectCaseTypeDtl eq 'CASE_TYPE_DTL_PIDANA_PELAPOR' and litigationViewDetailBean.litigationNew.selectCaseType eq 'CASE_TYPE_PIDANA' ? '':'display:none'}"> 
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseRegistration}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseYear}"/></label>
+									<p:inputText id="tahunPerkaraPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.caseYear}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"> 
+										<p:outputLabel value="#{msg.formLitigationReportDate}" />
+									</label>
+									<p:calendar id="tanggalLaporanPidanaPelapor" styleClass="form-control-datepicker-wrap" 
+											maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.reportDate}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationReportNumber}" /></label>
+									<p:inputText id="nomorPerkaraPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.caseNumber}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCriminalOffense}"/></label>
+									<p:inputTextarea id="tindakPidanaPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.tindakPidana}" disabled="true"/>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCasePosition}" for="kasusPosisiPidanaPelapor" /></label>
+									<p:inputTextarea id="kasusPosisiPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.casePosition}" disabled="true"/>
+									<p:message for="kasusPosisiPidanaPelapor"/>	
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationExaminingAgency}" for="instansiPemeriksaPidanaPelapor" /></label>
+									<p:inputText id="instansiPemeriksaPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.examiningAgency}" disabled="true"/>
+								</div>
+							</div>
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationParaPihak}"/>
+							</h3>
+							<!-- DTL PELAPOR -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationPelapor}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPihakPelaporTableWarpPidanaPelapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakPelaporPidanaPelapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakPenggugatPemohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationPelapor}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.penggugatPemohon}" disabled="true">
+														<p:ajax event="valueChange" />
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<!-- DTL TERLAPOR -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTerlapor}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationPihakTerlaporTableWarpPidanaPelapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePihakTerlaporPidanaPelapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationPihakTergugatTermohon}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationTerlapor}" width="500">
+													<p:inputText styleClass="form-control" value="#{data.tergugatTermohon}" disabled="true">
+														<p:ajax event="valueChange"/>
+													</p:inputText>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+
+							<!-- DTL PENANGANAN TIM -->
+							<h:panelGroup>
+								<h3>
+									<h:outputLabel value="#{msg.formLitigationTeamHandler}"/>
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationTimPerkaraPidanaPelapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTablePerkaraTimPidanaPelapor"
+													value="#{litigationViewDetailBean.litigationNew}">
+												<p:column headerText="#{msg.formLitigationTeamHandler}" width="150">
+													<h:selectOneMenu id="caseTeamHandlerPidanaPelapor" styleClass="form-control s2" immediate="true"
+															value="#{litigationViewDetailBean.litigationNew.selectCaseTeamHandlerPidanaPel}" disabled="true">
+														<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+														<f:selectItems value="#{litigationViewDetailBean.caseTeamHandlerList}" />
+														<p:ajax event="change" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPic}" width="200">
+													<table>
+														<tr>
+															<td style="width: 100%">
+																<p:inputText id="picPidanaPelapor" styleClass="form-control"
+																	value="#{litigationViewDetailBean.litigationNew.selectedPicName}" disabled="true">
+																</p:inputText>
+															</td>
+														</tr>
+													</table>	
+												</p:column>
+												<p:column headerText="#{msg.formLitigationPicDescription}" width="250">
+													<p:inputTextarea id="picKeteranganPidanaPelapor" styleClass="form-control" 
+															value="#{litigationViewDetailBean.litigationNew.picDescPidanaPel}" disabled="true">
+														<p:ajax event="change"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+								
+							</h:panelGroup>
+							
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseHandler}"/></label>
+									<h:selectOneMenu id="caseHandlerPidanaPelapor"  styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.selectCaseHandler}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.caseHandlerList}" />
+									</h:selectOneMenu> 
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationAttorneyOfficeName}"/></label>
+									<p:inputText id="tergugatKuasaHukumPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.attorneyOfficeName}" disabled="true"/>
+								</div>
+							</div>
+							
+							<!-- DTL PROGRESS/PERKEMBANGAN PERKARA -->
+							<h:panelGroup>
+								<h3>
+									<h:outputText value="#{msg.formLitigationCaseProgression}" />
+								</h3>
+								<div class="col-lg-12">
+									<div id="litigationProgressPerkaraTableWarpPidanaPelapor">
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableProgressPerkaraPidanaPelapor" var="data"
+													value="#{litigationViewDetailBean.tableModelLitigationProgressPerkara}"
+													rowKey="#{data.sequence}" rowIndexVar="statIndex"
+													rowSelectMode="checkbox">
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDate}" width="150">
+													<p:calendar styleClass="form-control-datepicker-wrap" 
+															maxlength="11" autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+															value="#{data.progressDate}" disabled="true">
+														<p:ajax event="dateSelect" />
+													</p:calendar>
+												</p:column>
+												
+												<p:column headerText="#{msg.formLitigationCaseProgressDesc}" width="150">
+													<p:inputTextarea styleClass="form-control" value="#{data.progressDesc}" disabled="true">
+														<p:ajax event="change"/>
+													</p:inputTextarea>
+												</p:column>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							
+							
+							<h3>
+								<h:outputLabel value="#{msg.formLitigationCaseValue}"/>
+							</h3>
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseValueIdr}" for="nilaiIdrPidanaPelapor" /></label>
+									<p:inputNumber id="nilaiIdrPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.caseValueIdr}" disabled="true"/>
+									<p:message for="nilaiIdrPidanaPelapor"/>	
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationForeignCurrencyType}"/></label>
+									<h:selectOneMenu id="tipeValasPidanaPelapor" styleClass="form-control s2" immediate="true"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.selectForeignCurrency}" disabled="true">
+										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+										<f:selectItems value="#{litigationViewDetailBean.foreignCurrencyList}" />
+									</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="col-lg-8">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="#{msg.formLitigationCaseValueValas}"/></label>
+									<p:inputText id="nilaiValasPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.caseValueValas}" disabled="true"/>
+								</div>
+							</div>
+							
+							<div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label" tl="category">
+										<p:outputLabel value="#{msg.formLitigationInspectLevel}" />
+									</label>								
+									<div>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelPol}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.inspectionLevelPolFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelJaksa}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.inspectionLevelJaksaFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelPn}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.inspectionLevelPnFlag}">
+										</p:selectBooleanCheckbox>
+										<p:selectBooleanCheckbox itemLabel="#{msg.formLitigationInspectLevelFinished}" disabled="true"
+												value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.inspectionLevelFinishedFlag}">
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+							</div>
+							
+							<!-- <div class="col-lg-12">
+								<div class="form-group">
+									<label class="tl-label"><p:outputLabel
+											value="Kuasa Hukum Maybank" for="kuasaHukumMaybankPidanaPelapor" /></label>
+									<p:inputText id="kuasaHukumMaybankPidanaPelapor" styleClass="form-control"
+											value="#{litigationViewDetailBean.litigationNew.litigationPidanaPelapor.attorney}" disabled="true"/>
+								</div>
+							</div> -->
+							
+						</h:panelGroup>
+						
+					</h:panelGroup>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="control-label tl-label" tl="description"><p:outputLabel
+									value="#{msg.formLitigationDataChangeHistory}" for="dataChangeHistory" /></label>								
+							<p:inputTextarea id="dataChangeHistory" styleClass="form-control"
+									value="#{litigationViewDetailBean.litigationNew.description}" disabled="true"/>
+							<p:message for="dataChangeHistory"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<h:commandLink value="#{msg.buttonCancel}"
+						actionListener="#{litigationViewDetailBean.back()}" immediate="true"
+						styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

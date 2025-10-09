@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Maybank LCCA Site</title>
+    <link rel="icon" href="#{request.contextPath}/resources/assets/images/Maybank-head-ico.svg"/>
+
+    <link rel="stylesheet" href="#{request.contextPath}/resources/assets/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="#{request.contextPath}/resources/assets/css/slick.min.css" type="text/css"/>
+    <link rel="stylesheet" href="#{request.contextPath}/resources/assets/css/fontawesome.css" type="text/css"/>
+    <link rel="stylesheet" href="#{request.contextPath}/resources/assets/css/bootstrap-datepicker3.css" type="text/css"/>
+    <script src="#{request.contextPath}/resources/assets/js/jquery.js" type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/assets/js/vendor/popper.min.js" type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/assets/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="#{request.contextPath}/resources/assets/js/moment.js" type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/assets/js/id.js" type="text/javascript"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script> -->
+    <script src="#{request.contextPath}/resources/assets/js/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/assets/locales/bootstrap-datepicker.en-CA.min.js" type="text/javascript"></script> 
+    <!-- <script src="https://kit.fontawesome.com/abe15a9ddf.js" crossorigin="anonymous"></script> -->
+    <script src="#{request.contextPath}/resources/assets/js/script.js" type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/assets/js/jquery.cookie.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="#{request.contextPath}/resources/assets/css/style.css" type="text/css"/>
+    
+    <script>
+    function clearCookies(){
+		  var cookies = $.cookie();
+		  for(var cookie in cookies) {
+		  $.removeCookie(cookie);
+		  }
+	}
+    
+    function setPin(x,y,row,prov){
+		addImage($('.pin-content'),x,y,row,prov);
+	}
+    function addImage(object, xPos, yPos,row,prov){
+      //object.append('<p:graphicImage id="pinMarker"  styleClass="marker'+row+'" value="/resources/assets/images/pin-asset.svg" />' );
+      //object.append('<span class="pin-item"><img class="marker'+row+'" src="#{request.contextPath}/resources/assets/images/pin-asset.svg" data-toggle="tooltip" title="'+prov+'" /></span>' );
+      object.append('<img class="marker'+row+'" src="#{request.contextPath}/resources/assets/images/pin-asset.svg" data-toggle="tooltip" title="'+prov+'" />' );
+	  //console.log({xPos: xPos, yPos: yPos});
+	  var pinSizeW = 21.58;//ukuran w pin di admin
+	  var pinSizeH = 28.05;//ukuran h pin di admin
+      var xPos = xPos + 2;//adjustment tidak ada patokan, disesuaikan sendiri
+	  var yPos = yPos - 8;//adjustment tidak ada patokan, disesuaikan sendiri
+      //954.609px; height: 693.875p
+      var origMapW = 1245.5;//-->ini seharusnya W map
+      var origMapH = 905.33;//-->ini seharusnya H map
+      var adminPinW = (21.58 / origMapW) * 100;//width pin saat posisi didefinisikan
+      var adminPinH = (28.05 / origMapH) * 100;//height pin saat posisi didefinisikan
+      var pinPosX = ((xPos / origMapW) * 100) + '%';
+      var pinPosY = ((yPos / origMapH) * 100) + '%';
+      //$('.marker'+row).css('left', xPos-5).css('top', yPos-25).show();
+      $('.marker'+row).css('left', pinPosX).css('top', pinPosY).show();
+      
+      
+      $('.pin-content img').on('mouseenter', function(){
+          var $el = $(this); 
+          var pinTitle = $el.attr('title');
+          $('.talk').remove();
+          $el.after('<div class="talk you" style="top: ' + ($el.position().top - 30) + 'px; left: ' + ($el.position().left + 40) + 'px"><p>' + pinTitle + '</p></div>');
+      }).on('mouseleave', function(){
+      	setTimeout(function() {
+              $('.talk').remove();
+          }, 5000);
+      }).on('click', function(){
+          var $el = $(this); 
+          var pinTitle = $el.attr('title');
+          $('.talk').remove();
+          $el.after('<div class="talk you" style="top: ' + ($el.position().top - 30) + 'px; left: ' + ($el.position().left + 40) + 'px"><p>' + pinTitle + '</p></div>');
+      });
+      
+   	}
+    
+    </script>
+    
+</h:head>
+
+<h:body >
+<h:form>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light navbar-mobile-look">
+		    <a class="navbar-brand" href="#">
+		    	<p:graphicImage  value="/resources/assets/images/Maybank-logo.svg" />
+		    </a>
+		    <span style="font-size: 15px; padding: 18px 5px 15px;">| </span>
+            <div class="logo-title">
+                <h5><b>LCCA<span> SITE</span></b></h5>
+            </div>
+		    <button data-trigger="#navbar_main" class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
+		</nav>
+		 
+		<b class="screen-overlay"></b>
+		<nav id="navbar_main" class="mobile-offcanvas navbar navbar-expand-lg">
+				<a class="navbar-brand" href="#">
+			    	<p:graphicImage  value="/resources/assets/images/Maybank-logo.svg" />
+			    </a>
+			    <span style="font-size: 15px; padding: 18px 5px 15px;" class="navbar-brand-sep">| </span>
+	            <div class="logo-title">
+	                <h5><b>LCCA<span> SITE</span></b></h5>
+	            </div>
+		    <button data-trigger="#navbar_main" class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
+		    
+		  <div class="offcanvas-header">  
+		    <a class="btn btn-link btn-close"><i class="fa fa-close"></i></a>
+		  </div>
+		  
+		  <ul class="navbar-nav ml-auto">
+		    <li class="nav-item">
+		    	<a href="/compliance/pages/aboutUsFE/aboutUsFE.faces" class="nav-link">
+                	<div style="width: 27px; height: 27px; margin: auto; margin-right: 10px;" class="ico-wrap">
+                    	<p:graphicImage  value="/resources/assets/images/Maybank-head-ico.svg" />
+                    </div>
+                    TENTANG LCCA
+                </a>
+            </li>
+		    <li class="nav-item">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	               <div style="width: 27px; height: 27px; margin: auto; margin-right: 10px;" class="ico-wrap">
+	               		<p:graphicImage  value="/resources/assets/images/user-dark-ico.svg" />
+	               </div>
+		          	SELAMAT DATANG, #{headerFrontEndBean.username}
+	        	</a>
+		        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+		        	<a class="dropdown-item" href="/compliance/pages/dashboard/dashboard.faces" style="#{headerFrontEndBean.isAdmin == true?'':'display:none'}">INTERNAL MENU</a>
+		        	<h:commandLink styleClass="dropdown-item" actionListener="#{headerFrontEndBean.doHandleLogout()}">LOGOUT</h:commandLink>
+		        </div>
+           </li>
+           <li><ul class="mobile-webportal">
+			<li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces">PERATURAN INTERNAL</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces">PERATURAN EKSTERNAL</a>
+              </li>
+              
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                  OPINI
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/compliance/pages/opinionFE/opinionFE.faces?ARTICLE_TYPE=LEGAL_OPINION">LEGAL OPINION</a>
+                  <a class="dropdown-item" href="/compliance/pages/opinionFE/opinionFE.faces?ARTICLE_TYPE=COMPLIANCE_OPINION">COMPLIANCE OPINION</a>
+                  
+                </div>
+              </li>
+              
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#"  id="navbardrop" data-toggle="dropdown">
+                  ARTIKEL
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=COMPLIANCE_FLASH">COMPLIANCE FLASH</a>
+                  <a class="dropdown-item" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=WORKSHOP">WORKSHOP</a>
+                  <a class="dropdown-item" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=TRAINING_MATERIAL">MATERI TRAINING</a>
+                  <a class="dropdown-item" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=LEGAL_REVIEW">LEGAL REVIEW</a>
+                  <a class="dropdown-item" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=GENERAL">UMUM</a>
+                </div>
+              </li>
+              
+              <li class="nav-item dropdown">
+              	<a class="nav-link dropdown-toggle has-wo-counter" href="#" id="navbardrop" data-toggle="dropdown" aria-expanded="true">
+					<span class="wo-msg-text">
+						TUGAS SAYA
+						<span class="wo-counter">#{(headerFrontEndBean.countTindakLanjutSosialisasi + headerFrontEndBean.countTindakLanjutDenda 
+                                                + headerFrontEndBean.countTindakLanjutSuratMasuk
+                                                + headerFrontEndBean.countTindakLanjutRegulatoryReport
+                                                + headerFrontEndBean.countTindakLanjutAudit
+                                                + headerFrontEndBean.countTindakLanjutComplianceTesting
+                                                + headerFrontEndBean.countTindakLanjutRegulationMonitor
+                                                + headerFrontEndBean.countCpsa
+                                                + headerFrontEndBean.countCpsaApproval)>0?(headerFrontEndBean.countTindakLanjutSosialisasi + headerFrontEndBean.countTindakLanjutDenda 
+                                                + headerFrontEndBean.countTindakLanjutSuratMasuk
+                                                + headerFrontEndBean.countTindakLanjutRegulatoryReport
+                                                + headerFrontEndBean.countTindakLanjutAudit
+                                                + headerFrontEndBean.countTindakLanjutComplianceTesting
+                                                + headerFrontEndBean.countTindakLanjutRegulationMonitor
+                                                + headerFrontEndBean.countCpsa
+                                                + headerFrontEndBean.countCpsaApproval):''}</span>
+					</span>
+				</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/compliance/pages/socializationFE/socializationFE.faces"><span class="wo-msg-text">SOSIALISASI<span style="#{headerFrontEndBean.countTindakLanjutSosialisasi > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutSosialisasi}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/correspondenceFE/correspondenceFE.faces"><span class="wo-msg-text">SURAT MASUK<span style="#{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutSuratMasuk}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/fineFE/fineFE.faces"><span class="wo-msg-text">SURAT TIPE DENDA<span style="#{headerFrontEndBean.countTindakLanjutDenda > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutDenda}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/regulatoryReportingFE/regulatoryReportingFE.faces"><span class="wo-msg-text">REGULATORY REPORTING<span style="#{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutRegulatoryReport}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/auditFE/auditFE.faces"><span class="wo-msg-text">AUDIT<span style="#{headerFrontEndBean.countTindakLanjutAudit > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutAudit}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/regulationMonitoringFE/regulationMonitoringFE.faces"><span class="wo-msg-text">REGULATION MONITORING<span style="#{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutRegulationMonitor}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/complianceTestingFE/complianceTestingFE.faces"><span class="wo-msg-text">COMPLIANCE TESTING<span style="#{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countTindakLanjutComplianceTesting}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces"><span class="wo-msg-text">CPSA<span style="#{headerFrontEndBean.countCpsa > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countCpsa}</span></span></a>
+                  <a class="dropdown-item" href="/compliance/pages/cpsaApprovalFE/cpsaApprovalFE.faces"><span class="wo-msg-text">CPSA APPROVAL<span style="#{headerFrontEndBean.countCpsaApproval > 0 ?'':'display:none'}" class="wo-counter">#{headerFrontEndBean.countCpsaApproval}</span></span></a>
+                </div>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/discussionFE/discussionFE.faces">GROUP DISCUSSION</a>
+              </li>
+              
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                  PUSAT INFORMASI
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/compliance/pages/advocateFE/advocateFE.faces">DAFTAR KANTOR HUKUM</a>
+                  <a class="dropdown-item" href="/compliance/pages/notaryFE/notaryFE.faces">DAFTAR NOTARIS</a>
+                  <a class="dropdown-item" href="/compliance/pages/litigationViewFE/litigationViewFE.faces">LITIGASI</a>
+                  <a class="dropdown-item" href="/compliance/pages/templateViewFE/templateViewFE.faces">TEMPLATE</a>
+                  <!-- <a class="dropdown-item" href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces">COMPLIANCE PLAN SELF ASSESSMENT</a> -->
+                </div>
+              </li>
+              
+              <li class="nav-item dropdown">
+              	<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                  DATABASE FCC
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/compliance/pages/countryFE/countryFE.faces">NEGARA</a>
+                  <a class="dropdown-item" href="/compliance/pages/economySectorFE/economySectorFE.faces">SEKTOR EKONOMI</a>
+                  <a class="dropdown-item" href="/compliance/pages/occupationFE/occupationFE.faces">PEKERJAAN</a>
+                </div>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="/compliance/pages/faqFE/faqFE.faces">FAQ</a>
+              </li>
+              </ul>
+              </li>
+		  </ul>
+		</nav>
+    </header>
+    <main id="top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="left-sidebar">
+                    <div class="calendar">
+                        <h5>Kalender Kegiatan</h5>
+                        <div id="calendar-agenda" class="calendar-content"></div>
+                    </div>
+                    <div class="cs">
+	                    <a href="/compliance/pages/qaFE/qaFE.faces">
+	                        <div class="cs-illus">
+	                            <h5 style="text-align:left;color:white;">Tanya Kami</h5>
+	                            <div class="triangle">
+	                            	<p:graphicImage  value="/resources/assets/images/shape-tanya-kami.svg" />
+	                            </div>
+	                            <div class="cs-content">
+	                                <h6>TANGGAPAN</h6>
+	                                <div class="row">
+	                                    <span class="cs-hour md">1</span>
+	                                    <span class="cs-hour sm">X</span>
+	                                    <span class="cs-hour md">24</span>
+	                                    <span class="cs-hour sm">JAM</span>
+	                                    <span class="fa-chevron-right-embed"></span>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </a>
+                    </div>
+                    <div class="faq-bg">
+                        <div class="faq">
+                        	<a href="/compliance/pages/faqFE/faqFE.faces">
+	                            <div>
+	                                <h5>FAQ</h5>
+	                            </div>
+	                            <div class="faq-img">
+	                                    <div class="rounded-circle">
+	                                    <p:graphicImage  value="/resources/assets/images/faq-ico.svg" />
+	                                    </div>
+	                            </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="content-1">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4"></div>
+                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 search">
+                                <div class="form-group">
+                                	<p:remoteCommand name="onSearch" action="#{dashboardFrontEndBean.searchAll()}"></p:remoteCommand>
+                                    <input type="text" class="form-control searchVal" placeholder="APA YANG ANDA CARI?.." />
+                                    <button class="btn-search" onclick="onSearch([{name: 'SEARCH_VAL', value:$('.searchVal').val()}]);return false;"><i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<div class="cs">
+                    	<a href="/compliance/pages/qaFE/qaFE.faces">
+	                        <div class="cs-illus">
+	                            <h5 style="text-align:left;color:white;">Tanya Kami</h5>
+	                            <div class="triangle">
+	                            <p:graphicImage  value="/resources/assets/images/shape-tanya-kami.svg" />
+	                            </div>
+	                            <div class="cs-content">
+	                                <h6>TANGGAPAN</h6>
+                                    <div class="row">
+                                        <span class="cs-hour md">1</span>
+                                        <span class="cs-hour sm">X</span>
+                                        <span class="cs-hour md">24</span>
+                                        <span class="cs-hour sm">JAM</span>
+                                        <span class="fa-chevron-right-embed"></span>
+                                    </div>
+	                            </div>
+	                        </div>
+                    	</a>
+                    </div>
+                    <div class="faq-bg">
+                        <div class="faq">
+                            <div>
+                                <h5>FAQ</h5>
+                            </div>
+                            <div class="faq-img">
+                                <a href="/compliance/pages/faqFE/faqFE.faces">
+                                    <div class="rounded-circle">
+                                    <p:graphicImage  value="/resources/assets/images/faq-ico.svg" />
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notif">
+                        <h5>Notifikasi</h5>
+                        <h6>Sejak kunjungan terakhir, <br/>Anda <h:outputText value="memiliki:" rendered="#{headerFrontEndBean.showDataNotif ne '' and headerFrontEndBean.showDataNotif ne null}" /><h:outputText value="tidak memiliki notifikasi" rendered="#{headerFrontEndBean.showDataNotif eq '' or headerFrontEndBean.showDataNotif eq null}" /></h6>
+                        <div class="notif-item-wrapper">
+	                        <!-- <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanBelumDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanBelumDijawab') ? '' : 'display:none' }">
+	                           <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                      <span>#{headerFrontEndBean.countPertanyaanBelumDijawab}</span>
+                                  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan belum terjawab</dt>
+                                  		<dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanBelumDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a> -->
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanSudahDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanSudahDijawab') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanSudahDijawab}</span>
+	                               </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan sudah dijawab</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanSudahDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanPerluDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanPerluDijawab') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanPerluDijawab}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan perlu dijawab</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanPerluDitutup > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanPerluDitutup') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanPerluDitutup}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan perlu ditutup</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDitutup}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/socializationFE/socializationFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutSosialisasi > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutSosialisasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutSosialisasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Sosialisasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSosialisasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/fineFE/fineFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutDenda > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutDenda') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutDenda}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Denda</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutDenda}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/correspondenceFE/correspondenceFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutSuratMasuk') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutSuratMasuk}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Surat Masuk</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSuratMasuk}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulatoryReportingFE/regulatoryReportingFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutRegulatoryReport') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutRegulatoryReport}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Regulatory Reporting</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulatoryReport}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/auditFE/auditFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutAudit > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutAudit') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutAudit}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Audit</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutAudit}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/complianceTestingFE/complianceTestingFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutComplianceTesting')  ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutComplianceTesting}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Compliance Testing</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutComplianceTesting}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulationMonitoringFE/regulationMonitoringFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutRegulationMonitor') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutRegulationMonitor}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Regulation Monitoring</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulationMonitor}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulationSocializationVerification/regulationSocializationVerification.faces" class="notif-item" style="#{headerFrontEndBean.countSosialisasiPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countSosialisasiPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countSosialisasiPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Sosialisasi Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateSosialisasiPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcFineApproval/trcFineApproval.faces" class="notif-item" style="#{headerFrontEndBean.countDendaPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countDendaPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countDendaPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Denda Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateDendaPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcCorrespondenceApproval/trcCorrespondenceApproval.faces" class="notif-item" style="#{headerFrontEndBean.countSuratMasukPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countSuratMasukPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countSuratMasukPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Surat Masuk Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateSuratMasukPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcAuditVerification/trcAuditVerification.faces" class="notif-item" style="#{headerFrontEndBean.countAuditPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countAuditPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countAuditPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Audit Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateAuditPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcComplianceReviewApproval/trcComplianceReviewApproval.faces" class="notif-item" style="#{headerFrontEndBean.countComplianceTestingPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countComplianceTestingPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countComplianceTestingPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Compliance Testing  Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateComplianceTestingPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countCpsa > 0 and headerFrontEndBean.showDataNotif.contains('countCpsa') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countCpsa}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>CPSA</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateCpsa}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/cpsaApprovalFE/cpsaApprovalFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countCpsaApproval > 0 and headerFrontEndBean.showDataNotif.contains('countCpsaApproval') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countCpsaApproval}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>CPSA Approval</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateCpsaApproval}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/regulationMonitoringVerification/regulationMonitoringVerification.faces" class="notif-item" style="#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countRegulationMoitorPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Regulation Monitoring  Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateRegulationMoitorPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countPeraturanInternalBaru > 0 and headerFrontEndBean.showDataNotif.contains('countPeraturanInternalBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPeraturanInternalBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Peraturan Internal baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePeraturanInternalBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countPeraturanEksternalBaru > 0 and headerFrontEndBean.showDataNotif.contains('countPeraturanEksternalBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPeraturanEksternalBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Peraturan Eksternal baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePeraturanEksternalBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/articleFE/articleFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countArtikelBaru > 0 and headerFrontEndBean.showDataNotif.contains('countArtikelBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countArtikelBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Artikel baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateArtikelBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/opinionFE/opinionFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countOpiniBaru > 0 and headerFrontEndBean.showDataNotif.contains('countOpiniBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countOpiniBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Opinis baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateOpiniBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/discussionFE/discussionFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countDiskusiBaru > 0 and headerFrontEndBean.showDataNotif.contains('countDiskusiBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countDiskusiBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Diskusi baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateDiskusiBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                       <!-- <a href="/compliance/pages/litigationViewFE/litigationViewFE.faces" class="notif-item notif-item-common" 
+	                                style="headerFrontEndBean.countLitigasiBaru > 0 and headerFrontEndBean.showDataNotif.contains('countLitigasiBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>headerFrontEndBean.countLitigasiBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Litigasi baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update headerFrontEndBean.maxDateLitigasiBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a> --> 
+	                    </div>
+                        <div class="notif-see">
+                            <a href="/compliance/pages/dashboard/notificationDtlFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="pengumuman">
+                        <ul class="tabs">
+                            
+                            <li id="internal2" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/icon-internal.svg" alt="Peraturan Internal" title="Peraturan Internal" /></div>
+                            </li>
+                            <li id="eksternal2" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/icon-external.svg" alt="Peraturan Eksternal" title="Peraturan Eksternal" /></div>
+                            </li>
+                            <li id="info2" class="tabs-item active" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/Info-terbaru.svg"  alt="Informasi Terbaru" title="Informasi Terbaru"/></div>
+                            </li>
+                            <li id="pengumuman2" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/Pengumuman.svg" alt="Pengumuman" title="Pengumuman" /></div>
+                            </li>
+                        </ul>
+
+                        <div class="pengumuman-content">
+                            
+                            <div id="tabs-internal2" class="tabs-content">
+                                <h6>
+                                    PERATURAN INTERNAL
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPeraturanInternal}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/internalRegulationFE/internalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                <div class="pengumuman-see">
+                                <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>  
+                            </div>
+                            <div id="tabs-eksternal2" class="tabs-content">
+                                <h6>
+                                    PERATURAN EKSTERNAL
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPeraturanEksternal}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/externalRegulationFE/externalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                   
+                      
+                                </div>
+                                 <div class="pengumuman-see">
+                                <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>
+                            </div>
+                            <div id="tabs-info2" class="tabs-content active">
+                                <h6>
+                                    INFORMASI TERBARU
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                    <ui:repeat value="#{dashboardFrontEndBean.listInformasiTerbaru}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/internalRegulationFE/internalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                <div class="pengumuman-see">
+                                <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces?DOC_TYPE=#{dashboardFrontEndBean.docTypeId}"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>
+                            </div>
+                            <div id="tabs-pengumuman2" class="tabs-content">
+                                <h6>
+                                    PENGUMUMAN
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPengumuman}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/announcementViewFE/announcementViewFEEdit.faces?token=#{dashboardFrontEndBean.encryptId(vo.announcementId.toString())}">
+                                        <h6>#{vo.announcementTitle}</h6>
+                                        <span>#{vo.announcementContent}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                 <div class="pengumuman-see">
+                                <a href="/compliance/pages/announcementViewFE/announcementViewFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-2">
+                        <div class="world-map">
+                            <!-- <p:graphicImage  value="/resources/assets/images/map-full-fix.svg" /> -->
+                            <img class="map-full" src="#{request.contextPath}/resources/assets/images/map-full-fix.svg" />
+                             <div class="pin">
+                                <div class="pin-content">
+                                    <!-- <p:graphicImage styleClass="marker1" value="/resources/assets/images/pin-asset.svg"  />  -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="top-shadow"></div>
+
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ct-2-text">
+                            <h2><b>#{dashboardFrontEndBean.countUserLogin}</b></h2>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 user-on">
+                                    <h6>Pengguna sedang ONLINE</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-menu">
+                            <div id="btn-close" class="collapse" onclick="btnCloseMainMenu()">
+                                <i class="fa fa-close"></i>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuInternal">
+                                <h5><b>PERATURAN INTERNAL</b></h5>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">MAYBANK GROUP</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuExternal">
+                                <h5><b>PERATURAN EKSTERNAL</b></h5>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">BANK INDONESIA</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">OJK - PERBANKAN</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">OJK - PASAR MODAL</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">LEMBAGA PENJAMIN SIMPANAN</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">PUSAT PELAPORAN DAN<br/>ANALISIS TRANSAKSI
+                                                KEUANGAN</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">KOMISI PEMBERANTASAN KORUPSI</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">UNDANG-UNDANG</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">PERATURAN PEMERINTAH <br/>PENGGANTI
+                                                UNDANG-UNDANG</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">PERATURAN PEMERINTAH</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">PERATURAN PRESIDEN</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="#">PERATURAN KETUA BAPEPAM LK</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuOpini">
+                                <div class="row">
+                                    <h5 class="col-xl-4 col-lg-4 col-md-4 col-sm-4"><b>OPINI</b></h5>
+                                    <h5 class="col-xl-4 col-lg-4 col-md-4 col-sm-4"><b>ARTIKEL</b></h5>
+                                </div>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/opinionFE/opinionFE.faces?ARTICLE_TYPE=LEGAL_OPINION">OPINI LEGAL</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/opinionFE/opinionFE.faces?ARTICLE_TYPE=COMPLIANCE_OPINION">OPINI KEPATUHAN</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=COMPLIANCE_FLASH">COMPLIANCE FLASH</a>
+                                        </li>
+                                        <!-- <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=NEWS">BERITA</a>
+                                        </li> -->
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=WORKSHOP">WORKSHOP</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=TRAINING_MATERIAL">MATERI TRAINING</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=LEGAL_REVIEW">LEGAL REVIEW</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/articleFE/articleFE.faces?ARTICLE_TYPE=GENERAL">UMUM</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuTugas">
+                                <h5 class="col-xl-4 col-lg-4 col-md-4 col-sm-4"><b>TUGAS SAYA</b></h5>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutSosialisasi > 0 ?'infinite-hover':''}" href="/compliance/pages/socializationFE/socializationFE.faces">SOSIALISASI
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutSosialisasi > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutSosialisasi}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 ?'infinite-hover':''}" href="/compliance/pages/correspondenceFE/correspondenceFE.faces">SURAT MASUK
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutSuratMasuk}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link  #{headerFrontEndBean.countTindakLanjutDenda > 0 ?'infinite-hover':''}" href="/compliance/pages/fineFE/fineFE.faces">DENDA
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutDenda > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutDenda}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 ?'infinite-hover':''}" href="/compliance/pages/regulatoryReportingFE/regulatoryReportingFE.faces">REGULATORY
+                                                REPORTING
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutRegulatoryReport}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutAudit > 0 ?'infinite-hover':''}" href="/compliance/pages/auditFE/auditFE.faces">AUDIT
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutAudit > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutAudit}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 ?'infinite-hover':''}" href="/compliance/pages/regulationMonitoringFE/regulationMonitoringFE.faces">REGULATION
+                                                MONITORING
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutRegulationMonitor}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 ?'infinite-hover':''}" href="/compliance/pages/complianceTestingFE/complianceTestingFE.faces">COMPLIANCE TESTING
+                                            <div class="pesan" style="#{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countTindakLanjutComplianceTesting}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link #{headerFrontEndBean.countCpsa > 0 ?'infinite-hover':''}" href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces">CPSA
+                                            <div class="pesan" style="#{headerFrontEndBean.countCpsa > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countCpsa}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                    	<li class="menu-item" style="#{headerFrontEndBean.countCpsaApproval > 0 ?'':'display:none'}">
+                                            <a class="menu-link #{headerFrontEndBean.countCpsaApproval > 0 ?'infinite-hover':''}" href="/compliance/pages/cpsaApprovalFE/cpsaApprovalFE.faces">CPSA APPROVAL
+                                            <div class="pesan" style="#{headerFrontEndBean.countCpsaApproval > 0 ?'':'display:none'}">
+                                                <span>#{headerFrontEndBean.countCpsaApproval}</span>
+                                            </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuGroup">
+                                <a class="menu-link" href="/compliance/pages/discussionFE/discussionFE.faces"><h5><b>GROUP DISCUSSION</b></h5></a>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuInformasi">
+                                <h5><b>PUSAT INFORMASI</b></h5>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/advocateFE/advocateFE.faces">DAFTAR KANTOR HUKUM</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/notaryFE/notaryFE.faces">DAFTAR NOTARIS</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/litigationViewFE/litigationViewFE.faces">LITIGASI</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/templateViewFE/templateViewFE.faces">TEMPLATE</a>
+                                        </li>
+                                        <!-- <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces">COMPLIANCE PLAN SELF ASSESSMENT</a>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="collapse navbar-collapse" id="show-menuFCC">
+                                <h5><b>DATABASE FCC</b></h5>
+                                <div class="row">
+                                    <ul class="col-xl-4 col-lg-4 col-md-4 col-sm-4 navbar-nav">
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/countryFE/countryFE.faces">
+                                            	<p:graphicImage  value="/resources/assets/images/Globe_icon.svg"  style="width:24px;height:24px; margin-right:7px;"/>
+                                            	NEGARA
+                                           	</a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a class="menu-link" href="/compliance/pages/economySectorFE/economySectorFE.faces">
+                                            	<p:graphicImage  value="/resources/assets/images/Briefcase.svg"  style="width:24px;height:24px; margin-right:7px;"/>
+                                            	SEKTOR EKONOMI
+                                            </a>
+                                        </li>
+                                        <li class="menu-item">
+                                        	<p:graphicImage  value="/resources/assets/images/business-man-suitcase.svg"  style="width:24px;height:24px; margin-right:7px;"/>
+                                            <a class="menu-link" href="/compliance/pages/occupationFE/occupationFE.faces">PEKERJAAN</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-3">
+                        <div id="carouselMenu" class="carousel slide slide-menu" data-interval="false">
+                            <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                                <div class="carousel-item col-md-3 active">
+                                    <div id="menuInternal" class="collapsed p-2" onclick="/*menu(this.id)*/">
+                                        <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces">
+                                            <div class="rounded-shape"><p:graphicImage  value="/resources/assets/images/icon-internal.svg"  />
+                                            </div>
+                                            <span>PERATURAN<br/>INTERNAL</span> 
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuExternal" class="collapsed p-2" onclick="/*menu(this.id)*/">
+                                        <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces">
+                                            <div class="rounded-shape"><p:graphicImage  value="/resources/assets/images/icon-external.svg"  />
+                                            </div>
+                                            <span>PERATURAN<br/>EKSTERNAL</span> 
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuOpini" class="collapsed p-2" onclick="menu(this.id)">
+                                        <div class="rounded-shape"><p:graphicImage  value="/resources/assets/images/bulb-ico.svg"  /></div>
+                                        <span>OPINI &amp;<br/>ARTIKEL</span> 
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuTugas" class="collapsed p-2" onclick="menu(this.id)">
+                                        <div class="rounded-shape">
+                                        <p:graphicImage  value="/resources/assets/images/to-do-ico.svg"  />
+                                            <div class="pesan" style="#{(headerFrontEndBean.countTindakLanjutSosialisasi + headerFrontEndBean.countTindakLanjutDenda 
+                                                + headerFrontEndBean.countTindakLanjutSuratMasuk
+                                                + headerFrontEndBean.countTindakLanjutRegulatoryReport
+                                                + headerFrontEndBean.countTindakLanjutAudit
+                                                + headerFrontEndBean.countTindakLanjutComplianceTesting
+                                                + headerFrontEndBean.countTindakLanjutRegulationMonitor
+                                                + headerFrontEndBean.countCpsa
+                                                + headerFrontEndBean.countCpsaApproval)>0?'':'display:none'}">
+                                                <span>#{(headerFrontEndBean.countTindakLanjutSosialisasi + headerFrontEndBean.countTindakLanjutDenda 
+                                                + headerFrontEndBean.countTindakLanjutSuratMasuk
+                                                + headerFrontEndBean.countTindakLanjutRegulatoryReport
+                                                + headerFrontEndBean.countTindakLanjutAudit
+                                                + headerFrontEndBean.countTindakLanjutComplianceTesting
+                                                + headerFrontEndBean.countTindakLanjutRegulationMonitor
+                                                + headerFrontEndBean.countCpsa
+                                                + headerFrontEndBean.countCpsaApproval)}</span>
+                                            </div>
+                                        </div>
+                                        <span>TUGAS<br/>SAYA</span>
+
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuGroup" class="collapsed p-2" onclick="/*menu(this.id)*/">
+                                        <a href="/compliance/pages/discussionFE/discussionFE.faces">
+                                            <div class="rounded-shape"> <p:graphicImage  value="/resources/assets/images/peraturan-Ico.svg"  />
+                                            </div>
+                                            <span>GROUP<br/>DISCUSSION</span> 
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuInformasi" class="collapsed p-2" onclick="menu(this.id)">
+                                        <div class="rounded-shape"> <p:graphicImage  value="/resources/assets/images/pusat-informasi.svg"  />
+                                        </div>
+                                        <span>PUSAT<br/>INFORMASI</span> 
+                                    </div>
+                                </div>
+                                <div class="carousel-item col-md-3">
+                                    <div id="menuFCC" class="collapsed p-2" onclick="menu(this.id)">
+                                        <div class="rounded-shape"> <p:graphicImage  value="/resources/assets/images/database.svg"  />
+                                        </div>
+                                        <span>DATABASE<br/>FCC</span> 
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselMenu" role="button" data-slide="prev">
+                                <span class="fa fa-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselMenu" role="button" data-slide="next">
+                                <span class="fa fa-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="right-sidebar">
+                    <div class="notif">
+                        <h5>Notifikasi</h5>
+                        <h6>Sejak kunjungan terakhir, <br/>Anda memiliki:</h6>
+                        <div class="notif-item-wrapper">
+	                        <!-- <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanBelumDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanBelumDijawab') ? '' : 'display:none' }">
+	                           <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                      <span>#{headerFrontEndBean.countPertanyaanBelumDijawab}</span>
+                                  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan belum terjawab</dt>
+                                  		<dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanBelumDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a> -->
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanSudahDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanSudahDijawab') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanSudahDijawab}</span>
+	                               </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan sudah dijawab</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanSudahDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanPerluDijawab > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanPerluDijawab') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanPerluDijawab}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan perlu dijawab</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDijawab}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/qaFE/qaFE.faces" class="notif-item" style="#{headerFrontEndBean.countPertanyaanPerluDitutup > 0 and headerFrontEndBean.showDataNotif.contains('countPertanyaanPerluDitutup') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPertanyaanPerluDitutup}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Pertanyaan perlu ditutup</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePertanyaanPerluDitutup}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/socializationFE/socializationFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutSosialisasi > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutSosialisasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutSosialisasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Sosialisasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSosialisasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/fineFE/fineFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutDenda > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutDenda') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutDenda}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Denda</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutDenda}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/correspondenceFE/correspondenceFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutSuratMasuk > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutSuratMasuk') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutSuratMasuk}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Surat Masuk</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutSuratMasuk}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulatoryReportingFE/regulatoryReportingFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutRegulatoryReport > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutRegulatoryReport') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutRegulatoryReport}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Regulatory Reporting</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulatoryReport}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/auditFE/auditFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutAudit > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutAudit') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutAudit}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Audit</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutAudit}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/complianceTestingFE/complianceTestingFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutComplianceTesting > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutComplianceTesting')  ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutComplianceTesting}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Compliance Testing</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutComplianceTesting}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulationMonitoringFE/regulationMonitoringFE.faces" class="notif-item" style="#{headerFrontEndBean.countTindakLanjutRegulationMonitor > 0 and headerFrontEndBean.showDataNotif.contains('countTindakLanjutRegulationMonitor') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countTindakLanjutRegulationMonitor}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Tindak Lanjut Regulation Monitoring</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateTindakLanjutRegulationMonitor}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/regulationSocializationVerification/regulationSocializationVerification.faces" class="notif-item" style="#{headerFrontEndBean.countSosialisasiPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countSosialisasiPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countSosialisasiPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Sosialisasi Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateSosialisasiPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcFineApproval/trcFineApproval.faces" class="notif-item" style="#{headerFrontEndBean.countDendaPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countDendaPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countDendaPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Denda Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateDendaPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcCorrespondenceApproval/trcCorrespondenceApproval.faces" class="notif-item" style="#{headerFrontEndBean.countSuratMasukPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countSuratMasukPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countSuratMasukPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Surat Masuk Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateSuratMasukPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcAuditVerification/trcAuditVerification.faces" class="notif-item" style="#{headerFrontEndBean.countAuditPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countAuditPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countAuditPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Audit Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateAuditPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/trcComplianceReviewApproval/trcComplianceReviewApproval.faces" class="notif-item" style="#{headerFrontEndBean.countComplianceTestingPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countComplianceTestingPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countComplianceTestingPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Compliance Testing  Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateComplianceTestingPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/cpsaFE/compliancePlanSelfAssessmentFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countCpsa > 0 and headerFrontEndBean.showDataNotif.contains('countCpsa') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countCpsa}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>CPSA</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateCpsa}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/cpsaApprovalFE/cpsaApprovalFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countCpsaApproval > 0 and headerFrontEndBean.showDataNotif.contains('countCpsaApproval') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countCpsaApproval}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>CPSA Approval</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateCpsaApproval}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        
+	                        <a href="/compliance/pages/regulationMonitoringVerification/regulationMonitoringVerification.faces" class="notif-item" style="#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi > 0 and headerFrontEndBean.showDataNotif.contains('countRegulationMoitorPerluVerifikasi') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countRegulationMoitorPerluVerifikasi}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Regulation Monitoring  Perlu Verifikasi</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateRegulationMoitorPerluVerifikasi}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countPeraturanInternalBaru > 0 and headerFrontEndBean.showDataNotif.contains('countPeraturanInternalBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPeraturanInternalBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Peraturan Internal baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePeraturanInternalBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countPeraturanEksternalBaru > 0 and headerFrontEndBean.showDataNotif.contains('countPeraturanEksternalBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countPeraturanEksternalBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Peraturan Eksternal baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDatePeraturanEksternalBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/articleFE/articleFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countArtikelBaru > 0 and headerFrontEndBean.showDataNotif.contains('countArtikelBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countArtikelBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Artikel baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateArtikelBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/opinionFE/opinionFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countOpiniBaru > 0 and headerFrontEndBean.showDataNotif.contains('countOpiniBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countOpiniBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Opini baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateOpiniBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                        <a href="/compliance/pages/discussionFE/discussionFE.faces" class="notif-item notif-item-common" style="#{headerFrontEndBean.countDiskusiBaru > 0 and headerFrontEndBean.showDataNotif.contains('countDiskusiBaru') ? '' : 'display:none' }">
+	                            <ul class="notif-item-meta">
+                                  <li class="notif-item-count">
+                                  	<span>#{headerFrontEndBean.countDiskusiBaru}</span>
+								  </li>
+                                  <li class="notif-item-data">
+                                  	<dl>
+                                  		<dt>Diskusi baru</dt>
+	                                    <dd class="notif-item-time">Terakhir update #{headerFrontEndBean.maxDateDiskusiBaru}</dd>
+                                  	</dl>
+                                  </li>
+	                           </ul>
+	                        </a>
+	                    </div>
+                        <div class="notif-see">
+                            <a href="/compliance/pages/dashboard/notificationDtlFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="pengumuman">
+                        <ul class="tabs">
+                            
+                            <li id="internal" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/icon-internal.svg" alt="Peraturan Internal" title="Peraturan Internal" /></div>
+                            </li>
+                            <li id="eksternal" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/icon-external.svg" alt="Peraturan Eksternal" title="Peraturan Eksternal" /></div>
+                            </li>
+                            <li id="info" class="tabs-item active" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/Info-terbaru.svg" alt="Informasi Terbaru" title="Informasi Terbaru" /></div>
+                            </li>
+                            <li id="pengumuman" class="tabs-item" onclick="tabs(this.id)">
+                                <div class="tabs-link"><p:graphicImage  value="/resources/assets/images/Pengumuman.svg" alt="Pengumuman" title="Pengumuman"  /></div>
+                            </li>
+                        </ul>
+
+                        <div class="pengumuman-content">
+                            
+                            <div id="tabs-internal" class="tabs-content">
+                                <h6>
+                                    PERATURAN INTERNAL
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPeraturanInternal}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/internalRegulationFE/internalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                <div class="pengumuman-see">
+                                <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>  
+                            </div>
+                            <div id="tabs-eksternal" class="tabs-content">
+                                <h6>
+                                    PERATURAN EKSTERNAL
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPeraturanEksternal}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/externalRegulationFE/externalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                   
+                      
+                                </div>
+                                 <div class="pengumuman-see">
+                                <a href="/compliance/pages/externalRegulationFE/externalRegulationFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>
+                            </div>
+                            <div id="tabs-info" class="tabs-content active">
+                                <h6>
+                                    INFORMASI TERBARU
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                    <ui:repeat value="#{dashboardFrontEndBean.listInformasiTerbaru}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/internalRegulationFE/internalRegulationFEView.faces?token=#{dashboardFrontEndBean.encryptId(vo.regulationId.toString())}">
+                                        <h6>#{vo.docNo}</h6>
+                                        <span>#{vo.nameIn}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                <div class="pengumuman-see">
+                                <a href="/compliance/pages/internalRegulationFE/internalRegulationFE.faces?DOC_TYPE=#{dashboardFrontEndBean.docTypeId}"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div>
+                            </div>
+                            <div id="tabs-pengumuman" class="tabs-content">
+                                <h6>
+                                    PENGUMUMAN
+                                </h6>
+                                <div class="tabs-item pengumuman-item-wrapper">
+                                <ui:repeat value="#{dashboardFrontEndBean.listPengumuman}" var="vo" varStatus="status">
+                                	<hr style="#{status.index == 0? 'display:none':''}"/>
+                                    <a class="tabs-sub-item" href="/compliance/pages/announcementViewFE/announcementViewFEEdit.faces?token=#{dashboardFrontEndBean.encryptId(vo.announcementId.toString())}">
+                                        <h6>#{vo.announcementTitle}</h6>
+                                        <span>#{vo.announcementContent}</span>
+                                    </a>
+                                </ui:repeat>
+                                </div>
+                                 <div class="pengumuman-see">
+                                <a href="/compliance/pages/announcementViewFE/announcementViewFE.faces"><b>LIHAT SEMUA </b> <i class="fa fa-arrow-right"></i></a>
+                            	</div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+
+        <div class="footer-content row">
+            <div class="col-xl-4 col-lg-4 col-md-4 footer-menu navbar-expand-md col">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleLink">
+                    <span class="navbar-toggler-icon"><i class="fa fa-bars"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="collapsibleLink">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#{dashboardFrontEndBean.linkTentangMaybank}">MAYBANK CORPORATE PORTAL</a>
+                        </li>
+                        <span>|</span>
+                        <li class="nav-item">
+                            <a href="/compliance/pages/staticPage/staticPageBantuan.faces">BANTUAN</a>
+                        </li>
+                        <span>|</span>
+                        <li class="nav-item">
+                            <a href="#{dashboardFrontEndBean.linkElearning}">E-LEARNING</a>
+                        </li>
+                        <span>|</span>
+                        <li class="nav-item">
+                            <a href="/compliance/pages/staticPage/staticPageLink.faces">LINK</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-copyright-mobi">© 2023. PT Bank Maybank Indonesia Tbk. Berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan merupakan peserta penjaminan LPS</div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 footer-copyright">
+                <span>© 2023. PT Bank Maybank Indonesia Tbk. Berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK) dan merupakan peserta penjaminan LPS</span>
+            </div>
+        </div>
+    </footer>
+</h:form>
+</h:body>
+</html>
+

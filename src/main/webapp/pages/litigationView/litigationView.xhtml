@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formLitigationViewTitle}" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formLitigationCaseType}" />
+								</label>
+								<h:selectOneMenu id="searchCaseType" styleClass="form-control s2"
+									value="#{litigationViewBean.searchCaseType}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewBean.caseTypeList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formLitigationBranchOffice}" />
+								</label>
+								<p:inputText id="searchBranchOffice" styleClass="form-control"
+									autocomplete="off" value="#{litigationViewBean.searchDivNameOrBranchOffice}" />
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formLitigationSegment}" />
+								</label>
+								<p:inputText id="searchSegment" styleClass="form-control"
+									autocomplete="off" value="#{litigationViewBean.searchSegment}" />
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formLitigationDebitur}" />
+								</label>
+								<p:inputText id="searchDebtor" styleClass="form-control"
+									autocomplete="off" value="#{litigationViewBean.searchDebtor}" />
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formLitigationCaseNumber}" />
+								</label>
+								<p:inputText id="searchCaseNumber" styleClass="form-control"
+									autocomplete="off" value="#{litigationViewBean.searchCaseNumber}" />
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText
+										value="#{msg.formLitigationReportNumber}" />
+								</label>
+								<p:inputText id="searchReportNumber" styleClass="form-control"
+									autocomplete="off" value="#{litigationViewBean.searchReportNumber}" />
+							</div>
+						</div>
+						
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{msg.formLitigationActiveStatus}" />
+								</label>
+								<h:selectOneMenu id="searchActiveStatus" styleClass="form-control s2"
+									value="#{litigationViewBean.searchDataStatus}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{litigationViewBean.dataStatusList}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+
+					</h:panelGroup>
+
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li>
+									<p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="dataTable"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{litigationViewBean.search}">
+									</p:commandButton>
+								</li>
+								<li>
+									<p:commandButton value="#{msg.buttonReset}" ajax="true"
+										update="dataTable panelSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{litigationViewBean.reset}">
+									</p:commandButton>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="table-responsive linked-to-top-scroller">
+							<p:dataTable id="dataTable" paginator="true" var="vo"
+								value="#{litigationViewBean.litigationViewTableModel}"
+								dynamic="true" lazy="true" emptyMessage="#{msg.textNodata}"
+								rows="#{litigationViewBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column style="text-align:center;"
+									headerText="#{msg.formAction}" width="150">
+									<p:commandLink id="viewId" value=" #{msg.buttonView}"
+										action="#{litigationViewBean.getNavigateView()}" ajax="false"
+										styleClass="tl-label">
+										<f:param name="viewId" value="#{vo.litigationId}" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{msg.formLitigationActiveStatus}" width="100">
+									<h:outputLabel value="#{vo.activeStatus}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationCaseType}" width="150">
+									<h:outputLabel value="#{vo.caseTypeName} #{vo.caseTypeDtlName}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationBranchOffice}" width="250">
+									<h:outputLabel value="#{vo.divisionOrBranchOffice}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationSegment}" width="250">
+									<h:outputLabel value="#{vo.segment}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationDebitur}" width="250">
+									<h:outputLabel value="#{vo.debtor}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationCaseNumber}" width="250">
+									<h:outputLabel value="#{vo.caseNumber}" />
+								</p:column>
+								<p:column headerText="#{msg.formLitigationReportNumber}" width="250">
+									<h:outputLabel value="#{vo.reportNumber}" />
+								</p:column>
+								<p:column headerText="Last Update" width="250">
+									<h:outputLabel value="#{vo.createdUpdatePic}" />
+								</p:column>
+								<p:column headerText="Note" width="400">
+									<h:outputLabel value="#{vo.note}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

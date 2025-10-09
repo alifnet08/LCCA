@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+	package="com.wo.module.regulationMonitoring.model">
+	<class name="RegMonitoringTrc"
+		table="WO_TRC_REG_MONITORING">
+		<id name="regMonitoringTrcId" column="REG_MONITORING_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TRC_REG_MONITORING_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="jenisKetentuan"
+			property-ref="parameterDtlCode" column="JENIS_KETENTUAN"
+			class="com.wo.module.parameter.model.ParameterDetail" fetch="join" />
+
+		<many-to-one name="counterType" column="COUNTER_TYPE_ID"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+
+		<property name="followUp" column="FOLLOW_UP" type="string" />
+
+		<property name="notes" column="NOTES" type="string" />
+
+		<property name="reminderStatus" column="REMINDER_STATUS"
+			type="string" />
+
+		<property name="status" column="STATUS" type="string" />
+		
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="creationDate" column="CREATION_DATE"
+			type="timestamp" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY"
+			type="string" />
+			<property name="enabledFlag" column="ENABLED_FLAG"
+			type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+		<bag name="regMonitoringRegulationTrcs" inverse="true"
+			cascade="save-update, delete-orphan"
+			order-by="REG_MONITOR_REGULATION_ID asc">
+			<key column="REG_MONITORING_ID" />
+			<one-to-many
+				class="com.wo.module.regulationMonitoring.model.RegMonitoringRegulationTrc" />
+		</bag>
+	
+		<bag name="regMonitoringPICComplianceTrcs" inverse="true"
+			cascade="save-update, delete-orphan"
+			order-by="REG_MONITOR_PIC_CMPLC_ID asc">
+			<key column="REG_MONITORING_ID" />
+			<one-to-many
+				class="com.wo.module.regulationMonitoring.model.RegMonitoringPICComplianceTrc" />
+		</bag>
+	
+		<bag name="regMonitoringPICFollowUpTrcs" inverse="true"
+			cascade="save-update, delete-orphan"
+			order-by="REG_MONITORING_PIC_FOLLOWUP_ID asc">
+			<key column="REG_MONITORING_ID" />
+			<one-to-many
+				class="com.wo.module.regulationMonitoring.model.RegMonitoringPICFollowUpTrc" />
+		</bag>
+	</class>
+</hibernate-mapping>

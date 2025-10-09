@@ -1,0 +1,142 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="#{msg.formMenuTitle}" />
+	</ui:define>
+
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="deletedMessage" globalOnly="true" />
+				<div class="row">
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText
+									value="#{msg.formMenuMenuName}" /></label>
+							<p:inputText id="searchName" styleClass="form-control"
+								value="#{menuBean.searchName}"></p:inputText>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{menuBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}"
+										ajax="true" update="tableSearch form:searchName"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{menuBean.reset}"></p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{menuBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{menuBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+
+								<p:column style="text-align:center;"
+									headerText="#{msg.formAction}">
+
+									<h:outputLabel value="&#160;" />
+									<p:commandLink id="edit" value="#{msg.buttonEdit}"
+										action="#{menuBean.getNavigateEdit()}" type="submit"
+										ajax="false" styleClass="tl-label">
+										<f:param name="id" value="#{vo.menuId}" />
+									</p:commandLink>
+
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuMenuName}">
+									<h:outputLabel value="#{vo.nameIn}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuAction}">
+									<h:outputLabel value="#{vo.action}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuParentMenu}">
+									<h:outputLabel value="#{vo.parentMenuNameIn}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuDescription}">
+									<h:outputLabel value="#{vo.description}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuMenuLevel}" style="text-align:center;">
+									<h:outputLabel value="#{vo.menuLevel}" />
+								</p:column>
+
+								<p:column headerText="#{msg.formMenuMenuOrder}" style="text-align:center;">
+									<h:outputLabel value="#{vo.menuOrder}" />
+								</p:column>
+
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:confirmDialog id="deleteConfirm" global="true" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+		</p:confirmDialog>
+
+		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
+			aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">
+							<h:outputText value="#{msg.formMenuConfirmDelete}" />
+						</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<h:outputText value="#{msg.formMenuDeleteMenu}" />
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-outline pull-left btn-flat" type="button"
+							data-dismiss="modal">
+							<i class="fa fa-fw fa-close" aria-hidden="true"></i>
+							<h:outputText value="#{msg.buttonCancel}" />
+						</button>
+						<button class="btn btn-danger pull-right btn-flat" type="button"
+							id="confirm">
+							<i class="fa fa-fw fa-trash-o" aria-hidden="true"></i>
+							<h:outputText value="#{msg.formMenuConfirmDelete}" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</ui:define>
+</ui:composition>

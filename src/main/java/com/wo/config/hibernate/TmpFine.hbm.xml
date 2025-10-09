@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpFine.model">
+	<class name="TmpFine" table="wo_tmp_fine">
+		<id name="fineId" column="fine_id" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_fine_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="senderCode" property-ref="parameterDtlCode"
+			column="sender_code" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+
+		<property name="letterReceivedDate" column="letter_received_date"
+			type="date" />
+		<property name="letterNo" column="letter_no" type="string" />
+		<property name="letterDate" column="letter_date" type="date" />
+		<property name="perihalIn" column="perihal_in" type="string" />
+		<property name="perihalEn" column="perihal_en" type="string" />
+		<property name="letterSummary" column="letter_summary" type="string" />
+		<property name="followUp" column="follow_up" type="string" />
+		<property name="notes" column="notes" type="string" />
+		<!-- <property name="divisionId" column="division_id" type="long" />
+		<many-to-one name="userId1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="userId2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="userId3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" /> 
+		<property name="targetDate" column="target_date" type="date" />-->
+		<many-to-one name="counterType" column="counter_type_id"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+			
+		<many-to-one name="counterTypeResponse" column="counter_type_response_id"
+			class="com.wo.module.counterType.model.CounterType" fetch="join" />
+			
+		<many-to-one name="reminderStatus" property-ref="parameterDtlCode"
+			column="REMINDER_STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+
+		<many-to-one name="reportName" property-ref="parameterDtlCode"
+			column="REPORT_NAME" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+		<property name="otherReportName" column="OTHER_REPORT_NAME" type="string" />	
+		
+		<property name="targetSettlement" column="TARGET_SETTLEMENT" type="date"/>
+		
+		<many-to-one name="status" property-ref="parameterDtlCode"
+			column="STATUS" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="fineCode" property-ref="parameterDtlCode"
+			column="correspondence_type" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		
+
+		<bag name="tmpFineApprovals" inverse="true"
+			cascade="save-update, delete-orphan" order-by="fine_approval_id asc">
+			<key column="fine_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFineApproval" />
+		</bag>
+
+		<bag name="tmpFineDocuments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="fine_attachment_id asc">
+			<key column="fine_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFineDocument" />
+		</bag>
+
+		<bag name="tmpFinePicCompliances" inverse="true"
+			cascade="save-update, delete-orphan" order-by="fine_pic_compliance_id asc">
+			<key column="fine_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFinePicCompliance" />
+		</bag>
+		
+		<bag name="tmpFinePicFollowups" inverse="true"
+			cascade="save-update, delete-orphan" order-by="fine_pic_followup_id asc">
+			<key column="fine_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFinePicFollowup" />
+		</bag>
+
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

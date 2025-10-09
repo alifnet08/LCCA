@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpComplianceReview.model">
+	<class name="TmpComplianceReviewPicFollowup" table="wo_tmp_comp_rvw_pic_fp">
+		<id name="complianceReviewPicFollowupId" column="compliance_rvw_pic_fp_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TMP_COMP_RVW_PIC_FP_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpComplianceReview" column="compliance_review_id"
+			class="com.wo.module.tmpComplianceReview.model.TmpComplianceReview"
+			fetch="join" />
+
+		<property name="divisionId" column="division_id" type="long" />
+
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="target_date" type="date" />
+		
+		<bag name="tmpComplianceReviewPicFollowupEmails" inverse="true"
+			cascade="delete-orphan" order-by="cmplc_rvw_pc_fp_email_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupEmail" />
+		</bag>
+		
+		
+		<bag name="tmpComplianceReviewPicFollowupReschedules" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_pic_fp_resc_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupReschedule" />
+		</bag>
+		
+		<bag name="tmpComplianceReviewPicFollowupFindings" inverse="true"
+			cascade="save-update, delete-orphan" order-by="compliance_rvw_pc_fp_find_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupFindings" />
+		</bag>
+		
+		<bag name="tmpComplianceReviewPicFollowupPoints" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_pc_fp_points_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupPoints" />
+		</bag>
+		
+		<bag name="tmpComplianceReviewPicFollowupReviews" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_pic_fp_rvw_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupReview" />
+		</bag>
+		
+		<bag name="tmpComplianceReviewPicFollowupRegulations" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cmplc_rvw_pc_fp_reg_id asc">
+			<key column="compliance_rvw_pic_fp_id" />
+			<one-to-many
+				class="com.wo.module.tmpComplianceReview.model.TmpComplianceReviewPicFollowupRegulation" />
+		</bag>
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

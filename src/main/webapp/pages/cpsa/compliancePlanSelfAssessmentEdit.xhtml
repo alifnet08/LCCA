@@ -1,0 +1,543 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.ui-panelgrid tr, .ui-panelgrid td {
+				border: 0 !important;
+			}
+			
+			.ui-inputfield, .ui-widget-content .ui-inputfield {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+			
+			.form-control[disabled] {
+				font-size: 13px;
+				font-family: 'Montserrat';
+				color: #444444;
+			}
+			
+			.input-group {
+				margin-top: 15px;
+			}
+			
+			.ui-widget-content .ui-inputfield {
+				font-family: 'Montserrat';
+			}
+			
+			.div-css-margin-bottom {
+				margin-bottom: -20px !important;
+			}
+			.form-group.required.calendar-style {
+			    margin-bottom: auto;
+			}
+			.form-group.required.text-input-required {
+			    margin-bottom: auto;
+			}
+		</style>		
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="CPSA Administrator" />
+	</ui:define>
+
+	<ui:define name="content">
+		<!-- required to enable selectbooleanchekcbox -->
+		<p:remoteCommand autoRun="true" oncomplete="initSelect2()"
+			update="form:dataTablePicCpsa" immediate="true"/>
+		
+		<p:growl id="msgs" rendered="true" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title tl-label" tl="new-master-cpsa">
+					<h:outputText value="Tambah CPSA" />
+				</h3>
+			</div>
+
+			<div class="box-body">
+				<p:growl id="messages" rendered="true" />				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="cpsaType"> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentType}"
+									for="cpsaType" />
+							</label>
+							<h:selectOneMenu id="cpsaType" styleClass="form-control s2"
+								required="true"
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentType} #{msg.validateRequired}"
+								value="#{compliancePlanSelfAssessmentEditBean.cpsa.cpsaType.parameterDtlCode}">
+								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								<f:selectItems
+									value="#{compliancePlanSelfAssessmentEditBean.cpsaTypeList}" />
+							</h:selectOneMenu>
+							<p:message for="cpsaType" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="cpsaBranchSubBranch"> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentBranchSubBranch}"
+									for="cpsaBranchSubBranch" />
+							</label>
+							
+							<p:inputText autocomplete="off" style="width:100%"
+								styleClass="form-control" id="cpsaBranchSubBranch"
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								required="false" value="#{compliancePlanSelfAssessmentEditBean.cpsa.cpsaBranchSubBranch}" />
+						</div>
+					</div>
+
+					<div class="col-lg-12 div-css-margin-bottom">
+						<div class="form-group">
+							<label class="tl-label" tl=""> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentPeriod}" />
+							</label>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group required">
+							<label class="tl-label" tl="startDatePeriod">
+							      <p:outputLabel value="#{msg.formCompliancePlanSelfAssessmentStartDate}" for="startDatePeriod" />
+						    </label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								placeholder="Tanggal Mulai" maxlength="11" id="startDatePeriod"
+								value="#{compliancePlanSelfAssessmentEditBean.cpsa.periodFrom}"
+								autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+								required="true"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentStartDate} #{msg.validateRequired}">
+							</p:calendar>
+							<p:message for="startDatePeriod" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group required">
+							<label class="tl-label" tl="endaDatePeriod">
+							     <p:outputLabel value="#{msg.formCompliancePlanSelfAssessmentEndDate}" for="endaDatePeriod" />
+							</label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								placeholder="Tanggal Akhir" maxlength="11" id="endaDatePeriod"
+								value="#{compliancePlanSelfAssessmentEditBean.cpsa.periodTo}"
+								autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+								required="true"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentEndDate} #{msg.validateRequired}">
+							</p:calendar>
+							<p:message for="endaDatePeriod" />
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="letterNo"> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentLetterNo}" for="letterNo" />
+							</label>
+							<p:inputText autocomplete="off" style="width:100%"
+								styleClass="form-control" id="letterNo"
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								required="true" value="#{compliancePlanSelfAssessmentEditBean.cpsa.letterNo}"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentLetterNo} #{msg.validateRequired}" />
+							<p:message for="letterNo" />
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="letterDate">
+							       <p:outputLabel value="#{msg.formCompliancePlanSelfAssessmentLetterDate}"  for="letterDate"/>
+							</label>
+							<p:calendar styleClass="form-control-datepicker-wrap"
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								placeholder="#{msg.formCompliancePlanSelfAssessmentLetterDate}" maxlength="11" id="letterDate"
+								autocomplete="off" pattern="dd-MMM-yyyy" locale="en"
+								required="true" value="#{compliancePlanSelfAssessmentEditBean.cpsa.letterDate}"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentLetterDate} #{msg.validateRequired}">
+							</p:calendar>
+							<p:message for="letterDate" />
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group required">
+							<label class="tl-label" tl="letterAbout"> 
+							       <p:outputLabel value="#{msg.formCompliancePlanSelfAssessmentLetterAbout}" for="letterAbout" />
+							</label>
+							<p:inputText autocomplete="off" style="width:100%"
+								styleClass="form-control" id="letterAbout"
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								required="true" value="#{compliancePlanSelfAssessmentEditBean.cpsa.letterAbout}"
+								requiredMessage="#{msg.formCompliancePlanSelfAssessmentLetterAbout} #{msg.validateRequired}" />
+							<p:message for="letterAbout" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12 div-css-margin-bottom">
+						<div class="form-group">
+							<label class="tl-label" tl=""> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentDocMail}" />
+							</label>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:remoteCommand name="onCompleteUpload" update="attachment"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+									value="#{msg.formCompliancePlanSelfAssessmentEntryDoc}" /> <br /> <h:outputText
+									style="color: #dd4b39"
+									value="#{compliancePlanSelfAssessmentEditBean.textWarningUpload}" /> </label>
+							<p:fileUpload
+								disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								fileUploadListener="#{compliancePlanSelfAssessmentEditBean.handleUploadFile}"
+								oncomplete="onCompleteUpload()"
+								value="compliancePlanSelfAssessmentEditBean.uploadFiles" mode="advanced"
+								auto="true" dragDropSupport="false" multiple="true"
+								sizeLimit="#{compliancePlanSelfAssessmentEditBean.standardAttachmentSize}"
+								update="msgs" />
+							<p:dataList value="#{compliancePlanSelfAssessmentEditBean.uploadedFiles}"
+								emptyMessage="" var="vo" id="attachment" rowIndexVar="index">
+								<table>
+									<tr>
+										<td style="width: 80%"><p:commandLink
+												title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+												actionListener="#{compliancePlanSelfAssessmentEditBean.downloadFile(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td><span>&nbsp;</span></td>
+										<td><p:commandLink immediate="true"
+												disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+												actionListener="#{compliancePlanSelfAssessmentEditBean.deleteAttachment(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}"
+												update="attachment">#{msg.buttonDelete}</p:commandLink></td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+					
+					<div class="col-lg-12 div-css-margin-bottom">
+						<div class="form-group">
+							<label class="tl-label" tl=""> <p:outputLabel
+									value="#{msg.formCompliancePlanSelfAssessmentCPSAQuestion}" />
+							</label>
+						</div>
+					</div>
+
+					<div class="col-lg-12">
+						<div class="form-group">
+							<p:remoteCommand name="onCompleteUploadCpsa" update="attachmentCpsa"></p:remoteCommand>
+							<label class="tl-label"><h:outputText
+									value="#{msg.formCompliancePlanSelfAssessmentCPSADoc}" />
+									<h:outputLabel value="&#160;"/> 
+									<h:commandLink value="Download Template CPSA" styleClass="tl-label"
+										target="_blank" immediate="true">
+										<p:fileDownload value="#{compliancePlanSelfAssessmentEditBean.templateUploadCPSA}" />
+									</h:commandLink>
+									<br /> <h:outputText
+									style="color: #dd4b39"
+									value="#{compliancePlanSelfAssessmentEditBean.textWarningUploadCpsa}" /> </label>
+							<p:fileUpload disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+								fileUploadListener="#{compliancePlanSelfAssessmentEditBean.handleUploadFileCpsa}"
+								oncomplete="onCompleteUploadCpsa()"
+								value="compliancePlanSelfAssessmentEditBean.uploadedFileCpsas" mode="advanced"
+								auto="true" dragDropSupport="false" multiple="true"
+								sizeLimit="#{compliancePlanSelfAssessmentEditBean.standardAttachmentSize}"
+								update="msgs" />
+							<p:dataList value="#{compliancePlanSelfAssessmentEditBean.uploadedFileCpsas}"
+								emptyMessage="" var="vo" id="attachmentCpsa" rowIndexVar="index">
+								<table>
+									<tr>
+										<td style="width: 80%"><p:commandLink
+												title="#{vo.fileSizeKB} KB" ajax="false" immediate="true"
+												actionListener="#{compliancePlanSelfAssessmentEditBean.downloadFileCpsa(vo.fileId,vo.fileName,null)}"
+												target="_blank">#{vo.fileName}</p:commandLink></td>
+										<td><span>&nbsp;</span></td>
+										<td><p:commandLink immediate="true" disabled="#{compliancePlanSelfAssessmentEditBean.flagNewEdit == false}"
+												actionListener="#{compliancePlanSelfAssessmentEditBean.deleteAttachmentCpsa(vo.fileId,index,'UPLOAD_TYPE_DOCUMENT')}"
+												update="attachmentCpsa">#{msg.buttonDelete}</p:commandLink></td>
+									</tr>
+								</table>
+							</p:dataList>
+						</div>
+					</div>
+					
+					<h:panelGroup id="panelPicCPSA">
+						<h3>
+							<h:outputText value="#{msg.formCompliancePlanSelfAssessmentPICFollowup}" />
+						</h3>
+						<div class="col-lg-12">
+							<div id="mp-pic-tindak-lanjut-cpsa">
+								<h4 class="sub-header">
+									&nbsp;
+									<div class="box-tools">
+										<ul class="no-margin no-padding">
+											<li><p:commandLink onclick="onAddNewCpsaPic()">
+													<i class="fa fa-plus"></i>
+												</p:commandLink></li>
+											<li><p:commandLink onclick="onDeleteRowCpsaPic()">
+													<i class="fa fa-trash"></i>
+												</p:commandLink></li>
+										</ul>
+									</div>
+								</h4>
+								<div class="table-wrapper table-responsive">
+									<p:dataTable id="dataTablePicCpsa" var="data"
+										value="#{compliancePlanSelfAssessmentEditBean.tableModelCpsaPic}"
+										selection="#{compliancePlanSelfAssessmentEditBean.selectedDataCpsaPic}"
+										rowKey="#{data.sequence}" rowIndexVar="statIndex"
+										rowSelectMode="checkbox">
+
+										<p:ajax event="rowSelectCheckbox" process="@this" />
+										<p:ajax event="rowUnselectCheckbox" process="@this" />
+										<p:ajax event="toggleSelect" process="@this" />
+
+										<p:column selectionMode="multiple"
+											styleClass="#{!data.isEditableTemp ? 'optionDisabled':''}"
+											style="text-align:center; width:40px;" />
+
+										<p:column style="text-align:center; width:40px;">
+											<p:commandLink id="lock" title="Lock CPSA" immediate="false" ajax="false" styleClass="text-mb-g5"
+												action="#{compliancePlanSelfAssessmentEditBean.lockCpsa(statIndex,data.cpsaPicId)}"
+												process="@this" update="form:messages dataTablePicCpsa" 
+												disabled="#{data.isCanLock}">
+												<i class="fa fa-lock"/>
+											</p:commandLink>
+										</p:column>
+
+										<p:column headerText="#{msg.formCompliancePlanSelfAssessmentWorkUnit}" width="200">
+											<h:selectOneMenu
+												styleClass="form-control s2 division#{statIndex}"
+												disabled="#{!data.isEditableTemp}"
+												value="#{data.divisionId}">
+												<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+												<f:selectItems
+													value="#{compliancePlanSelfAssessmentEditBean.unitKerjas}" />
+												<p:ajax event="change" update="form:panelPicCPSA"
+													listener="#{compliancePlanSelfAssessmentEditBean.onChangeUnitKerjaPic(statIndex)}" />
+											</h:selectOneMenu>
+										</p:column>
+										
+										<p:column headerText="Branch/Sub Branch" width="200">				
+											<table>
+											<tr>
+												<td style="width: 5%"><h:inputText styleClass="branch#{statIndex}" style="visibility:hidden"
+														id="branchCode" value="#{data.branchCode}"  /></td>
+												<td style="width: 75%">
+												
+												<h:inputText id="branchName"
+														styleClass="form-control"
+														value="#{data.branchName}" readonly="true" /></td>
+												<td style="width: 20%">
+												 	<!-- <p:commandLink
+														rendered="data.isEditableTemp}"
+														onstart="('.hdnParamBranchOption').val($('.division#{rivSubject}#{statIndex}').val());branchDialog.show();"
+														process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="compliancePlanSelfAssessmentEditBean.indexDtlFollowup}"
+															value="statIndex}" />
+													</p:commandLink> -->
+												    <p:commandLink
+														rendered="#{data.isEditableTemp}"
+														onstart="branchDialog.show();"
+														process="@this">
+														<i class="fa fa-search ico-lg"></i>
+														<f:setPropertyActionListener
+															target="#{compliancePlanSelfAssessmentEditBean.indexDtlFollowup}"
+															value="#{statIndex}" />
+													</p:commandLink>
+												</td>
+											</tr>
+										</table>
+											
+										</p:column>
+										
+										<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC1}"
+											width="250">
+											<table>
+												<tr>
+													<td style="width: 80%">
+														<div class="form-group required text-input-required">
+															<h:inputText
+																styleClass="form-control user1#{statIndex}"
+																id="userName1" value="#{data.user1.name}"
+																readonly="true" />
+														</div>
+														</td>
+													<td style="width: 20%"><p:commandLink
+															rendered="#{data.isEditableTemp}"
+															onstart="$('.hdnParamEmailCc1Option').val($('.division#{statIndex}').val());$('.hdnTypeEmailCc1Option').val($('.branch#{statIndex}').val());pic1Dialog.show();"
+															process="@this" >
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{compliancePlanSelfAssessmentEditBean.indexDtlFollowup}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+
+										<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC2}"
+											width="250">
+											<table>
+												<tr>
+													<td style="width: 70%"><h:inputText
+															styleClass="form-control user2"
+															id="userName2" value="#{data.user2.name}" readonly="true" /></td>
+													<td style="width: 15%"><p:commandLink
+															rendered="#{data.isEditableTemp}"
+															onstart="$('.hdnParamEmailCc2Option').val($('.division#{statIndex}').val());$('.hdnTypeEmailCc2Option').val($('.branch#{statIndex}').val());pic2Dialog.show();"
+															process="@this">
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{compliancePlanSelfAssessmentEditBean.indexDtlFollowup}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink
+															rendered="#{data.isEditableTemp}" immediate="true"
+															style="float:left;margin-left:-10px;"
+															actionListener="#{compliancePlanSelfAssessmentEditBean.clearPicDetail2(statIndex)}"
+															update="dataTablePicCpsa">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+
+										<p:column headerText="#{msg.formCompliancePlanSelfAssessmentPIC3}"
+											width="250">
+											<table>
+												<tr>
+													<td style="width: 70%"><h:inputText
+															styleClass="form-control user3"
+															id="userName3" value="#{data.user3.name}" readonly="true" /></td>
+													<td style="width: 15%"><p:commandLink
+															rendered="#{data.isEditableTemp}"
+															onstart="$('.hdnParamEmailCc3Option').val($('.division#{statIndex}').val());$('.hdnTypeEmailCc3Option').val($('.branch#{statIndex}').val());pic3Dialog.show();"
+															process="@this">
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{compliancePlanSelfAssessmentEditBean.indexDtlFollowup}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink
+															rendered="#{data.isEditableTemp}" immediate="true"
+															style="float:left;margin-left:-10px;"
+															actionListener="#{compliancePlanSelfAssessmentEditBean.clearPicDetail3(statIndex)}"
+															update="dataTablePicCpsa">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+										<p:column headerText="#{msg.formCompliancePlanSelfAssessmentTargetDate}"
+											width="150">
+												<div class="form-group required calendar-style">
+													<p:calendar maxlength="11"  pattern="dd MMM yyyy" style="width:100px" 
+													    placeholder="#{msg.formCompliancePlanSelfAssessmentTargetDate}"
+														value="#{data.targetDate}" autocomplete="off" 
+														styleClass="form-control-datepicker-wrap" locale="en">
+														<f:attribute name="seq" value="#{data.sequence}" />
+														<f:attribute name="rowIdx" value="#{statIndex}" />
+														<p:ajax event="dateSelect" update="form:panelReminder"
+															listener="#{compliancePlanSelfAssessmentEditBean.onTargetDateChange(statIndex)}" />
+													</p:calendar>
+												</div>
+										</p:column>
+										<p:column headerText="Status" width="150">
+										    <p:outputLabel value="#{data.cpsaStatus.nameIn}"/>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+										
+					<h:panelGroup id="panelReminder">
+						<div class="col-lg-12" style="margin-top: 15px;">
+							<div 
+								class="form-group #{'Y' eq compliancePlanSelfAssessmentEditBean.followUpRemainder? 'required':''}">
+								<label class="control-label tl-label"><p:outputLabel
+										for="#{'Y' eq compliancePlanSelfAssessmentEditBean.followUpRemainder? 'dateReminder':''}"
+										value="#{msg.formCompliancePlanSelfAssessmentReminderType}" /></label>
+								<h:selectOneMenu id="dateReminder"
+									disabled="#{'Y' ne compliancePlanSelfAssessmentEditBean.followUpRemainder}"
+									required="#{'Y' eq compliancePlanSelfAssessmentEditBean.followUpRemainder}"
+									styleClass="form-control s2"
+									value="#{compliancePlanSelfAssessmentEditBean.cpsa.counterType.counterTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{compliancePlanSelfAssessmentEditBean.counterTypes}" />
+								</h:selectOneMenu>
+								<p:message for="dateReminder" />
+							</div>
+						</div>
+					</h:panelGroup>
+
+				</div>
+
+				<div class="box-footer">
+					<h:commandButton value="#{msg.buttonSave}" type="submit"
+						styleClass="btn btn-primary pull-left"
+						actionListener="#{compliancePlanSelfAssessmentEditBean.save()}">
+					</h:commandButton>
+					<h:commandLink value="#{msg.buttonCancel}"
+						actionListener="#{compliancePlanSelfAssessmentEditBean.cancel()}"
+						immediate="true" styleClass="btn btn-default pull-right tl-label">
+					</h:commandLink>
+					<p:remoteCommand action="#{compliancePlanSelfAssessmentEditBean.onAddNewCpsaPic}"
+						process="@this" immediate="true" name="onAddNewCpsaPic"
+						update="dataTablePicCpsa"></p:remoteCommand>
+					<p:remoteCommand
+						action="#{compliancePlanSelfAssessmentEditBean.onDeleteRowCpsaPic}"
+						process="@this" immediate="true" name="onDeleteRowCpsaPic"
+						update="dataTablePicCpsa"></p:remoteCommand>
+				</div>
+
+			</div>
+		</div>
+		
+		<wo:selector id="pic1OptionDummy" height="450" width="550"
+			title="LOV #{msg.formCompliancePlanSelfAssessmentPIC1}"
+			widgetVar="pic1DialogDummy"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorPic1}"
+			bean="#{compliancePlanSelfAssessmentEditBean}"
+			updateOnSelected="form:dataTablePicCpsa"/>
+
+		<wo:selector id="EmailCc1Option" height="450" width="550"
+			title="LOV #{msg.formCompliancePlanSelfAssessmentPIC1}"
+			widgetVar="pic1Dialog"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorPic1}"
+			bean="#{compliancePlanSelfAssessmentEditBean}"
+			updateOnSelected="form:dataTablePicCpsa" />
+
+		<wo:selector id="EmailCc2Option" height="450" width="550" 
+		    title="LOV #{msg.formCompliancePlanSelfAssessmentPIC2}"
+			widgetVar="pic2Dialog"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorPic2}"
+			bean="#{compliancePlanSelfAssessmentEditBean}" 
+			updateOnSelected="form:dataTablePicCpsa"/>
+
+		<wo:selector id="EmailCc3Option" height="450" width="550" 
+		    title="LOV #{msg.formCompliancePlanSelfAssessmentPIC3}"
+			widgetVar="pic3Dialog"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorPic3}"
+			bean="#{compliancePlanSelfAssessmentEditBean}"
+			updateOnSelected="form:dataTablePicCpsa" />
+		
+		<wo:selector id="BranchOption" height="450" width="550"
+			title="LOV Branch"
+			widgetVar="branchDialog"
+			selectorInfo="#{compliancePlanSelfAssessmentEditBean.selectorBranch}"
+			bean="#{compliancePlanSelfAssessmentEditBean}"
+			updateOnSelected="form:dataTablePicCpsa" />
+		
+	</ui:define>
+</ui:composition>

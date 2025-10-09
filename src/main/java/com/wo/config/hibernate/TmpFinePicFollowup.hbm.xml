@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.tmpFine.model">
+	<class name="TmpFinePicFollowup" table="wo_tmp_fine_pic_followup">
+		<id name="finePicFollowupId" column="fine_pic_followup_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_tmp_fine_pic_followup_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="tmpFine" column="fine_id"
+			class="com.wo.module.tmpFine.model.TmpFine"
+			fetch="join" />
+			
+		<many-to-one name="rc" column="rc_id"
+			class="com.wo.module.rc.model.RC"
+			fetch="join" />
+			
+		<many-to-one name="userId1" column="USER_ID_1"
+			class="com.wo.module.user.model.User"
+			fetch="join" />
+			
+		<many-to-one name="userId2" column="USER_ID_2"
+			class="com.wo.module.user.model.User"
+			fetch="join" />
+			
+		<many-to-one name="userId3" column="USER_ID_3"
+			class="com.wo.module.user.model.User"
+			fetch="join" />
+
+		<property name="fineDebitted" column="FINE_DEBITTED" type="date" />
+		<property name="fineAmount" column="FINE_AMOUNT" type="long" />
+		<property name="breaches" column="BREACHES" type="string" />
+		<property name="rootCause" column="ROOT_CAUSE" type="string" />
+		<property name="category" column="CATEGORY" type="string" />
+		<property name="targetDate" column="TARGET_DATE" type="date" />
+		<property name="targetResponseDate" column="TARGET_RESPONSE_DATE" type="date" />
+		
+		<property name="divisionId" column="DIVISION_ID" type="long" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="tmpFinePicFollowupEmails" inverse="true"
+			cascade="save-update, delete-orphan" order-by="fine_pic_followup_email_id asc">
+			<key column="fine_pic_followup_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFinePicFollowupEmail" />
+		</bag>
+
+		<bag name="tmpFinePicFollowupReschedules" inverse="true"
+			cascade="save-update, delete-orphan" order-by="crpdc_pic_fp_rschdl_id asc">
+			<key column="fine_pic_followup_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.tmpFine.model.TmpFinePicFollowupReschedule" />
+		</bag>
+	</class>
+</hibernate-mapping>

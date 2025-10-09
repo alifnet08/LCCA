@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.template.model">
+	<class name="Template" table="wo_mst_template">
+		<id name="templateId" column="TEMPLATE_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_template_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="templateCategory" property-ref="parameterDtlCode"
+			column="TEMPLATE_CATEGORY" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		<many-to-one name="templateSubCategory" property-ref="parameterDtlCode"
+			column="TEMPLATE_SUBCATEGORY" class="com.wo.module.parameter.model.ParameterDetail"
+			fetch="join" />
+			
+		
+		<property name="perihalIn" column="PERIHAL_IN" type="string" />
+		<property name="perihalEn" column="PERIHAL_EN" type="string" />
+		<property name="note" column="NOTE" type="string" />
+		<property name="deskripsi" column="DESKRIPSI" type="string" />
+		<property name="saranaPenyampaianLaporan" column="SARANA_PENYAMPAIAN_LAPORAN" type="string" />
+		<property name="sanksi" column="SANKSI" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		
+		
+		<bag name="templateDocuments" inverse="true"
+			cascade="save-update, delete-orphan" order-by="template_document_id asc">
+			<key column="template_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.template.model.TemplateDocument" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

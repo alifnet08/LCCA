@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.trcAudit.model">
+	<class name="TrcAuditPicFollowupAuditFindingsTable" table="wo_trc_aud_pc_fp_aud_fdgs_tbl">
+		<id name="auditPicFollowupAuditFindingsTableId" column="aud_pc_fp_aud_fdgs_table_id"
+			type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_aud_pc_fp_aud_fd_tbl_sq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="trcAuditCheckPoint" column="AUDIT_CHECK_POINT_ID"
+			class="com.wo.module.trcAudit.model.TrcAuditCheckPoint"
+			fetch="join" />
+
+		<property name="column1" column="column_1" type="string" />
+		<property name="column2" column="column_2" type="string" />
+		<property name="column3" column="column_3" type="string" />
+		<property name="column4" column="column_4" type="string" />
+		<property name="column5" column="column_5" type="string" />
+		<property name="column6" column="column_6" type="string" />
+		<property name="column7" column="column_7" type="string" />
+		<property name="column8" column="column_8" type="string" />
+		<property name="column9" column="column_9" type="string" />
+		<property name="column10" column="column_10" type="string" />
+		<property name="column11" column="column_11" type="string" />
+		<property name="column12" column="column_12" type="string" />
+		<property name="column13" column="column_13" type="string" />
+		<property name="column14" column="column_14" type="string" />
+		<property name="column15" column="column_15" type="string" />
+		<property name="column16" column="column_16" type="string" />
+		<property name="column17" column="column_17" type="string" />
+		<property name="column18" column="column_18" type="string" />
+		<property name="column19" column="column_19" type="string" />
+		<property name="column20" column="column_20" type="string" />
+		<property name="column21" column="column_21" type="string" />
+		<property name="column22" column="column_22" type="string" />
+		<property name="column23" column="column_23" type="string" />
+		<property name="column24" column="column_24" type="string" />
+		<property name="column25" column="column_25" type="string" />
+		<property name="column26" column="column_26" type="string" />
+		<property name="column27" column="column_27" type="string" />
+		<property name="column28" column="column_28" type="string" />
+		<property name="column29" column="column_29" type="string" />
+		<property name="column30" column="column_30" type="string" />
+		<property name="column31" column="column_31" type="string" />
+		<property name="column32" column="column_32" type="string" />
+		<property name="column33" column="column_33" type="string" />
+		<property name="column34" column="column_34" type="string" />
+		<property name="column35" column="column_35" type="string" />
+		<property name="column36" column="column_36" type="string" />
+		<property name="column37" column="column_37" type="string" />
+		<property name="column38" column="column_38" type="string" />
+		<property name="column39" column="column_39" type="string" />
+		<property name="column40" column="column_40" type="string" />
+		<property name="column41" column="column_41" type="string" />
+		<property name="column42" column="column_42" type="string" />
+		<property name="column43" column="column_43" type="string" />
+		<property name="column44" column="column_44" type="string" />
+		<property name="column45" column="column_45" type="string" />
+		<property name="column46" column="column_46" type="string" />
+		<property name="column47" column="column_47" type="string" />
+		<property name="column48" column="column_48" type="string" />
+		<property name="column49" column="column_49" type="string" />
+		<property name="column50" column="column_50" type="string" />
+		<property name="isHeader" column="is_header" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+	</class>
+</hibernate-mapping>

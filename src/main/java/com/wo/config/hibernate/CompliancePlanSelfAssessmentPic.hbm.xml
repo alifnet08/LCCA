@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.cpsa.model">
+	<class name="CompliancePlanSelfAssessmentPic" table="wo_mst_cpsa_pic">
+		<id name="cpsaPicId" column="CPSA_PIC_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_cpsa_pic_seq</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="cpsa" column="CPSA_ID" fetch="join" 
+				class="com.wo.module.cpsa.model.CompliancePlanSelfAssessment" />
+		
+		<property name="divisionId" column="division_id" type="long" />
+		
+		<property name="branchCode" column="branch_code" type="string" />
+
+		<many-to-one name="user1" column="user_id_1"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user2" column="user_id_2"
+			class="com.wo.module.user.model.User" fetch="join" />
+		<many-to-one name="user3" column="user_id_3"
+			class="com.wo.module.user.model.User" fetch="join" />
+
+		<property name="targetDate" column="target_date" type="date" />
+		
+		<property name="note" column="note" type="string" />
+		
+		<many-to-one name="userApproval" column="USER_APPROVAL"
+			class="com.wo.module.user.model.User" fetch="join" />
+		
+		<property name="approvalDate" column="APPROVAL_DATE" type="date" />
+		
+		<many-to-one name="statusPic" column="STATUS_PIC_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />
+		
+		<many-to-one name="cpsaStatus" column="CPSA_STATUS_ID" fetch="join" 
+				class="com.wo.module.parameter.model.ParameterDetail" />
+		
+		<property name="cpsaNote" column="CPSA_NOTE" type="string" />
+				
+		<property name="reviewDate" column="REVIEW_DATE" type="date" />		
+		
+		<property name="totalQuestion" column="TOTAL_QUESTION" type="integer" />		
+		<property name="totalAnswer" column="TOTAL_ANSWER" type="integer" />		
+		
+		<property name="sendEmailFlag" column="SEND_EMAIL_FLAG" type="string"/>
+		<property name="lockFlag" column="LOCK_FLAG" type="string" />
+		<property name="userNikLock" column="USER_NIK_LOCK" type="string" />
+		
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		<bag name="cpsaAnswers" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cpsa_pic_id asc">
+			<key column="cpsa_pic_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.cpsa.model.CompliancePlanSelfAssessmentAnswer" />
+		</bag>
+		
+		<bag name="cpsaPicEmailList" inverse="true"
+			cascade="save-update, delete-orphan" order-by="cpsa_pic_email_id asc">
+			<key column="cpsa_pic_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.cpsa.model.CompliancePlanSelfAssessmentPicEmail" />
+		</bag>
+		
+	</class>
+</hibernate-mapping>

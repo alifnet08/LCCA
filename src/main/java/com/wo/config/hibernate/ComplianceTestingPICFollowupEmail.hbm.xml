@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.complianceTestingMockup.model">
+	<class name="ComplianceTestingPICFollowupEmail" table="WO_TRC_COMP_TEST_PIC_FP_EMAIL">
+		<id name="complianceTestingPICFollowEmailId" column="COMP_TEST_PIC_FP_EMAIL_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">WO_TRC_COMP_TEST_PIC_FP_EM_SEQ</param>
+			</generator>
+		</id>
+
+		<many-to-one name="complianceTestingPICFollowup" column="COMPLIANCE_TEST_PIC_FP_ID"
+			class="com.wo.module.complianceTestingMockup.model.ComplianceTestingPICFollowup" fetch="join" />
+			
+		<property name="emailDate" column="EMAIL_DATE" type="date" />
+		<property name="slaType" column="SLA_TYPE" type="string" />
+		<property name="sla" column="SLA" type="long" />
+		<property name="emailStatus" column="email_status" type="string" />
+		<property name="emailSubject" column="email_subject" type="string" />
+		<property name="emailContent" column="email_content" type="string" />
+		<property name="resendCount" column="resend_count" type="integer" />
+
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+		
+		
+	</class>
+</hibernate-mapping>
