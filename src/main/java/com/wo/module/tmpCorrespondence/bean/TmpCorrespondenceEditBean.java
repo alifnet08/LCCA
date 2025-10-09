@@ -1658,6 +1658,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
 							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
 							dataEmailVo.setEmailTo(emailToConcate);
+							dataEmailVo.setTargetDate(tmpData.getTargetDate());
 							dataEmailToList.add(dataEmailVo);
 						}
 						
@@ -1683,6 +1684,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
 							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
 							dataEmailVo.setEmailTo(emailTo);
+							dataEmailVo.setTargetDate(tmpData.getTargetDate());
 							dataEmailToList.add(dataEmailVo);
 						}
 					}
@@ -1740,7 +1742,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							urlLink = pdHostName.getNameIn().concat(
 									"pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token + "&menuId=" + menuId + "&tokenPic=" + dataEmailTo.getCrpdcPicConfirmId());
 							emailContent = emailContent.replaceAll("target_date",
-									tmpCorrespondence.getTargetDate() != null ? sdf.format(tmpCorrespondence.getTargetDate()) : "");
+									tmpCorrespondence.getTargetDate() != null ? sdf.format(dataEmailTo.getTargetDate()) : "");
 							emailContent = emailContent.replaceAll("url_link", urlLink);
 							to = dataEmailTo.getEmailTo();
 							content = emailContent;

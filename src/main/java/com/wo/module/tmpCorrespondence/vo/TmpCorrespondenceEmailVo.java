@@ -1,6 +1,7 @@
 package com.wo.module.tmpCorrespondence.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class TmpCorrespondenceEmailVo implements Serializable {
 
@@ -9,6 +10,8 @@ public class TmpCorrespondenceEmailVo implements Serializable {
 	private Long crpdcPicConfirmId;
 	
 	private String emailTo;
+	
+	private Date targetDate;
 	
 	public TmpCorrespondenceEmailVo() {}
 
@@ -26,6 +29,14 @@ public class TmpCorrespondenceEmailVo implements Serializable {
 
 	public void setEmailTo(String emailTo) {
 		this.emailTo = emailTo;
+	}
+
+	public Date getTargetDate() {
+		return targetDate;
+	}
+
+	public void setTargetDate(Date targetDate) {
+		this.targetDate = targetDate;
 	}
 	
 	
