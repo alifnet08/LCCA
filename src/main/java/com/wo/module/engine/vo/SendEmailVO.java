@@ -149,6 +149,8 @@ public class SendEmailVO implements Serializable {
 	private Date startDate;
 	private Date endDate;
 	
+	private Long crpdcPicConfirmId;
+	
 
 	public String getPic1() {
 		return pic1;
@@ -800,6 +802,14 @@ public class SendEmailVO implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public Long getCrpdcPicConfirmId() {
+		return crpdcPicConfirmId;
+	}
+
+	public void setCrpdcPicConfirmId(Long crpdcPicConfirmId) {
+		this.crpdcPicConfirmId = crpdcPicConfirmId;
 	}
 
 	

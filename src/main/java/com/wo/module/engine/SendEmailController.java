@@ -249,9 +249,10 @@ public class SendEmailController implements Job {
 					String token = Constants.encryptString(vo.getId().toString());
 					String menuId = "";
 					String urlLink = "";
+					String tokenPic = vo.getCrpdcPicConfirmId() !=null ? Constants.encryptString(vo.getCrpdcPicConfirmId()+"") : "";
 					if (vo.getSenderCode() != null && vo.getSenderCode().equals(ParameterHeader.PARAM_HEAD_CODE_SENDER)) {
 						menuId = Constants.encryptString(Constants.MENU_ID_FOLLOWUP_CONFIRMATION_CORRESPONDENCE);
-						urlLink = pdHostName.concat("pages/correspondenceFE/correspondenceFEEdit.faces?token="+token+"&menuId="+menuId);
+						urlLink = pdHostName.concat("pages/correspondenceFE/correspondenceFEEdit.faces?token="+token+"&menuId="+menuId+"&tokenPic="+tokenPic);
 					} else if (vo.getSenderCode() != null && vo.getSenderCode().equals(ParameterHeader.PARAM_HEAD_CODE_SENDER_AML)) {
 						menuId = Constants.encryptString(Constants.MENU_ID_FOLLOWUP_CONFIRMATION_CORRESPONDENCE_AML);
 						urlLink = pdHostName.concat("pages/trcCorrespondenceAml/trcCorrespondenceAmlEdit.faces?token="+token+"&menuId="+menuId);

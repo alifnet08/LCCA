@@ -114,7 +114,8 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
 					+ "                  when pc.division_id = u2.division_id then u2.division_name "
 					+ "                  when pc.division_id = u3.division_id then u3.division_name end) else null end) division, "
 					+ "            u1.name pic_1_name, u2.name pic_2_name, u3.name pic_3_name, "
-					+ "            sender.name_in, sender.name_en, dbms_lob.substr(c.letter_summary, 4000, 1 ) letter_summary, sender.parameter_code sender_code " 
+					+ "            sender.name_in, sender.name_en, dbms_lob.substr(c.letter_summary, 4000, 1 ) letter_summary, sender.parameter_code sender_code "
+					+ "            ,pc.CRPDC_PIC_CONFIRM_ID "
 					+ "       from wo_trc_correspondence c "
 					+ "     	   inner join wo_trc_crpdc_pic_fp_email e on e.correspondence_id = c.correspondence_id "
 					+ "		       inner join WO_TRC_CRPDC_PIC_CONFIRM pc ON pc.correspondence_id = c.correspondence_id "
@@ -167,7 +168,8 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
 					data.setSenderEn(obj[23] != null ? (String) obj[23] : null);
 					data.setLetterSummary(obj[24] != null ? (String) obj[24] : null);
 					data.setSenderCode(obj[25] != null ? (String) obj[25] : null);
-
+					data.setCrpdcPicConfirmId(obj[26] != null ? (MathUtil.returnIdObjectToLong(obj[26])) : null);
+					
 					String detailQuery = "SELECT "
 							+ "(case when c.division_id is not null then (case when c.division_id = u1.division_id then u1.division_name when c.division_id = u2.division_id then u2.division_name when c.division_id = u3.division_id then u3.division_name end) else null end) division, "
 							+ "u1.name pic_1_name, u2.name pic_2_name, u3.name pic_3_name, "
