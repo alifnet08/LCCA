@@ -62,9 +62,6 @@ import com.wo.module.tmpCorrespondence.model.TmpReffDocument;
 import com.wo.module.tmpCorrespondence.service.TmpCorrespondenceService;
 import com.wo.module.tmpCorrespondence.vo.TmpCorrespondenceEmailVo;
 import com.wo.module.trcCorrespondence.model.TrcCorrespondence;
-import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttachment;
-import com.wo.module.trcCorrespondence.model.TrcCorrespondencePicFollowupAttendance;
-import com.wo.module.trcCorrespondence.model.TrcCrpdcPicConfirm;
 import com.wo.module.trcCorrespondence.service.TrcCorrespondenceService;
 import com.wo.module.user.model.Division;
 import com.wo.module.user.model.User;
@@ -1607,12 +1604,12 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 						CounterTypeDtl cd = tmpCorrespondence.getCounterType().getDetails().get(0);
 						emailTo = cd.getEmailTo();
 						emailCc1 = cd.getEmailCc1();
-						emailCc2 = cd.getEmailCc2();
+						emailCc2 = cd.getEmailCc2();						
 						
-						String emailToConcate = "";
 						String emailCc1Concate = "";
 						String emailCc2Concate = "";
 						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
+							String emailToConcate = "";
 							if (emailTo !=null && emailTo.equals(Constants.REMINDER_PIC1) && 
 									tmpData.getUser1() != null ) {
 								emailToConcate = emailToConcate != "" ? (emailToConcate.concat(",").concat(tmpData.getUser1().getEmail()))
@@ -1662,12 +1659,13 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							dataEmailToList.add(dataEmailVo);
 						}
 						
-						emailTo = emailToConcate;
+						//emailTo = emailToConcate;
 						emailCc1 = emailCc1Concate;
 						emailCc2 = emailCc2Concate;						
 
 					} else {
 						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
+							emailTo = "";
 							if (tmpData.getUser1() != null ) {
 								emailTo = emailTo != "" ? (emailTo.concat(",").concat(tmpData.getUser1().getEmail()))
 										: emailTo.concat(tmpData.getUser1().getEmail());
@@ -1739,13 +1737,17 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					//if (emailTo != null && !emailTo.isEmpty()) {
 					if(dataEmailToList !=null && dataEmailToList.size() > 0) {
 						for(TmpCorrespondenceEmailVo dataEmailTo : dataEmailToList) {
-							urlLink = pdHostName.getNameIn().concat(
-									"pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token + "&menuId=" + menuId + "&tokenPic=" + dataEmailTo.getCrpdcPicConfirmId());
-							emailContent = emailContent.replaceAll("target_date",
-									tmpCorrespondence.getTargetDate() != null ? sdf.format(dataEmailTo.getTargetDate()) : "");
-							emailContent = emailContent.replaceAll("url_link", urlLink);
+							String emailDataContent = emailContent;
+							urlLink = pdHostName.getNameIn()
+									.concat("pages/correspondenceFE/correspondenceFEEdit.faces?token=" + token
+											+ "&menuId=" + menuId + "&tokenPic="
+											+ toEncrypt(dataEmailTo.getCrpdcPicConfirmId()));
+							emailDataContent = emailDataContent.replaceAll("target_date",
+									dataEmailTo.getTargetDate() != null ? sdf.format(dataEmailTo.getTargetDate()) : "");
+							emailDataContent= emailDataContent.replaceAll("url_link", urlLink);
+							
 							to = dataEmailTo.getEmailTo();
-							content = emailContent;
+							content = emailDataContent;
 							CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_CORESPONDENCE", "true", parameterDetailService);
 						}
 					}
@@ -1758,7 +1760,15 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 			ex.printStackTrace();
 			throw new CustomAPIException(ex.getMessage());
 		}
-
+	}
+	
+	public String toEncrypt(Long correspondenceId){
+		try {
+			return Constants.encryptString(correspondenceId.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	public FacesUtil getFacesUtil() {
