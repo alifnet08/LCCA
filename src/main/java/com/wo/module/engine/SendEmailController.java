@@ -281,6 +281,7 @@ public class SendEmailController implements Job {
 						// add by dwi
 						emailContent = emailContent.replaceAll("summary_in", vo.getLetterSummary());
 						
+						
 						if (vo.getListDetail() != null && vo.getListDetail().size() > 0) {
 							if (vo.getListDetail().size() == 1) {
 								emailContent = emailContent.replaceAll("supporting_name_division", StringUtils.isNotBlank(vo.getListDetail().get(0).getDivisionName()) ? vo.getListDetail().get(0).getDivisionName() : "NA");

@@ -17,6 +17,7 @@
 		<property name="reportNameIn" column="REPORT_NAME_IN" type="string" />
 		<property name="reportNameEn" column="REPORT_NAME_EN" type="string" />
 		<property name="description" column="DESCRIPTION" type="string" />
+		<property name="means_of_delivery" column="MEANS_OF_DELIVERY" type="string" />
 
 		<many-to-one name="counterType" column="COUNTER_TYPE_ID"
 			class="com.wo.module.counterType.model.CounterType" fetch="join" />

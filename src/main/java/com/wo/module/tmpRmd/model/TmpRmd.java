@@ -26,6 +26,7 @@ public class TmpRmd extends BaseEntity implements Serializable {
 	private String reportNameIn;
 	private String reportNameEn;
 	private String description;
+	private String means_of_delivery;
 	private CounterType counterType;
 	private Long divisionId;
 	private User user1;
@@ -152,6 +153,14 @@ public class TmpRmd extends BaseEntity implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getMeans_of_delivery() {
+		return means_of_delivery;
+	}
+
+	public void setMeans_of_delivery(String means_of_delivery) {
+		this.means_of_delivery = means_of_delivery;
 	}
 
 	public CounterType getCounterType() {

@@ -27,6 +27,7 @@ import com.wo.module.calendar.model.Calendar;
 import com.wo.module.calendar.service.CalendarService;
 import com.wo.module.common.bean.CommonBean;
 import com.wo.module.common.constant.Constants;
+import com.wo.module.common.exception.CustomAPIException;
 import com.wo.module.common.paging.DefaultSearchObject;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.holiday.model.Holiday;
@@ -129,7 +130,7 @@ public class CalendarBean extends CommonBean implements Serializable {
     }
 	
 	public void addEvent(ActionEvent actionEvent) {
-		
+		try {
 		System.out.println("calendar Event=="+event.getTitle());
 		System.out.println("start Date=="+event.getStartDate());
 		System.out.println("end Date=="+event.getEndDate());
@@ -179,20 +180,20 @@ public class CalendarBean extends CommonBean implements Serializable {
 			calendarNew.setLastUpdateDate(new Timestamp(new Date().getTime()));
 			calendarNew.setDelId(new Long(0));
 			calendarNew.setEnabledFlag(Constants.CONSTANT_YES);
-			if(calendar.getAllDayFlag()!= null && calendar.getAllDayFlag().equals(1)){
-				Holiday holiday = holidayService.getHolidayDataByName(calendar.getCalendarEvent());
+			if(calendarNew.getAllDayFlag()!= null && calendarNew.getAllDayFlag().equals(1)){
+				Holiday holiday = holidayService.getHolidayDataByName(calendarNew.getCalendarEvent());
 				if(holiday!=null && holiday.getHolidayId()!=null){
-					holiday.setHolidayDateFrom(calendar.getStartDate());
-					holiday.setHolidayDateTo(calendar.getEndDate());
+					holiday.setHolidayDateFrom(calendarNew.getStartDate());
+					holiday.setHolidayDateTo(calendarNew.getEndDate());
 					holiday.setEnabledFlag(Constants.CONSTANT_YES);
 					holiday.setLastUpdateBy(facesUtil.retrieveUserLogin());
 					holiday.setLastUpdateDate(new Timestamp(new Date().getTime()));
 					holidayService.update(holiday);
 				}else{
 					holiday = new Holiday();
-					holiday.setHolidayName(calendar.getCalendarEvent());
-					holiday.setHolidayDateFrom(calendar.getStartDate());
-					holiday.setHolidayDateTo(calendar.getEndDate());
+					holiday.setHolidayName(calendarNew.getCalendarEvent());
+					holiday.setHolidayDateFrom(calendarNew.getStartDate());
+					holiday.setHolidayDateTo(calendarNew.getEndDate());
 					holiday.setEnabledFlag(Constants.CONSTANT_YES);
 					holiday.setCreatedBy(facesUtil.retrieveUserLogin());
 					holiday.setCreationDate(new Timestamp(new Date().getTime()));
@@ -204,7 +205,10 @@ public class CalendarBean extends CommonBean implements Serializable {
 		}
 		
 		event = new DefaultScheduleEvent();
-		
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new CustomAPIException(ex.getMessage());
+		}
 	}
 	
 	public void onEventSelect(SelectEvent selectEvent) {

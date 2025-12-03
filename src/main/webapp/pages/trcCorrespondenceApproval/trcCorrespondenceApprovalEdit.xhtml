@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:wo="http://java.sun.com/jsf/composite/wo"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../templates/template.xhtml">
 
 	<ui:define name="head">
@@ -112,9 +113,11 @@
 						<div class="form-group">
 							<label class="tl-label"><h:outputText
 									value="#{msg.formTmpCorrespondenceLetterSummary}" /></label>
-							<h:inputText styleClass="form-control" title="#{trcCorrespondenceApprovalEditBean.trcCorrespondence.letterSummary}"
-								value="#{trcCorrespondenceApprovalEditBean.trcCorrespondence.letterSummary}"
-								disabled="true"/>
+							<pe:ckEditor widgetVar="editorContentIn" width="100%" id="tmpCorrespondeceLetterSummary" 
+							height="300" style="margin-bottom:10px" 
+								required="true"
+								requiredMessage="#{msg.formTmpCorrespondenceLetterSummary} #{msg.validateRequired}"
+								value="#{tmpCorrespondenceEditBean.tmpCorrespondence.letterSummary}" disabled="true"/>
 						</div>
 					</div>
 					

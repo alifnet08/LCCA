@@ -26,6 +26,7 @@ import com.wo.module.common.util.FileUtil;
 import com.wo.module.common.utility.CallApiManager;
 import com.wo.module.complianceTestingFE.service.ComplianceTestingFEService;
 import com.wo.module.complianceTestingMockup.model.ComplianceTesting;
+import com.wo.module.complianceTestingMockup.model.ComplianceTestingDtl;
 import com.wo.module.complianceTestingMockup.model.ComplianceTestingPICFollowup;
 import com.wo.module.complianceTestingMockup.model.ComplianceTestingPICFollowupAttachment;
 import com.wo.module.complianceTestingMockup.model.ComplianceTestingPICFollowupExt;
@@ -36,6 +37,7 @@ import com.wo.module.emailTemplate.model.EmailTemplate;
 import com.wo.module.emailTemplate.service.EmailTemplateService;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.parameter.model.ParameterDetail;
+import com.wo.module.tmpComplianceReviewApproval.constant.TmpComplianceReviewApprovalConstants;
 import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
 
@@ -174,6 +176,9 @@ public class ComplianceTestingFEEditBean extends CommonBean implements Serializa
 			String emailContent = "";
 			String emailTo = "";
 			String emailCc = "";
+			String emailCcPICReview = "";
+			String atasanPicReviewEmail="";
+			String atasanPicFollowupEmail="";
 			
 			String noDocAssigment = complianceTesting.getInspectionNo() != null ? " - " + complianceTesting.getInspectionNo() : "";
 
@@ -182,19 +187,64 @@ public class ComplianceTestingFEEditBean extends CommonBean implements Serializa
 			
 			emailSubject = emailSubject.replace(Constants.CONFIRMATION_TYPE_AND_DOC_NUM, "Compliance Testing" 
 					+ noDocAssigment);
+			
+			if(complianceTesting.getComplianceTestingDtls()!=null && complianceTesting.getComplianceTestingDtls().size()>0) {
+				for(int i=0;i<complianceTesting.getComplianceTestingDtls().size();i++) {
+					ComplianceTestingDtl dtl = complianceTesting.getComplianceTestingDtls().get(i);
+					
+					if(dtl.getComplianceTestingPICFollowups()!=null && dtl.getComplianceTestingPICFollowups().size()>0) {
+						for(int x=0;x<dtl.getComplianceTestingPICFollowups().size();x++) {
+							ComplianceTestingPICFollowup dtlFollow = dtl.getComplianceTestingPICFollowups().get(x);
+							emailTo = dtlFollow.getUser1().getEmail();
+							
+							User atasanPICFollowup = userService.getUserByNik(dtlFollow.getUser1().getPukNik());
+							if (atasanPICFollowup != null) 
+							{
+								atasanPicFollowupEmail = atasanPICFollowup.getEmail();
+							}
+							if (StringUtils.isNotEmpty(atasanPicFollowupEmail)) {
+								if (StringUtils.isNotEmpty(emailCc)) {
+									emailCc = emailCc.concat(",").concat(atasanPicFollowupEmail);
+								} else {
+									emailCc = atasanPicFollowupEmail;
+								}
+							}
+		
+							final String subject = emailSubject;
+							final String content = emailContent;
+							final String to = emailTo;
+							
+							final String cc = emailCc;
+
+							CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_PIC_COMPLIANCE", "true",
+									parameterDetailService);
+							}
+						}
+					}
+					
+				}
 
 			for (int x = 0; x < complianceTesting.getComplianceTestingPICReviews().size(); x++) {
 				ComplianceTestingPICReview cd = complianceTesting.getComplianceTestingPICReviews().get(x);
 				emailTo = cd.getUser().getEmail();
-
-				// ExecutorService emailExecutor =
-				// Executors.newCachedThreadPool();
+				
+				User atasanPICUser = userService.getUserByNik(cd.getUser().getPukNik());
+				if (atasanPICUser != null) 
+				{
+					atasanPicReviewEmail = atasanPICUser.getEmail();
+				}
+				if (StringUtils.isNotEmpty(atasanPicReviewEmail)) {
+					if (StringUtils.isNotEmpty(emailCcPICReview)) {
+						emailCcPICReview = emailCc.concat(",").concat(atasanPicReviewEmail);
+					} else {
+						emailCcPICReview = atasanPicReviewEmail;
+					}
+				}
 
 				final String subject = emailSubject;
 				final String content = emailContent;
 				final String to = emailTo;
-				// final String to = "h3ndr407@gmail.com";
-				final String cc = emailCc;
+				final String cc = emailCcPICReview;
 
 				CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_PIC_COMPLIANCE", "true",
 						parameterDetailService);

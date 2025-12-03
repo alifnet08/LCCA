@@ -1288,9 +1288,16 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 	@SuppressWarnings("unused")
 	public void sendEmail() {
 		try {
-
-			EmailTemplate emailTemplate = emailTemplateService
-					.getEmailTemplateByEmailTemplateCode("EMAIL_KORESPONDENSI");
+			EmailTemplate emailTemplate = new EmailTemplate();
+			emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_KORESPONDENSI");
+			if (trcCorrespondence != null && trcCorrespondence.getComplianceStatus() != null)
+			{
+				if (trcCorrespondence.getComplianceStatus().getParameterDtlCode().equals(ParameterDetail.PARAM_DET_CODE_COMPLIANCE_CHECK_STATUS_COMPLIANCE_CLOSE))
+				{
+					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_KORESPONDENSI_COMPLETE");
+				}
+			}
+						
 			String emailSubject = emailTemplate.getEmailSubject().replaceAll("counter_type", "NOTIFICATION");
 			emailSubject = emailSubject.replaceAll("perihal_in", tmpCorrespondence.getPerihalIn());
 			emailSubject = emailSubject.replaceAll("perihal_en", tmpCorrespondence.getPerihalEn());
@@ -1624,78 +1631,74 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 										: emailToConcate.concat(tmpData.getUser3().getEmail());
 							}		
 							
-							if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC1) && 
-									tmpData.getUser1() != null ) {
-								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser1().getEmail()))
-										: emailCc1Concate.concat(tmpData.getUser1().getEmail());
-							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC2) && 
-									tmpData.getUser2() != null ) {
-								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser2().getEmail()))
-										: emailCc1Concate.concat(tmpData.getUser2().getEmail());
-							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC3) && 
-									tmpData.getUser3() != null ) {
-								emailCc1Concate = emailCc1Concate != "" ? (emailCc1Concate.concat(",").concat(tmpData.getUser3().getEmail()))
-										: emailCc1Concate.concat(tmpData.getUser3().getEmail());
+							if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC1) &&  tmpData.getUser1() != null ) {
+								emailCc1Concate = tmpData.getUser1().getEmail();
+							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC2) &&  tmpData.getUser2() != null ) {
+								emailCc1Concate = tmpData.getUser2().getEmail();
+							} else if (emailCc1 !=null && emailCc1.equals(Constants.REMINDER_PIC3) && tmpData.getUser3() != null ) {
+								emailCc1Concate = tmpData.getUser3().getEmail();
 							}		
 							
 							if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC1) && 
 									tmpData.getUser1() != null ) {
-								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser1().getEmail()))
-										: emailCc2Concate.concat(tmpData.getUser1().getEmail());
+								emailCc2Concate = tmpData.getUser1().getEmail();
 							} else if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC2) && 
 									tmpData.getUser2() != null ) {
-								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser2().getEmail()))
-										: emailCc2Concate.concat(tmpData.getUser2().getEmail());
+								emailCc2Concate = tmpData.getUser2().getEmail();
 							} else if (emailCc2 !=null && emailCc2.equals(Constants.REMINDER_PIC3) && 
 									tmpData.getUser3() != null ) {
-								emailCc2Concate = emailCc2Concate != "" ? (emailCc2Concate.concat(",").concat(tmpData.getUser3().getEmail()))
-										: emailCc2Concate.concat(tmpData.getUser3().getEmail());
+								emailCc2Concate = tmpData.getUser3().getEmail();
 							}
 							
 							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
 							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
 							dataEmailVo.setEmailTo(emailToConcate);
+							dataEmailVo.setEmailCC1(emailCc1Concate);
+							dataEmailVo.setEmailCC2(emailCc2Concate);
 							dataEmailVo.setTargetDate(tmpData.getTargetDate());
 							dataEmailToList.add(dataEmailVo);
 						}
 						
 						//emailTo = emailToConcate;
-						emailCc1 = emailCc1Concate;
-						emailCc2 = emailCc2Concate;						
-
+						//emailCc1 = emailCc1Concate;
+						//emailCc2 = emailCc2Concate;	
 					} else {
 						for(TmpCrpdcPicConfirm tmpData : tmpCorrespondence.getTmpCrpdcPicConfirms()) {
 							emailTo = "";
+							String emailCC1Confirm = "";
+							String emailCC2Confirm = "";
+							
 							if (tmpData.getUser1() != null ) {
 								emailTo = emailTo != "" ? (emailTo.concat(",").concat(tmpData.getUser1().getEmail()))
 										: emailTo.concat(tmpData.getUser1().getEmail());
-							}							
-							if (tmpData.getUser2() != null ) {
-								emailCc1 = emailCc1 != "" ? (emailCc1.concat(",").concat(tmpData.getUser2().getEmail()))
-										: emailCc1.concat(tmpData.getUser2().getEmail());
 							}
+							
+							if (tmpData.getUser2() != null ) {
+								emailCC1Confirm = tmpData.getUser2().getEmail();
+							}
+							
 							if (tmpData.getUser3() != null ) {
-								emailCc2 = emailCc2 != "" ? (emailCc2.concat(",").concat(tmpData.getUser3().getEmail()))
-										: emailCc2.concat(tmpData.getUser3().getEmail());
+								emailCC2Confirm = tmpData.getUser3().getEmail();
 							}
 							
 							TmpCorrespondenceEmailVo dataEmailVo = new TmpCorrespondenceEmailVo();
 							dataEmailVo.setCrpdcPicConfirmId(tmpData.getCrpdcPicConfirmId());
 							dataEmailVo.setEmailTo(emailTo);
+							dataEmailVo.setEmailCC1(emailCC1Confirm);
+							dataEmailVo.setEmailCC2(emailCC2Confirm);
 							dataEmailVo.setTargetDate(tmpData.getTargetDate());
 							dataEmailToList.add(dataEmailVo);
 						}
 					}
 					
 					
-					if (StringUtils.isNotEmpty(emailCc1)) {
-						emailCc = emailCc.concat(emailCc1);
-					}
-					if (StringUtils.isNotEmpty(emailCc2)) {
-						emailCc = StringUtils.isNotEmpty(emailCc) ? emailCc.concat(",").concat(emailCc2)
-								: emailCc.concat(emailCc2);
-					}
-					
+					//if (StringUtils.isNotEmpty(emailCc1)) {
+						//emailCc = emailCc.concat(emailCc1);
+					//}
+					//if (StringUtils.isNotEmpty(emailCc2)) {
+						//emailCc = StringUtils.isNotEmpty(emailCc) ? emailCc.concat(",").concat(emailCc2)
+								//: emailCc.concat(emailCc2);
+					//}
 					
 					for(TmpCorrespondencePicCompliance tmpDataPICComp : tmpCorrespondence.getTmpCorrespondencePicCompliances()) {
 						if (tmpDataPICComp.getUser() != null ) {
@@ -1732,7 +1735,7 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 					//final String to = emailTo;
 					String content = "";
 					String to = "";					
-					final String cc = emailCc;
+					//final String cc = emailCc;
 					
 					//if (emailTo != null && !emailTo.isEmpty()) {
 					if(dataEmailToList !=null && dataEmailToList.size() > 0) {
@@ -1745,8 +1748,30 @@ public class TmpCorrespondenceEditBean extends CommonBean implements SelectorLis
 							emailDataContent = emailDataContent.replaceAll("target_date",
 									dataEmailTo.getTargetDate() != null ? sdf.format(dataEmailTo.getTargetDate()) : "");
 							emailDataContent= emailDataContent.replaceAll("url_link", urlLink);
+
 							
+							String emailCcConcate = emailCc;
+
+							if (StringUtils.isNotEmpty(dataEmailTo.getEmailCC1())) {
+								if (StringUtils.isNotEmpty(emailCcConcate)) {
+									emailCcConcate = emailCcConcate.concat(",").concat(dataEmailTo.getEmailCC1());
+								} else {
+									emailCcConcate = dataEmailTo.getEmailCC1();
+								}
+							}
+							
+							if (StringUtils.isNotEmpty(dataEmailTo.getEmailCC2())) {
+								if (StringUtils.isNotEmpty(emailCcConcate)) {
+									emailCcConcate = emailCcConcate.concat(",").concat(dataEmailTo.getEmailCC2());
+								} else {
+									emailCcConcate = dataEmailTo.getEmailCC2();
+								}
+							}
+							
+							
+							final String cc = emailCcConcate;
 							to = dataEmailTo.getEmailTo();
+							
 							content = emailDataContent;
 							CallApiManager.sendEmailAPI(to, cc, subject, content, "EMAIL_CORESPONDENCE", "true", parameterDetailService);
 						}

@@ -1251,11 +1251,14 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 			String dueDate = "";
 			if (picFollowupId != null && picFollowupId.getRmdPicFollowupId() != null) {
 				token = Constants.encryptString(picFollowupId.getRmdPicFollowupId().toString());
-				dueDate = (picFollowupId.getTargetDate() != null ? sdf.format(picFollowupId.getTargetDate()) : "");
+				//dueDate = (picFollowupId.getTargetDate() != null ? sdf.format(picFollowupId.getTargetDate()) : "");
+				System.out.println("picFollowupId - "+ dueDate);
 			} else {
 				//token = Constants.encryptString(rmdId.toString());
-				dueDate = tmpRmdNew.getDueDateDetails()!=null && tmpRmdNew.getDueDateDetails().size()>0 ?sdf.format(tmpRmdNew.getDueDateDetails().get(0).getDueDate()):"";
+				//dueDate = tmpRmdNew.getDueDateDetails()!=null && tmpRmdNew.getDueDateDetails().size()>0 ?sdf.format(tmpRmdNew.getDueDateDetails().get(0).getDueDate()):"";
+				dueDate = sdf.format(tmpRmdNew.getRecurringStartDate());
 			}
+			dueDate = sdf.format(tmpRmdNew.getRecurringStartDate());
 			String menuId = Constants.encryptString(Constants.MENU_ID_FOLLOWUP_CONFIRMATION_RMD);
 			String urlLink = pdHostName.getNameIn().concat("pages/regulatoryReportingFE/regulatoryReportingFEEdit.faces?token="+token+"&menuId="+menuId);
 			
@@ -1281,6 +1284,7 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 				emailContent = emailContent.replaceAll("url_link", urlLink);
 				emailContent = emailContent.replaceAll("description", tmpRmdNew.getDescription()!=null?tmpRmdNew.getDescription():"");
 				emailContent = emailContent.replaceAll("report_delivery", tmpRmdNew.getDedicatedTo()!=null?tmpRmdNew.getDedicatedTo():"");
+				emailContent = emailContent.replaceAll("means_of_delivery", tmpRmdNew.getMeans_of_delivery()!=null?tmpRmdNew.getMeans_of_delivery():"");
 				
 				try {
 					emailContent = emailContent.replaceAll("document_category_in",
@@ -1510,6 +1514,29 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 					if(StringUtils.isNotEmpty(emailCc2)) {
 						emailCc = StringUtils.isNotEmpty(emailCc)?emailCc.concat(",").concat(emailCc2):emailCc.concat(emailCc2);
 					}
+				} 
+				else
+				{
+					if (tmpRmdNew.getUser1() != null ) {
+						emailTo = emailTo != "" ? (emailTo.concat(",").concat(tmpRmdNew.getUser1().getEmail()))
+								: emailTo.concat(tmpRmdNew.getUser1().getEmail());
+					}							
+					if (tmpRmdNew.getUser2() != null ) {
+						emailCc1 = emailCc1 != "" ? (emailCc1.concat(",").concat(tmpRmdNew.getUser2().getEmail()))
+								: emailCc1.concat(tmpRmdNew.getUser2().getEmail());
+					}
+					if (tmpRmdNew.getUser3() != null ) {
+						emailCc2 = emailCc2 != "" ? (emailCc2.concat(",").concat(tmpRmdNew.getUser3().getEmail()))
+								: emailCc2.concat(tmpRmdNew.getUser3().getEmail());
+					}
+					
+					if(StringUtils.isNotEmpty(emailCc1)) {
+						emailCc = emailCc.concat(emailCc1);
+					}
+					if(StringUtils.isNotEmpty(emailCc2)) {
+						emailCc = StringUtils.isNotEmpty(emailCc)?emailCc.concat(",").concat(emailCc2):emailCc.concat(emailCc2);
+					}
+				}
 					
 					emailUserInputerCc = tmpRmdNew.getPicCompliance().getEmail();
 					if (StringUtils.isNotEmpty(emailUserInputerCc)) {
@@ -1546,15 +1573,8 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 					
 					
 					CallApiManager.sendEmailAPI(to,cc, subject,
-							content, "EMAIL_RMD", "true", parameterDetailService);
-
-			        
-					
-					
+							content, "EMAIL_RMD", "true", parameterDetailService);	
 				}
-				
-				
-			}
 		    
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1609,6 +1629,7 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void hitungTargetDate() throws Exception {
 		Calendar calendarRec = Calendar.getInstance();
 		Date targetDateTmpRec = tmpRmd.getRecurringStartDate();
@@ -1620,14 +1641,32 @@ public class TmpRmdEditBean extends CommonBean implements SelectorListener<Objec
 		List<Date> listTargetDate = new ArrayList<>();
 		listTargetDate.add(targetDateTmpRec);
 		
+		Calendar calendarEndRec = Calendar.getInstance();
+		calendarEndRec.setTime(endDateRec);
+		int monthStartDate = calendarRec.get(Calendar.MONTH);
+		int dayStartDate = calendarRec.get(Calendar.DAY_OF_MONTH);
+		int monthEndDate = calendarEndRec.get(Calendar.MONTH);
+		int dayEndDate = calendarEndRec.get(Calendar.DAY_OF_MONTH);
+		
+	
 		while(!flagLoopMonthRec) {
 			calendarRec.add(Calendar.MONTH, recurringMonth);
+			int monthCurrentDate = calendarRec.get(Calendar.MONTH);
 			if(calendarRec.getTime().before(endDateRec)) {
+				System.out.println("monthCurrentDate:" + monthCurrentDate);
+				if (dayStartDate ==31 && dayEndDate ==31 && (monthCurrentDate== 11 || monthCurrentDate== 2 || monthCurrentDate == 0
+				|| monthCurrentDate == 6 || monthCurrentDate == 7|| monthCurrentDate == 9 || monthCurrentDate == 4))
+				{
+					calendarRec.set(Calendar.DAY_OF_MONTH, 31);
+				}
+				if (dayStartDate == 30 && (dayEndDate == 30 || dayEndDate == 31) && monthCurrentDate != 1)
+				{
+					calendarRec.set(Calendar.DAY_OF_MONTH, 30);
+				}
 				listTargetDate.add(calendarRec.getTime());
 			}else {
 				flagLoopMonthRec = true;
 			}
-			
 		}
 		
 		if (tmpRmd.getDueDateDetails() == null) {

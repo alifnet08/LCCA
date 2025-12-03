@@ -11,6 +11,10 @@ public class TmpCorrespondenceEmailVo implements Serializable {
 	
 	private String emailTo;
 	
+	private String emailCC1;
+	
+	private String emailCC2;
+	
 	private Date targetDate;
 	
 	public TmpCorrespondenceEmailVo() {}
@@ -30,6 +34,23 @@ public class TmpCorrespondenceEmailVo implements Serializable {
 	public void setEmailTo(String emailTo) {
 		this.emailTo = emailTo;
 	}
+	
+	public String getEmailCC1() {
+		return emailCC1;
+	}
+
+	public void setEmailCC1(String emailCC1) {
+		this.emailCC1 = emailCC1;
+	}
+	
+	public String getEmailCC2() {
+		return emailCC2;
+	}
+
+	public void setEmailCC2(String emailCC2) {
+		this.emailCC2 = emailCC2;
+	}
+
 
 	public Date getTargetDate() {
 		return targetDate;
