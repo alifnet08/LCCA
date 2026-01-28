@@ -1410,6 +1410,7 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
 			sb.append("WHERE 1=1 ");
 			sb.append("AND iope.ENABLED_FLAG = 'Y' ");
 			sb.append("AND iope.EMAIL_DATE IS NOT NULL ");
+			sb.append("AND io.open_close_reg_obsolete = 611");
 			sb.append("AND TO_CHAR(iope.EMAIL_DATE, 'DD-MM-YYYY') = TO_CHAR(SYSDATE,'DD-MM-YYYY') ");
 			
 			Query query = getSession().createSQLQuery(sb.toString());
