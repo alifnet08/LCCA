@@ -23,115 +23,114 @@
 		<div class="box box-solid">
 			<div class="box-body">
 				<div class="row">
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationRegulationType}" /></label>
-							<h:selectOneMenu styleClass="form-control s2"
-								value="#{internalRegulationViewBean.documentTypeId}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems value="#{internalRegulationViewBean.docTypes}" />
-							</h:selectOneMenu>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationRegulationCategory}" /></label>
-							<h:selectOneMenu styleClass="form-control s2"
-								value="#{internalRegulationViewBean.documentCategoryId}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems
-									value="#{internalRegulationViewBean.docCategories}" />
-							</h:selectOneMenu>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationProposerUnit}" /></label>
-							<p:inputText styleClass="form-control" autocomplete="off"
-								value="#{internalRegulationViewBean.publisherUnit}" />
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationDocNo}" /></label>
-							<p:inputText styleClass="form-control" autocomplete="off"
-								value="#{internalRegulationViewBean.documentNo}"></p:inputText>
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationRegTitle}" /></label>
-							<p:inputText styleClass="form-control" autocomplete="off"
-								value="#{internalRegulationViewBean.judulPeraturan}"></p:inputText>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label>
-							   <h:outputText value="#{msg.formInternalRegulationPublishedDate}" /></label>
-							<div class="input-group">
-								<!-- <input type="text" class="form-control date_picker"
-									id="startDate" placeholder="from"
-									value="#{internalRegulationViewBean.startDateStr}" /> --> 
-								<p:calendar styleClass="form-control-datepicker-wrap" id="startDate"
-										placeholder="#{msg.from}" maxlength="11"
-										value="#{internalRegulationViewBean.startDate}" autocomplete="off"
-										pattern="dd-MMM-yyyy" locale="en" >
-							    </p:calendar>	
-								<span class="input-group-addon plain">-</span> 
-								<!-- <input type="text"
-									class="form-control date_picker" id="endDate" placeholder="to"
-									value="#{internalRegulationViewBean.endDateStr}" /> -->
-								<p:calendar styleClass="form-control-datepicker-wrap" id="endDate"
-										placeholder="#{msg.to}" maxlength="11"
-										value="#{internalRegulationViewBean.endDate}" autocomplete="off"
-										pattern="dd-MMM-yyyy" locale="en" >
-							    </p:calendar>		
+					<h:panelGroup id="panelSearch">
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegulationType}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationViewBean.documentTypeId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationViewBean.docTypes}" />
+								</h:selectOneMenu>
 							</div>
 						</div>
-					</div>
-
-
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formInternalRegulationTrackRecord}" /></label>
-							<h:selectOneMenu styleClass="form-control s2"
-								value="#{internalRegulationViewBean.trackRecordCode}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems
-									value="#{internalRegulationViewBean.trackRecords}" />
-							</h:selectOneMenu>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegulationCategory}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationViewBean.documentCategoryId}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{internalRegulationViewBean.docCategories}" />
+								</h:selectOneMenu>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label" tl=""><h:outputText
-									value="#{msg.formInternalRegulationStatus}" /></label>
-							<h:selectOneMenu styleClass="form-control s2"
-								value="#{internalRegulationViewBean.statusCode}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems value="#{internalRegulationViewBean.status}" />
-							</h:selectOneMenu>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationProposerUnit}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{internalRegulationViewBean.publisherUnit}" />
+							</div>
 						</div>
-					</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationDocNo}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{internalRegulationViewBean.documentNo}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationRegTitle}" /></label>
+								<p:inputText styleClass="form-control" autocomplete="off"
+									value="#{internalRegulationViewBean.judulPeraturan}"></p:inputText>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label>
+								   <h:outputText value="#{msg.formInternalRegulationPublishedDate}" /></label>
+								<div class="input-group">
+									<!-- <input type="text" class="form-control date_picker"
+										id="startDate" placeholder="from"
+										value="#{internalRegulationViewBean.startDateStr}" /> --> 
+									<p:calendar styleClass="form-control-datepicker-wrap" id="startDate"
+											placeholder="#{msg.from}" maxlength="11"
+											value="#{internalRegulationViewBean.startDate}" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en" >
+								    </p:calendar>	
+									<span class="input-group-addon plain">-</span> 
+									<!-- <input type="text"
+										class="form-control date_picker" id="endDate" placeholder="to"
+										value="#{internalRegulationViewBean.endDateStr}" /> -->
+									<p:calendar styleClass="form-control-datepicker-wrap" id="endDate"
+											placeholder="#{msg.to}" maxlength="11"
+											value="#{internalRegulationViewBean.endDate}" autocomplete="off"
+											pattern="dd-MMM-yyyy" locale="en" >
+								    </p:calendar>		
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label"><h:outputText
+										value="#{msg.formInternalRegulationTrackRecord}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationViewBean.trackRecordCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems
+										value="#{internalRegulationViewBean.trackRecords}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+								<label class="tl-label" tl=""><h:outputText
+										value="#{msg.formInternalRegulationStatus}" /></label>
+								<h:selectOneMenu styleClass="form-control s2"
+									value="#{internalRegulationViewBean.statusCode}">
+									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+									<f:selectItems value="#{internalRegulationViewBean.status}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
 					<div class="col-lg-12">
 						<div class="filter-tools">
 							<ul class="no-margin no-padding">
-								<li><h:commandButton value="#{msg.buttonSearch}"
+								<li><p:commandButton value="#{msg.buttonSearch}"
+										ajax="true" update="tableSearch"
 										styleClass="btn btn-success tl-label"
-										onclick="searchOnClick([{name: 'START_DATE', value:$('#startDate').val()},{name: 'END_DATE', value:$('#endDate').val()}])"></h:commandButton>
-									<p:remoteCommand
-										actionListener="#{internalRegulationViewBean.search}"
-										name="searchOnClick"></p:remoteCommand></li>
-								<li><h:commandLink value="#{msg.buttonReset}"
+										actionListener="#{internalRegulationViewBean.search}" ></p:commandButton></li>
+								<li><p:commandButton value="#{msg.buttonReset}"
+										ajax="true" update="tableSearch panelSearch"
 										styleClass="btn btn-default btn-flat tl-label"
-										actionListener="#{internalRegulationViewBean.reset}"></h:commandLink>
+										actionListener="#{internalRegulationViewBean.reset}"></p:commandButton>
 								</li>
 							</ul>
 						</div>
@@ -226,7 +225,12 @@
 								<p:column
 									headerText="#{msg.formInternalRegulationProposerUnit}"
 									width="100">
-									<h:outputLabel value="#{vo.publisherUnit}" title="#{vo.publisherUnit}" />
+									<!-- <h:outputLabel value="vo.publisherUnit}" title="vo.publisherUnit}" /> -->
+									<p:dataList value="#{vo.regulationProposerUnits}" 
+										emptyMessage=""
+										var="dtlUnit"><h:outputLabel value="#{dtlUnit.publisherUnit}" 
+										  title="#{dtlUnit.publisherUnit}" />
+								    </p:dataList>
 								</p:column>
 
 								<p:column

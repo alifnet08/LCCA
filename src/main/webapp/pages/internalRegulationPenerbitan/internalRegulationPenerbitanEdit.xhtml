@@ -57,6 +57,11 @@
 			.form-group.required.irg-input-text {
 			    margin-bottom: auto;
 			}
+			.checkbox-col {
+			    text-align: center;
+			    vertical-align: middle;
+			}
+						
 		</style>
 	</ui:define>
 
@@ -354,9 +359,9 @@
 													style="text-align:center; width:40px;" />
 												<p:column style="text-align:center;" headerText="#{msg.formInternalRegulationPenerbitanReviewApproval}" width="80">
 													<h:selectBooleanCheckbox styleClass="skin-blue sidebar-mini" id="checkboxReview" value="#{data.checkFlag}" >	
-													 	<f:param name="indexCheckBoxRow" value="#{statIndex}" />
-													    <p:ajax partialSubmit="true"
-													                listener="#{internalRegulationPenerbitanEditBean.onChangeCheckBox}" />	
+													 	 <p:ajax event="change" process="@this" update="@none"
+														         listener="#{internalRegulationPenerbitanEditBean.onChangeCheckBox}"/>														            
+														 <f:param name="indexCheckBoxRow" value="#{statIndex}" />
 													</h:selectBooleanCheckbox>
 												</p:column>
 												
@@ -517,16 +522,72 @@
 								</div>
 							</div>
 							
+							<!--
 							<div class="col-lg-12" style="margin-top: 15px;">
 								<div class="form-group">
 									<label class="control-label tl-label" for="internalRegPenerEmailGroupTpk">
 										<p:outputLabel value="Email Group TPK" />
 									</label>
 									<p:chips style="width:100%" styleClass="form-control" 
-										id="internalRegPenerEmailGroupTpk" value="#{internalRegulationPenerbitanEditBean.emailGroupTpkList}"/>
+										id="internalRegPenerEmailGroupTpk" value="internalRegulationPenerbitanEditBean.emailGroupTpkList}"/>
 									<p:message for="internalRegPenerEmailGroupTpk" />
 								</div>
 							</div>
+							-->
+							<h:panelGroup id="panelEmailGroupTpk">
+								<h3>
+									<h:outputText value="Email Group TPK" />
+								</h3>
+								<div class="col-lg-12">
+									<div id="mp-rekam-jejak">
+										<h4 class="sub-header">
+											&nbsp;
+											<div class="box-tools">
+												<ul class="no-margin no-padding">
+													<li><p:commandLink onclick="onAddNewEmailGroupTpk()">
+															<i class="fa fa-plus"></i>
+														</p:commandLink></li>
+													<li><p:commandLink onclick="onDeleteRowEmailGroupTpk()">
+															<i class="fa fa-trash"></i>
+														</p:commandLink></li>
+												</ul>
+											</div>
+										</h4>
+										<div class="table-wrapper table-responsive">
+											<p:dataTable id="dataTableEmailGroupTpk" var="data"
+												value="#{internalRegulationPenerbitanEditBean.tableModelEmailGroupTpk}"
+												selection="#{internalRegulationPenerbitanEditBean.selectedDataEmailGroupTpk}"
+												rowKey="#{data.sequence}" rowIndexVar="statIndex"
+												rowSelectMode="checkbox">
+
+												<p:ajax event="rowSelectCheckbox" process="@this" />
+												<p:ajax event="rowUnselectCheckbox" process="@this" />
+												<p:ajax event="toggleSelect" process="@this" />
+
+												<p:column selectionMode="multiple" style="text-align:center; width:40px;" />
+												
+												<p:column style="text-align:center;" width="25px;"
+													headerText="#{msg.formInternalRegulationPenerbitanReviewApproval}">
+													<h:selectBooleanCheckbox id="checkboxEmailGroupTpk" disabled="#{data.editableTemp}"
+													     value="#{data.checkFlag}">	
+													 	 <p:ajax event="change" process="@this" update="@none"
+														         listener="#{internalRegulationPenerbitanEditBean.onChangeCheckBoxEmailTpk}"/>														            
+														 <f:param name="indexCheckBoxEmailGroupRow" value="#{statIndex}" />
+													</h:selectBooleanCheckbox>																							
+												</p:column>
+																									
+												<p:column headerText="Email Group TPK" width="200">
+													<h:inputText styleClass="form-control" disabled="#{data.editableTemp}"
+														  id="emailGroupTpk#{statIndex}" value="#{data.emailGroup}">
+														  <p:ajax event="change" />
+													</h:inputText>	  													
+												</p:column>																																	
+											</p:dataTable>
+										</div>
+									</div>
+								</div>								
+						   </h:panelGroup>			
+							
 							<h:panelGroup id="panelReminder">
 								<div class="col-lg-12" style="margin-top: 15px;">
 									<div class="form-group required">
@@ -884,6 +945,14 @@
 				process="@this" immediate="true" name="onDeleteRowPictpk"
 				update="dataTablePictpk"></p:remoteCommand>
 				
+			<p:remoteCommand action="#{internalRegulationPenerbitanEditBean.onAddNewEmailGroupTpk}"
+				process="@this" immediate="true" name="onAddNewEmailGroupTpk"
+				update="form:dataTableEmailGroupTpk"></p:remoteCommand>
+			<p:remoteCommand
+				action="#{internalRegulationPenerbitanEditBean.onDeleteRowEmailGroupTpk}"
+				process="@this" immediate="true" name="onDeleteRowEmailGroupTpk"
+				update="dataTableEmailGroupTpk"></p:remoteCommand>	
+				
 			<wo:selector id="Pic1OptionTpk" height="450" width="550"
 				title="LOV #{msg.formInternalRegulationPenerbitanPIC1}"
 				widgetVar="pic1DialogTpk"
@@ -909,6 +978,11 @@
 				selectorInfo="#{internalRegulationPenerbitanEditBean.selectorPicIrg2}"
 				bean="#{internalRegulationPenerbitanEditBean}"
 				updateOnSelected="form:dataTablePicirg" />	
+							
+			<p:remoteCommand action="#{internalRegulationPenerbitanEditBean.onChangeCheckBoxEmailTpk}"
+				process="@this" immediate="true" name="onClickCheckBoxEmailTpk"
+				update="form:dataTableEmailGroupTpk"></p:remoteCommand>			
+				
 		</div>
 	</ui:define>
 </ui:composition>

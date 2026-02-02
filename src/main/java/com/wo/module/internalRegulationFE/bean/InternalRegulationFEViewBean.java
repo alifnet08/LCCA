@@ -2,6 +2,7 @@ package com.wo.module.internalRegulationFE.bean;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,10 +18,11 @@ import com.wo.module.common.bean.CommonBean;
 import com.wo.module.common.constant.Constants;
 import com.wo.module.common.utility.CallApiManager;
 import com.wo.module.externalRegulation.model.RegulationMst;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitMst;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordMst;
 import com.wo.module.externalRegulation.service.RegulationMstService;
+import com.wo.module.externalRegulation.service.RegulationProposerUnitMstService;
 import com.wo.module.externalRegulation.service.RegulationTrackRecordMstService;
-import com.wo.module.internalRegulationFE.constant.InternalRegulationFEConstants;
 import com.wo.module.internalRegulationFE.service.InternalRegulationFEService;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.parameter.model.ParameterDetail;
@@ -43,6 +45,8 @@ public class InternalRegulationFEViewBean extends CommonBean implements Serializ
 	private RegulationMstService regulationService;
 	
 	private RegulationTrackRecordMstService regulationTrackRecordMstService;
+	
+	private RegulationProposerUnitMstService regulationProposerUnitMstService;
 	
 	private String docType;
 	private String searchCategory;
@@ -96,6 +100,7 @@ public class InternalRegulationFEViewBean extends CommonBean implements Serializ
 		
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void handleEdit() {
 		try {
 			String editId = facesUtil.retrieveRequestParam("id");
@@ -141,6 +146,13 @@ public class InternalRegulationFEViewBean extends CommonBean implements Serializ
 					}
 				}
 //			}
+				
+				List<RegulationProposerUnitMst> proposerUnitList = regulationProposerUnitMstService.getRegulationProposerUnitByRegulationId(idLong);
+				if (proposerUnitList != null && proposerUnitList.size() > 0) {
+					regulation.setRegulationProposerUnits(proposerUnitList);					
+				}else {
+					regulation.setRegulationProposerUnits(new ArrayList());
+				}
 
 //			hits = regulationService.getCountHitRegulation(idLong,
 //					"/compliance/pages/internalRegulationFE/internalRegulationFE.faces");
@@ -303,5 +315,13 @@ public class InternalRegulationFEViewBean extends CommonBean implements Serializ
 
 	public void setSearchVal(String searchVal) {
 		this.searchVal = searchVal;
+	}
+
+	public RegulationProposerUnitMstService getRegulationProposerUnitMstService() {
+		return regulationProposerUnitMstService;
+	}
+
+	public void setRegulationProposerUnitMstService(RegulationProposerUnitMstService regulationProposerUnitMstService) {
+		this.regulationProposerUnitMstService = regulationProposerUnitMstService;
 	}
 }

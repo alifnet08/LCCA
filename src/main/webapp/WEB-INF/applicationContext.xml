@@ -80,6 +80,8 @@
 				<value>com/wo/config/hibernate/RegulationMst.hbm.xml </value>
 				<value>com/wo/config/hibernate/RegulationAttachmentMst.hbm.xml </value>
 				<value>com/wo/config/hibernate/RegulationTrackRecordMst.hbm.xml </value>
+				<value>com/wo/config/hibernate/RegulationProposerUnit.hbm.xml</value>
+				<value>com/wo/config/hibernate/RegulationProposerUnitMst.hbm.xml</value>
 				
 				<value>com/wo/config/hibernate/SocializationTmp.hbm.xml </value>
 				<value>com/wo/config/hibernate/SocializationDocumentTmp.hbm.xml </value>
@@ -327,6 +329,7 @@
 				<value>com/wo/config/hibernate/InternalRegulationPenerbitanPicTpgEmail.hbm.xml</value>
 				<value>com/wo/config/hibernate/InternalRegulationPenerbitanPicTpkEmail.hbm.xml</value>
 				<value>com/wo/config/hibernate/InternalRegulationPenerbitanAttachment.hbm.xml</value>
+				<value>com/wo/config/hibernate/InternalRegulationPenerbitanEmailGroup.hbm.xml</value>
 				
 				<value>com/wo/config/hibernate/RunningNumber.hbm.xml</value>
 				

@@ -43,6 +43,8 @@ import com.wo.module.holiday.service.HolidayService;
 import com.wo.module.internalRegulationPenerbitan.constant.InternalRegulationPenerbitanConstants;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitan;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanAttachment;
+import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanEmailGroup;
+import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanEmailGroupTableModel;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicIrg;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicIrgTableModel;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpg;
@@ -77,6 +79,8 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 	private Integer indexDtlFollowupTpg;
 	private Integer indexDtlFollowupTpk;
 	private Integer indexDtlFollowupIrg;
+	private Integer indexDtlFollowupEmailGroup;
+	private Integer lastSequenceOfEmailGroup;
 	
 	private Long counterTypeId;
 
@@ -120,12 +124,16 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 
 	private InternalRegulationPenerbitanPicTpk[] selectedDataPictpk;
 	private InternalRegulationPenerbitanPicTpkTableModel<InternalRegulationPenerbitanPicTpk> tableModelPictpk;
-
+	
+	private InternalRegulationPenerbitanEmailGroup[] selectedDataEmailGroupTpk;
+	private InternalRegulationPenerbitanEmailGroupTableModel<InternalRegulationPenerbitanEmailGroup> tableModelEmailGroupTpk;
+	
 	private FacesUtil facesUtil;
 	private FileUtil fileUtil;
 	
 	private List<InternalRegulationPenerbitanPicTpg> dataIrgPenerbitanPicTpgDeleteList;
 	private List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList;
+	private List<InternalRegulationPenerbitanEmailGroup> dataIrgPenerbitanEmailGroupDeleteList;
 
 	private String navigateSearch = InternalRegulationPenerbitanConstants.NAVIGATE_SEARCH;
 
@@ -175,13 +183,16 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 		selectorPicIrg2 = InternalRegulationPenerbitanConstants.buildSelectorPICIrg(facesUtil);
 		
 		dataIrgPenerbitanPicTpgDeleteList = new ArrayList<InternalRegulationPenerbitanPicTpg>();
-		dataIrgPenerbitanPicTpkDeleteList = new ArrayList<InternalRegulationPenerbitanPicTpk>();
+		dataIrgPenerbitanPicTpkDeleteList = new ArrayList<InternalRegulationPenerbitanPicTpk>();	
+		
+		PrimeFaces.current().executeScript("initSelect2();");
 	}
 	
 	private void checkNewOrEdit() {
 		this.editedId = facesUtil.retrieveRequestParam("editId");
 		String token = facesUtil.retrieveRequestParam("token");
 		userEmailGroupCorpSec = userService.getUserByNik("DUMMY3");
+		dataIrgPenerbitanEmailGroupDeleteList = new ArrayList<InternalRegulationPenerbitanEmailGroup>();
 		if (StringUtils.isBlank(editedId) && StringUtils.isBlank(token)) {
 			handleNew();
 			flagNewEdit = true;
@@ -207,6 +218,8 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 				irg.getIrgPicIrgs());		
 		tableModelPictpk = new InternalRegulationPenerbitanPicTpkTableModel<InternalRegulationPenerbitanPicTpk>(
 				irg.getIrgPicTpks());
+		tableModelEmailGroupTpk = new InternalRegulationPenerbitanEmailGroupTableModel<InternalRegulationPenerbitanEmailGroup>(
+				irg.getIrgEmailGroups());
 		
 		InternalRegulationPenerbitanPicIrg rt = new InternalRegulationPenerbitanPicIrg();
 		lastSequenceOfPicIrg = 1;
@@ -321,12 +334,30 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 			}
 		}
 		
+		lastSequenceOfEmailGroup = 0;
+		if (irg.getIrgEmailGroups() != null && !irg.getIrgEmailGroups().isEmpty()) {
+			for (int i = 0; i < irg.getIrgEmailGroups().size(); i++) {
+				InternalRegulationPenerbitanEmailGroup dataIrgEmailGroup = irg.getIrgEmailGroups().get(i);
+				lastSequenceOfEmailGroup = lastSequenceOfEmailGroup + 1;
+				dataIrgEmailGroup.setSequence(lastSequenceOfEmailGroup);	
+				if(dataIrgEmailGroup.getReviewApprovalFlag() !=null && dataIrgEmailGroup.getReviewApprovalFlag().equals("Y")) {
+					dataIrgEmailGroup.setCheckFlag(true);
+					dataIrgEmailGroup.setEditableTemp(true);
+				}else {
+					dataIrgEmailGroup.setCheckFlag(false);
+					dataIrgEmailGroup.setEditableTemp(false);
+				}
+			}
+		}
+		
 		tableModelPictpg = new InternalRegulationPenerbitanPicTpgTableModel<InternalRegulationPenerbitanPicTpg>(
 				irg.getIrgPicTpgs());
 		tableModelPicirg = new InternalRegulationPenerbitanPicIrgTableModel<InternalRegulationPenerbitanPicIrg>(
 				irg.getIrgPicIrgs());		
 		tableModelPictpk = new InternalRegulationPenerbitanPicTpkTableModel<InternalRegulationPenerbitanPicTpk>(
 				irg.getIrgPicTpks());
+		tableModelEmailGroupTpk = new InternalRegulationPenerbitanEmailGroupTableModel<InternalRegulationPenerbitanEmailGroup>(
+				irg.getIrgEmailGroups());
 		
 		PrimeFaces.current().executeScript("initSelect2();");
 		
@@ -661,6 +692,7 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 		}else {
 			irg.getIrgPicTpks().get(indexCheckBoxRow).setReviewApprovalFlag("N");
 		}
+		
 		PrimeFaces.current().ajax().update("form:dataTablePictpk:"+indexCheckBoxRow+":checkboxReview");
 		
 		PrimeFaces.current().executeScript("initSelect2();");
@@ -1064,6 +1096,11 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 						
 						picTpk.setDelId(0l);
 						picTpk.setEnabledFlag(Constants.CONSTANT_YES);
+						if(picTpk.getCheckFlag()) {
+							picTpk.setReviewApprovalFlag("Y");
+						}else {
+							picTpk.setReviewApprovalFlag("N");
+						}
 						
 						if(picTpk.getUploadedFilesDocument() !=null && picTpk.getUploadedFilesDocument().size() > 0) {
 							for(UploadedFileWO uf : picTpk.getUploadedFilesDocument()) {
@@ -1175,7 +1212,7 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 					}
 				}
 				
-				if (emailGroupTpkList != null && !emailGroupTpkList.isEmpty()) {
+				/*if (emailGroupTpkList != null && !emailGroupTpkList.isEmpty()) {
 					if (emailGroupTpkList.size() == 1) {
 						irg.setEmailGroupTpk(emailGroupTpkList.get(0));
 					} else {
@@ -1189,9 +1226,46 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 						}
 						irg.setEmailGroupTpk(emailGroupTpkTemp);
 					}
+				}*/
+				
+				String emailGroupTpkData = "";
+				if(irg.getIrgEmailGroups() !=null && irg.getIrgEmailGroups().size() > 0) {
+					for(InternalRegulationPenerbitanEmailGroup emailGroupIrg : irg.getIrgEmailGroups()) {
+						emailGroupIrg.setIrg(irg);
+						if (emailGroupIrg.getCreatedBy() == null) {
+							emailGroupIrg.setCreatedBy(facesUtil.retrieveUserLogin());
+							emailGroupIrg.setCreationDate(new Timestamp(new Date().getTime()));
+						}else {
+							emailGroupIrg.setLastUpdateBy(facesUtil.retrieveUserLogin());
+							emailGroupIrg.setLastUpdateDate(new Timestamp(new Date().getTime()));
+						}	
+						
+						emailGroupIrg.setDelId(0l);
+						emailGroupIrg.setEnabledFlag(Constants.CONSTANT_YES);
+						
+						if(emailGroupIrg.getCheckFlag()) {
+							emailGroupIrg.setReviewApprovalFlag("Y");
+						}else {
+							emailGroupIrg.setReviewApprovalFlag("N");
+						}
+						
+						if (emailGroupIrg.getReviewApprovalFlag() != null
+								&& emailGroupIrg.getReviewApprovalFlag().equals("N")) {
+							if (StringUtils.isBlank(emailGroupTpkData)) {
+								emailGroupTpkData = emailGroupIrg.getEmailGroup();
+							} else {
+								emailGroupTpkData = emailGroupTpkData.concat(";").concat(emailGroupIrg.getEmailGroup());
+							}
+						}
+						
+						irg.setEmailGroupTpkData(emailGroupTpkData);
+					}
 				}
 				
-				internalRegulationPenerbitanService.saveStep1(irg, facesUtil.retrieveUserLogin(), dataIrgPenerbitanPicTpgDeleteList, dataIrgPenerbitanPicTpkDeleteList);
+				internalRegulationPenerbitanService.saveStep1(irg, facesUtil.retrieveUserLogin(),
+						dataIrgPenerbitanPicTpgDeleteList, dataIrgPenerbitanPicTpkDeleteList, 
+						dataIrgPenerbitanEmailGroupDeleteList);
+				
 				if(irg.getProcessStatus() == null) {
 					irg.setProcessStatus(new ParameterDetail());
 				}
@@ -1208,7 +1282,7 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 		        	@Override
 		            public void run() {
 		                try {
-		                	sendEmail(irg.getIrgAttachmentList(), irg.getEmailGroupTpk());
+		                	sendEmail(irg.getIrgAttachmentList(), irg.getEmailGroupTpkData());
 		                } catch (Exception e) {
 		                    logger.error("send email failed", e);
 		                }
@@ -1807,6 +1881,60 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 		}
 	}
 	
+	public void onChangeCheckBoxEmailTpk() {
+		String indexCheck = facesUtil.retrieveRequestParam("indexCheckBoxEmailGroupRow");
+		Integer indexCheckBoxRow = Integer.parseInt(indexCheck);
+		
+		if(irg.getIrgEmailGroups().get(indexCheckBoxRow).getCheckFlag()) {
+			irg.getIrgEmailGroups().get(indexCheckBoxRow).setReviewApprovalFlag("Y");
+		}else {
+			irg.getIrgEmailGroups().get(indexCheckBoxRow).setReviewApprovalFlag("N");
+		}
+		
+		PrimeFaces.current().ajax().update("form:dataTableEmailGroupTpk:"+indexCheckBoxRow+":checkboxEmailGroupTpk");
+		
+		PrimeFaces.current().executeScript("initSelect2();");		
+	}
+	
+	public void onAddNewEmailGroupTpk() {
+		if (irg.getIrgEmailGroups() == null
+				|| irg.getIrgEmailGroups().size() == 0) {
+			irg.setIrgEmailGroups(new ArrayList<InternalRegulationPenerbitanEmailGroup>());
+			lastSequenceOfEmailGroup = 0;
+		}  else {
+			if(irg.getIrgEmailGroups().size() == 0) {
+				lastSequenceOfEmailGroup = 0;
+			}			
+		} 
+
+		InternalRegulationPenerbitanEmailGroup rt = new InternalRegulationPenerbitanEmailGroup();
+		lastSequenceOfEmailGroup = lastSequenceOfEmailGroup + 1;
+		rt.setSequence(lastSequenceOfEmailGroup);
+		//rt.setEditableTemp(true);
+		irg.getIrgEmailGroups().add(rt);
+
+		tableModelEmailGroupTpk.setWrappedData(irg.getIrgEmailGroups());
+		
+		PrimeFaces.current().executeScript("initSelect2();");
+	}
+
+	public void onDeleteRowEmailGroupTpk() {
+		for (int i = 0; i < selectedDataEmailGroupTpk.length; i++) {
+			dataIrgPenerbitanEmailGroupDeleteList.add(selectedDataEmailGroupTpk[i]);
+			irg.getIrgEmailGroups().remove(selectedDataEmailGroupTpk[i]);
+		}
+		
+		if (irg.getIrgEmailGroups() == null
+				|| irg.getIrgEmailGroups().size() == 0) {
+			lastSequenceOfEmailGroup = 0;
+		}
+
+		tableModelEmailGroupTpk.setWrappedData(irg.getIrgEmailGroups());
+		
+		PrimeFaces.current().executeScript("initSelect2();");
+	}
+	
+	
 	public static Logger getLogger() {
 		return logger;
 	}
@@ -2275,8 +2403,40 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 	public void setDataIrgPenerbitanPicTpkDeleteList(
 			List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList) {
 		this.dataIrgPenerbitanPicTpkDeleteList = dataIrgPenerbitanPicTpkDeleteList;
+	}
+
+	public InternalRegulationPenerbitanEmailGroup[] getSelectedDataEmailGroupTpk() {
+		return selectedDataEmailGroupTpk;
+	}
+
+	public void setSelectedDataEmailGroupTpk(InternalRegulationPenerbitanEmailGroup[] selectedDataEmailGroupTpk) {
+		this.selectedDataEmailGroupTpk = selectedDataEmailGroupTpk;
+	}
+
+	public InternalRegulationPenerbitanEmailGroupTableModel<InternalRegulationPenerbitanEmailGroup> getTableModelEmailGroupTpk() {
+		return tableModelEmailGroupTpk;
+	}
+
+	public void setTableModelEmailGroupTpk(
+			InternalRegulationPenerbitanEmailGroupTableModel<InternalRegulationPenerbitanEmailGroup> tableModelEmailGroupTpk) {
+		this.tableModelEmailGroupTpk = tableModelEmailGroupTpk;
+	}
+
+	public Integer getIndexDtlFollowupEmailGroup() {
+		return indexDtlFollowupEmailGroup;
+	}
+
+	public void setIndexDtlFollowupEmailGroup(Integer indexDtlFollowupEmailGroup) {
+		this.indexDtlFollowupEmailGroup = indexDtlFollowupEmailGroup;
+	}
+
+	public Integer getLastSequenceOfEmailGroup() {
+		return lastSequenceOfEmailGroup;
+	}
+
+	public void setLastSequenceOfEmailGroup(Integer lastSequenceOfEmailGroup) {
+		this.lastSequenceOfEmailGroup = lastSequenceOfEmailGroup;
 	}	
-	
-	
+		
 
 }

@@ -411,5 +411,6 @@ public class InternalRegulationPenerbitanReportVo implements Serializable {
 	public void setEmailGroupTpk(String emailGroupTpk) {
 		this.emailGroupTpk = emailGroupTpk;
 	}
+	 
 	
 }

@@ -1123,7 +1123,11 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
         sb.append(" 	,ur2.email irg_pic2 ");
         sb.append(" 	,ur1.NAME irg_pic_name1 ");
         sb.append(" 	,ur2.NAME irg_pic_name2 ");
-        sb.append(" 	,CAST(i.EMAIL_GROUP_TPK AS varchar(4000)) EMAIL_GROUP_TPK ");
+        sb.append("     ,(SELECT LISTAGG(wtieg.EMAIL_GROUP, ', ') ");
+    	sb.append("              WITHIN GROUP (ORDER BY wtieg.EMAIL_GROUP) AS EMAIL_GROUPS ");
+    	sb.append("         FROM WO_TRC_IRG_EMAIL_GROUP wtieg ");
+    	sb.append("        WHERE wtieg.IRG_ID = i.IRG_ID ");
+    	sb.append("              AND (wtieg.REVIEW_APPROVAL_FLAG IS NULL OR wtieg.REVIEW_APPROVAL_FLAG = 'N')) EMAIL_GROUP ");        
         sb.append(" 	,ur3.email irg_pic3 ");
         sb.append(" 	,ur3.NAME irg_pic_name3 ");
         sb.append(" FROM WO_TRC_IRG i ");

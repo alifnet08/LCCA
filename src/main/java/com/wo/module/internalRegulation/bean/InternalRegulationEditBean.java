@@ -49,6 +49,8 @@ import com.wo.module.emailTemplate.model.EmailTemplate;
 import com.wo.module.emailTemplate.service.EmailTemplateService;
 import com.wo.module.externalRegulation.model.Regulation;
 import com.wo.module.externalRegulation.model.RegulationAttachment;
+import com.wo.module.externalRegulation.model.RegulationProposerUnit;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitTableModel;
 import com.wo.module.externalRegulation.model.RegulationTrackRecord;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordTableModel;
 import com.wo.module.externalRegulation.service.RegulationService;
@@ -102,6 +104,8 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 	private Integer indexDtl;
 	private Integer effectiveYear;
 	private Integer lastSequenceOfDtl;
+	private Integer indexDtlPuPic;
+	private Integer lastSequenceOfPuDtl;
 	
 	private List<SelectItem> provTypes;
 	private List<SelectItem> trackCodes;
@@ -124,10 +128,14 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 	private SelectorInfo selectorJdlPeraturan;
 	private SelectorInfo selectorPic;
 	private SelectorInfo selectorPuk;
+	private SelectorInfo selectorProposerUnit;
 	
 	private RegulationTrackRecord[] selectedData;
 
 	private RegulationTrackRecordTableModel<RegulationTrackRecord> tableModel;
+	
+	private RegulationProposerUnit[] selectedDataProposerUnit;
+	private RegulationProposerUnitTableModel<RegulationProposerUnit> tableModelProposerUnit;
 
 	private HashMap<String, String> recordMap = new HashMap<String, String>();	
 	private HashMap<String, String> reviewDateMonth = new HashMap<String,String>();
@@ -165,6 +173,8 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 		
 		selectorJdlPeraturan = InternalRegulationConstants.buildSelectorJdlPeraturan(facesUtil);
 
+		selectorProposerUnit = InternalRegulationConstants.buildSelectorProposerUnit();
+		
 		isShowPanelTipeTanggalUlasan = false;
 		
 		checkNewOrEdit();
@@ -454,6 +464,10 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 			actionMode = Constants.ACTION_ADD;
 			tableModel = new RegulationTrackRecordTableModel<RegulationTrackRecord>(
 					regulation.getRegulationTrackRecords());
+			
+			tableModelProposerUnit = new RegulationProposerUnitTableModel<RegulationProposerUnit>(
+					regulation.getRegulationProposerUnits());
+			
 			facesUtil.setSessionAttribute("token", null);
 			
 			setTanggalUlasanPeraturanSementaraFlag(false);
@@ -577,6 +591,21 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 				rtr.setRegulationLinkName(r.getDocumentNo());
 			}
 		}
+		
+		lastSequenceOfPuDtl = 0;
+		if (regulation.getRegulationProposerUnits() != null) {
+			lastSequenceOfPuDtl = regulation.getRegulationProposerUnits().size();
+			for (int i = 0; i < regulation.getRegulationProposerUnits().size(); i++) {
+				RegulationProposerUnit dtl = regulation.getRegulationProposerUnits().get(i);
+				lastSequenceOfDtl = lastSequenceOfDtl + 1;
+				dtl.setSequence(lastSequenceOfDtl);
+				dtl.setPicNameTemp(dtl.getPic() !=null ? dtl.getPic().getName():null);
+				dtl.setPukNameTemp(dtl.getPuk() !=null ? dtl.getPuk().getName():null);
+			}
+		}
+		
+		tableModelProposerUnit = new RegulationProposerUnitTableModel<RegulationProposerUnit>(regulation.getRegulationProposerUnits());
+		
 		
 		PrimeFaces.current().executeScript("reInitSelect2();");
 
@@ -1050,6 +1079,16 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 
 				for (int i = 0; i < regulation.getRegulationTrackRecords().size(); i++) {
 					RegulationTrackRecord rt = regulation.getRegulationTrackRecords().get(i);
+					rt.setRegulation(regulation);
+					rt.setCreatedBy(facesUtil.retrieveUserLogin());
+					rt.setCreationDate(new Timestamp(new Date().getTime()));
+					rt.setDelId(new Long(0));
+					rt.setEnabledFlag(Constants.CONSTANT_YES);
+
+				}
+				
+				for (int i = 0; i < regulation.getRegulationProposerUnits().size(); i++) {
+					RegulationProposerUnit rt = regulation.getRegulationProposerUnits().get(i);
 					rt.setRegulation(regulation);
 					rt.setCreatedBy(facesUtil.retrieveUserLogin());
 					rt.setCreationDate(new Timestamp(new Date().getTime()));
@@ -1737,17 +1776,110 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 		if (StringUtils.equals("picDialog", widgetVar)) {
 			Object[] obj = (Object[]) selectedItem;
 			User userPic = userService.findById(MathUtil.returnIdObjectToLong(obj[0]));
-			regulation.setPic(userPic);
-			regulation.setPicNameTemp(userPic.getName());
+			
+			if(indexDtlPuPic == null) {
+				indexDtlPuPic = 0;
+			}			
+			
+			regulation.getRegulationProposerUnits().get(indexDtlPuPic).setPic(userPic);
+			regulation.getRegulationProposerUnits().get(indexDtlPuPic).setPicNameTemp(userPic.getName());
 		}
+		
 		if (StringUtils.equals("pukDialog", widgetVar)) {
 			Object[] obj = (Object[]) selectedItem;
 			User userPuk = userService.findById(MathUtil.returnIdObjectToLong(obj[0]));
-			regulation.setPuk(userPuk);
-			regulation.setPukNameTemp(userPuk.getName());
+			regulation.getRegulationProposerUnits().get(indexDtlPuPic).setPuk(userPuk);
+			regulation.getRegulationProposerUnits().get(indexDtlPuPic).setPukNameTemp(userPuk.getName());
+		}
+		
+		if (StringUtils.equals("proposerUnitDialog", widgetVar)) {
+			Object[] obj = (Object[]) selectedItem;
+			regulation.getRegulationProposerUnits().get(indexDtlPuPic).setPublisherUnit(obj[0]+"");
 		}
 		
 		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
+	
+	public void onAddNewPicPu() {		
+		if (regulation.getRegulationProposerUnits() == null
+				|| regulation.getRegulationProposerUnits().size() == 0) {
+			regulation.setRegulationProposerUnits(new ArrayList<RegulationProposerUnit>());
+			lastSequenceOfPuDtl = 0;
+		}  else {
+			if(regulation.getRegulationProposerUnits().size() == 0) {
+				lastSequenceOfPuDtl = 0;
+			}			
+		} 
+
+		RegulationProposerUnit rt = new RegulationProposerUnit();
+		lastSequenceOfPuDtl = lastSequenceOfPuDtl + 1;
+		rt.setSequence(lastSequenceOfPuDtl);
+		regulation.getRegulationProposerUnits().add(rt);
+		
+		tableModelProposerUnit.setWrappedData(regulation.getRegulationProposerUnits());
+		
+		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
+
+	public void onDeleteRowPicPu() {
+		if(selectedData !=null) {
+			for (int i = 0; i < selectedDataProposerUnit.length; i++) {
+				regulation.getRegulationProposerUnits().remove(selectedDataProposerUnit[i]);
+			}
+		}
+		
+		if (regulation.getRegulationProposerUnits() == null
+				|| regulation.getRegulationProposerUnits().size() == 0) {
+			lastSequenceOfPuDtl = 0;
+		}
+		
+		tableModel.setWrappedData(regulation.getRegulationProposerUnits());
+		
+		PrimeFaces.current().executeScript("reInitSelect2();");
+	}
+	
+	public void onChangeDirectoratePu(int i) {		
+		RegulationProposerUnit data = regulation.getRegulationProposerUnits().get(i);
+		
+		if (data.getDirectorate() != null) {
+			/*List<String> getDivision = userService.getDivisionByDirectorate(data.getDirectorate());
+			if(unitPenerbitList.size()>0){
+				unitPenerbitList.clear();
+			}
+			
+			for (String pd : getDivision) {
+				SelectItem si = new SelectItem();
+				si.setLabel(pd);
+				si.setValue(pd);
+				
+				unitPenerbitList.add(si);
+			}*/
+			PrimeFaces.current().executeScript("reInitSelect2();");
+		}
+		
+		
+		data.setPublisherUnit(null);
+		data.setPic(null);
+		data.setPicNameTemp(null);
+		data.setPuk(null);
+		data.setPukNameTemp(null);
+				
+		PrimeFaces.current().executeScript("initSelect2();");		
+	}
+	
+	public void clearPicPuDetail(int i) {	
+		regulation.getRegulationProposerUnits().get(i).setPic(null);
+		PrimeFaces.current().executeScript("initSelect2();");
+	}
+	
+	public void clearPukPuDetail(int i) {	
+		regulation.getRegulationProposerUnits().get(i).setPuk(null);
+		PrimeFaces.current().executeScript("initSelect2();");
+	}
+	
+	public void clearProposerUnitPuDetail(int i) {	
+		regulation.getRegulationProposerUnits().get(i).setPublisherUnit(null);
+		PrimeFaces.current().executeScript("initSelect2();");
 	}
 
 	public Regulation getRegulationValided() {
@@ -1948,6 +2080,46 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 
 	public void setIsShowPanelTipeTanggalUlasan(Boolean isShowPanelTipeTanggalUlasan) {
 		this.isShowPanelTipeTanggalUlasan = isShowPanelTipeTanggalUlasan;
+	}
+
+	public Integer getIndexDtlPuPic() {
+		return indexDtlPuPic;
+	}
+
+	public void setIndexDtlPuPic(Integer indexDtlPuPic) {
+		this.indexDtlPuPic = indexDtlPuPic;
+	}
+
+	public Integer getLastSequenceOfPuDtl() {
+		return lastSequenceOfPuDtl;
+	}
+
+	public void setLastSequenceOfPuDtl(Integer lastSequenceOfPuDtl) {
+		this.lastSequenceOfPuDtl = lastSequenceOfPuDtl;
+	}
+
+	public SelectorInfo getSelectorProposerUnit() {
+		return selectorProposerUnit;
+	}
+
+	public void setSelectorProposerUnit(SelectorInfo selectorProposerUnit) {
+		this.selectorProposerUnit = selectorProposerUnit;
+	}
+
+	public RegulationProposerUnit[] getSelectedDataProposerUnit() {
+		return selectedDataProposerUnit;
+	}
+
+	public void setSelectedDataProposerUnit(RegulationProposerUnit[] selectedDataProposerUnit) {
+		this.selectedDataProposerUnit = selectedDataProposerUnit;
+	}
+
+	public RegulationProposerUnitTableModel<RegulationProposerUnit> getTableModelProposerUnit() {
+		return tableModelProposerUnit;
+	}
+
+	public void setTableModelProposerUnit(RegulationProposerUnitTableModel<RegulationProposerUnit> tableModelProposerUnit) {
+		this.tableModelProposerUnit = tableModelProposerUnit;
 	}
 	
 	

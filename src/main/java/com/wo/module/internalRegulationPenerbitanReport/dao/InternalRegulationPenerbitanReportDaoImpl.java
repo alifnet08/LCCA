@@ -245,7 +245,11 @@ public class InternalRegulationPenerbitanReportDaoImpl extends GenericDAOHiberna
     	sb.append("       irg.EMAIL_BLAST_DATE, TO_CHAR(irg.EMAIL_BLAST_DATE, 'DD-Mon-YYYY') EMAIL_BLAST_DATE_STR, ");
     	sb.append("       irg.UPLOAD_BLAST_DATE, TO_CHAR(irg.UPLOAD_BLAST_DATE, 'DD-Mon-YYYY') UPLOAD_BLAST_DATE_STR ,");
     	sb.append("       irg.REG_OBSOLETE_TYPE, dtl4.NAME_IN REG_OBSOLETE_TYPE_NAME, irg.OBSOLETE_INFO, ");
-    	sb.append("       user1.NIK PIC_NIK1, user1.NAME PIC_NAME1, user2.NIK PIC_NIK2, user2.NAME PIC_NAME2 ");
+    	sb.append("       user1.NIK PIC_NIK1, user1.NAME PIC_NAME1, user2.NIK PIC_NIK2, user2.NAME PIC_NAME2, ");
+    	sb.append("       (SELECT LISTAGG(EMAIL_GROUP, ', ') ");
+    	sb.append("               WITHIN GROUP (ORDER BY EMAIL_GROUP) AS EMAIL_GROUPS ");
+    	sb.append("          FROM WO_TRC_IRG_EMAIL_GROUP ");
+    	sb.append("         WHERE IRG_ID = irg.IRG_ID) EMAIL_GROUP ");
     	sb.append("  FROM WO_TRC_IRG irg");
     	sb.append("       INNER JOIN WO_TRC_IRG_PIC_IRG picIrg ON irg.IRG_ID = picIrg.IRG_ID ");
     	sb.append("       INNER JOIN WO_MST_USER user1 ON picIrg.USER_ID_1 = user1.USER_ID ");
@@ -349,9 +353,11 @@ public class InternalRegulationPenerbitanReportDaoImpl extends GenericDAOHiberna
                 data.setPicIrgName1(obj[33]!=null?(String)obj[33]:null);
                 data.setPicIrgNik2(obj[34]!=null?(String)obj[34]:null);
                 data.setPicIrgName2(obj[35]!=null?(String)obj[35]:null);
+                data.setEmailGroupTpk(obj[36]!=null?(String)obj[36]:null);
+                
                 data.setPicTpgReportList(getDataPicTpg(data.getIrgId()));
                 data.setPicTpkReportList(getDataPicTpk(data.getIrgId()));
-                
+                                
                 dataVoList.add(data);
             }
         }

@@ -94,92 +94,149 @@
 							</h:selectOneMenu>
 						</div>
 					</div>
-					<div class="col-lg-12">
-						<div class="form-group required">
-							<label class="tl-label"><h:outputLabel
-									value="#{msg.formInternalRegulationDirectorate}"
-									for="internalDirectorate" /></label>
-							<h:selectOneMenu id="internalDirectorate"
-								styleClass="form-control s2" required="true"
-								requiredMessage="#{msg.formInternalRegulationDirectorate} #{msg.validateRequired}"
-								value="#{internalRegulationEditBean.regulation.directorate}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-								<f:selectItems
-									value="#{internalRegulationEditBean.directorateLists}" />
-								<f:ajax event="change"
-									listener="#{internalRegulationEditBean.updatePublisherUnit}"
-									process="@this" render="panelUnit" />
-							</h:selectOneMenu>
-							<p:message for="internalDirectorate" />
+					
+					<h:panelGroup id="panelProposePu" style="margin-top: 100px;">
+					    <h4>
+							<h:outputText value="#{msg.formInternalRegulationProposerUnit}" />
+						</h4>
+						<div class="col-lg-12">
+							<div id="ir-unit-pengusul">
+								<h4 class="sub-header">
+									&nbsp;
+									<div class="box-tools">
+										<ul class="no-margin no-padding">
+											<li><p:commandLink onclick="onAddNewPicPu()">
+													<i class="fa fa-plus"></i>
+												</p:commandLink></li>
+											<li><p:commandLink onclick="onDeleteRowPicPu()">
+													<i class="fa fa-trash"></i>
+												</p:commandLink></li>
+										</ul>
+									</div>
+								</h4>
+
+								<div class="table-wrapper table-responsive">
+									<p:dataTable id="dataTableProposerUnit" var="data"
+										value="#{internalRegulationEditBean.tableModelProposerUnit}"
+										selection="#{internalRegulationEditBean.selectedDataProposerUnit}"
+										rowKey="#{data.sequence}" rowIndexVar="statIndex"
+										rowSelectMode="checkbox">
+
+										<p:ajax event="rowSelectCheckbox" process="@this" />
+										<p:ajax event="rowUnselectCheckbox" process="@this" />
+										<p:ajax event="toggleSelect" process="@this" />
+
+										<p:column selectionMode="multiple" style="text-align:center; width:40px;" />
+										<p:column headerText="#{msg.formInternalRegulationDirectorate}" >
+											<div class="form-group required text-input-required" style="margin-top:12px;">
+												<h:selectOneMenu styleClass="form-control s2 directoratePu#{statIndex}"
+													style="margin-bottom:10px;" value="#{data.directorate}">
+													<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+													<f:selectItems
+														value="#{internalRegulationEditBean.directorateLists}" />
+													<p:ajax event="change" update="form:dataTableProposerUnit"
+														listener="#{internalRegulationEditBean.onChangeDirectoratePu(statIndex)}" />
+												</h:selectOneMenu>
+											</div>
+										</p:column>
+
+										<p:column headerText="#{msg.formInternalRegulationProposerUnit}">
+											<table>
+												<tr>
+													<td style="width: 80%">
+													    <div class="form-group required text-input-required" style="margin-top:12px;">
+														     <h:inputText styleClass="form-control"
+																id="proposerUnit#{statIndex}" value="#{data.publisherUnit}"
+																readonly="true" />
+														</div>	
+													</td>
+													<td style="width: 10%"><p:commandLink
+															onstart="$('.hdnParamProposerUnitOption').val($('.directoratePu#{statIndex}').val());proposerUnitDialog.show();"
+															process="@this">
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{internalRegulationEditBean.indexDtlPuPic}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink immediate="true"
+															style="float:left;margin-left:-5px;"
+															actionListener="#{internalRegulationEditBean.clearProposerUnitPuDetail(statIndex)}"
+															update="dataTableProposerUnit">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+											
+										</p:column>
+
+										<p:column headerText="#{msg.formInternalRegulationPIC}">
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															styleClass="form-control text-input-required"
+															id="picNameTemp#{statIndex}" value="#{data.picNameTemp}"
+															readonly="true" /></td>
+													<td style="width: 10%"><p:commandLink
+															onstart="$('.hdnParamPicOption').val($('.divId'));picDialog.show();"
+															process="@this">
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{internalRegulationEditBean.indexDtlPuPic}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink immediate="true"
+															style="float:left;margin-left:-5px;"
+															actionListener="#{internalRegulationEditBean.clearPicPuDetail(statIndex)}"
+															update="dataTableProposerUnit">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+
+										<p:column headerText="#{msg.formInternalRegulationPUK}" >
+											<table>
+												<tr>
+													<td style="width: 80%"><h:inputText
+															id="pukNameTemp#{statIndex}" styleClass="form-control"
+															value="#{data.pukNameTemp}" readonly="true" /></td>
+													<td style="width: 10%"><p:commandLink
+															onstart="$('.hdnParamPukOption').val($('.divId'));pukDialog.show();"
+															process="@this">
+															<i class="fa fa-search ico-lg"></i>
+															<f:setPropertyActionListener
+																target="#{internalRegulationEditBean.indexDtlPuPic}"
+																value="#{statIndex}" />
+														</p:commandLink></td>
+													<td style="width: 15%"><p:commandLink immediate="true"
+															style="float:left;margin-left:-5px;"
+															actionListener="#{internalRegulationEditBean.clearPukPuDetail(statIndex)}"
+															update="dataTableProposerUnit">
+															<span class="input-group-btn fa fa-trash btn btn-link"></span>
+														</p:commandLink></td>
+												</tr>
+											</table>
+										</p:column>
+
+									</p:dataTable>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group required">
-							<label class="tl-label"><p:outputLabel
-									value="#{msg.formInternalRegulationProposerUnit}"
-									for="internalRegulationPublisherUnit" /></label>
-							<p:outputPanel id="panelUnit">
-								<h:selectOneMenu id="internalRegulationPublisherUnit"
-									styleClass="form-control s2" required="true"
-									requiredMessage="#{msg.formInternalRegulationProposerUnit} #{msg.validateRequired}"
-									value="#{internalRegulationEditBean.regulation.publisherUnit}">
-									<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-									<f:selectItems
-										value="#{internalRegulationEditBean.unitPenerbitList}" />
-								</h:selectOneMenu>
-							</p:outputPanel>
-							<p:message for="internalRegulationPublisherUnit" />
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label class="tl-label"> <h:outputLabel
-									value="#{msg.formInternalRegulationPIC}" for="internalPIC" /> <p:commandLink
-									process="@this"
-									onstart="$('.hdnParamPicOption').val($('.divId'));picDialog.show();">
-									<i class="fa fa-search ico-lg"></i>
-								</p:commandLink> <p:commandLink immediate="true"
-									actionListener="#{internalRegulationEditBean.clearPic}"
-									update="form:internalPIC">
-									<span class="input-group-btn fa fa-trash btn btn-link"></span>
-								</p:commandLink>
-							</label>
-							<p:inputText id="internalPIC"
-								value="#{internalRegulationEditBean.regulation.picNameTemp}"
-								styleClass="form-control" autocomplete="off" disabled="true" />
-							<p:message for="internalPIC" />
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group">
-							<label class="tl-label"> <h:outputLabel
-									value="#{msg.formInternalRegulationPUK}" for="internalPUK" /> <p:commandLink
-									process="@this"
-									onstart="$('.hdnParamPukOption').val($('.divId'));pukDialog.show();">
-									<i class="fa fa-search ico-lg"></i>
-								</p:commandLink> <p:commandLink immediate="true"
-									actionListener="#{internalRegulationEditBean.clearPuk}"
-									update="form:internalPUK">
-									<span class="input-group-btn fa fa-trash btn btn-link"></span>
-								</p:commandLink>
-							</label>
-							<p:inputText id="internalPUK"
-								value="#{internalRegulationEditBean.regulation.pukNameTemp}"
-								styleClass="form-control" autocomplete="off" disabled="true" />
-							<p:message for="internalPUK" />
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div class="form-group required">
-							<label class="tl-label"><p:outputLabel
-									for="internalRegulationDocNo"
-									value="#{msg.formInternalRegulationDocNo}" /></label>
-							<p:inputText id="internalRegulationDocNo" required="true"
-								requiredMessage="#{msg.formInternalRegulationDocNo} #{msg.validateRequired}"
-								styleClass="form-control form-required"
-								value="#{internalRegulationEditBean.regulation.documentNo}"
-								maxlength="100" autocomplete="off"></p:inputText>
-							<p:message for="internalRegulationDocNo" />
+					</h:panelGroup>
+					
+					<div style="margin-top:150px;">
+						<div class="col-lg-12">
+							<div class="form-group required">
+								<label class="tl-label"><p:outputLabel
+										for="internalRegulationDocNo"
+										value="#{msg.formInternalRegulationDocNo}" /></label>
+								<p:inputText id="internalRegulationDocNo" required="true"
+									requiredMessage="#{msg.formInternalRegulationDocNo} #{msg.validateRequired}"
+									styleClass="form-control form-required"
+									value="#{internalRegulationEditBean.regulation.documentNo}"
+									maxlength="100" autocomplete="off"></p:inputText>
+								<p:message for="internalRegulationDocNo" />
+							</div>
 						</div>
 					</div>
 					<div class="col-lg-12">
@@ -520,7 +577,7 @@
 									<p:column selectionMode="multiple"
 										style="text-align:center; width:40px;" />
 									<p:column headerText="#{msg.formInternalRegulationRekamJejak}"
-										style="text-align:center; width:150px;">
+										style="width:210px;">
 										<h:selectOneMenu styleClass="form-control s2"
 											value="#{data.trackCode}">
 											<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
@@ -651,6 +708,14 @@
 			</div>
 
 		</div>
+		
+		<p:remoteCommand action="#{internalRegulationEditBean.onAddNewPicPu}"
+				process="@this" immediate="true" name="onAddNewPicPu"
+				update="form:dataTableProposerUnit"></p:remoteCommand>
+				
+		<p:remoteCommand action="#{internalRegulationEditBean.onDeleteRowPicPu}"
+				process="@this" immediate="true" name="onDeleteRowPicPu"
+				update="form:dataTableProposerUnit"></p:remoteCommand>
 
 		<wo:selectorRegulation id="JudulPeraturanOption0" height="450"
 			width="750" title="LOV #{msg.formInternalRegulationTitle}"
@@ -665,17 +730,25 @@
 			bean="#{internalRegulationEditBean}"
 			updateOnSelected="form:dataTable" />
 
+		<wo:selector id="ProposerUnitOption" height="450" width="550" 
+			title="LOV #{msg.formInternalRegulationProposerUnit}"
+			widgetVar="proposerUnitDialog"
+			selectorInfo="#{internalRegulationEditBean.selectorProposerUnit}"
+			bean="#{internalRegulationEditBean}"
+			updateOnSelected="form:dataTableProposerUnit" />	
+
 		<wo:selector id="PicOption" height="450" width="550" title="LOV PIC"
 			widgetVar="picDialog"
 			selectorInfo="#{internalRegulationEditBean.selectorPic}"
 			bean="#{internalRegulationEditBean}"
-			updateOnSelected="form:internalPIC" />
+			updateOnSelected="form:dataTableProposerUnit" />
 
 		<wo:selector id="PukOption" height="450" width="550" title="LOV PUK"
 			widgetVar="pukDialog"
 			selectorInfo="#{internalRegulationEditBean.selectorPuk}"
 			bean="#{internalRegulationEditBean}"
-			updateOnSelected="form:internalPUK" />
+			updateOnSelected="form:dataTableProposerUnit" />
+			
 
 	</ui:define>
 </ui:composition>

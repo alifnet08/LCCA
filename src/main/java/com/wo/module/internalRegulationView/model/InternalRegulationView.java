@@ -12,6 +12,7 @@ import com.wo.module.documentCategory.model.DocumentCategory;
 import com.wo.module.documentTopic.model.DocumentTopic;
 import com.wo.module.documentType.model.DocumentType;
 import com.wo.module.externalRegulation.model.RegulationAttachmentMst;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitMst;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordMst;
 
 public class InternalRegulationView extends BaseEntity implements Serializable {
@@ -54,7 +55,7 @@ public class InternalRegulationView extends BaseEntity implements Serializable {
 	
 	private List<RegulationTrackRecordMst> regulationTrackRecords;
 	private List<RegulationAttachmentMst> regulationAttachments;
-
+	private List<RegulationProposerUnitMst> regulationProposerUnits;
 	
 	//helper
 	private String statusNameIn;
@@ -355,6 +356,14 @@ public class InternalRegulationView extends BaseEntity implements Serializable {
 
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+
+	public List<RegulationProposerUnitMst> getRegulationProposerUnits() {
+		return regulationProposerUnits;
+	}
+
+	public void setRegulationProposerUnits(List<RegulationProposerUnitMst> regulationProposerUnits) {
+		this.regulationProposerUnits = regulationProposerUnits;
 	}
 
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.internalRegulationPenerbitan.model">
+	<class name="InternalRegulationPenerbitanEmailGroup" table="wo_trc_irg_email_group">
+		<id name="irgEmailGroupId" column="IRG_EMAIL_GROUP_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_trc_irg_email_group_seq</param>
+			</generator>
+		</id>
+		
+		<many-to-one name="irg" column="IRG_ID" fetch="join" 
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitan" />
+		
+		<property name="emailGroup" column="EMAIL_GROUP" type="string" />		
+		<property name="reviewApprovalFlag" column="REVIEW_APPROVAL_FLAG" type="string" />
+		
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />		
+		
+	</class>
+</hibernate-mapping>
+                   
+                 
+  
+  

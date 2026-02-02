@@ -132,4 +132,24 @@ public abstract class InternalRegulationConstants {
         return info;
 	}
 	
+	public static SelectorInfo buildSelectorProposerUnit() {
+		SelectorModel.SelectorInfo info = new SelectorModel.SelectorInfo(
+                " select distinct division_name, directorate_name from wo_mst_user "
+                + " where 1=1 "
+                + " and division_name is not null "
+                + " and enabled_flag = 'Y' "
+                + " and (upper(division_name) like upper('%{0}%')) "
+                + " and (upper(directorate_name) = upper('{1}')) "
+                + " order by division_name "  ,
+                " SELECT COUNT(1) from wo_mst_user "
+        		+ " where 1=1 "
+                + " and division_name is not null "
+                + " and enabled_flag = 'Y' "
+                + " and (upper(division_name) like upper('%{0}%')) "
+                + " and (upper(directorate_name) = upper('{1}')) ",
+                Arrays.asList("Division Name", "Directorate Name"),
+                Arrays.asList("0", "1"),false);
+        return info;
+	}
+	
 }

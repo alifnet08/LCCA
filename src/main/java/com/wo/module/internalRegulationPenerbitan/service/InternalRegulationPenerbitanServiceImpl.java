@@ -17,9 +17,11 @@ import com.wo.module.common.paging.SearchObject;
 import com.wo.module.internalRegulationPenerbitan.constant.InternalRegulationPenerbitanConstants;
 import com.wo.module.internalRegulationPenerbitan.constant.InternalRegulationPenerbitanRomawiConstants;
 import com.wo.module.internalRegulationPenerbitan.dao.InternalRegulationPenerbitanDao;
+import com.wo.module.internalRegulationPenerbitan.dao.InternalRegulationPenerbitanEmailGroupDao;
 import com.wo.module.internalRegulationPenerbitan.dao.InternalRegulationPenerbitanPicTpgDao;
 import com.wo.module.internalRegulationPenerbitan.dao.InternalRegulationPenerbitanPicTpkDao;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitan;
+import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanEmailGroup;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpg;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpk;
 import com.wo.module.internalRegulationPenerbitan.vo.InternalRegulationPenerbitanVo;
@@ -57,6 +59,10 @@ public class InternalRegulationPenerbitanServiceImpl implements InternalRegulati
 	@Autowired
 	@Qualifier("runningNumberService")
 	private RunningNumberService runningNumberService;
+	
+	@Autowired
+	@Qualifier("internalRegulationPenerbitanEmailGroupDao")
+	private InternalRegulationPenerbitanEmailGroupDao internalRegulationPenerbitanEmailGroupDao;
 	
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -142,7 +148,8 @@ public class InternalRegulationPenerbitanServiceImpl implements InternalRegulati
 	@SuppressWarnings("deprecation")
 	@Override
 	public void saveStep1(InternalRegulationPenerbitan irg, String userLogin, List<InternalRegulationPenerbitanPicTpg> dataIrgPenerbitanPicTpgDeleteList, 
-			List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList) throws Exception {		
+			List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList,
+			List<InternalRegulationPenerbitanEmailGroup> dataIrgPenerbitanEmailGroupDeleteList) throws Exception {		
 		irg.setDelId(new Long(0));
 		irg.setEnabledFlag(Constants.CONSTANT_YES);
 		if(irg.getCreatedBy() == null || irg.getCreatedBy().equals(InternalRegulationPenerbitanConstants.STRING_EMPTY)) {
@@ -168,6 +175,14 @@ public class InternalRegulationPenerbitanServiceImpl implements InternalRegulati
 			for(InternalRegulationPenerbitanPicTpk picTpk : dataIrgPenerbitanPicTpkDeleteList) {
 				if(picTpk != null && picTpk.getIrgPicId() != null && picTpk.getIrgPicId() > 0) {
 					internalRegulationPenerbitanPicTpkDao.delete(picTpk);
+				}
+			}
+		}
+
+		if(dataIrgPenerbitanEmailGroupDeleteList != null && dataIrgPenerbitanEmailGroupDeleteList.size() > 0) {
+			for(InternalRegulationPenerbitanEmailGroup emailGroupTpk : dataIrgPenerbitanEmailGroupDeleteList) {
+				if(emailGroupTpk != null && emailGroupTpk.getIrgEmailGroupId() != null && emailGroupTpk.getIrgEmailGroupId() > 0) {
+					internalRegulationPenerbitanEmailGroupDao.delete(emailGroupTpk);
 				}
 			}
 		}

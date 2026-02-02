@@ -20,6 +20,7 @@ import com.wo.module.common.dao.GenericDAOHibernate;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.common.util.MathUtil;
 import com.wo.module.externalRegulation.dao.RegulationAttachmentMstDao;
+import com.wo.module.externalRegulation.dao.RegulationProposerUnitMstDao;
 import com.wo.module.externalRegulation.dao.RegulationTrackRecordMstDao;
 import com.wo.module.internalRegulation.constant.InternalRegulationConstants;
 import com.wo.module.internalRegulationView.model.InternalRegulationView;
@@ -36,6 +37,10 @@ public class InternalRegulationViewDaoImpl extends GenericDAOHibernate<InternalR
 	@Autowired
     @Qualifier("regulationAttachmentMstDao")
     private RegulationAttachmentMstDao regulationAttachmentMstDao;
+
+	@Autowired
+    @Qualifier("regulationProposerUnitMstDao")
+    private RegulationProposerUnitMstDao regulationProposerUnitMstDao;
 	
 	public RegulationTrackRecordMstDao getRegulationTrackRecordMstDao() {
 		return regulationTrackRecordMstDao;
@@ -73,7 +78,10 @@ public class InternalRegulationViewDaoImpl extends GenericDAOHibernate<InternalR
 						sb.append(" and dc.document_category_id = " + val + " ");
 					}
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_PUBLISHER_UNIT, col)) {
-						sb.append(" and UPPER(r.publisher_unit) like UPPER('%" + val + "%') ");
+						//sb.append(" and UPPER(r.publisher_unit) like UPPER('%" + val + "%') ");
+						sb.append(" and exists (select 1 from wo_mst_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.publisher_unit) like UPPER('%" + val + "%')) ");
 					}
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DOC_NO, col)) {
 						sb.append(" and UPPER(r.document_no) LIKE UPPER('%" + val + "%') ");
@@ -190,7 +198,6 @@ public class InternalRegulationViewDaoImpl extends GenericDAOHibernate<InternalR
         
         sb.append(" ORDER BY r.published_date DESC, r.document_no asc ");
         
-        
         Query result = getSession().createSQLQuery(sb.toString());
         result.setFirstResult(first);
         result.setMaxResults(pageSize);
@@ -224,7 +231,8 @@ public class InternalRegulationViewDaoImpl extends GenericDAOHibernate<InternalR
                 try {
 					data.setRegulationTrackRecords(regulationTrackRecordMstDao.getRegulationTrackRecordByRegulationId(data.getRegulationId()));
 					data.setRegulationAttachments(regulationAttachmentMstDao.getRegulationAttachmentByRegulationId(data.getRegulationId()));
-				} catch (Exception e) {
+				    data.setRegulationProposerUnits(regulationProposerUnitMstDao.getRegulationProposerUnitByRegulationId(data.getRegulationId()));
+                } catch (Exception e) {
 					e.printStackTrace();
 				}
                 

@@ -231,6 +231,7 @@ public class InternalRegulationViewBean extends CommonBean implements SelectorLi
 		if (locale != null && locale.equals(locale.ENGLISH)) {
 			localLanguange = "EN";
 		} 
+		
 		fileUtil = FileUtil.getInstance();
 	}
 	

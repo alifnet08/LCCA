@@ -85,6 +85,13 @@
 				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanAttachment" />
 		</bag>
 		
+		<bag name="irgEmailGroups" inverse="true"
+			cascade="save-update, delete-orphan" order-by="irg_email_group_id asc">
+			<key column="irg_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanEmailGroup" />
+		</bag>		
+		
 	</class>
 </hibernate-mapping>
                    

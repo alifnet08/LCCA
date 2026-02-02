@@ -265,8 +265,13 @@
 								</p:column>
 
 								<p:column headerText="#{msg.formInternalRegulationProposerUnit}"
-									width="100">
-									<h:outputLabel value="#{vo.publisherUnit}" title="#{vo.publisherUnit}" />
+									width="220">
+									<!-- <h:outputLabel value="vo.publisherUnit}" title="vo.publisherUnit}" /> -->
+									<p:dataList value="#{vo.regulationProposerUnits}" 
+										emptyMessage=""
+										var="dtlUnit"><h:outputLabel value="#{dtlUnit.publisherUnit}" 
+										  title="#{dtlUnit.publisherUnit}" />
+								    </p:dataList>	
 								</p:column>
 
 								<p:column
