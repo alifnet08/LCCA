@@ -680,9 +680,9 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 							
 							pic.getRegulationObsoleteEmailTmps().add(picEmail);
 							//ADD a new list for IRG Obsolete Email Tmps for D-2
-							InternalRegulationObsoleteEmailTmp picEmailDayMinus2 = new InternalRegulationObsoleteEmailTmp();
+							InternalRegulationObsoleteEmailTmp picEmailDayMinus30 = new InternalRegulationObsoleteEmailTmp();
 							
-							picEmailDayMinus2.setIrgObsoletePic(pic);
+							picEmailDayMinus30.setIrgObsoletePic(pic);
 							
 							//check if d-2 is a holiday
 							Calendar calendar = Calendar.getInstance();
@@ -710,15 +710,15 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 								
 							}
 							
-							picEmailDayMinus2.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
+							picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
 							
-							picEmailDayMinus2.setCreatedBy(facesUtil.retrieveUserLogin());
-							picEmailDayMinus2.setCreationDate(new Timestamp(System.currentTimeMillis()));
-							picEmailDayMinus2.setEnabledFlag(Constants.CONSTANT_YES);
-							picEmailDayMinus2.setDelId(Long.valueOf(0));;
-							picEmailDayMinus2.setSlaType(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_2);
+							picEmailDayMinus30.setCreatedBy(facesUtil.retrieveUserLogin());
+							picEmailDayMinus30.setCreationDate(new Timestamp(System.currentTimeMillis()));
+							picEmailDayMinus30.setEnabledFlag(Constants.CONSTANT_YES);
+							picEmailDayMinus30.setDelId(Long.valueOf(0));;
+							picEmailDayMinus30.setSlaType(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_30);
 							
-							pic.getRegulationObsoleteEmailTmps().add(picEmailDayMinus2);
+							pic.getRegulationObsoleteEmailTmps().add(picEmailDayMinus30);
 						}else { //UPDATE EXISTING IRG OBSOLETE
 							if(pic.getIsEditable()) { //ADD NEW EMAIL WITH NEW PIC
 								InternalRegulationObsoleteEmailTmp picEmail = new InternalRegulationObsoleteEmailTmp();
@@ -735,9 +735,9 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 								pic.getRegulationObsoleteEmailTmps().add(picEmail);
 								
 								//ADD a new list for IRG Obsolete Email Tmps for D-2
-								InternalRegulationObsoleteEmailTmp picEmailDayMinus2 = new InternalRegulationObsoleteEmailTmp();
+								InternalRegulationObsoleteEmailTmp picEmailDayMinus30 = new InternalRegulationObsoleteEmailTmp();
 								
-								picEmailDayMinus2.setIrgObsoletePic(pic);
+								picEmailDayMinus30.setIrgObsoletePic(pic);
 								
 								//check if d-2 is a holiday
 								Calendar calendar = Calendar.getInstance();
@@ -765,15 +765,15 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 									
 								}
 								
-								picEmailDayMinus2.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
+								picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
 								
-								picEmailDayMinus2.setCreatedBy(facesUtil.retrieveUserLogin());
-								picEmailDayMinus2.setCreationDate(new Timestamp(System.currentTimeMillis()));
-								picEmailDayMinus2.setEnabledFlag(Constants.CONSTANT_YES);
-								picEmailDayMinus2.setDelId(Long.valueOf(0));;
-								picEmailDayMinus2.setSlaType(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_2);
+								picEmailDayMinus30.setCreatedBy(facesUtil.retrieveUserLogin());
+								picEmailDayMinus30.setCreationDate(new Timestamp(System.currentTimeMillis()));
+								picEmailDayMinus30.setEnabledFlag(Constants.CONSTANT_YES);
+								picEmailDayMinus30.setDelId(Long.valueOf(0));;
+								picEmailDayMinus30.setSlaType(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_30);
 								
-								pic.getRegulationObsoleteEmailTmps().add(picEmailDayMinus2);
+								pic.getRegulationObsoleteEmailTmps().add(picEmailDayMinus30);
 								
 							}
 						}

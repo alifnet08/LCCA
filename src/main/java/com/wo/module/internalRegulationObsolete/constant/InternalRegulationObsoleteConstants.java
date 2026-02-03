@@ -25,6 +25,7 @@ public abstract class InternalRegulationObsoleteConstants {
 		
 	//Email SLA Type Difference
 	public final static String REMINDER_H_MINUS_2 = "2";
+	public final static String REMINDER_H_MINUS_30 = "30";
 	public final static String REMINDER_H_PLUS_0 = "0";
 	
 	
