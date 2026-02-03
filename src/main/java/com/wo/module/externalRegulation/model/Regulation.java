@@ -41,6 +41,7 @@ public class Regulation extends BaseEntity implements Serializable {
 	private List<RegulationTrackRecord> regulationTrackRecords;
 	private List<RegulationAttachment> regulationAttachments;
 	private List<RegulationApproval> regulationApprovals;
+	private List<RegulationProposerUnit> regulationProposerUnits;
 	
 	private String publishedDateStr;
 	private String expiredDateStr;
@@ -332,6 +333,14 @@ public class Regulation extends BaseEntity implements Serializable {
 
 	public void setNameInOld(String nameInOld) {
 		this.nameInOld = nameInOld;
+	}
+
+	public List<RegulationProposerUnit> getRegulationProposerUnits() {
+		return regulationProposerUnits;
+	}
+
+	public void setRegulationProposerUnits(List<RegulationProposerUnit> regulationProposerUnits) {
+		this.regulationProposerUnits = regulationProposerUnits;
 	}
 
 	/*public ParameterDetail getDirectorate() {

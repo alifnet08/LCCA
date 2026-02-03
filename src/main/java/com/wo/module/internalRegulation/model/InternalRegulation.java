@@ -12,6 +12,7 @@ import com.wo.module.documentCategory.model.DocumentCategory;
 import com.wo.module.documentTopic.model.DocumentTopic;
 import com.wo.module.documentType.model.DocumentType;
 import com.wo.module.externalRegulation.model.RegulationAttachment;
+import com.wo.module.externalRegulation.model.RegulationProposerUnit;
 import com.wo.module.externalRegulation.model.RegulationTrackRecord;
 import com.wo.module.parameter.model.ParameterDetail;
 
@@ -57,7 +58,7 @@ public class InternalRegulation extends BaseEntity implements Serializable {
 	
 	private List<RegulationTrackRecord> regulationTrackRecords;
 	private List<RegulationAttachment> regulationAttachments;
-
+	private List<RegulationProposerUnit> regulationProposerUnits;
 	
 	//helper
 	private String statusNameIn;
@@ -410,6 +411,14 @@ public class InternalRegulation extends BaseEntity implements Serializable {
 
 	public void setRekamJejakCode(String rekamJejakCode) {
 		this.rekamJejakCode = rekamJejakCode;
+	}
+
+	public List<RegulationProposerUnit> getRegulationProposerUnits() {
+		return regulationProposerUnits;
+	}
+
+	public void setRegulationProposerUnits(List<RegulationProposerUnit> regulationProposerUnits) {
+		this.regulationProposerUnits = regulationProposerUnits;
 	}
 	
 	

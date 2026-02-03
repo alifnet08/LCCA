@@ -20,6 +20,7 @@ import com.wo.module.common.dao.GenericDAOHibernate;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.common.util.MathUtil;
 import com.wo.module.externalRegulation.dao.RegulationAttachmentDao;
+import com.wo.module.externalRegulation.dao.RegulationProposerUnitDao;
 import com.wo.module.externalRegulation.dao.RegulationTrackRecordDao;
 import com.wo.module.internalRegulation.constant.InternalRegulationConstants;
 import com.wo.module.internalRegulation.model.InternalRegulation;
@@ -37,6 +38,10 @@ public class InternalRegulationDaoImpl extends GenericDAOHibernate<InternalRegul
     @Qualifier("regulationAttachmentDao")
     private RegulationAttachmentDao regulationAttachmentDao;
 	
+	@Autowired
+    @Qualifier("regulationProposerUnitDao")
+    private RegulationProposerUnitDao regulationProposerUnitDao;
+	
 	public RegulationTrackRecordDao getRegulationTrackRecordDao() {
 		return regulationTrackRecordDao;
 	}
@@ -51,6 +56,14 @@ public class InternalRegulationDaoImpl extends GenericDAOHibernate<InternalRegul
 
 	public void setRegulationAttachmentDao(RegulationAttachmentDao regulationAttachmentDao) {
 		this.regulationAttachmentDao = regulationAttachmentDao;
+	}
+
+	public RegulationProposerUnitDao getRegulationProposerUnitDao() {
+		return regulationProposerUnitDao;
+	}
+
+	public void setRegulationProposerUnitDao(RegulationProposerUnitDao regulationProposerUnitDao) {
+		this.regulationProposerUnitDao = regulationProposerUnitDao;
 	}
 
 	@SuppressWarnings({ "rawtypes", "static-access" })
@@ -73,7 +86,10 @@ public class InternalRegulationDaoImpl extends GenericDAOHibernate<InternalRegul
 						sb.append(" and dc.document_category_id = " + val + " ");
 					}
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_PUBLISHER_UNIT, col)) {
-						sb.append(" and UPPER(r.publisher_unit) like UPPER('%" + val + "%') ");
+						//sb.append(" and UPPER(r.publisher_unit) like UPPER('%" + val + "%') ");
+						sb.append(" and exists (select 1 from wo_tmp_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.publisher_unit) like UPPER('%" + val + "%')) ");
 					}
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DOC_NO, col)) {
 						sb.append(" and UPPER(r.document_no) like UPPER('%" + val + "%') ");
@@ -238,7 +254,8 @@ public class InternalRegulationDaoImpl extends GenericDAOHibernate<InternalRegul
                 try {
 					data.setRegulationTrackRecords(regulationTrackRecordDao.getRegulationTrackRecordByRegulationId(data.getRegulationId()));
 					data.setRegulationAttachments(regulationAttachmentDao.getRegulationAttachmentByRegulationId(data.getRegulationId()));
-				} catch (Exception e) {
+					data.setRegulationProposerUnits(regulationProposerUnitDao.getRegulationProposerUnitByRegulationId(data.getRegulationId()));
+                } catch (Exception e) {
 					e.printStackTrace();
 				}
                 

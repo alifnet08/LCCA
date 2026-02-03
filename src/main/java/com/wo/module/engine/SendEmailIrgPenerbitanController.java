@@ -249,7 +249,7 @@ public class SendEmailIrgPenerbitanController implements Job {
 						// PIC TPG
 						
 						// EMAIL GROUP TPK
-						if (StringUtils.isNotBlank(vo.getEmailGroupTpk())) {
+						/*if (StringUtils.isNotBlank(vo.getEmailGroupTpk())) {
 							if (vo.getEmailGroupTpk().contains(";")) {
 								String[] split = vo.getEmailGroupTpk().split(";");
 								for (String string : split) {
@@ -262,7 +262,8 @@ public class SendEmailIrgPenerbitanController implements Job {
 							} else {
 								emailCcEmailGroupTpk = vo.getEmailGroupTpk();
 							}
-						}
+						}*/
+						emailCcEmailGroupTpk = vo.getEmailGroupTpk();
 						// EMAIL GROUP TPK
 						
 						// ATTACHMENT

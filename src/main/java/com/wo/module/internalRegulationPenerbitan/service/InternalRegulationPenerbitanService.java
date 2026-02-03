@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.wo.module.common.paging.RetrieverDataPage;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitan;
+import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanEmailGroup;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpg;
 import com.wo.module.internalRegulationPenerbitan.model.InternalRegulationPenerbitanPicTpk;
 import com.wo.module.internalRegulationPenerbitan.vo.InternalRegulationPenerbitanVo;
@@ -16,7 +17,7 @@ public interface InternalRegulationPenerbitanService extends RetrieverDataPage<I
 	public List<String> getDataRegulationTitle(String regulationTitle);
 
 	public void saveStep1(InternalRegulationPenerbitan irg, String userLogin, List<InternalRegulationPenerbitanPicTpg> dataIrgPenerbitanPicTpgDeleteList, 
-			List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList ) throws Exception;
+			List<InternalRegulationPenerbitanPicTpk> dataIrgPenerbitanPicTpkDeleteList, List<InternalRegulationPenerbitanEmailGroup> dataIrgPenerbitanEmailGroupDeleteList) throws Exception;
 	
 	public void saveStep2(InternalRegulationPenerbitan irg, String userLogin) throws Exception;
 	

@@ -91,6 +91,12 @@
 				class="com.wo.module.externalRegulation.model.RegulationAttachmentMst" />
 		</bag>
 
+		<bag name="regulationProposerUnits" inverse="true"
+			cascade="save-update, delete-orphan" order-by="regulation_proposer_unit_id asc">
+			<key column="regulation_id" />
+			<one-to-many
+				class="com.wo.module.externalRegulation.model.RegulationProposerUnitMst" />
+		</bag>
 
 
 	</class>

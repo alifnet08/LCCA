@@ -21,6 +21,7 @@ public class InternalRegulationPenerbitan extends BaseEntity implements Serializ
 	private String regulationNo;
 	private String obsoleteInfo;
 	private String emailGroupTpk;
+	private String emailGroupTpkData;
 
 	private Date regulationInDate;
 	private Date finalIrgDate;
@@ -41,9 +42,10 @@ public class InternalRegulationPenerbitan extends BaseEntity implements Serializ
 	private List<InternalRegulationPenerbitanPicIrg> irgPicIrgs;
 	private List<InternalRegulationPenerbitanPicTpg> irgPicTpgs;
 	private List<InternalRegulationPenerbitanPicTpk> irgPicTpks;
+	private List<InternalRegulationPenerbitanEmailGroup> irgEmailGroups;
+	
 	private List<InternalRegulationPenerbitanAttachment> irgAttachmentList;
 	
-
 	public Long getIrgId() {
 		return irgId;
 	}
@@ -242,6 +244,22 @@ public class InternalRegulationPenerbitan extends BaseEntity implements Serializ
 
 	public void setIrgAttachmentList(List<InternalRegulationPenerbitanAttachment> irgAttachmentList) {
 		this.irgAttachmentList = irgAttachmentList;
+	}
+
+	public List<InternalRegulationPenerbitanEmailGroup> getIrgEmailGroups() {
+		return irgEmailGroups;
+	}
+
+	public void setIrgEmailGroups(List<InternalRegulationPenerbitanEmailGroup> irgEmailGroups) {
+		this.irgEmailGroups = irgEmailGroups;
+	}
+
+	public String getEmailGroupTpkData() {
+		return emailGroupTpkData;
+	}
+
+	public void setEmailGroupTpkData(String emailGroupTpkData) {
+		this.emailGroupTpkData = emailGroupTpkData;
 	}
 
 }

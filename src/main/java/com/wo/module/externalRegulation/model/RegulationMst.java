@@ -40,7 +40,7 @@ public class RegulationMst extends BaseEntity implements Serializable {
 	
 	private List<RegulationTrackRecordMst> regulationTrackRecords;
 	private List<RegulationAttachmentMst> regulationAttachments;
-	
+	private List<RegulationProposerUnitMst> regulationProposerUnits;
 	
 	private String publishedDateStr;
 	private String expiredDateStr;
@@ -328,6 +328,13 @@ public class RegulationMst extends BaseEntity implements Serializable {
 	public void setTypeReviewDate(String typeReviewDate) {
 		this.typeReviewDate = typeReviewDate;
 	}
-	
+
+	public List<RegulationProposerUnitMst> getRegulationProposerUnits() {
+		return regulationProposerUnits;
+	}
+
+	public void setRegulationProposerUnits(List<RegulationProposerUnitMst> regulationProposerUnits) {
+		this.regulationProposerUnits = regulationProposerUnits;
+	}	
 	
 }

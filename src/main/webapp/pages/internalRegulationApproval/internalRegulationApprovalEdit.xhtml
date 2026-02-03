@@ -53,62 +53,53 @@
 				    <f:selectItems value="#{internalRegulationApprovalEditBean.docCategories}" />
 	            </h:selectOneMenu>
               </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-                <label class="tl-label"><h:outputLabel value="#{msg.formInternalRegulationDirectorate}" for="internalDirectorate"/></label>
-	          	<h:selectOneMenu id="internalDirectorate" styleClass="form-control s2" disabled="true"
-	          		value="#{internalRegulationApprovalEditBean.regulation.directorate}">
-	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-				    <f:selectItems value="#{internalRegulationApprovalEditBean.directorateLists}" />
-	            </h:selectOneMenu>
-	            <p:message for="internalDirectorate"/>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-              	<label class="tl-label"><p:outputLabel value="#{msg.formInternalRegulationProposerUnit}" for="internalRegulationPublisherUnit" /></label>
-	            <h:selectOneMenu id="internalRegulationPublisherUnit" styleClass="form-control s2" disabled="true"
-	            	value="#{internalRegulationApprovalEditBean.regulation.publisherUnit}">
-	                <f:selectItem itemLabel="#{msg.choose}" itemValue="" />
-				    <f:selectItems value="#{internalRegulationApprovalEditBean.unitPenerbitList}" />
-	            </h:selectOneMenu>
-	            <p:message for="internalRegulationPublisherUnit"/>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-                <label class="tl-label">
-                	<h:outputLabel value="#{msg.formInternalRegulationPIC}" for="internalPIC"/>
-                </label>
-	          	<h:inputText id="internalPIC" styleClass="form-control"
-								alt="#{internalRegulationApprovalEditBean.regulation.picNameTemp}"
-								title="#{internalRegulationApprovalEditBean.regulation.picNameTemp}"
-								value="#{internalRegulationApprovalEditBean.regulation.picNameTemp}"
-								disabled="true" />
-	            <p:message for="internalPIC"/>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-                <label class="tl-label">
-                	<h:outputLabel value="#{msg.formInternalRegulationPUK}" for="internalPUK"/>
-                </label>
-	          	<h:inputText id="internalPUK" styleClass="form-control"
-								alt="#{internalRegulationApprovalEditBean.regulation.pukNameTemp}"
-								title="#{internalRegulationApprovalEditBean.regulation.pukNameTemp}"
-								value="#{internalRegulationApprovalEditBean.regulation.pukNameTemp}"
-								disabled="true" />
-	            <p:message for="internalPUK"/>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <div class="form-group">
-                <label class="tl-label" ><h:outputText value="#{msg.formInternalRegulationDocNo}" /></label>
-                <h:inputText styleClass="form-control" value="#{internalRegulationApprovalEditBean.regulation.documentNo}"
-                	title="#{internalRegulationApprovalEditBean.regulation.documentNo}"
-                	disabled="true" />
-              </div>
+            </div>                        
+            <h:panelGroup id="panelProposePu" style="margin-top: 100px;">
+			    <h4>
+					<h:outputText value="#{msg.formInternalRegulationProposerUnit}" />
+				</h4>
+				<div class="col-lg-12">
+					<div id="ir-unit-pengusul">
+						<div class="table-wrapper table-responsive">
+							<p:dataTable id="dataTableProposerUnit" var="data"
+								value="#{internalRegulationApprovalEditBean.tableModelProposerUnit}"
+								selection="#{internalRegulationApprovalEditBean.selectedProposerUnit}"
+								rowIndexVar="statIndex">
+								
+								<p:column headerText="#{msg.formInternalRegulationDirectorate}">
+								   <h:inputText styleClass="form-control" value="#{data.directorate}"
+										readonly="true" />									
+								</p:column>
+
+								<p:column headerText="#{msg.formInternalRegulationProposerUnit}">
+									<h:inputText styleClass="form-control" value="#{data.publisherUnit}"
+										readonly="true" />		 						
+								</p:column>
+
+								<p:column headerText="#{msg.formInternalRegulationPIC}">
+								    <h:inputText styleClass="form-control" value="#{data.picNameTemp}"
+										readonly="true" />									
+								</p:column>
+
+								<p:column headerText="#{msg.formInternalRegulationPUK}" >
+								    <h:inputText styleClass="form-control" value="#{data.pukNameTemp}"
+										readonly="true" />									
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+            
+            <div style="margin-top:150px;">
+	            <div class="col-lg-12">
+	              <div class="form-group">
+	                <label class="tl-label" ><h:outputText value="#{msg.formInternalRegulationDocNo}" /></label>
+	                <h:inputText styleClass="form-control" value="#{internalRegulationApprovalEditBean.regulation.documentNo}"
+	                	title="#{internalRegulationApprovalEditBean.regulation.documentNo}"
+	                	disabled="true" />
+	              </div>
+	            </div>
             </div>
             <div class="col-lg-12">
               <div class="form-group">

@@ -3,9 +3,7 @@ package com.wo.module.internalRegulationFE.bean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,15 +12,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.SortOrder;
 
 import com.wo.module.common.bean.CommonPagingFEBean;
-import com.wo.module.common.constant.CommonConstants;
 import com.wo.module.common.constant.Constants;
 import com.wo.module.common.paging.DefaultSearchObject;
 import com.wo.module.common.paging.SearchObject;

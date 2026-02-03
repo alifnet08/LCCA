@@ -382,7 +382,8 @@ public class InternalRegulationPenerbitanReportServiceImpl implements InternalRe
 	
 	private void getCellDataDetailPicTpk(Row rowDtl, Cell cell, Workbook wb, InternalRegulationPenerbitanReportVo irgReportVo, 
 			InternalRegulationPenerbitanPicTpkReportVo irgPicTpk) {
-		getCellDataReport(rowDtl, cell, wb, irgReportVo);		
+		getCellDataReport(rowDtl, cell, wb, irgReportVo);	
+		
 		// EXCEL_COL_IDX_PIC_TPK_REVIEW_APPROVAL = 16;
 		cell = rowDtl.createCell(16);
 		cell.setCellStyle(buildStyleForDataCenter(wb));

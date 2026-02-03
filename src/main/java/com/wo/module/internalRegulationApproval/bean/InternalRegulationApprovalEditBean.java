@@ -34,6 +34,8 @@ import com.wo.module.documentType.model.DocumentType;
 import com.wo.module.documentType.service.DocumentTypeService;
 import com.wo.module.externalRegulation.model.Regulation;
 import com.wo.module.externalRegulation.model.RegulationAttachment;
+import com.wo.module.externalRegulation.model.RegulationProposerUnit;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitTableModel;
 import com.wo.module.externalRegulation.model.RegulationTrackRecord;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordTableModel;
 import com.wo.module.externalRegulation.service.RegulationService;
@@ -43,7 +45,6 @@ import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.lov.bean.SelectorModel.SelectorInfo;
 import com.wo.module.parameter.model.ParameterDetail;
 import com.wo.module.parameter.model.ParameterHeader;
-import com.wo.module.parameter.service.ParameterDetailService;
 import com.wo.module.user.service.UserService;
 
 public class InternalRegulationApprovalEditBean extends CommonBean implements Serializable {
@@ -105,6 +106,10 @@ public class InternalRegulationApprovalEditBean extends CommonBean implements Se
 	private RegulationTrackRecord[] selectedData;
 
 	private RegulationTrackRecordTableModel<RegulationTrackRecord> tableModel;
+	
+	private RegulationProposerUnit[] selectedProposerUnit;
+
+	private RegulationProposerUnitTableModel<RegulationProposerUnit> tableModelProposerUnit;
 
 	private RegulationTrackRecord selectedRow;
 	
@@ -440,6 +445,16 @@ public class InternalRegulationApprovalEditBean extends CommonBean implements Se
 					rtr.setRegulationLinkName(r.getDocumentNo());
 				}
 			}
+			
+			for (int i = 0; i < regulation.getRegulationProposerUnits().size(); i++) {
+				RegulationProposerUnit rtr = (RegulationProposerUnit) regulation.getRegulationProposerUnits().get(i);
+				rtr.setPicNameTemp(rtr.getPic() !=null ? rtr.getPic().getName():null);
+				rtr.setPukNameTemp(rtr.getPuk() !=null ? rtr.getPuk().getName():null);
+			}
+			
+			tableModelProposerUnit = new RegulationProposerUnitTableModel<RegulationProposerUnit>(
+					regulation.getRegulationProposerUnits());
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -939,6 +954,22 @@ public class InternalRegulationApprovalEditBean extends CommonBean implements Se
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public RegulationProposerUnit[] getSelectedProposerUnit() {
+		return selectedProposerUnit;
+	}
+
+	public void setSelectedProposerUnit(RegulationProposerUnit[] selectedProposerUnit) {
+		this.selectedProposerUnit = selectedProposerUnit;
+	}
+
+	public RegulationProposerUnitTableModel<RegulationProposerUnit> getTableModelProposerUnit() {
+		return tableModelProposerUnit;
+	}
+
+	public void setTableModelProposerUnit(RegulationProposerUnitTableModel<RegulationProposerUnit> tableModelProposerUnit) {
+		this.tableModelProposerUnit = tableModelProposerUnit;
 	}
 	
 	

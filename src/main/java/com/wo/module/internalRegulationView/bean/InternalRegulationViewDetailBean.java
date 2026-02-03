@@ -31,6 +31,8 @@ import com.wo.module.documentType.model.DocumentType;
 import com.wo.module.documentType.service.DocumentTypeService;
 import com.wo.module.externalRegulation.model.RegulationAttachmentMst;
 import com.wo.module.externalRegulation.model.RegulationMst;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitMst;
+import com.wo.module.externalRegulation.model.RegulationProposerUnitMstTableModel;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordMst;
 import com.wo.module.externalRegulation.model.RegulationTrackRecordMstTableModel;
 import com.wo.module.externalRegulation.service.RegulationMstService;
@@ -98,6 +100,10 @@ public class InternalRegulationViewDetailBean extends CommonBean implements Seri
 	private RegulationTrackRecordMstTableModel<RegulationTrackRecordMst> tableModel;
 
 	private RegulationTrackRecordMst selectedRow;
+	
+	private RegulationProposerUnitMst[] selectedProposerUnit;
+
+	private RegulationProposerUnitMstTableModel<RegulationProposerUnitMst> tableModelProposerUnit;
 	
 	private Integer indexDtl;
 
@@ -421,6 +427,16 @@ public class InternalRegulationViewDetailBean extends CommonBean implements Seri
 					rtr.setRegulationLinkName(r.getDocumentNo());
 				}
 			}
+			
+			for (int i = 0; i < regulationMst.getRegulationProposerUnits().size(); i++) {
+				RegulationProposerUnitMst rtr = (RegulationProposerUnitMst) regulationMst.getRegulationProposerUnits().get(i);
+				rtr.setPicNameTemp(rtr.getPic() !=null ? rtr.getPic().getName():null);
+				rtr.setPukNameTemp(rtr.getPuk() !=null ? rtr.getPuk().getName():null);
+			}
+			
+			tableModelProposerUnit = new RegulationProposerUnitMstTableModel<RegulationProposerUnitMst>(
+					regulationMst.getRegulationProposerUnits());
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -749,5 +765,23 @@ public class InternalRegulationViewDetailBean extends CommonBean implements Seri
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
+
+	public RegulationProposerUnitMst[] getSelectedProposerUnit() {
+		return selectedProposerUnit;
+	}
+
+	public void setSelectedProposerUnit(RegulationProposerUnitMst[] selectedProposerUnit) {
+		this.selectedProposerUnit = selectedProposerUnit;
+	}
+
+	public RegulationProposerUnitMstTableModel<RegulationProposerUnitMst> getTableModelProposerUnit() {
+		return tableModelProposerUnit;
+	}
+
+	public void setTableModelProposerUnit(
+			RegulationProposerUnitMstTableModel<RegulationProposerUnitMst> tableModelProposerUnit) {
+		this.tableModelProposerUnit = tableModelProposerUnit;
+	}
+
 	
 }

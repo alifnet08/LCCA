@@ -98,6 +98,13 @@
 			<one-to-many
 				class="com.wo.module.externalRegulationApproval.model.RegulationApproval" />
 		</bag>
+		
+		<bag name="regulationProposerUnits" inverse="true"
+			cascade="save-update, delete-orphan" order-by="REGULATION_PROPOSER_UNIT_ID asc">
+			<key column="regulation_id" />
+			<one-to-many
+				class="com.wo.module.externalRegulation.model.RegulationProposerUnit" />
+		</bag>
 
 	</class>
 </hibernate-mapping>
