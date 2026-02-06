@@ -43,6 +43,7 @@ import com.wo.module.documentType.service.DocumentTypeService;
 import com.wo.module.externalRegulation.model.Regulation;
 import com.wo.module.externalRegulation.model.RegulationAttachment;
 import com.wo.module.externalRegulation.model.RegulationMst;
+import com.wo.module.externalRegulation.model.RegulationProposerUnit;
 import com.wo.module.externalRegulation.service.RegulationMstService;
 import com.wo.module.externalRegulation.service.RegulationService;
 import com.wo.module.internalRegulation.constant.InternalRegulationConstants;
@@ -261,7 +262,13 @@ public class InternalRegulationBean extends CommonBean implements SelectorListen
 					} else if (x == 4) {
 						cell.setCellValue(er.getDocumentTypeName() != null ? er.getDocumentTypeName() : "");
 					} else if (x == 5) {
-						cell.setCellValue(er.getPublisherUnit() != null ? er.getPublisherUnit() : "");
+						StringBuilder publisherUnit = new StringBuilder();
+						for (int j = 0; j < er.getRegulationProposerUnits().size(); j++) {
+							RegulationProposerUnit rpu = er.getRegulationProposerUnits().get(j);
+							publisherUnit.append(rpu.getPublisherUnit()).append(",");
+						}
+						cell.setCellValue(publisherUnit.toString());
+						//cell.setCellValue(er.getPublisherUnit() != null ? er.getPublisherUnit() : "");
 					} else if (x == 6) {
 						cell.setCellValue(er.getPublishedDateStr() != null ? er.getPublishedDateStr() : "");
 					} else if (x == 7) {

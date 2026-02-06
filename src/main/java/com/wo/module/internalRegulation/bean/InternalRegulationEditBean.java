@@ -1822,7 +1822,7 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 	}
 
 	public void onDeleteRowPicPu() {
-		if(selectedData !=null) {
+		if(selectedDataProposerUnit !=null) {
 			for (int i = 0; i < selectedDataProposerUnit.length; i++) {
 				regulation.getRegulationProposerUnits().remove(selectedDataProposerUnit[i]);
 			}
@@ -1833,7 +1833,7 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 			lastSequenceOfPuDtl = 0;
 		}
 		
-		tableModel.setWrappedData(regulation.getRegulationProposerUnits());
+		tableModelProposerUnit.setWrappedData(regulation.getRegulationProposerUnits());
 		
 		PrimeFaces.current().executeScript("reInitSelect2();");
 	}

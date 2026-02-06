@@ -17,7 +17,9 @@ import com.wo.module.common.constant.Constants;
 import com.wo.module.externalRegulation.dao.RegulationDao;
 import com.wo.module.externalRegulation.model.Regulation;
 import com.wo.module.externalRegulation.model.RegulationAttachment;
+import com.wo.module.externalRegulation.model.RegulationProposerUnit;
 import com.wo.module.externalRegulation.model.RegulationTrackRecord;
+import com.wo.module.user.model.User;
 
 @Transactional
 @Service("regulationService")
@@ -263,6 +265,83 @@ public class RegulationServiceImpl implements RegulationService {
 			}				
 		}		
 		
+		// update regulation proposerunit
+		List<RegulationProposerUnit> childListProposerUnitReal = regulationDb.getRegulationProposerUnits();
+		List<RegulationProposerUnit> childListProposerUnitNew = regulationNew.getRegulationProposerUnits(); 
+		if(childListProposerUnitNew != null) {
+			RegulationProposerUnit regulationProposerUnit = null;
+			RegulationProposerUnit regulationProposerUnitDb = null;
+			RegulationProposerUnit regulationProposerUnitNew = null;
+			boolean exist = false;
+			
+			// untuk insert data baru dan update data lama 
+			for(int x=0; x<childListProposerUnitNew.size(); x++)
+			{
+				regulationProposerUnitNew = (RegulationProposerUnit) childListProposerUnitNew.get(x);
+				
+				exist = false;
+				for(int i=0; i<childListProposerUnitReal.size(); i++)
+				{
+					regulationProposerUnitDb = (RegulationProposerUnit) childListProposerUnitReal.get(i);										
+					if((regulationProposerUnitDb.getRegulationProposerUnitId() != null && regulationProposerUnitNew.getRegulationProposerUnitId() != null
+							&& regulationProposerUnitDb.getRegulationProposerUnitId().equals(regulationProposerUnitNew.getRegulationProposerUnitId()))) 
+					{
+						exist = true;
+						break;
+					}
+				}
+				
+				if (exist)
+				{	// update 			
+					regulationProposerUnitDb.setDirectorate(regulationProposerUnitNew.getDirectorate());					
+					regulationProposerUnitDb.setPublisherUnit(regulationProposerUnitNew.getPublisherUnit());
+					regulationProposerUnitDb.setPic(regulationProposerUnitNew.getPic());
+					regulationProposerUnitDb.setPuk(regulationProposerUnitNew.getPuk());					
+					regulationProposerUnitDb.setLastUpdateBy(userLogin);
+					regulationProposerUnitDb.setLastUpdateDate(new Timestamp(new Date().getTime()));
+					regulationProposerUnitDb.setDelId(new Long(0));
+					regulationProposerUnitDb.setEnabledFlag(Constants.CONSTANT_YES);
+				}
+				else
+				{	// insert 
+					regulationProposerUnit = new RegulationProposerUnit();
+					regulationProposerUnit.setRegulation(regulationDb);
+					regulationProposerUnit.setDirectorate(regulationProposerUnitNew.getDirectorate());					
+					regulationProposerUnit.setPublisherUnit(regulationProposerUnitNew.getPublisherUnit());
+					regulationProposerUnit.setPic(regulationProposerUnitNew.getPic());
+					regulationProposerUnit.setPuk(regulationProposerUnitNew.getPuk());					
+					regulationProposerUnit.setCreatedBy(userLogin);
+					regulationProposerUnit.setCreationDate(new Timestamp(new Date().getTime()));
+					regulationProposerUnit.setDelId(new Long(0));
+					regulationProposerUnit.setEnabledFlag(Constants.CONSTANT_YES);					
+					childListProposerUnitReal.add(regulationProposerUnit);
+				}
+			}
+
+			for(int i=0; i<childListProposerUnitReal.size(); i++)
+			{
+				regulationProposerUnitDb = (RegulationProposerUnit) childListProposerUnitReal.get(i);
+
+				for(int x=0; x<childListProposerUnitNew.size(); x++)
+				{
+					regulationProposerUnitNew = (RegulationProposerUnit) childListProposerUnitNew.get(x);
+					exist = false;				
+					if((regulationProposerUnitDb.getRegulationProposerUnitId() != null && regulationProposerUnitNew.getRegulationProposerUnitId() != null
+							&& regulationProposerUnitDb.getRegulationProposerUnitId().equals(regulationProposerUnitNew.getRegulationProposerUnitId()))
+							||
+							(regulationProposerUnitDb.getRegulationProposerUnitId() == null && regulationProposerUnitNew.getRegulationProposerUnitId() == null))
+					{
+						exist = true;
+						break;
+					}
+				}
+
+				if (!exist)
+				{	i--;
+				childListProposerUnitReal.remove(regulationProposerUnitDb);
+				}
+			}				
+		}		
 		
 		regulationDb.setLastUpdateBy(userLogin);
 		regulationDb.setLastUpdateDate(new Timestamp(new Date().getTime()));
