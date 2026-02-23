@@ -1,4 +1,4 @@
-package com.wo.module.internalRegulationFE.dao;
+package com.wo.module.formulirRegulationFE.dao;
 
 
 import java.math.BigDecimal;
@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,13 +18,13 @@ import com.wo.module.common.constant.CommonConstants;
 import com.wo.module.common.dao.GenericDAOHibernate;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.common.util.MathUtil;
+import com.wo.module.formulirRegulationFE.vo.FormulirRegulationFEVO;
 import com.wo.module.internalRegulation.constant.InternalRegulationConstants;
 import com.wo.module.internalRegulation.model.InternalRegulation;
-import com.wo.module.internalRegulationFE.vo.InternalRegulationFEVO;
 
-@Repository("internalRegulationFEDao")
-public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalRegulation, Long> 
-    implements InternalRegulationFEDao {
+@Repository("formulirRegulationFEDao")
+public class FormulirRegulationFEDaoImpl extends GenericDAOHibernate<InternalRegulation, Long> 
+    implements FormulirRegulationFEDao {
 
 	@SuppressWarnings("rawtypes")
     private StringBuilder getQueryWhereString(StringBuilder sb, List<? extends SearchObject> searchCriteria) {
@@ -31,10 +32,7 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 			for (SearchObject searchVal : searchCriteria) {
 				String col = searchVal.getSearchColumn();
 				String val = searchVal.getSearchValue()!=null?searchVal.getSearchValueAsString():"";
-				if (!StringUtils.isBlank(val)) {					
-					/*if (StringUtils.equals(CommonConstants.SEARCH_BY_TEXT_BOX, col)) {
-						sb.append(" and (UPPER(r.name_in) like UPPER('%" + val + "%') or r.document_no like '%" + val + "%')");
-					}*/
+				if (!StringUtils.isBlank(val)) {			
 					if (StringUtils.equals(CommonConstants.SEARCH_BY_COMBO_BOX, col)) {
 						sb.append(" and r.status = '" + val + "' ");
 					}
@@ -52,6 +50,11 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_YEAR, col)) {
 						sb.append(" and to_char(r.effective_date, 'yyyy') = " + val + " ");
 					}
+					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DIRECTORATE, col)) {
+						sb.append(" and exists (select 1 from wo_tmp_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.directorate) = UPPER('" + val + "')) ");
+					}
 				}
 			}
 		}
@@ -64,17 +67,12 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 			for (SearchObject searchVal : searchCriteria) {
 				String col = searchVal.getSearchColumn();
 				String val = searchVal.getSearchValueAsString();
-//				Object valReal = searchVal.getSearchValue();
 
 				if (!StringUtils.isBlank(val)) {
 					
 					if (StringUtils.equals(CommonConstants.SEARCH_BY_USER_LOGIN, col)) {
 						query.setParameter("userId", val );						
 					}
-//					if (StringUtils.equals(CommonConstants.SEARCH_CATEGORY, col)) {
-//						query.setParameter("document_category_id", val );						
-//					}
-
 				}
 			}
 		}
@@ -104,8 +102,7 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 		sb.append("  WHERE 1=1 ");
 		sb.append("        and r.enabled_flag = 'Y' ");
 		sb.append("        and r.JENIS_KETENTUAN = 'KETENTUAN_INTERNAL' ");
-		sb.append("        and dt.DOCUMENT_TYPE_IN not in ('Formulir') ");
-		//sb.append("        and r.status = 'DATA_ACTIVE' ");
+		sb.append("        and dt.DOCUMENT_TYPE_IN = 'Formulir' ");
 		
 		List<String> list = getSearchValList(searchCriteria);
 		if(list!=null && !list.isEmpty()) {
@@ -138,10 +135,10 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
     }
     
     @SuppressWarnings("rawtypes")
-    public List<InternalRegulationFEVO> searchData(List<? extends SearchObject> searchCriteria, int first, int pageSize, String sortField, SortOrder sortOrder) 
+    public List<FormulirRegulationFEVO> searchData(List<? extends SearchObject> searchCriteria, int first, int pageSize, String sortField, SortOrder sortOrder) 
             throws Exception {
         
-        List<InternalRegulationFEVO> voList = searchDataCriteria(searchCriteria, first, pageSize);
+        List<FormulirRegulationFEVO> voList = searchDataCriteria(searchCriteria, first, pageSize);
 
         return voList;
     }
@@ -224,6 +221,11 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_YEAR, col)) {
 						sb.append(" and to_char(r.effective_date, 'yyyy') = " + val + " ");
 					}
+					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DIRECTORATE, col)) {
+						sb.append(" and exists (select 1 from wo_tmp_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.directorate) = UPPER('" + val + "')) ");
+					}
 				}
 			}
 		}
@@ -231,7 +233,7 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
     }
     
     @SuppressWarnings("rawtypes")
-    private List<InternalRegulationFEVO> searchDataCriteria(List<? extends SearchObject> searchCriteria, int first, int pageSize) {   
+    private List<FormulirRegulationFEVO> searchDataCriteria(List<? extends SearchObject> searchCriteria, int first, int pageSize) {   
     	String valueSearch = getSearchVal(searchCriteria);			        
         StringBuilder sb = new StringBuilder();
         //sb.append(" SELECT * from ( ");
@@ -242,15 +244,15 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 		sb.append("        (select count(1) ");
 		sb.append("           from wo_log_access a ");
 		sb.append("          where a.user_id = :userId  and a.access_id = r.regulation_id   ");
-		sb.append("                and ((a.access_action = '/compliance/pages/internalRegulationFE/internalRegulationFE.faces') ");
-		sb.append("                     OR (a.access_action = '/compliance/pages/internalRegulationFE/internalRegulationFEView.faces')) ) flagIsAccess ");
+		sb.append("                and ((a.access_action = '/compliance/pages/formulirRegulationFE/formulirRegulationFE.faces') ");
+		sb.append("                     OR (a.access_action = '/compliance/pages/formulirRegulationFE/formulirRegulationFEView.faces')) ) flagIsAccess ");
 		sb.append("   FROM wo_mst_regulation r  ");
 		sb.append("        LEFT JOIN wo_mst_document_type dt on r.document_type_id = dt.document_type_id  ");
 		sb.append("        LEFT JOIN wo_mst_document_category dc on dc.document_category_id = r.document_category_id  ");
 		sb.append("  WHERE 1=1 ");
 		sb.append("        and r.enabled_flag = 'Y' ");
 		sb.append("        and r.JENIS_KETENTUAN = 'KETENTUAN_INTERNAL' ");
-		sb.append("        and dt.DOCUMENT_TYPE_IN not in ('Formulir') ");
+		sb.append("        and dt.DOCUMENT_TYPE_IN = 'Formulir' ");
 		sb = getQueryWhereString2(sb, searchCriteria);		
 		sb.append(" ORDER BY r.published_date DESC, r.document_no asc ), ");
 		sb.append(" queryKetentuanInternal2 as( ");
@@ -260,15 +262,15 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 		sb.append("        (select count(1) ");
 		sb.append("           from wo_log_access a ");
 		sb.append("          where a.user_id = :userId  and a.access_id = r.regulation_id   ");
-		sb.append("                and ((a.access_action = '/compliance/pages/internalRegulationFE/internalRegulationFE.faces') OR (a.access_action = '/compliance/pages/internalRegulationFE/internalRegulationFEView.faces')) ) flagIsAccess ");
+		sb.append("                and ((a.access_action = '/compliance/pages/formulirRegulationFE/formulirRegulationFE.faces') OR (a.access_action = '/compliance/pages/formulirRegulationFE/formulirRegulationFEView.faces')) ) flagIsAccess ");
 		sb.append("   FROM wo_mst_regulation r  ");
 		sb.append("        LEFT JOIN wo_mst_document_type dt on r.document_type_id = dt.document_type_id  ");
 		sb.append("        LEFT JOIN wo_mst_document_category dc on dc.document_category_id = r.document_category_id  ");
 		sb.append("  WHERE 1=1 ");
 		sb.append("        and r.enabled_flag = 'Y' ");
 		sb.append("        and r.JENIS_KETENTUAN = 'KETENTUAN_INTERNAL' ");
+		sb.append("        and dt.DOCUMENT_TYPE_IN = 'Formulir' ");
 		sb.append("        and r.regulation_id not in (select regulation_id from queryKetentuanInternal) ");
-		sb.append("        and dt.DOCUMENT_TYPE_IN not in ('Formulir') ");
 		//sb.append("        and r.status = 'DATA_ACTIVE' ");
 		
 		List<String> list = getSearchValList(searchCriteria);
@@ -306,12 +308,12 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
         
         List resultList = result.getResultList();
         
-        List<InternalRegulationFEVO> vo = new ArrayList<InternalRegulationFEVO>();
+        List<FormulirRegulationFEVO> vo = new ArrayList<FormulirRegulationFEVO>();
         
         if(resultList!=null) {
             for(int i=0; i<resultList.size(); i++) {
                 Object[] obj = (Object[]) resultList.get(i);
-                InternalRegulationFEVO data = new InternalRegulationFEVO();
+                FormulirRegulationFEVO data = new FormulirRegulationFEVO();
                 data.setRegulationId(obj[0]!=null?MathUtil.returnIdObjectToLong(obj[0]):null);
                 data.setNameIn(obj[1]!=null?(String)obj[1]:null);
                 data.setEffectiveDate (obj[2]!=null?(String)obj[2]:null);
@@ -328,4 +330,32 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
         
         return vo;
     }    
+    
+    @SuppressWarnings("rawtypes")
+    public List<SelectItem> getDataDirectorateList() {           
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT distinct directorate_name, '01' test ");
+        sb.append("   FROM wo_mst_user ");
+		sb.append("  WHERE directorate_name is not null ");
+		        
+        Query result = getSession().createSQLQuery(sb.toString());
+                
+        List resultList = result.getResultList();
+        
+        List<SelectItem> vo = new ArrayList<SelectItem>();
+        
+        if(resultList!=null) {
+            for(int i=0; i<resultList.size(); i++) {
+                Object[] obj = (Object[]) resultList.get(i);
+                SelectItem item = new SelectItem();
+                item.setLabel((String) obj[0]);
+                item.setValue((String) obj[0]);
+                vo.add(item);
+            }
+        }
+        
+        return vo;
+    }    
+    
+   
 }

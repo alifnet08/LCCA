@@ -30,6 +30,7 @@ public abstract class InternalRegulationConstants {
 	public final static String WHERE_STATUS = "STATUS";
 	public final static String WHERE_DOC_TYPE_IS_NOT_ANOUNCEMENT = "IS_NOT_ANOUNCEMENT";
 	public final static String WHERE_YEAR = "YEAR";
+	public final static String WHERE_DIRECTORATE = "DIRECTORATE";
 	
 	public final static String JENIS_KETENTUAN_INTERNAL = "JENIS_KETENTUAN_INTERNAL";
 	
