@@ -15,13 +15,11 @@ import com.wo.module.common.constant.CommonConstants;
 import com.wo.module.common.paging.DefaultSearchObject;
 import com.wo.module.common.paging.RetrieverDataPage;
 import com.wo.module.common.paging.SearchObject;
-import com.wo.module.correspondenceFE.constant.CorrespondenceFEConstants;
 import com.wo.module.internalRegulation.constant.InternalRegulationConstants;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.opinionFE.constant.OpinionFEConstants;
 import com.wo.module.qaFE.constant.QAFEConstant;
-import com.wo.module.trcCorrespondence.constant.TrcCorrespondenceConstants;
 import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
 
@@ -58,6 +56,8 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 	
 	private Long docCategory;
 	
+	private String directorateName;
+	
 	private UserService userService;
 	
 	private Long idLogin;
@@ -71,6 +71,8 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 	private String searchCabang;
 	
 	private String searchPartner;
+	
+	private String searchDirectorateName;
 	
 	private int firstTemp;
 	
@@ -165,8 +167,7 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 		if(searchCategoryParam !=null){
 			searchCategory = searchCategoryParam;
 		}
-		
-		
+				
 		String searchArticleTypeParam = facesUtil.retrieveRequestParam("ARTICLE_TYPE");
 		if(searchArticleTypeParam !=null){
 			articleType = searchArticleTypeParam;
@@ -187,6 +188,11 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 		String searchTahunParam = facesUtil.retrieveRequestParam("SEARCH_TAHUN");
 		if (searchTahunParam != null) {
 			searchTahun = searchTahunParam;
+		}
+		
+		String directorateNameParam = facesUtil.retrieveRequestParam("DIRECTORATE");
+		if(directorateNameParam != null) {
+			directorateName =  directorateNameParam;
 		}
 		
 		searchCriteria = new ArrayList<SearchObject>();
@@ -210,6 +216,10 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 			searchCriteria.add(new DefaultSearchObject(InternalRegulationConstants.WHERE_CATEGORY, docCatStr));
 		}
 		
+		if (directorateName != null && !directorateName.isEmpty()) {
+			searchCriteria.add(new DefaultSearchObject(InternalRegulationConstants.WHERE_DIRECTORATE, directorateName));
+		}
+		
 		if (searchCategory != null && !searchCategory.isEmpty()) {
 			searchCriteria.add(new DefaultSearchObject(QAFEConstant.SEARCH_BY_CATEGORY, searchCategory));
 		}
@@ -229,7 +239,7 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 		if (searchPartner != null && !searchPartner.isEmpty()) {
 			searchCriteria.add(new DefaultSearchObject(AdvocateFEConstants.SEARCH_PARTNER, searchPartner));
 		}
-		
+				
 		User userLogin = userService.getUserByNik(facesUtil.retrieveUserLogin());
 		if (userLogin != null) {
 			searchCriteria.add(new DefaultSearchObject(CommonConstants.SEARCH_BY_USER_LOGIN, userLogin.getUserId()));
@@ -346,6 +356,11 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 			searchCriteria.add(new DefaultSearchObject(OpinionFEConstants.SEARCH_BY_ARTICLE_TYPE, articleType));
 		}
 		
+		if (directorateName != null) {
+			String directorateNameStr = directorateName.toString();
+			searchCriteria.add(new DefaultSearchObject(InternalRegulationConstants.WHERE_DIRECTORATE, directorateNameStr));
+		}
+		
 		if (docType != null) {
 			String docTypeStr = docType.toString();
 			searchCriteria.add(new DefaultSearchObject(InternalRegulationConstants.WHERE_DOC_TYPE, docTypeStr));
@@ -434,6 +449,9 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 				}
 				if (facesUtil.getSessionAttribute("FIRST_INTER_REGULATION_FE") != null) {
 					facesUtil.removeSessionAttribute("FIRST_INTER_REGULATION_FE");
+				}
+				if (facesUtil.getSessionAttribute("FIRST_FORMULIR_REGULATION_FE") != null) {
+					facesUtil.removeSessionAttribute("FIRST_FORMULIR_REGULATION_FE");
 				}
 				if (facesUtil.getSessionAttribute("FIRST_EXTER_REGULATION_FE") != null) {
 					facesUtil.removeSessionAttribute("FIRST_EXTER_REGULATION_FE");
@@ -699,15 +717,20 @@ public class CommonPagingFEBean<T> extends CommonBean implements RetrieverDataPa
 		this.searchPartner = searchPartner;
 	}
 
-	
-	
-	
-	
-	
+	public String getSearchDirectorateName() {
+		return searchDirectorateName;
+	}
 
-	
-	
-	
-	
+	public void setSearchDirectorateName(String searchDirectorateName) {
+		this.searchDirectorateName = searchDirectorateName;
+	}
+
+	public String getDirectorateName() {
+		return directorateName;
+	}
+
+	public void setDirectorateName(String directorateName) {
+		this.directorateName = directorateName;
+	}
 	
 }

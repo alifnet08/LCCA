@@ -9140,6 +9140,88 @@
 	</managed-bean>
 	<!-- ReportLogAccessBean -->
 	
-	-
+		<!-- FormulirRegulationFEMain -->
+	  <managed-bean>
+		<managed-bean-name>formulirRegulationFEMainBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.formulirRegulation.bean.FormulirRegulationFEMainBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>formulirRegulationFEBean</property-name>
+			<value>#{formulirRegulationFEBean}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>formulirRegulationFEViewBean</property-name>
+			<value>#{formulirRegulationFEViewBean}</value>
+		</managed-property>
+	</managed-bean> 
+	<!-- FormulirRegulationFEMain -->
 	
+	<!-- FormulirRegulationFEBean (SEARCH)-->
+	 <managed-bean>
+		<managed-bean-name>formulirRegulationFEBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.formulirRegulationFE.bean.FormulirRegulationFEBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>formulirRegulationFEService</property-name>
+			<value>#{formulirRegulationFEService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>documentTypeService</property-name>
+			<value>#{documentTypeService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>documentCategoryService</property-name>
+			<value>#{documentCategoryService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- FormulirRegulationFEBean (SEARCH)-->
+	
+	<!-- FormulirRegulationFEView -->
+	 <managed-bean>
+		<managed-bean-name>formulirRegulationFEViewBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.formulirRegulationFE.bean.FormulirRegulationFEViewBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>formulirRegulationFEService</property-name>
+			<value>#{formulirRegulationFEService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>regulationService</property-name>
+			<value>#{regulationMstService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>regulationTrackRecordMstService</property-name>
+			<value>#{regulationTrackRecordMstService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- InternalRegulationFEView -->
+		
 </faces-config>
