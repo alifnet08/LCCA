@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,11 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 					}
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_YEAR, col)) {
 						sb.append(" and to_char(r.effective_date, 'yyyy') = " + val + " ");
+					}
+					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DIRECTORATE, col)) {
+						sb.append(" and exists (select 1 from wo_tmp_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.directorate) = UPPER('" + val + "')) ");
 					}
 				}
 			}
@@ -224,6 +230,11 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 					else if (StringUtils.equals(InternalRegulationConstants.WHERE_YEAR, col)) {
 						sb.append(" and to_char(r.effective_date, 'yyyy') = " + val + " ");
 					}
+					else if (StringUtils.equals(InternalRegulationConstants.WHERE_DIRECTORATE, col)) {
+						sb.append(" and exists (select 1 from wo_tmp_regulation_proposerunit wtrp ");
+						sb.append("               where wtrp.regulation_id = r.regulation_id ");
+						sb.append("                     and UPPER(wtrp.directorate) = UPPER('" + val + "')) ");
+					}
 				}
 			}
 		}
@@ -270,7 +281,7 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
 		sb.append("        and r.regulation_id not in (select regulation_id from queryKetentuanInternal) ");
 		sb.append("        and dt.DOCUMENT_TYPE_IN not in ('Formulir') ");
 		//sb.append("        and r.status = 'DATA_ACTIVE' ");
-		
+				
 		List<String> list = getSearchValList(searchCriteria);
 		if(list!=null && !list.isEmpty()) {
 			if(list.size()==1) {
@@ -327,5 +338,32 @@ public class InternalRegulationFEDaoImpl extends GenericDAOHibernate<InternalReg
         result.setMaxResults(pageSize);
         
         return vo;
-    }    
+    }
+
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public List<SelectItem> getDataDirectorateList() {
+		StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT distinct directorate_name, '01' test ");
+        sb.append("   FROM wo_mst_user ");
+		sb.append("  WHERE directorate_name is not null ");
+		        
+        Query result = getSession().createSQLQuery(sb.toString());
+                
+        List resultList = result.getResultList();
+        
+        List<SelectItem> vo = new ArrayList<SelectItem>();
+        
+        if(resultList!=null) {
+            for(int i=0; i<resultList.size(); i++) {
+                Object[] obj = (Object[]) resultList.get(i);
+                SelectItem item = new SelectItem();
+                item.setLabel((String) obj[0]);
+                item.setValue((String) obj[0]);
+                vo.add(item);
+            }
+        }
+        
+        return vo;
+	}    
 }

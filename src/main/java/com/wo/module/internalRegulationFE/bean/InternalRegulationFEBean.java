@@ -46,6 +46,8 @@ public class InternalRegulationFEBean extends CommonPagingFEBean<InternalRegulat
 	
 	private List<SelectItem> tipeCategoryPeraturanList;
 	
+	private List<SelectItem> directorateList;
+	
 	private InternalRegulationFEService  internalRegulationFEService;
 	
 	private DocumentCategoryService documentCategoryService;
@@ -106,7 +108,9 @@ public class InternalRegulationFEBean extends CommonPagingFEBean<InternalRegulat
 				SelectItem si = new SelectItem();
 				si.setLabel(((DocumentType) pd.get(i)).getDocumentType());
 				si.setValue(((DocumentType) pd.get(i)).getDocumentTypeId());
-				tipePeraturanList.add(si);
+				if(si.getLabel() !=null && !si.getLabel().equals("Formulir")) {
+					tipePeraturanList.add(si);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,6 +132,17 @@ public class InternalRegulationFEBean extends CommonPagingFEBean<InternalRegulat
 			e.printStackTrace();
 		}
 		
+		directorateList = new ArrayList<SelectItem>();
+		try {
+			List<SelectItem> dataString = internalRegulationFEService.getDataDirectorateList();
+			for (int i = 0; i < dataString.size(); i++) {
+				SelectItem si = (SelectItem) dataString.get(i);
+				directorateList.add(si);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
 		if(facesUtil.retrieveRequestParam("docType") != null && !facesUtil.retrieveRequestParam("docType").equals("")) {
 			//System.out.println(facesUtil.retrieveRequestParam("docType"));
 			setDocType(Long.parseLong(facesUtil.retrieveRequestParam("docType")));
@@ -140,9 +155,11 @@ public class InternalRegulationFEBean extends CommonPagingFEBean<InternalRegulat
 		if(facesUtil.retrieveRequestParam("searchStatus") != null) { 
 			setSearchStatus(facesUtil.retrieveRequestParam("searchStatus"));
 		}
-//		else {
-//			setSearchStatus("DATA_ACTIVE");
-//		}
+
+		if(facesUtil.retrieveRequestParam("directorateName") != null && 
+				!facesUtil.retrieveRequestParam("directorateName").equals("")) {
+			setDirectorateName(facesUtil.retrieveRequestParam("directorateName"));
+		}
 		
 		if(facesUtil.retrieveRequestParam("searchTahun") != null)
 			setSearchTahun(facesUtil.retrieveRequestParam("searchTahun"));
@@ -358,6 +375,14 @@ public class InternalRegulationFEBean extends CommonPagingFEBean<InternalRegulat
 
 	public void setStringSearchVal(String stringSearchVal) {
 		this.stringSearchVal = stringSearchVal;
+	}
+
+	public List<SelectItem> getDirectorateList() {
+		return directorateList;
+	}
+
+	public void setDirectorateList(List<SelectItem> directorateList) {
+		this.directorateList = directorateList;
 	}
 	
 	
