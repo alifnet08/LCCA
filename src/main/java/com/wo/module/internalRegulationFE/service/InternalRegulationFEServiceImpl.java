@@ -2,6 +2,7 @@ package com.wo.module.internalRegulationFE.service;
 
 import java.util.List;
 
+import javax.faces.model.SelectItem;
 import javax.transaction.Transactional;
 
 import org.primefaces.model.SortOrder;
@@ -43,6 +44,11 @@ public class InternalRegulationFEServiceImpl implements InternalRegulationFEServ
     public Long searchCountData(List<? extends SearchObject> searchCriteria) throws Exception {
         return internalRegulationFEDao.searchCountData(searchCriteria);
     }
+
+	@Override
+	public List<SelectItem> getDataDirectorateList() {
+		return internalRegulationFEDao.getDataDirectorateList();
+	}
 	
     
 	

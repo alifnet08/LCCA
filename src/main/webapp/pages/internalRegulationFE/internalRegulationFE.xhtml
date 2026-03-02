@@ -42,26 +42,30 @@
 			<div style="font-size: 14px; color: #7D7D7D;"></div>
 			<!-- <h:form styleClass="form-group has-search my-2 my-lg-5"> -->
 			<h:form styleClass="wo-search-form">
-				<p:remoteCommand name="onSearch" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun"
-						update="dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun" action="#{internalRegulationFEBean.search()}"
+				<p:remoteCommand name="onSearch" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun"
+						update="dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun" 
+						action="#{internalRegulationFEBean.search()}"
 						onstart="PF('statusDialog').show()"
 						onsuccess="PF('statusDialog').hide();"></p:remoteCommand>
-					<p:remoteCommand name="onClickPage" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun"
-						update="dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun"
+					<p:remoteCommand name="onClickPage" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun"
+						update="dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun"
 						action="#{internalRegulationFEBean.searchDataPrevNext()}"
 						onstart="PF('statusDialog').show()"
 						onsuccess="PF('statusDialog').hide();"></p:remoteCommand>
-					<p:remoteCommand name="onPrev" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun"
-						update="dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun" action="#{internalRegulationFEBean.prev()}"
+					<p:remoteCommand name="onPrev" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun"
+						update="dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun" 
+						action="#{internalRegulationFEBean.prev()}"
 						onstart="PF('statusDialog').show()"
 						onsuccess="PF('statusDialog').hide();"></p:remoteCommand>
-					<p:remoteCommand name="onNext" process="@this dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun"
-						update="dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun" action="#{internalRegulationFEBean.next()}"
+					<p:remoteCommand name="onNext" 
+						process="@this dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun"
+						update="dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun" 
+						action="#{internalRegulationFEBean.next()}"
 						onstart="PF('statusDialog').show()"
 						onsuccess="PF('statusDialog').hide();"></p:remoteCommand>
 					<p:remoteCommand name="onChangeSearchParam" 
-						process="@this dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun" 
-						update="dataList searchVal searchTipe searchKategoriPeraturan searchStatus searchTahun" 
+						process="@this dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun" 
+						update="dataList searchVal searchTipe searchKategoriPeraturan searchDirectorate searchStatus searchTahun" 
 						action="#{internalRegulationFEBean.onChangeSearchParam()}"
 						onstart="PF('statusDialog').show()"
 						onsuccess="PF('statusDialog').hide();"/>
@@ -71,7 +75,7 @@
 						value="#{internalRegulationFEBean.totalPage}"></h:inputHidden>
 				
 			<div class="form-row">
-            <div class="col-md-4 form-group">
+            <div class="col-md-6 form-group">
               <div class="label-form">Tipe Peraturan</div>
 						<p:selectOneMenu styleClass="form-control s2" id="searchTipe" widgetVar="selectTipePeraturan"
 								onchange="onSearch([{name: 'PAGE_SELECTED', value:'0'}]); onChangeSearchParam();"
@@ -81,7 +85,7 @@
 						</p:selectOneMenu>
 		    </div>
 		    
-		    <div class="col-md-4 form-group">
+		    <div class="col-md-6 form-group">
               <div class="label-form">Kategori Peraturan</div>
 						<p:selectOneMenu styleClass="form-control s2" id="searchKategoriPeraturan" widgetVar="selectKategoriPeraturan"
 								onchange="onSearch([{name: 'PAGE_SELECTED', value:'0'}]); onChangeSearchParam();"
@@ -91,7 +95,17 @@
 						</p:selectOneMenu>
 		    </div>
 		    
-            <div class="col-md-4 form-group">
+		    <div class="col-md-6 form-group">
+              <div class="label-form">Direktorat</div>
+						<p:selectOneMenu styleClass="form-control s2" id="searchDirectorate" widgetVar="selectDirectorate"
+								onchange="onSearch([{name: 'PAGE_SELECTED', value:'0'}]); onChangeSearchParam();"
+								value="#{internalRegulationFEBean.directorateName}">
+							<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+							<f:selectItems value="#{internalRegulationFEBean.directorateList}" />
+						</p:selectOneMenu>
+		    </div>
+		    
+            <div class="col-md-6 form-group">
             <div class="label-form">Status</div>
 						<p:selectOneMenu styleClass="form-control s2" id="searchStatus" widgetVar="selectStatus"
 								onchange="onSearch([{name: 'PAGE_SELECTED', value:'0'}]); onChangeSearchParam();"
