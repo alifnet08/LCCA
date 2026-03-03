@@ -147,12 +147,12 @@ public class FormulirRegulationFEViewBean extends CommonBean implements Serializ
 				}
 			}
 				
-				List<RegulationProposerUnitMst> proposerUnitList = regulationProposerUnitMstService.getRegulationProposerUnitByRegulationId(idLong);
-				if (proposerUnitList != null && proposerUnitList.size() > 0) {
-					regulation.setRegulationProposerUnits(proposerUnitList);					
-				}else {
-					regulation.setRegulationProposerUnits(new ArrayList());
-				}
+			List<RegulationProposerUnitMst> proposerUnitList = regulationProposerUnitMstService.getRegulationProposerUnitByRegulationId(idLong);
+			if (proposerUnitList != null && proposerUnitList.size() > 0) {
+				regulation.setRegulationProposerUnits(proposerUnitList);					
+			}else {
+				regulation.setRegulationProposerUnits(new ArrayList());
+			}
 
 			hits = regulationService.getCountHitRegulation(idLong,
 					"/compliance/pages/formulirRegulationFE/formulirRegulationFEView.faces%");
