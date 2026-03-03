@@ -43,9 +43,13 @@
             <div class="col">
               <div class="label-form">Unit Pengusul</div>
               <!-- <div class="value-form">internalRegulationFEViewBean.regulation.publisherUnit}</div> -->
-              <ui:repeat value="#{internalRegulationFEViewBean.regulation.regulationProposerUnits}" var="vo1" >
-				<div class="value-form">#{vo1.publisherUnit}</div>
-			  </ui:repeat>	
+              <ui:repeat value="#{internalRegulationFEViewBean.regulation.regulationProposerUnits}" 
+                           var="vo1" varStatus="status">
+				<div class="value-form">
+			        #{vo1.publisherUnit}
+			        <h:outputText value="," rendered="#{!status.last}" />
+			    </div>
+			  </ui:repeat>			   
             </div>
             <div class="col">
               <div class="label-form">Tanggal Efektif</div>
