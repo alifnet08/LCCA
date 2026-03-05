@@ -121,10 +121,10 @@
 										selection="#{internalRegulationEditBean.selectedDataProposerUnit}"
 										rowKey="#{data.sequence}" rowIndexVar="statIndex"
 										rowSelectMode="checkbox">
-
-										<p:ajax event="rowSelectCheckbox" process="@this" />
-										<p:ajax event="rowUnselectCheckbox" process="@this" />
-										<p:ajax event="toggleSelect" process="@this" />
+										
+										<p:ajax event="rowSelectCheckbox" update="@this" />
+										<p:ajax event="rowUnselectCheckbox" update="@this" />
+										<p:ajax event="toggleSelect" update="@this" />
 
 										<p:column selectionMode="multiple" style="text-align:center; width:40px;" />
 										<p:column headerText="#{msg.formInternalRegulationDirectorate}" >
@@ -571,9 +571,9 @@
 									selection="#{internalRegulationEditBean.selectedData}"
 									rowKey="#{data.sequence}" rowIndexVar="statIndex"
 									rowSelectMode="checkbox">
-									<p:ajax event="rowSelectCheckbox" process="@this" />
-									<p:ajax event="rowUnselectCheckbox" process="@this" />
-									<p:ajax event="toggleSelect" process="@this" />
+									<p:ajax event="rowSelectCheckbox" update="@this" />
+									<p:ajax event="rowUnselectCheckbox" update="@this" />
+									<p:ajax event="toggleSelect" update="@this" />
 									<p:column selectionMode="multiple"
 										style="text-align:center; width:40px;" />
 									<p:column headerText="#{msg.formInternalRegulationRekamJejak}"
