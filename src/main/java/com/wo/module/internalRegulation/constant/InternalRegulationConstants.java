@@ -142,12 +142,15 @@ public abstract class InternalRegulationConstants {
                 + " and (upper(division_name) like upper('%{0}%')) "
                 + " and (upper(directorate_name) = upper('{1}')) "
                 + " order by division_name "  ,
-                " SELECT COUNT(1) from wo_mst_user "
-        		+ " where 1=1 "
-                + " and division_name is not null "
-                + " and enabled_flag = 'Y' "
-                + " and (upper(division_name) like upper('%{0}%')) "
-                + " and (upper(directorate_name) = upper('{1}')) ",
+                " SELECT COUNT(1) "
+                + " FROM (select distinct division_name, directorate_name "
+                + "         from wo_mst_user "
+        		+ "        where 1=1 "
+                + "              and division_name is not null "
+                + " 		     and enabled_flag = 'Y' "
+                + " 			 and (upper(division_name) like upper('%{0}%')) "
+                + " 			 and (upper(directorate_name) = upper('{1}')))"
+                + " WHERE 1=1 ",
                 Arrays.asList("Division Name", "Directorate Name"),
                 Arrays.asList("0", "1"),false);
         return info;

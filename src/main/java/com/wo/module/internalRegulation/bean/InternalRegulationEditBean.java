@@ -833,6 +833,28 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 						+ facesUtil.retrieveMessage("validateRequired"));
 				flag = true;
 			}
+			
+			// unit pengusul
+			if (regulation.getRegulationProposerUnits() != null && regulation.getRegulationProposerUnits().size() > 0) {
+				for (int i = 0; i < regulation.getRegulationProposerUnits().size(); i++) {
+					RegulationProposerUnit dataUnit = (RegulationProposerUnit) regulation.getRegulationProposerUnits().get(i);
+					if (dataUnit.getDirectorate() == null || dataUnit.getDirectorate().equals("")) {
+						facesUtil.addErrMessage(facesUtil.retrieveMessage("formInternalRegulationDirectorate") + " "
+								+ facesUtil.retrieveMessage("validateRequired"));
+						flag = true;
+					}
+					
+					if (dataUnit.getPublisherUnit() == null || dataUnit.getPublisherUnit().equals("")) {
+						facesUtil.addErrMessage(facesUtil.retrieveMessage("formInternalRegulationProposerUnit") + " "
+								+ facesUtil.retrieveMessage("validateRequired"));
+						flag = true;
+					}
+				}
+			}else {
+				facesUtil.addErrMessage(facesUtil.retrieveMessage("formInternalRegulationProposerUnit") + " "
+						+ facesUtil.retrieveMessage("validateRequired"));
+				flag = true;
+			}
 
 			if (!flag) {
 				Regulation regulValid = regulationService.getCheckDataRegulation(regulation.getRegulationId(),
@@ -865,6 +887,7 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 					}
 				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			facesUtil.addErrMessage("validate error Internal Regulation = " + e.getMessage());
