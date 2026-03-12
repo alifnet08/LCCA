@@ -625,6 +625,9 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 					facesUtil.addErrMessage(
 							facesUtil.retrieveMessage("formInternalRegulationObsoleteConversionTargetDate") + " "
 							+ facesUtil.retrieveMessage("validateRequired"));
+					
+					flag = true;
+					break;
 				}
 			}
 		}
