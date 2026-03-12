@@ -419,6 +419,8 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 				regulation.setExpiredDate(cal.getTime());
 			}
 		}
+		
+		PrimeFaces.current().executeScript("reInitSelect2();");
 	}
 
 	private void checkNewOrEdit() {
@@ -1892,11 +1894,13 @@ public class InternalRegulationEditBean extends CommonBean implements SelectorLi
 	
 	public void clearPicPuDetail(int i) {	
 		regulation.getRegulationProposerUnits().get(i).setPic(null);
+		regulation.getRegulationProposerUnits().get(i).setPicNameTemp(null);
 		PrimeFaces.current().executeScript("initSelect2();");
 	}
 	
 	public void clearPukPuDetail(int i) {	
 		regulation.getRegulationProposerUnits().get(i).setPuk(null);
+		regulation.getRegulationProposerUnits().get(i).setPukNameTemp(null);
 		PrimeFaces.current().executeScript("initSelect2();");
 	}
 	

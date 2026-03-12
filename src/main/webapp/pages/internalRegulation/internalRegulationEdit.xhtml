@@ -300,7 +300,8 @@
 							<p:calendar styleClass="form-control-datepicker-wrap" id="effectiveDate" maxlength="11"
 									value="#{internalRegulationEditBean.regulation.effectiveDate}" autocomplete="off"	
 									pattern="dd-MMM-yyyy" locale="en">
-									<p:ajax event="dateSelect" listener="#{internalRegulationEditBean.setExpiredDateValue}" process="@this" update="expiredDate" />
+									<p:ajax event="dateSelect" listener="#{internalRegulationEditBean.setExpiredDateValue}" 
+									   process="@this expiredDate" update="expiredDate" />
 						     </p:calendar>	  
 							
 						</div>
@@ -318,7 +319,7 @@
 										<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
 										<f:selectItems
 											value="#{internalRegulationEditBean.typeReviewDateList}" />
-										<p:ajax event="change" update="expiredDate publishedDate"
+										<p:ajax event="change" update="expiredDate publishedDate" process="@this expiredDate publishedDate"
 											listener="#{internalRegulationEditBean.onChangeReviewDateType}" />
 									</h:selectOneMenu>
 								</div>
