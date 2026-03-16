@@ -1394,7 +1394,29 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 	private void sendEmailWhenEdit(List<SendEmailVo> sendEmailList, String emailGroupTpk) {
 		try {
 			List<InternalRegulationPenerbitanPicTpk> irgPicTpkList = new ArrayList<>();
-			EmailTemplate emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+			EmailTemplate emailTemplate = new EmailTemplate();
+			
+			if(irg.getCounterType() != null && irg.getCounterType().getDetails().size()==1)
+			{
+				CounterTypeDtl dtl = irg.getCounterType().getDetails().get(0);
+				if(dtl.getSla() == 3)
+				{
+					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_3");
+				}
+				else if(dtl.getSla() == 5)
+				{
+					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_5");
+				} 
+				else
+				{
+				   emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+				}
+			}
+			else
+			{
+				emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+			}
+			
 			ParameterDetail pdRegulationType = parameterDetailService.findById(irg.getRegulationType().getParameterDtlId());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy");
 			
@@ -1644,7 +1666,29 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 	
 	private void sendEmailWhenAdd(List<SendEmailVo> sendEmailList, String emailGroupTpk) {
 		try {
-			EmailTemplate emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+			EmailTemplate emailTemplate = new EmailTemplate();
+			
+			if(irg !=null && irg.getCounterType() != null && irg.getCounterType().getDetails().size()==1)
+			{
+				CounterTypeDtl dtl = irg.getCounterType().getDetails().get(0);
+				if(dtl.getSla() == 3)
+				{
+					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_3");
+				}
+				else if(dtl.getSla() == 5)
+				{
+					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_5");
+				} 
+				else
+				{
+				   emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+				}
+			}
+			else
+			{
+				emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW");
+			}
+			
 			ParameterDetail pdRegulationType = parameterDetailService.findById(irg.getRegulationType().getParameterDtlId());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy");
 			

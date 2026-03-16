@@ -18,6 +18,7 @@ public class InternalRegulationPenerbitanPicTpkVo implements Serializable {
 	private Long delId;
 	private Long irgPicEmailId;
 	private Long sla;
+	private Long counterTypeId;
 	
 	private Date targetDate;
 	private Date oldTargetDate;
@@ -390,6 +391,14 @@ public class InternalRegulationPenerbitanPicTpkVo implements Serializable {
 
 	public void setEmailGroupTpk(String emailGroupTpk) {
 		this.emailGroupTpk = emailGroupTpk;
+	}
+
+	public Long getCounterTypeId() {
+		return counterTypeId;
+	}
+
+	public void setCounterTypeId(Long counterTypeId) {
+		this.counterTypeId = counterTypeId;
 	}
 	
 }

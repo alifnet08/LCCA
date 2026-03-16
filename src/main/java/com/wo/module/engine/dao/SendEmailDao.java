@@ -57,4 +57,5 @@ public interface SendEmailDao extends GenericDAO<LogHeader, Long> {
 	public ParameterDetail getDataParameter(String parameterDtlCode);
 	public void updateFollowupRmd(TrcRmdPicFollowup entity);
 	public Boolean isAvailableDate(Date date);
+	public Integer getCountDataCounterType(Long id);
 }

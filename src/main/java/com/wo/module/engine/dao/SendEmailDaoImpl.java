@@ -1130,6 +1130,7 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
     	sb.append("              AND (wtieg.REVIEW_APPROVAL_FLAG IS NULL OR wtieg.REVIEW_APPROVAL_FLAG = 'N')) EMAIL_GROUP ");        
         sb.append(" 	,ur3.email irg_pic3 ");
         sb.append(" 	,ur3.NAME irg_pic_name3 ");
+        sb.append(" 	,i.counter_type_id");
         sb.append(" FROM WO_TRC_IRG i ");
         sb.append(" 	INNER JOIN WO_TRC_IRG_PIC_IRG r ON i.IRG_ID = r.IRG_ID ");
         sb.append(" 	INNER JOIN WO_TRC_IRG_PIC_TPK t ON i.IRG_ID = t.IRG_ID ");
@@ -1190,6 +1191,7 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
                 data.setEmailGroupTpk(obj[23] != null ? (String) obj[23] : null);                
                 data.setEmailIrgPic3(obj[24]!=null?(String)obj[24]:null);  
                 data.setIrgPicName3(obj[25]!=null?(String)obj[25]:null); 
+                data.setCounterTypeId(obj[26]!=null?(MathUtil.returnIdObjectToLong(obj[26])):null); 
                 
                 if (data.getIrgId() != null) {
                 	// Query tpg
@@ -1490,6 +1492,28 @@ public class SendEmailDaoImpl extends GenericDAOHibernate<LogHeader, Long> imple
 			return false;
 		}
 
+	}
+
+	@Override
+	public Integer getCountDataCounterType(Long id) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(" SELECT count(1) ");
+		sb.append(" FROM wo_mst_counter_type_dtl ");
+		sb.append(" WHERE 1 = 1 ");
+		sb.append(" AND Counter_Type_ID =:id ");
+
+		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("id", id);
+
+		Number result = (Number) query.getSingleResult();
+		
+		if (result == null) {
+			result = 0;
+		}
+		
+		return result.intValue();
 	}
 
 }

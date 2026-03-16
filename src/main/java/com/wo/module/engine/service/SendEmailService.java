@@ -55,4 +55,5 @@ public interface SendEmailService {
  	ParameterDetail getDataParameter(String parameterDtlCode);
 	void updateFollowupRmd(TrcRmdPicFollowup entity);
 	Boolean isAvailableDate(Date date);
+	Integer getCountDataCounterType(Long id);
 }

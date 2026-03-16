@@ -14,6 +14,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.util.StringUtil;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -121,7 +122,9 @@ public class SendEmailIrgPenerbitanController implements Job {
 				for(int i=0;i<listData.size();i++) {
 					InternalRegulationPenerbitanPicTpkVo vo = listData.get(i);
 					String dataIrgKey = vo.getTargetDateStr().concat("-").concat(String.valueOf(vo.getIrgId()));
-					
+					//vo.getSla()
+					Integer counterTypeDtlCount = sendEmailService.getCountDataCounterType(vo.getCounterTypeId());
+							
 					if (sendEmailVoByTargetDateMap.containsKey(dataIrgKey)) { 
 						SendEmailVo dataSendEmail = sendEmailVoByTargetDateMap.get(dataIrgKey);
 						String emailTo = "";
@@ -198,8 +201,28 @@ public class SendEmailIrgPenerbitanController implements Job {
 								}
 							}
 						}
+						String emailContent = StringUtils.EMPTY;
 						
-						String emailContent = sendEmailService.getEmailContent(InternalRegulationPenerbitanConstants.EMAIL_IRG_REMINDER); 
+						if(counterTypeDtlCount !=null && counterTypeDtlCount == 1)
+						{
+							if(vo.getSla() == 3)
+							{
+								emailContent = sendEmailService.getEmailContent("EMAIL_IRG_REMINDER_H_PLUS_3"); 
+							}
+							else if(vo.getSla() == 5)
+							{
+								emailContent = sendEmailService.getEmailContent("EMAIL_IRG_REMINDER_H_PLUS_5"); 
+							}
+							else
+							{
+								emailContent = sendEmailService.getEmailContent(InternalRegulationPenerbitanConstants.EMAIL_IRG_REMINDER); 
+							}
+						}
+						else
+						{
+							emailContent = sendEmailService.getEmailContent(InternalRegulationPenerbitanConstants.EMAIL_IRG_REMINDER); 
+						}
+						
 						String emailSubject = sendEmailService.getEmailSubject(InternalRegulationPenerbitanConstants.EMAIL_IRG_REMINDER);
 						String emailTo  = "";
 						String emailCc = "";

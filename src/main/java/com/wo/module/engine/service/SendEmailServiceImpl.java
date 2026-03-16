@@ -218,4 +218,10 @@ public class SendEmailServiceImpl implements SendEmailService {
 	public Boolean isAvailableDate(Date date) {
 		return sendEmailDao.isAvailableDate(date);
 	}
+
+	@Override
+	public Integer getCountDataCounterType(Long id) {
+		// TODO Auto-generated method stub
+		return sendEmailDao.getCountDataCounterType(id);
+	}
 }
