@@ -1395,10 +1395,10 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 		try {
 			List<InternalRegulationPenerbitanPicTpk> irgPicTpkList = new ArrayList<>();
 			EmailTemplate emailTemplate = new EmailTemplate();
-			
-			if(irg.getCounterType() != null && irg.getCounterType().getDetails().size()==1)
+			CounterType counterTypeDtls = counterTypeService.findById(irg.getCounterType().getCounterTypeId());
+			if(counterTypeDtls !=null && counterTypeDtls.getDetails().size()==1)
 			{
-				CounterTypeDtl dtl = irg.getCounterType().getDetails().get(0);
+				CounterTypeDtl dtl = counterTypeDtls.getDetails().get(0);
 				if(dtl.getSla() == 3)
 				{
 					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_3");
@@ -1634,10 +1634,10 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 						}
 						
 						if (StringUtils.isNotBlank(emailToGroupTpk)) {
-							if (StringUtils.isBlank(emailTo)) {
-								emailTo = emailToGroupTpk;
+							if (StringUtils.isBlank(emailCc)) {
+								emailCc = emailToGroupTpk;
 							} else {
-								emailTo = emailTo.concat(",").concat(emailToGroupTpk);
+								emailCc = emailCc.concat(",").concat(emailToGroupTpk);
 							}
 						}
 						
@@ -1667,10 +1667,10 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 	private void sendEmailWhenAdd(List<SendEmailVo> sendEmailList, String emailGroupTpk) {
 		try {
 			EmailTemplate emailTemplate = new EmailTemplate();
-			
-			if(irg !=null && irg.getCounterType() != null && irg.getCounterType().getDetails().size()==1)
+			CounterType counterTypeDtls = counterTypeService.findById(irg.getCounterType().getCounterTypeId());
+			if(counterTypeDtls !=null && counterTypeDtls.getDetails().size()==1)
 			{
-				CounterTypeDtl dtl = irg.getCounterType().getDetails().get(0);
+				CounterTypeDtl dtl = counterTypeDtls.getDetails().get(0);
 				if(dtl.getSla() == 3)
 				{
 					emailTemplate = emailTemplateService.getEmailTemplateByEmailTemplateCode("EMAIL_IRG_REVIEW_H_PLUS_3");
@@ -1899,9 +1899,9 @@ public class InternalRegulationPenerbitanEditBean extends CommonBean
 						
 						if (StringUtils.isNotBlank(emailCcGroupTpk)) {
 							if (StringUtils.isBlank(emailCc)) {
-								emailTo = emailCcGroupTpk;
+								emailCc = emailCcGroupTpk;
 							} else {
-								emailTo = emailTo.concat(",").concat(emailCcGroupTpk);
+								emailCc = emailCc.concat(",").concat(emailCcGroupTpk);
 							}
 						}
 						

@@ -357,9 +357,9 @@ public class SendEmailIrgPenerbitanController implements Job {
 						
 						if(StringUtils.isNotBlank(emailCcEmailGroupTpk)) {
 							if (StringUtils.isBlank(emailCc)) {
-								emailTo = emailCcEmailGroupTpk;
+								emailCc = emailCcEmailGroupTpk;
 							} else {
-								emailTo = emailTo.concat(",").concat(emailCcEmailGroupTpk);
+								emailCc = emailCc.concat(",").concat(emailCcEmailGroupTpk);
 							}
 						}
 						
