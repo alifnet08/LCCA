@@ -278,7 +278,13 @@ public class InternalRegulationBean extends CommonBean implements SelectorListen
 					} else if (x == 9) {
 						cell.setCellValue(er.getDocumentCategoryName() != null ? er.getDocumentCategoryName() : "");
 					}else if (x == 10) {
-						cell.setCellValue(er.getDirectorate() != null ? er.getDirectorate() : "");
+						StringBuilder publisherDirectorate = new StringBuilder();
+						for (int j = 0; j < er.getRegulationProposerUnits().size(); j++) {
+							RegulationProposerUnit rpu = er.getRegulationProposerUnits().get(j);
+							publisherDirectorate.append(rpu.getDirectorate()).append(",");
+						}
+						cell.setCellValue(publisherDirectorate.toString());
+						//cell.setCellValue(er.getDirectorate() != null ? er.getDirectorate() : "");
 					}else if (x == 11) {
 						cell.setCellValue(er.getDocumentTopicNameIn() != null ? er.getDocumentTopicNameIn() : "");
 					}else if (x == 12){
