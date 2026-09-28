@@ -5187,6 +5187,66 @@
 		</managed-property>
 	</managed-bean>
 	<!-- Notary Edit -->
+	<!-- Notary Task -->
+	 <managed-bean>
+		<managed-bean-name>notaryTaskBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.notary.bean.NotaryTaskBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>notaryService</property-name>
+			<value>#{notaryService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+	</managed-bean>
+	 <managed-bean>
+		<managed-bean-name>notaryTaskEditBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.notary.bean.NotaryTaskEditBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>notaryService</property-name>
+			<value>#{notaryService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- Notary Task -->
 	<!-- aboutUs -->
 	 <managed-bean>
 		<managed-bean-name>aboutUsBean</managed-bean-name>

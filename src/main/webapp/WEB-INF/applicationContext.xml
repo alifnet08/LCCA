@@ -225,6 +225,7 @@
 				<value>com/wo/config/hibernate/TemplateDocument.hbm.xml</value>
 				<value>com/wo/config/hibernate/Notary.hbm.xml</value>
 				<value>com/wo/config/hibernate/NotaryDocument.hbm.xml</value>
+				<value>com/wo/config/hibernate/NotaryHistory.hbm.xml</value>
 				<value>com/wo/config/hibernate/AboutUs.hbm.xml</value>
 				<value>com/wo/config/hibernate/Division.hbm.xml</value>
 				<value>com/wo/config/hibernate/Discussion.hbm.xml</value>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.wo.module.notary.model">
+	<class name="NotaryHistory" table="wo_mst_notary_history">
+		<id name="notaryHistoryId" column="NOTARY_HISTORY_ID" type="long">
+			<generator class="sequence">
+				<param name="sequence_name">wo_mst_notary_history_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="notary"
+			column="NOTARY_ID" class="com.wo.module.notary.model.Notary"
+			fetch="join" />
+
+		<property name="status" column="STATUS" type="string" />
+		<property name="catatanRevisi" column="CATATAN_REVISI" type="string" />
+
+		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
+		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
+		<property name="createdBy" column="CREATED_BY" type="string" />
+		<property name="lastUpdateDate" column="LAST_UPDATE_DATE"
+			type="timestamp" />
+		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
+		<property name="delId" column="DEL_ID" type="long" />
+
+	</class>
+</hibernate-mapping>

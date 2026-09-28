@@ -14,6 +14,7 @@ import org.primefaces.model.UploadedFile;
 import com.wo.module.common.paging.RetrieverDataPage;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.notary.model.Notary;
+import com.wo.module.notary.model.NotaryHistory;
 import com.wo.module.notary.vo.NotaryVo;
 
 public interface NotaryService extends RetrieverDataPage<Notary> {
@@ -25,6 +26,10 @@ public interface NotaryService extends RetrieverDataPage<Notary> {
 	public void delete(Notary entity);
 
 	public Notary findById(Long id);
+	
+	public void saveHistory(Notary notary, String historyStatus, String catatanRevisi, String userLogin);
+	
+	public List<NotaryHistory> getHistoryByNotaryId(Long notaryId);
 	
 	public NotaryVo saveUpload(UploadedFile fileUploadCpsa, FacesUtil facesUtil);
 	

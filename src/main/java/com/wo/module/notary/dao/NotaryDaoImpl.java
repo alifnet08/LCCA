@@ -54,6 +54,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 						sb.append(" and UPPER(area_code) like UPPER(:areaCode) ");
 					
 				}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
+						sb.append(" and ct.STATUS = :status ");
+					}
 				}
 			}
 		}
@@ -76,6 +79,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_AREA_CODE, col)) {
 						query.setParameter("areaCode", "%" + val + "%");
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
+						query.setParameter("status", val);
 					}
 				}
 			}

@@ -58,8 +58,10 @@ import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.dao.NotaryDao;
 import com.wo.module.notary.dao.NotaryDocumentDao;
+import com.wo.module.notary.dao.NotaryHistoryDao;
 import com.wo.module.notary.model.Notary;
 import com.wo.module.notary.model.NotaryDocument;
+import com.wo.module.notary.model.NotaryHistory;
 import com.wo.module.notary.vo.NotaryVo;
 import com.wo.module.parameter.dao.ParameterDetailDao;
 
@@ -77,6 +79,10 @@ public class NotaryServiceImpl implements NotaryService {
     @Autowired
     @Qualifier("notaryDocumentDao")
     private NotaryDocumentDao notaryDocumentDao;
+
+    @Autowired
+    @Qualifier("notaryHistoryDao")
+    private NotaryHistoryDao notaryHistoryDao;
     
     
 	public NotaryDao getNotaryDao() {
@@ -127,6 +133,30 @@ public class NotaryServiceImpl implements NotaryService {
     	}
     	return entity;
     }
+
+	public void saveHistory(Notary notary, String historyStatus, String catatanRevisi, String userLogin) {
+		if (notary == null || notary.getNotaryId() == null) {
+			return;
+		}
+		NotaryHistory history = new NotaryHistory();
+		history.setNotary(notary);
+		history.setStatus(historyStatus);
+		history.setCatatanRevisi(catatanRevisi);
+		history.setCreatedBy(userLogin);
+		history.setCreationDate(new Timestamp(new Date().getTime()));
+		history.setDelId(new Long(0));
+		history.setEnabledFlag(CommonConstants.Y);
+		notaryHistoryDao.save(history);
+	}
+
+	public List<NotaryHistory> getHistoryByNotaryId(Long notaryId) {
+		try {
+			return notaryHistoryDao.getNotaryHistoryByNotaryId(notaryId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<NotaryHistory>();
+		}
+	}
 
 	private void persistNotaryDocuments(Notary entity) {
 		if (entity == null || entity.getNotaryId() == null) {

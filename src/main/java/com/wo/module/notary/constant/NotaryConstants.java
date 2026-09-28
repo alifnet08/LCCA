@@ -33,7 +33,20 @@ public abstract class NotaryConstants {
 	public final static String EMPTY = "";
 	
 	public final static String STATUS_WAITING_APPROVAL_CDU_CHECKER = "waiting approval CDU Checker";
+	public final static String STATUS_WAITING_APPROVAL_LEGAL = "waiting approval Legal";
+	public final static String STATUS_WAITING_APPROVAL_SPV_LEGAL = "waiting approval SPV Legal";
+	public final static String STATUS_COMPLETE = "complete";
+	public final static String STATUS_REJECTED = "rejected";
+	public final static String STATUS_REVISION = "revision";
 	public final static String RESPONSIBILITY_CDU_CHECKER = "Role CDU Checker";
+	public final static String RESPONSIBILITY_CDU_MAKER = "Role CDU Maker";
+	public final static String RESPONSIBILITY_LEGAL = "Legal";
+	public final static String RESPONSIBILITY_SPV_LEGAL = "SPV Legal";
+	public final static String NAVIGATE_TASK = "notaryTask.faces";
+	public final static String NAVIGATE_TASK_EDIT = "notaryTaskEdit.faces";
+	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
+	public final static String REVISI_TARGET_MAKER = "MAKER";
+	public final static String REVISI_TARGET_LEGAL = "LEGAL";
 	public final static String JENIS_PENGAJUAN_NOTARIS_BARU = "Notaris Baru";
 	public final static String JENIS_PENGAJUAN_PERPANJANGAN = "Perpanjangan";
 	public final static String JENIS_PENGAJUAN_UPDATE_DOKUMEN = "Update Dokumen";

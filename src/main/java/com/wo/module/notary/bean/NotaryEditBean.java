@@ -262,6 +262,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				notary.setNotaryCategory(pd);
 
 				boolean isNewPengajuan = notary.getNotaryId() == null;
+				boolean isResubmitRevisi = !isNewPengajuan
+						&& StringUtils.equals(NotaryConstants.STATUS_REVISION, notary.getStatus());
 				if (isNewPengajuan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
@@ -271,6 +273,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				} else if (pengajuanUpdateDokumen) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+				} else if (isResubmitRevisi) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 				}
 
 				prepareNotaryDocuments();
@@ -290,8 +294,15 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					notaryService.save(notary);
 				}
 
-				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen) {
+				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen || isResubmitRevisi) {
 					sendNotificationToCduChecker();
+					String historyStatus = "Submit by CDU Maker";
+					if (pengajuanPerpanjangan) {
+						historyStatus = "Submit Perpanjangan by CDU Maker";
+					} else if (pengajuanUpdateDokumen) {
+						historyStatus = "Submit Update Dokumen by CDU Maker";
+					}
+					notaryService.saveHistory(notary, historyStatus, null, facesUtil.retrieveUserLogin());
 				}
 
 				facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);

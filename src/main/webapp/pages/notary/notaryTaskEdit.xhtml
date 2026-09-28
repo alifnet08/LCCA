@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="Daftar Tugas - Daftar Notaris" />
+	</ui:define>
+
+	<ui:define name="content">
+		<p:growl id="msgs" />
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title">Pengajuan Notaris</h3>
+			</div>
+			<div class="box-body">
+				<div class="row">
+					<div class="col-lg-12" style="margin-bottom:10px;">
+						<p:commandButton value="Form" process="@this" update="taskTabContent"
+							actionListener="#{notaryTaskEditBean.openFormTab}"
+							styleClass="#{notaryTaskEditBean.showLampiranTab ? 'btn btn-default' : 'btn btn-primary'}" />
+						<p:commandButton value="Lampiran" process="@this" update="taskTabContent"
+							actionListener="#{notaryTaskEditBean.openLampiranTab}"
+							styleClass="#{notaryTaskEditBean.showLampiranTab ? 'btn btn-primary' : 'btn btn-default'}" />
+					</div>
+				</div>
+				<p:outputPanel id="taskTabContent">
+				<h:panelGroup layout="block" style="#{notaryTaskEditBean.showLampiranTab ? 'display:none' : ''}">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Jenis Pengajuan</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.jenisPengajuan}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>#{msg.formNotaryCategory}</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.notaryCategory.nameIn}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>#{msg.formNotaryArea}</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.area}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>#{msg.formNotaryNotarisName}</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.notaryName}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Tanggal Pensiun</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.tanggalPensiun}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Tanggal Berakhir Kerjasama</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.tanggalBerakhirPks}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Status</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.status}" />
+						</div>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup layout="block" style="#{notaryTaskEditBean.showLampiranTab ? '' : 'display:none'}">
+					<p:dataList value="#{notaryTaskEditBean.notary.notaryDocuments}" var="vo"
+						emptyMessage="#{msg.textNodata}">
+						<h:outputText value="#{vo.attachmentType} : " />
+						<p:commandLink rendered="#{not empty vo.fileId}" ajax="false" immediate="true"
+							actionListener="#{notaryTaskEditBean.downloadFile(vo.fileId,vo.attachmentFile,null)}"
+							target="_blank">#{vo.attachmentFile}</p:commandLink>
+					</p:dataList>
+					<div class="form-group" style="margin-top:10px;">
+						<label>Pilih dokumen yang perlu direvisi</label>
+						<p:selectManyCheckbox value="#{notaryTaskEditBean.selectedRevisiDocuments}"
+							layout="pageDirection" rendered="#{notaryTaskEditBean.actionEnabled}">
+							<f:selectItems value="#{notaryTaskEditBean.notary.notaryDocuments}" var="doc"
+								itemLabel="#{doc.attachmentType}" itemValue="#{doc.attachmentType}" />
+						</p:selectManyCheckbox>
+					</div>
+				</h:panelGroup>
+				</p:outputPanel>
+				<div class="row" style="margin-top:15px;">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Catatan Revisi</label>
+							<p:inputTextarea styleClass="form-control" rows="3"
+								value="#{notaryTaskEditBean.catatanRevisi}" />
+						</div>
+					</div>
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{notaryTaskEditBean.spvLegal}">
+						<div class="form-group">
+							<label>Revisi ditujukan ke</label>
+							<h:selectOneMenu styleClass="form-control" value="#{notaryTaskEditBean.revisiTarget}">
+								<f:selectItem itemLabel="Submit to CDU Maker" itemValue="MAKER" />
+								<f:selectItem itemLabel="Submit to Legal" itemValue="LEGAL" />
+							</h:selectOneMenu>
+						</div>
+					</h:panelGroup>
+				</div>
+			</div>
+			<div class="box-footer">
+				<h:panelGroup rendered="#{notaryTaskEditBean.actionEnabled}">
+					<p:commandButton value="Reject" action="#{notaryTaskEditBean.reject}"
+						process="@form" styleClass="btn btn-danger" />
+					<p:commandButton value="Revision" action="#{notaryTaskEditBean.revisi}"
+						process="@form" styleClass="btn btn-warning" />
+					<p:commandButton value="Approve" action="#{notaryTaskEditBean.approve}"
+						process="@form" styleClass="btn btn-success" />
+				</h:panelGroup>
+				<h:commandLink value="#{msg.buttonCancel}" immediate="true"
+					actionListener="#{notaryTaskEditBean.cancel()}"
+					styleClass="btn btn-default pull-right tl-label"></h:commandLink>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

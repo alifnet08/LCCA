@@ -1,0 +1,21 @@
+INSERT INTO WO_MST_MENU (
+	MENU_ID, NAME_IN, NAME_EN, ACTION, PARENT_ID, MENU_LEVEL, MENU_ORDER,
+	FONTAWESOME, DESCRIPTION, ENABLED_FLAG, CREATION_DATE, CREATED_BY, DEL_ID
+)
+SELECT wo_mst_menu_seq.NEXTVAL,
+	'Daftar Notaris',
+	'Daftar Notaris',
+	'/pages/notary/notaryTask.faces',
+	p.MENU_ID,
+	NVL(p.MENU_LEVEL, 1) + 1,
+	NVL(p.MENU_ORDER, 0) + 1,
+	p.FONTAWESOME,
+	'Daftar Tugas Pengajuan Notaris',
+	'Y',
+	SYSDATE,
+	'SYSTEM',
+	0
+FROM WO_MST_MENU p
+WHERE UPPER(p.NAME_IN) = UPPER('Daftar Tugas')
+AND p.ENABLED_FLAG = 'Y'
+AND ROWNUM = 1;
