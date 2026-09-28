@@ -225,37 +225,37 @@
 		</p:confirmDialog>
 
 		<p:dialog id="dlgJenisPengajuan" widgetVar="dlgJenisPengajuan" header="Jenis Pengajuan"
-			modal="true" resizable="false" closable="true" width="400">
+			modal="true" resizable="false" closable="true" width="400" appendTo="@form">
 			<div class="form-group">
-				<p:commandLink action="#{notaryBean.getNavigateEdit()}" ajax="false"
-					styleClass="btn btn-default btn-block tl-label" process="@this">
-					<h:outputText value="Tambah Notaris" />
-				</p:commandLink>
+				<p:commandButton value="Tambah Notaris" process="@this"
+					action="#{notaryBean.navigateTambahNotaris}"
+					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 			<div class="form-group">
 				<p:commandButton value="Perpanjangan" process="@this"
 					actionListener="#{notaryBean.openPerpanjangan}"
-					update="form:dlgPerpanjangan"
+					update="form:dlgPerpanjangan form:deletedMessage"
 					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 			<div class="form-group">
 				<p:commandButton value="Update Dokumen Pendukung" process="@this"
 					actionListener="#{notaryBean.openUpdateDokumen}"
-					update="form:dlgPerpanjangan"
+					update="form:dlgPerpanjangan form:deletedMessage"
 					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 		</p:dialog>
 
 		<p:dialog id="dlgPerpanjangan" widgetVar="dlgPerpanjangan" header="Pilih Notaris"
-			modal="true" resizable="false" closable="true" width="800">
+			modal="true" resizable="false" closable="true" width="800" appendTo="@form">
 			<p:dataTable id="tablePerpanjangan" var="vo"
 				value="#{notaryBean.perpanjanganList}"
 				selection="#{notaryBean.selectedNotary}"
 				selectionMode="single" rowKey="#{vo.notaryId}"
 				emptyMessage="#{msg.textNodata}"
 				paginator="true" rows="10">
+				<p:column selectionMode="single" style="width:40px;text-align:center" />
 				<p:column headerText="Nama Notaris">
 					<h:outputLabel value="#{vo.notaryName}" />
 				</p:column>

@@ -296,6 +296,15 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		}
 	}
 
+	public void navigateTambahNotaris() {
+		try {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.redirect("/pages/notary/notaryEdit.faces");
+		} catch (Exception e) {
+			addErrMessage("Operation Failed : " + e.getMessage());
+		}
+	}
+
 	public void navigatePerpanjangan() {
 		try {
 			if (selectedNotary == null || selectedNotary.getNotaryId() == null) {
