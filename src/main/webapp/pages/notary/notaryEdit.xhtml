@@ -225,7 +225,8 @@
 								<label class="tl-label">
 									<h:outputText value="#{st.index + 1}. #{doc.attachmentType}" />
 								</label>
-								<p:fileUpload fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								<p:fileUpload rendered="#{!notaryEditBean.pengajuanPerpanjangan}"
+									fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
 									oncomplete="onCompleteUploadLampiran()"
 									mode="advanced" auto="true" dragDropSupport="false" multiple="false"
 									sizeLimit="#{notaryEditBean.standardAttachmentSize}"
@@ -250,7 +251,7 @@
 										<h:outputText rendered="#{empty vo.fileId}" value="-" />
 									</td>
 									<td>
-										<p:commandLink rendered="#{not empty vo.fileId}" immediate="true"
+										<p:commandLink rendered="#{not empty vo.fileId and !notaryEditBean.pengajuanPerpanjangan}" immediate="true"
 											actionListener="#{notaryEditBean.deleteLampiranAttachment(vo.fileId, vo.attachmentType)}"
 											update="notaryLampiranList">#{msg.buttonDelete}</p:commandLink>
 									</td>

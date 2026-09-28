@@ -75,6 +75,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	private List<NotaryDocument> lampiranList;
 
+	private boolean pengajuanPerpanjangan;
+	private boolean pengajuanUpdateDokumen;
+
 	private String navigateSeanotaryh = NotaryConstants.NAVIGATE_SEARCH;
 
 	public void addMessage(String summary) {
@@ -124,6 +127,12 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			
 			String viewId = facesUtil.retrieveRequestParam("viewId");
 			isViewOnly = false;
+			pengajuanPerpanjangan = false;
+			pengajuanUpdateDokumen = false;
+			String jenisPengajuanParam = facesUtil.retrieveRequestParam("jenisPengajuan");
+			if (StringUtils.isBlank(jenisPengajuanParam) && facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN) != null) {
+				jenisPengajuanParam = String.valueOf(facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN));
+			}
 			if (viewId != null && !viewId.isEmpty()) {
 				if (viewId.trim().equalsIgnoreCase("true")) {
 					isViewOnly = true;
@@ -134,6 +143,19 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 			} else {
 				this.handleEdit(editId);
+				if (notary != null
+						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, jenisPengajuanParam)) {
+					pengajuanPerpanjangan = true;
+					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+							NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+				} else if (notary != null
+						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, jenisPengajuanParam)) {
+					pengajuanUpdateDokumen = true;
+					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+							NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+				}
 			}
 		} catch (Exception e) {
 
@@ -146,6 +168,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		ParameterDetail pd = new ParameterDetail();
 		notary.setNotaryCategory(pd);
 		notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+		pengajuanPerpanjangan = false;
+		pengajuanUpdateDokumen = false;
+		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
 		lastSequenceOfDtl = 0;
 		actionMode = Constants.ACTION_ADD;
 		uploadFiles = new ArrayList<UploadedFileWO>();
@@ -240,6 +265,12 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				if (isNewPengajuan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+				} else if (pengajuanPerpanjangan) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
+					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+				} else if (pengajuanUpdateDokumen) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
+					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
 				}
 
 				prepareNotaryDocuments();
@@ -259,9 +290,11 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					notaryService.save(notary);
 				}
 
-				if (isNewPengajuan) {
+				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen) {
 					sendNotificationToCduChecker();
 				}
+
+				facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
 
 				if (deleteFiles != null) {
 					for (int i = 0; i < deleteFiles.size(); i++) {
@@ -325,6 +358,13 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			}
 			String subject = "Pengajuan Penambahan Notaris";
 			String content = "Pengajuan Penambahan Notaris Anda telah berhasil disubmit.";
+			if (pengajuanPerpanjangan) {
+				subject = "Pengajuan Perpanjangan Notaris";
+				content = "Pengajuan Perpanjangan Notaris Anda telah berhasil disubmit.";
+			} else if (pengajuanUpdateDokumen) {
+				subject = "Pengajuan Update Dokumen Notaris";
+				content = "Pengajuan Update Dokumen Notaris Anda telah berhasil disubmit.";
+			}
 			if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
 				content = content + " Nama Notaris: " + notary.getNotaryName();
 			}
@@ -384,6 +424,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public void handleLampiranFileUpload(FileUploadEvent event) {
+		if (pengajuanPerpanjangan) {
+			return;
+		}
 		try {
 			String attachmentType = (String) event.getComponent().getAttributes().get("attachmentType");
 			String fileId = CallApiManager.callUploadAPI(event.getFile(), Constants.ARTICLE, parameterDetailService,
@@ -406,6 +449,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public void deleteLampiranAttachment(String fileId, String attachmentType) throws Exception {
+		if (pengajuanPerpanjangan) {
+			return;
+		}
 		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
 		if (StringUtils.isNotBlank(fileId)) {
 			deleteFiles.add(new UploadedFileWO(fileId, null, null, null));
@@ -501,6 +547,14 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void setNotary(Notary notary) {
 		this.notary = notary;
+	}
+
+	public boolean isPengajuanPerpanjangan() {
+		return pengajuanPerpanjangan;
+	}
+
+	public void setPengajuanPerpanjangan(boolean pengajuanPerpanjangan) {
+		this.pengajuanPerpanjangan = pengajuanPerpanjangan;
 	}
 
 	public Boolean getIsViewOnly() {

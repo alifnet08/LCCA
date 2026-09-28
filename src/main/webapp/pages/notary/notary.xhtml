@@ -12,11 +12,11 @@
 	</ui:define>
 	<ui:define name="buttonAdd">
 		<ul class="action list-inline">
-			<li><h:commandLink action="#{notaryBean.getNavigateEdit()}"
-					type="submit" process="@this" ajax="false" styleClass="tl-label">
+			<li><p:commandLink process="@this" ajax="true" styleClass="tl-label"
+					onclick="PF('dlgJenisPengajuan').show(); return false;">
 					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
 					<h:outputText value="#{msg.buttonAdd}" />
-				</h:commandLink></li>
+				</p:commandLink></li>
 		</ul>
 	</ui:define>
 
@@ -223,6 +223,68 @@
 			<p:commandButton value="#{msg.textNo}" type="button"
 				styleClass="ui-confirmdialog-no" icon="pi pi-times" />
 		</p:confirmDialog>
+
+		<p:dialog id="dlgJenisPengajuan" widgetVar="dlgJenisPengajuan" header="Jenis Pengajuan"
+			modal="true" resizable="false" closable="true" width="400">
+			<div class="form-group">
+				<p:commandLink action="#{notaryBean.getNavigateEdit()}" ajax="false"
+					styleClass="btn btn-default btn-block tl-label" process="@this">
+					<h:outputText value="Tambah Notaris" />
+				</p:commandLink>
+			</div>
+			<div class="form-group">
+				<p:commandButton value="Perpanjangan" process="@this"
+					actionListener="#{notaryBean.openPerpanjangan}"
+					update="form:dlgPerpanjangan"
+					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
+					styleClass="btn btn-default btn-block tl-label" />
+			</div>
+			<div class="form-group">
+				<p:commandButton value="Update Dokumen Pendukung" process="@this"
+					actionListener="#{notaryBean.openUpdateDokumen}"
+					update="form:dlgPerpanjangan"
+					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
+					styleClass="btn btn-default btn-block tl-label" />
+			</div>
+		</p:dialog>
+
+		<p:dialog id="dlgPerpanjangan" widgetVar="dlgPerpanjangan" header="Pilih Notaris"
+			modal="true" resizable="false" closable="true" width="800">
+			<p:dataTable id="tablePerpanjangan" var="vo"
+				value="#{notaryBean.perpanjanganList}"
+				selection="#{notaryBean.selectedNotary}"
+				selectionMode="single" rowKey="#{vo.notaryId}"
+				emptyMessage="#{msg.textNodata}"
+				paginator="true" rows="10">
+				<p:column headerText="Nama Notaris">
+					<h:outputLabel value="#{vo.notaryName}" />
+				</p:column>
+				<p:column headerText="Kategori">
+					<h:outputLabel value="#{vo.notaryCategory.nameIn}" />
+				</p:column>
+				<p:column headerText="Area">
+					<h:outputLabel value="#{vo.area}" />
+				</p:column>
+				<p:column headerText="Email">
+					<h:outputLabel value="#{vo.email}" />
+				</p:column>
+			</p:dataTable>
+			<div class="filter-tools" style="margin-top:10px;">
+				<ul class="no-margin no-padding pull-right">
+					<li>
+						<p:commandButton value="Close" type="button" process="@this"
+							onclick="PF('dlgPerpanjangan').hide();"
+							styleClass="btn btn-default btn-flat tl-label" />
+					</li>
+					<li>
+						<p:commandButton value="Add" action="#{notaryBean.navigatePerpanjangan}"
+							ajax="true" process="@this form:tablePerpanjangan"
+							update="form:deletedMessage"
+							styleClass="btn btn-success tl-label" />
+					</li>
+				</ul>
+			</div>
+		</p:dialog>
 
 		<div class="modal fade modal-danger" id="confirmDelete" role="dialog"
 			aria-labelledby="confirmDeleteLabel" aria-hidden="true">

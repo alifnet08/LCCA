@@ -73,6 +73,10 @@ public class NotaryBean extends CommonBean  implements Serializable {
 
 	private String navigateEdit = NotaryConstants.NAVIGATE_EDIT;
 
+	private List<Notary> perpanjanganList;
+	private Notary selectedNotary;
+	private String pickerJenisPengajuan;
+
 	public void addMessage(String summary) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
 		FacesContext.getCurrentInstance().addMessage(null, message);
@@ -270,7 +274,38 @@ public class NotaryBean extends CommonBean  implements Serializable {
 	}
 
 
+	public void openPerpanjangan() {
+		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+		selectedNotary = null;
+		perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+	}
+
+	public void openUpdateDokumen() {
+		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
+		selectedNotary = null;
+		perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+	}
+
+	public void navigatePerpanjangan() {
+		try {
+			if (selectedNotary == null || selectedNotary.getNotaryId() == null) {
+				addErrMessage("Pilih Notaris");
+				return;
+			}
+			String jenisPengajuan = pickerJenisPengajuan;
+			if (StringUtils.isBlank(jenisPengajuan)) {
+				jenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+			}
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, jenisPengajuan);
+			facesUtil.redirect("/pages/notary/notaryEdit.faces?id=" + selectedNotary.getNotaryId()
+					+ "&jenisPengajuan=" + jenisPengajuan.replace(" ", "%20"));
+		} catch (Exception e) {
+			addErrMessage("Operation Failed : " + e.getMessage());
+		}
+	}
+
 	public String getNavigateEdit() {
+		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
 		return navigateEdit;
 	}
 
@@ -370,6 +405,22 @@ public class NotaryBean extends CommonBean  implements Serializable {
 
 	public void setFlagError(boolean flagError) {
 		this.flagError = flagError;
+	}
+
+	public List<Notary> getPerpanjanganList() {
+		return perpanjanganList;
+	}
+
+	public void setPerpanjanganList(List<Notary> perpanjanganList) {
+		this.perpanjanganList = perpanjanganList;
+	}
+
+	public Notary getSelectedNotary() {
+		return selectedNotary;
+	}
+
+	public void setSelectedNotary(Notary selectedNotary) {
+		this.selectedNotary = selectedNotary;
 	}
 	
 }
