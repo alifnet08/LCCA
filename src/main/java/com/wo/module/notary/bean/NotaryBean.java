@@ -277,13 +277,23 @@ public class NotaryBean extends CommonBean  implements Serializable {
 	public void openPerpanjangan() {
 		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
 		selectedNotary = null;
-		perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+		try {
+			perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addErrMessage("Operation Failed : " + e.getMessage());
+		}
 	}
 
 	public void openUpdateDokumen() {
 		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
 		selectedNotary = null;
-		perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+		try {
+			perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addErrMessage("Operation Failed : " + e.getMessage());
+		}
 	}
 
 	public void navigatePerpanjangan() {
