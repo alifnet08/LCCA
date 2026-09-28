@@ -682,22 +682,22 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 							picEmail.setSlaType(InternalRegulationObsoleteConstants.REMINDER_H_PLUS_0);
 							
 							pic.getRegulationObsoleteEmailTmps().add(picEmail);
-							//ADD a new list for IRG Obsolete Email Tmps for D-2
+							//ADD a new list for IRG Obsolete Email Tmps for D-30
 							InternalRegulationObsoleteEmailTmp picEmailDayMinus30 = new InternalRegulationObsoleteEmailTmp();
 							
 							picEmailDayMinus30.setIrgObsoletePic(pic);
 							
-							//check if d-2 is a holiday
+							//check if d-30 is a holiday
 							Calendar calendar = Calendar.getInstance();
-							Date targetDateTmpMinus2 = pic.getTargetDate();
+							Date targetDateTmpMinus30 = pic.getTargetDate();
 							int counterDate = 0;
-							calendar.setTime(targetDateTmpMinus2);
+							calendar.setTime(targetDateTmpMinus30);
 							
-							while (counterDate < 2) {
+							while (counterDate < 30) {
 								
-								calendar.setTime(targetDateTmpMinus2);
+								calendar.setTime(targetDateTmpMinus30);
 								calendar.add(Calendar.DAY_OF_MONTH, -1);
-								targetDateTmpMinus2 = calendar.getTime();
+								targetDateTmpMinus30 = calendar.getTime();
 								
 								int day = calendar.get(Calendar.DAY_OF_WEEK);
 								//System.out.println("Calendar Day: "+day);
@@ -705,7 +705,7 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 								if (day == 1 || day == 7) {
 									// do nothing
 								} else {
-									if (Boolean.TRUE.equals(holidayService.isAvailableDate(targetDateTmpMinus2))) {
+									if (Boolean.TRUE.equals(holidayService.isAvailableDate(targetDateTmpMinus30))) {
 										counterDate++;
 										//System.out.println("Counter Date: " + counterDate);
 									}
@@ -713,7 +713,7 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 								
 							}
 							
-							picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
+							picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus30.getTime()));
 							
 							picEmailDayMinus30.setCreatedBy(facesUtil.retrieveUserLogin());
 							picEmailDayMinus30.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -737,22 +737,22 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 								
 								pic.getRegulationObsoleteEmailTmps().add(picEmail);
 								
-								//ADD a new list for IRG Obsolete Email Tmps for D-2
+								//ADD a new list for IRG Obsolete Email Tmps for D-30
 								InternalRegulationObsoleteEmailTmp picEmailDayMinus30 = new InternalRegulationObsoleteEmailTmp();
 								
 								picEmailDayMinus30.setIrgObsoletePic(pic);
 								
-								//check if d-2 is a holiday
+								//check if d-30 is a holiday
 								Calendar calendar = Calendar.getInstance();
-								Date targetDateTmpMinus2 = pic.getTargetDate();
+								Date targetDateTmpMinus30 = pic.getTargetDate();
 								int counterDate = 0;
-								calendar.setTime(targetDateTmpMinus2);
+								calendar.setTime(targetDateTmpMinus30);
 								
-								while (counterDate < 2) {
+								while (counterDate < 30) {
 									
-									calendar.setTime(targetDateTmpMinus2);
+									calendar.setTime(targetDateTmpMinus30);
 									calendar.add(Calendar.DAY_OF_MONTH, -1);
-									targetDateTmpMinus2 = calendar.getTime();
+									targetDateTmpMinus30 = calendar.getTime();
 									
 									int day = calendar.get(Calendar.DAY_OF_WEEK);
 									//System.out.println("Calendar Day: "+day);
@@ -760,7 +760,7 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 									if (day == 1 || day == 7) {
 										// do nothing
 									} else {
-										if (Boolean.TRUE.equals(holidayService.isAvailableDate(targetDateTmpMinus2))) {
+										if (Boolean.TRUE.equals(holidayService.isAvailableDate(targetDateTmpMinus30))) {
 											counterDate++;
 											//System.out.println("Counter Date: " + counterDate);
 										}
@@ -768,7 +768,7 @@ public class InternalRegulationObsoleteEditBean extends CommonBean implements Se
 									
 								}
 								
-								picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus2.getTime()));
+								picEmailDayMinus30.setEmailDate(new Timestamp(targetDateTmpMinus30.getTime()));
 								
 								picEmailDayMinus30.setCreatedBy(facesUtil.retrieveUserLogin());
 								picEmailDayMinus30.setCreationDate(new Timestamp(System.currentTimeMillis()));

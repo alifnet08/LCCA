@@ -120,8 +120,8 @@ public class SendEmailIRGObsoleteController implements Job {
 						emailSubject = sendEmailService.getEmailSubject("EMAIL_IRG_OBSOLETE_H_PLUS_0");
 						emailContent = sendEmailService.getEmailContent("EMAIL_IRG_OBSOLETE_H_PLUS_0");
 					}else if(vo.getSlaType().equals(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_30)) {
-						emailSubject = sendEmailService.getEmailSubject("EMAIL_IRG_OBSOLETE_H_MINUS_2");
-						emailContent = sendEmailService.getEmailContent("EMAIL_IRG_OBSOLETE_H_MINUS_2");
+						emailSubject = sendEmailService.getEmailSubject("EMAIL_IRG_OBSOLETE_H_MINUS_30");
+						emailContent = sendEmailService.getEmailContent("EMAIL_IRG_OBSOLETE_H_MINUS_30");
 					}
 					
 					emailSubject = emailSubject.replaceAll("judul_obsolete", vo.getObsoleteTitle());
@@ -182,7 +182,7 @@ public class SendEmailIRGObsoleteController implements Job {
 										"EMAIL_IRG_OBSOLETE_H_PLUS_0", "true", sendEmailService);
 							}else if(vo.getSlaType().equals(InternalRegulationObsoleteConstants.REMINDER_H_MINUS_30)) {
 								result = CallApiManager.sendEmailAPIScheduller(emailTo, emailCc, emailSubject, emailContent, 
-										"EMAIL_IRG_OBSOLETE_H_MINUS_2", "true", sendEmailService);
+										"EMAIL_IRG_OBSOLETE_H_MINUS_30", "true", sendEmailService);
 							}
 							
 						}catch(Exception ex) {
