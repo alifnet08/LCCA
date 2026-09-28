@@ -14,5 +14,7 @@ import com.wo.module.notary.model.Notary;
  * @author hendra
  */
 public interface NotaryDao extends GenericDAO<Notary, Long>, RetrieverDataPage<Notary> {
-	
+
+	public String getLastNoPengajuan(String prefixLike) throws Exception;
+
 }

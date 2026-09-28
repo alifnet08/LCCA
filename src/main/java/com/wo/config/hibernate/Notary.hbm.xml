@@ -26,6 +26,9 @@
 		<property name="mobileNo" column="MOBILE_NO" type="string" />
 		<property name="workArea" column="WORK_AREA" type="string" />
 		<property name="note" column="NOTE" type="string" />
+		<property name="notaryNo" column="NO_PENGAJUAN" type="string" />
+		<property name="userPengaju" column="USER_PENGAJU" type="string" />
+		<property name="tanggalPengajuan" column="TANGGAL_PENGAJUAN" type="timestamp" />
 		<property name="status" column="STATUS" type="string" />
 		<property name="jenisPengajuan" column="JENIS_PENGAJUAN" type="string" />
 		<property name="tanggalPensiun" column="TANGGAL_PENSIUN" type="date" />

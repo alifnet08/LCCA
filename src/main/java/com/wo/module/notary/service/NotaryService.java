@@ -30,6 +30,8 @@ public interface NotaryService extends RetrieverDataPage<Notary> {
 	public void saveHistory(Notary notary, String historyStatus, String catatanRevisi, String userLogin);
 	
 	public List<NotaryHistory> getHistoryByNotaryId(Long notaryId);
+
+	public String generateNoPengajuan(String prefix);
 	
 	public NotaryVo saveUpload(UploadedFile fileUploadCpsa, FacesUtil facesUtil);
 	

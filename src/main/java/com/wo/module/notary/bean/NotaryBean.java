@@ -283,6 +283,8 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			e.printStackTrace();
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}
+		PrimeFaces.current().executeScript(
+				"setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 250);");
 	}
 
 	public void openUpdateDokumen() {
@@ -294,15 +296,13 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			e.printStackTrace();
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}
+		PrimeFaces.current().executeScript(
+				"setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 250);");
 	}
 
-	public void navigateTambahNotaris() {
-		try {
-			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
-			facesUtil.redirect("/pages/notary/notaryEdit.faces");
-		} catch (Exception e) {
-			addErrMessage("Operation Failed : " + e.getMessage());
-		}
+	public String navigateTambahNotaris() {
+		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+		return navigateEdit;
 	}
 
 	public void navigatePerpanjangan() {

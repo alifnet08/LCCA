@@ -158,6 +158,28 @@ public class NotaryServiceImpl implements NotaryService {
 		}
 	}
 
+	public String generateNoPengajuan(String prefix) {
+		Date now = new Date();
+		SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+		String bulan = monthFormat.format(now);
+		String tahun = yearFormat.format(now);
+		String numberPrefix = prefix + "." + bulan + "." + tahun + ".";
+		int nextSeq = 1;
+		try {
+			String lastNo = notaryDao.getLastNoPengajuan(numberPrefix + "%");
+			if (StringUtils.isNotBlank(lastNo) && lastNo.startsWith(numberPrefix)
+					&& lastNo.length() > numberPrefix.length()) {
+				String seqPart = lastNo.substring(numberPrefix.length());
+				nextSeq = Integer.parseInt(seqPart) + 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		DecimalFormat seqFormat = new DecimalFormat("0000");
+		return numberPrefix + seqFormat.format(nextSeq);
+	}
+
 	private void persistNotaryDocuments(Notary entity) {
 		if (entity == null || entity.getNotaryId() == null) {
 			return;

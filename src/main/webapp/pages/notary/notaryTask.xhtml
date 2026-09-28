@@ -55,11 +55,11 @@
 									<p:commandLink action="#{notaryTaskBean.openTask}" ajax="false"
 										styleClass="tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
-										<h:outputText value="#{vo.notaryId}" />
+										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
 								</p:column>
 								<p:column headerText="User Pengaju">
-									<h:outputLabel value="#{vo.createdBy}" />
+									<h:outputLabel value="#{vo.userPengaju}" />
 								</p:column>
 								<p:column headerText="Jenis Pengajuan">
 									<h:outputLabel value="#{vo.jenisPengajuan}" />
@@ -71,7 +71,7 @@
 									<h:outputLabel value="#{vo.notaryCategory.nameIn}" />
 								</p:column>
 								<p:column headerText="Tanggal Submit">
-									<h:outputLabel value="#{vo.creationDate}">
+									<h:outputLabel value="#{vo.tanggalPengajuan}">
 										<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
 									</h:outputLabel>
 								</p:column>
@@ -95,9 +95,9 @@
 			modal="true" resizable="false" width="700" appendTo="@form">
 			<div class="form-group">
 				<label>Nomor Pengajuan</label>
-			<p:inputText readonly="true" styleClass="form-control"
-				rendered="#{notaryTaskBean.selectedHistoryNotary != null}"
-				value="#{notaryTaskBean.selectedHistoryNotary.notaryId}" />
+				<p:inputText readonly="true" styleClass="form-control"
+					rendered="#{notaryTaskBean.selectedHistoryNotary != null}"
+					value="#{notaryTaskBean.selectedHistoryNotary.notaryNo}" />
 			</div>
 			<p:dataTable value="#{notaryTaskBean.historyList}" var="hist"
 				emptyMessage="#{msg.textNodata}">

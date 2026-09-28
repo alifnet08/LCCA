@@ -169,6 +169,22 @@
 									<h:outputLabel value="#{vo.note}" />
 								</p:column>
 
+								<p:column headerText="No Pengajuan">
+									<h:outputLabel value="#{vo.notaryNo}" />
+								</p:column>
+
+								<p:column headerText="User Pengaju">
+									<h:outputLabel value="#{vo.userPengaju}" />
+								</p:column>
+
+								<p:column headerText="Tanggal Pengajuan">
+									<h:outputLabel value="#{vo.tanggalPengajuan}" style="text-align:center" >
+										<f:convertDateTime
+											pattern="dd-MMM-yyyy" locale="en" >
+										</f:convertDateTime>
+									</h:outputLabel>
+								</p:column>
+
 								<p:column headerText="Jenis Pengajuan">
 									<h:outputLabel value="#{vo.jenisPengajuan}" />
 								</p:column>
@@ -227,7 +243,7 @@
 		<p:dialog id="dlgJenisPengajuan" widgetVar="dlgJenisPengajuan" header="Jenis Pengajuan"
 			modal="true" resizable="false" closable="true" width="400" appendTo="@form">
 			<div class="form-group">
-				<p:commandButton value="Tambah Notaris" process="@this"
+				<p:commandButton value="Tambah Notaris" process="@this" ajax="false"
 					action="#{notaryBean.navigateTambahNotaris}"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
@@ -235,14 +251,14 @@
 				<p:commandButton value="Perpanjangan" process="@this"
 					actionListener="#{notaryBean.openPerpanjangan}"
 					update="form:dlgPerpanjangan form:deletedMessage"
-					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
+					oncomplete="PF('dlgJenisPengajuan').hide();"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 			<div class="form-group">
 				<p:commandButton value="Update Dokumen Pendukung" process="@this"
 					actionListener="#{notaryBean.openUpdateDokumen}"
 					update="form:dlgPerpanjangan form:deletedMessage"
-					oncomplete="PF('dlgJenisPengajuan').hide();PF('dlgPerpanjangan').show();"
+					oncomplete="PF('dlgJenisPengajuan').hide();"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 		</p:dialog>
@@ -255,6 +271,8 @@
 				selectionMode="single" rowKey="#{vo.notaryId}"
 				emptyMessage="#{msg.textNodata}"
 				paginator="true" rows="10">
+				<p:ajax event="rowSelect" global="false" process="@this" />
+				<p:ajax event="rowUnselect" global="false" process="@this" />
 				<p:column selectionMode="single" style="width:40px;text-align:center" />
 				<p:column headerText="Nama Notaris">
 					<h:outputLabel value="#{vo.notaryName}" />
@@ -278,8 +296,7 @@
 					</li>
 					<li>
 						<p:commandButton value="Add" action="#{notaryBean.navigatePerpanjangan}"
-							ajax="true" process="@this form:tablePerpanjangan"
-							update="form:deletedMessage"
+							ajax="false" process="@this form:tablePerpanjangan"
 							styleClass="btn btn-success tl-label" />
 					</li>
 				</ul>

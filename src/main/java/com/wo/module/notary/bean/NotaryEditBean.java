@@ -96,6 +96,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		initList();
 		checkNewOrEdit();
 		fileUtil = FileUtil.getInstance();
+		if (StringUtils.isBlank(standardAttachmentSize)) {
+			standardAttachmentSize = "10485760";
+		}
 	}
 	
 	public void initList(){
@@ -275,6 +278,22 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
 				} else if (isResubmitRevisi) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
+				}
+
+				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen) {
+					String login = facesUtil.retrieveUserLogin();
+					notary.setUserPengaju(login);
+					notary.setTanggalPengajuan(new Timestamp(new Date().getTime()));
+					String prefix = NotaryConstants.PREFIX_NO_PENGAJUAN_BARU;
+					if (pengajuanPerpanjangan) {
+						prefix = NotaryConstants.PREFIX_NO_PENGAJUAN_PERPANJANGAN;
+					} else if (pengajuanUpdateDokumen) {
+						prefix = NotaryConstants.PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN;
+					}
+					notary.setNotaryNo(notaryService.generateNoPengajuan(prefix));
+				} else if (isResubmitRevisi) {
+					notary.setUserPengaju(facesUtil.retrieveUserLogin());
+					notary.setTanggalPengajuan(new Timestamp(new Date().getTime()));
 				}
 
 				prepareNotaryDocuments();

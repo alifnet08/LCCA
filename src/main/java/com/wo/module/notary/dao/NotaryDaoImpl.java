@@ -132,7 +132,8 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("		   ct.AREA, ct.NOTARY_NAME, ct.ADDRESS, ct.AREA_CODE, ct.PHONE_NO, ct.FAX_NO, ");
 		sb.append("        ct.EMAIL, ct.MOBILE_NO, ct.WORK_AREA, ct.NOTE, ct.CREATED_BY, ct.CREATION_DATE, ");
 		sb.append("        ct.LAST_UPDATE_BY, ct.LAST_UPDATE_DATE, ct.ENABLED_FLAG, ");
-		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS, ct.JENIS_PENGAJUAN ");
+		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS, ct.JENIS_PENGAJUAN, ");
+		sb.append("        ct.NO_PENGAJUAN, ct.USER_PENGAJU, ct.TANGGAL_PENGAJUAN ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("  WHERE 1=1 ");
@@ -184,6 +185,11 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					data.setTanggalBerakhirPks((Date) obj[20]);
 				}
 				data.setJenisPengajuan(obj[21] !=null?(String)obj[21]:null);
+				data.setNotaryNo(obj[22] !=null?(String)obj[22]:null);
+				data.setUserPengaju(obj[23] !=null?(String)obj[23]:null);
+				if (obj[24] != null) {
+					data.setTanggalPengajuan((Date) obj[24]);
+				}
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);
 				//data = findById(notaryId);
@@ -198,6 +204,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		return vo;
 	}
 
-	
+	@Override
+	public String getLastNoPengajuan(String prefixLike) throws Exception {
+		Query query = getSession().createSQLQuery(
+				"SELECT MAX(ct.NO_PENGAJUAN) FROM WO_MST_NOTARY ct WHERE ct.NO_PENGAJUAN LIKE :prefixLike ");
+		query.setParameter("prefixLike", prefixLike);
+		Object result = query.getSingleResult();
+		return result != null ? result.toString() : null;
+	}
 
 }

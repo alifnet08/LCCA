@@ -31,6 +31,29 @@
 				<h:panelGroup layout="block" style="#{notaryTaskEditBean.showLampiranTab ? 'display:none' : ''}">
 					<div class="col-lg-12">
 						<div class="form-group">
+							<label>No Pengajuan</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.notaryNo}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>User Pengaju</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.userPengaju}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label>Tanggal Pengajuan</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.tanggalPengajuan}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
 							<label>Jenis Pengajuan</label>
 							<p:inputText readonly="true" styleClass="form-control"
 								value="#{notaryTaskEditBean.notary.jenisPengajuan}" />

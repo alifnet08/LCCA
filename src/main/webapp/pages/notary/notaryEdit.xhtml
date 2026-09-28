@@ -200,6 +200,35 @@
 					
 					<div class="col-lg-12">
 						<div class="form-group">
+							<label class="tl-label" tl="noPengajuan"><p:outputLabel
+									value="No Pengajuan" for="noPengajuan" /></label>
+							<p:inputText id="noPengajuan" styleClass="form-control" readonly="true"
+							value="#{notaryEditBean.notary.notaryNo}" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="userPengaju"><p:outputLabel
+									value="User Pengaju" for="userPengaju" /></label>
+							<p:inputText id="userPengaju" styleClass="form-control" readonly="true"
+							value="#{notaryEditBean.notary.userPengaju}" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label class="tl-label" tl="tanggalPengajuan"><p:outputLabel
+									value="Tanggal Pengajuan" for="tanggalPengajuan" /></label>
+							<p:inputText id="tanggalPengajuan" styleClass="form-control" readonly="true"
+							value="#{notaryEditBean.notary.tanggalPengajuan}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+							</p:inputText>
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
 							<label class="tl-label" tl="jenisPengajuan"><p:outputLabel
 									value="Jenis Pengajuan" for="jenisPengajuan" /></label>
 							<p:inputText id="jenisPengajuan" styleClass="form-control" readonly="true"
