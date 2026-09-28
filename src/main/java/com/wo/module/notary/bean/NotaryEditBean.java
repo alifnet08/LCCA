@@ -145,6 +145,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		notary = new Notary();
 		ParameterDetail pd = new ParameterDetail();
 		notary.setNotaryCategory(pd);
+		notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
 		lastSequenceOfDtl = 0;
 		actionMode = Constants.ACTION_ADD;
 		uploadFiles = new ArrayList<UploadedFileWO>();
@@ -238,6 +239,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				boolean isNewPengajuan = notary.getNotaryId() == null;
 				if (isNewPengajuan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
+					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
 				}
 
 				prepareNotaryDocuments();

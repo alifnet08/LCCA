@@ -27,6 +27,7 @@
 		<property name="workArea" column="WORK_AREA" type="string" />
 		<property name="note" column="NOTE" type="string" />
 		<property name="status" column="STATUS" type="string" />
+		<property name="jenisPengajuan" column="JENIS_PENGAJUAN" type="string" />
 		<property name="tanggalPensiun" column="TANGGAL_PENSIUN" type="date" />
 		<property name="tanggalBerakhirPks" column="TANGGAL_BERAKHIR_PKS" type="date" />
 		

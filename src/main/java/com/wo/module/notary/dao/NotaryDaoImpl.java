@@ -126,7 +126,7 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("		   ct.AREA, ct.NOTARY_NAME, ct.ADDRESS, ct.AREA_CODE, ct.PHONE_NO, ct.FAX_NO, ");
 		sb.append("        ct.EMAIL, ct.MOBILE_NO, ct.WORK_AREA, ct.NOTE, ct.CREATED_BY, ct.CREATION_DATE, ");
 		sb.append("        ct.LAST_UPDATE_BY, ct.LAST_UPDATE_DATE, ct.ENABLED_FLAG, ");
-		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS ");
+		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS, ct.JENIS_PENGAJUAN ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("  WHERE 1=1 ");
@@ -177,6 +177,7 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				if (obj[20] != null) {
 					data.setTanggalBerakhirPks((Date) obj[20]);
 				}
+				data.setJenisPengajuan(obj[21] !=null?(String)obj[21]:null);
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);
 				//data = findById(notaryId);

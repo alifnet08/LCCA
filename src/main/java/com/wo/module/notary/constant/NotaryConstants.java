@@ -34,6 +34,7 @@ public abstract class NotaryConstants {
 	
 	public final static String STATUS_WAITING_APPROVAL_CDU_CHECKER = "waiting approval CDU Checker";
 	public final static String RESPONSIBILITY_CDU_CHECKER = "Role CDU Checker";
+	public final static String JENIS_PENGAJUAN_NOTARIS_BARU = "Notaris Baru";
 
 	public final static String[] NOTARY_DOCUMENT_TYPES = {
 			"Surat Permohonan Rekanan Notaris",

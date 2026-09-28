@@ -200,6 +200,15 @@
 					
 					<div class="col-lg-12">
 						<div class="form-group">
+							<label class="tl-label" tl="jenisPengajuan"><p:outputLabel
+									value="Jenis Pengajuan" for="jenisPengajuan" /></label>
+							<p:inputText id="jenisPengajuan" styleClass="form-control" readonly="true"
+							value="#{notaryEditBean.notary.jenisPengajuan}" />
+						</div>
+					</div>
+					
+					<div class="col-lg-12">
+						<div class="form-group">
 							<label class="tl-label" tl="status"><p:outputLabel
 									value="Status" for="status" /></label>
 							<p:inputText id="status" styleClass="form-control" readonly="true"
