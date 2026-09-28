@@ -7,6 +7,7 @@ package com.wo.module.notary.dao;
 import java.sql.Timestamp;
 //import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -124,7 +125,8 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append(" SELECT ct.NOTARY_ID, ct.NOTARY_CATEGORY, dtl.NAME_IN NOTARY_CATEGORY_NAME, ");
 		sb.append("		   ct.AREA, ct.NOTARY_NAME, ct.ADDRESS, ct.AREA_CODE, ct.PHONE_NO, ct.FAX_NO, ");
 		sb.append("        ct.EMAIL, ct.MOBILE_NO, ct.WORK_AREA, ct.NOTE, ct.CREATED_BY, ct.CREATION_DATE, ");
-		sb.append("        ct.LAST_UPDATE_BY, ct.LAST_UPDATE_DATE, ct.ENABLED_FLAG ");
+		sb.append("        ct.LAST_UPDATE_BY, ct.LAST_UPDATE_DATE, ct.ENABLED_FLAG, ");
+		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("  WHERE 1=1 ");
@@ -168,6 +170,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				data.setLastUpdateBy(obj[15] !=null?(String)obj[15]:null);
 				data.setLastUpdateDate(obj[16] !=null?(Timestamp)obj[16]:null);
 				data.setEnabledFlag(obj[17] !=null?(String)obj[17]:null);
+				data.setStatus(obj[18] !=null?(String)obj[18]:null);
+				if (obj[19] != null) {
+					data.setTanggalPensiun((Date) obj[19]);
+				}
+				if (obj[20] != null) {
+					data.setTanggalBerakhirPks((Date) obj[20]);
+				}
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);
 				//data = findById(notaryId);

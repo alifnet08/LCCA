@@ -5174,6 +5174,14 @@
 			<value>#{parameterDetailService}</value>
 		</managed-property>
 		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
 			<property-name>logAccessService</property-name>
 			<value>#{logAccessService}</value>
 		</managed-property>

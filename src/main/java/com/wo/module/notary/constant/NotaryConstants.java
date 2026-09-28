@@ -32,5 +32,29 @@ public abstract class NotaryConstants {
 	
 	public final static String EMPTY = "";
 	
+	public final static String STATUS_WAITING_APPROVAL_CDU_CHECKER = "waiting approval CDU Checker";
+	public final static String RESPONSIBILITY_CDU_CHECKER = "Role CDU Checker";
+
+	public final static String[] NOTARY_DOCUMENT_TYPES = {
+			"Surat Permohonan Rekanan Notaris",
+			"SK Pengangkatan Notaris",
+			"Berita acara sumpah jabatan Notaris",
+			"SK Pengangkatan PPAT",
+			"Berita acara sumpah jabatan PPAT",
+			"Bukti Kerjasama dengan Bank",
+			"Surat Pernyataan pernyataan tidak sedang tersangkut pelanggaran kode etik Notaris/PPAT (draft MBI)",
+			"Curriculum Vitae (CV)",
+			"Bukti kepemilikan kantor",
+			"Foto Kantor (tampak depan, dalam dan filling cabinet)",
+			"Lampiran tarif biaya Notaris",
+			"Surat keterangan dari ikatan Notaris dan PPAT memiliki rekam jejak yang baik",
+			"GoAML",
+			"Form AP Assessment Notaris/PPAT",
+			"Bukti kepemilikan rekening di Maybank Indonesia",
+			"Hasil screening melalui sistem SironKYC Tidak terdapat catatan negative atau lolos screening melalui system Pandawa",
+			"SLIK 1 bulan terakhir sebelum pengajuan dengan hasil kolektibilitas lancar",
+			"Formulir Third Party Assessment Checklist (aspek PDP) yang lengkap diisi secara benar dan telah ditandatangani notaris",
+			"Lampiran Kesepakatan Kerjasama Ketentuan Pelindungan Data Pribadi (PDP) antara Pengendali Data Pribadi dengan Prosesor Data Pribadi"
+	};
 	
 }

@@ -57,7 +57,9 @@ import com.wo.module.common.util.FileUtil;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.dao.NotaryDao;
+import com.wo.module.notary.dao.NotaryDocumentDao;
 import com.wo.module.notary.model.Notary;
+import com.wo.module.notary.model.NotaryDocument;
 import com.wo.module.notary.vo.NotaryVo;
 import com.wo.module.parameter.dao.ParameterDetailDao;
 
@@ -71,6 +73,10 @@ public class NotaryServiceImpl implements NotaryService {
     @Autowired
     @Qualifier("parameterDetailDao")
     private ParameterDetailDao parameterDetailDao;
+
+    @Autowired
+    @Qualifier("notaryDocumentDao")
+    private NotaryDocumentDao notaryDocumentDao;
     
     
 	public NotaryDao getNotaryDao() {
@@ -98,10 +104,12 @@ public class NotaryServiceImpl implements NotaryService {
 	
 	public void save(Notary entity) {
 		notaryDao.save(entity);
+		persistNotaryDocuments(entity);
 	}
 	
 	public void update(Notary entity) {
 		notaryDao.update(entity);
+		persistNotaryDocuments(entity);
 	}
 	
 	public void delete(Notary entity) {
@@ -109,8 +117,63 @@ public class NotaryServiceImpl implements NotaryService {
 	}
   
     public Notary findById(Long id) {
-    	return notaryDao.getById(id);
+    	Notary entity = notaryDao.getById(id);
+    	if (entity != null) {
+    		try {
+    			entity.setNotaryDocuments(notaryDocumentDao.getNotaryDocumentByNotaryId(id));
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	return entity;
     }
+
+	private void persistNotaryDocuments(Notary entity) {
+		if (entity == null || entity.getNotaryId() == null) {
+			return;
+		}
+		try {
+			List<NotaryDocument> existingList = notaryDocumentDao.getNotaryDocumentByNotaryId(entity.getNotaryId());
+			List<NotaryDocument> newList = entity.getNotaryDocuments();
+			if (existingList != null) {
+				for (int i = 0; i < existingList.size(); i++) {
+					NotaryDocument existing = existingList.get(i);
+					boolean stillActive = false;
+					if (newList != null) {
+						for (int j = 0; j < newList.size(); j++) {
+							NotaryDocument incoming = newList.get(j);
+							if (incoming != null && StringUtils.equals(existing.getAttachmentType(), incoming.getAttachmentType())
+									&& StringUtils.isNotBlank(incoming.getFileId())) {
+								stillActive = true;
+								break;
+							}
+						}
+					}
+					if (!stillActive) {
+						existing.setEnabledFlag("N");
+						existing.setDelId(new Long(1));
+						notaryDocumentDao.update(existing);
+					}
+				}
+			}
+			if (newList != null) {
+				for (int i = 0; i < newList.size(); i++) {
+					NotaryDocument doc = newList.get(i);
+					if (doc == null || StringUtils.isBlank(doc.getFileId())) {
+						continue;
+					}
+					doc.setNotary(entity);
+					if (doc.getNotaryDocumentId() == null) {
+						notaryDocumentDao.save(doc);
+					} else {
+						notaryDocumentDao.update(doc);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override

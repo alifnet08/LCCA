@@ -26,6 +26,9 @@
 		<property name="mobileNo" column="MOBILE_NO" type="string" />
 		<property name="workArea" column="WORK_AREA" type="string" />
 		<property name="note" column="NOTE" type="string" />
+		<property name="status" column="STATUS" type="string" />
+		<property name="tanggalPensiun" column="TANGGAL_PENSIUN" type="date" />
+		<property name="tanggalBerakhirPks" column="TANGGAL_BERAKHIR_PKS" type="date" />
 		
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />
@@ -34,8 +37,12 @@
 			type="timestamp" />
 		<property name="lastUpdateBy" column="LAST_UPDATE_BY" type="string" />
 		<property name="delId" column="DEL_ID" type="long" />
-		
-		
+
+		<bag name="notaryDocuments" inverse="true" order-by="notary_document_id asc">
+			<key column="notary_id" />
+			<one-to-many not-found="ignore"
+				class="com.wo.module.notary.model.NotaryDocument" />
+		</bag>
 
 	</class>
 </hibernate-mapping>

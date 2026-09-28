@@ -24,11 +24,16 @@ import com.wo.module.common.util.FileUtil;
 import com.wo.module.common.utility.CallApiManager;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.Notary;
+import com.wo.module.notary.model.NotaryDocument;
 import com.wo.module.notary.service.NotaryService;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.outgoingLetter.constant.OutgoingLetterConstants;
 import com.wo.module.parameter.model.ParameterDetail;
 import com.wo.module.parameter.model.ParameterHeader;
+import com.wo.module.responsibility.model.Responsibility;
+import com.wo.module.responsibility.service.ResponsibilityService;
+import com.wo.module.user.model.User;
+import com.wo.module.user.service.UserService;
 
 public class NotaryEditBean extends CommonBean implements Serializable {
 
@@ -47,6 +52,10 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	private NotaryService notaryService;
 
+	private UserService userService;
+
+	private ResponsibilityService responsibilityService;
+
 	public FacesUtil facesUtil;
 	
 	private Integer lastSequenceOfDtl;
@@ -61,6 +70,10 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	private FileUtil fileUtil;
 
 	private boolean checkAll;
+
+	private boolean showLampiranTab;
+
+	private List<NotaryDocument> lampiranList;
 
 	private String navigateSeanotaryh = NotaryConstants.NAVIGATE_SEARCH;
 
@@ -136,6 +149,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		actionMode = Constants.ACTION_ADD;
 		uploadFiles = new ArrayList<UploadedFileWO>();
 		facesUtil.setSessionAttribute("token", null);
+		initLampiranList();
 	}
 
 	private void handleEdit(String editId) {
@@ -150,6 +164,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		
 		
 		lastSequenceOfDtl = 0;
+		initLampiranList();
 		
 		
 	}
@@ -187,6 +202,26 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
+		if (StringUtils.isEmpty(notary.getEmail())) {
+			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryEmail") 
+					+ facesUtil.retrieveMessage("validateRequired"));
+			flag = true;
+		}
+		if (StringUtils.isEmpty(notary.getMobileNo())) {
+			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryHPNo") 
+					+ facesUtil.retrieveMessage("validateRequired"));
+			flag = true;
+		}
+		if (notary.getTanggalPensiun() == null) {
+			facesUtil.addErrMessage("Tanggal Pensiun"
+					+ facesUtil.retrieveMessage("validateRequired"));
+			flag = true;
+		}
+		if (notary.getTanggalBerakhirPks() == null) {
+			facesUtil.addErrMessage("Tanggal Berakhir Kerjasama"
+					+ facesUtil.retrieveMessage("validateRequired"));
+			flag = true;
+		}
 
 
 		return flag;
@@ -199,6 +234,13 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				
 				ParameterDetail pd = parameterDetailService.getParameterDetailByParamDtlCode(notary.getNotaryCategory().getParameterDtlCode());
 				notary.setNotaryCategory(pd);
+
+				boolean isNewPengajuan = notary.getNotaryId() == null;
+				if (isNewPengajuan) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
+				}
+
+				prepareNotaryDocuments();
 
 				if (notary.getNotaryId() != null) {
 					notary.setLastUpdateBy(facesUtil.retrieveUserLogin());
@@ -215,6 +257,17 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					notaryService.save(notary);
 				}
 
+				if (isNewPengajuan) {
+					sendNotificationToCduChecker();
+				}
+
+				if (deleteFiles != null) {
+					for (int i = 0; i < deleteFiles.size(); i++) {
+						UploadedFileWO uf = (UploadedFileWO) deleteFiles.get(i);
+						CallApiManager.deleteFile(uf.getFileId(), parameterDetailService, fileUtil);
+					}
+				}
+
 				facesUtil.redirect("/pages/notary/notary.faces");
 			}
 
@@ -223,7 +276,151 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		}
 
 	}
+
+	private void sendNotificationToCduChecker() {
+		try {
+			if (userService == null || responsibilityService == null || parameterDetailService == null) {
+				return;
+			}
+			List<Responsibility> responsibilityList = responsibilityService.getAllResponsibility();
+			Long cduCheckerResponsibilityId = null;
+			if (responsibilityList != null) {
+				for (Responsibility responsibility : responsibilityList) {
+					if (responsibility != null
+							&& StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_CHECKER,
+									responsibility.getName())) {
+						cduCheckerResponsibilityId = responsibility.getResponsibilityId();
+						break;
+					}
+				}
+			}
+			if (cduCheckerResponsibilityId == null) {
+				return;
+			}
+			List<User> userList = userService.getAllUser();
+			StringBuilder to = new StringBuilder();
+			if (userList != null) {
+				for (User user : userList) {
+					if (user == null || user.getResponsibilityId() == null
+							|| StringUtils.isBlank(user.getEmail())) {
+						continue;
+					}
+					if (!cduCheckerResponsibilityId.equals(user.getResponsibilityId())) {
+						continue;
+					}
+					if (StringUtils.isNotBlank(user.getEnabledFlag())
+							&& !StringUtils.equalsIgnoreCase(Constants.CONSTANT_YES, user.getEnabledFlag())) {
+						continue;
+					}
+					if (to.length() > 0) {
+						to.append(";");
+					}
+					to.append(user.getEmail());
+				}
+			}
+			if (to.length() == 0) {
+				return;
+			}
+			String subject = "Pengajuan Penambahan Notaris";
+			String content = "Pengajuan Penambahan Notaris Anda telah berhasil disubmit.";
+			if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
+				content = content + " Nama Notaris: " + notary.getNotaryName();
+			}
+			CallApiManager.sendEmailAPI(to.toString(), "", subject, content, "NOTARY", "true",
+					parameterDetailService);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
+	private void initLampiranList() {
+		lampiranList = new ArrayList<NotaryDocument>();
+		for (int i = 0; i < NotaryConstants.NOTARY_DOCUMENT_TYPES.length; i++) {
+			String documentType = NotaryConstants.NOTARY_DOCUMENT_TYPES[i];
+			NotaryDocument slot = null;
+			if (notary != null && notary.getNotaryDocuments() != null) {
+				for (int j = 0; j < notary.getNotaryDocuments().size(); j++) {
+					NotaryDocument existing = notary.getNotaryDocuments().get(j);
+					if (existing != null && StringUtils.equals(documentType, existing.getAttachmentType())) {
+						slot = existing;
+						break;
+					}
+				}
+			}
+			if (slot == null) {
+				slot = new NotaryDocument();
+				slot.setAttachmentType(documentType);
+			}
+			lampiranList.add(slot);
+		}
+	}
+
+	private void prepareNotaryDocuments() {
+		if (notary.getNotaryDocuments() == null) {
+			notary.setNotaryDocuments(new ArrayList<NotaryDocument>());
+		}
+		notary.getNotaryDocuments().clear();
+		if (lampiranList != null) {
+			for (int i = 0; i < lampiranList.size(); i++) {
+				NotaryDocument doc = lampiranList.get(i);
+				if (doc == null || StringUtils.isBlank(doc.getFileId())) {
+					continue;
+				}
+				doc.setNotary(notary);
+				if (doc.getNotaryDocumentId() == null) {
+					doc.setCreatedBy(facesUtil.retrieveUserLogin());
+					doc.setCreationDate(new Timestamp(new Date().getTime()));
+				} else {
+					doc.setLastUpdateBy(facesUtil.retrieveUserLogin());
+					doc.setLastUpdateDate(new Timestamp(new Date().getTime()));
+				}
+				doc.setDelId(new Long(0));
+				doc.setEnabledFlag(Constants.CONSTANT_YES);
+				notary.getNotaryDocuments().add(doc);
+			}
+		}
+	}
+
+	public void handleLampiranFileUpload(FileUploadEvent event) {
+		try {
+			String attachmentType = (String) event.getComponent().getAttributes().get("attachmentType");
+			String fileId = CallApiManager.callUploadAPI(event.getFile(), Constants.ARTICLE, parameterDetailService,
+					false, fileUtil);
+			if (lampiranList != null) {
+				for (int i = 0; i < lampiranList.size(); i++) {
+					NotaryDocument doc = lampiranList.get(i);
+					if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
+						doc.setFileId(fileId);
+						doc.setAttachmentFile(event.getFile().getFileName());
+						doc.setFileSize(event.getFile().getSize());
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			facesUtil.addErrMessage(e.getMessage());
+		}
+	}
+
+	public void deleteLampiranAttachment(String fileId, String attachmentType) throws Exception {
+		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
+		if (StringUtils.isNotBlank(fileId)) {
+			deleteFiles.add(new UploadedFileWO(fileId, null, null, null));
+		}
+		if (lampiranList != null) {
+			for (int i = 0; i < lampiranList.size(); i++) {
+				NotaryDocument doc = lampiranList.get(i);
+				if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
+					doc.setFileId(null);
+					doc.setAttachmentFile(null);
+					doc.setFileSize(null);
+					break;
+				}
+			}
+		}
+	}
+
 	public void handleFileUpload (FileUploadEvent event) {
 		try {
 			uploadFiles = uploadFiles == null ? new ArrayList<UploadedFileWO>() : uploadFiles;
@@ -270,6 +467,22 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void setNotaryService(NotaryService notaryService) {
 		this.notaryService = notaryService;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public ResponsibilityService getResponsibilityService() {
+		return responsibilityService;
+	}
+
+	public void setResponsibilityService(ResponsibilityService responsibilityService) {
+		this.responsibilityService = responsibilityService;
 	}
 
 	public String getNavigateSeanotaryh() {
@@ -402,7 +615,29 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	public void setKeywords(List<String> keywords) {
 		this.keywords = keywords;
 	}
-	
-	
+
+	public boolean isShowLampiranTab() {
+		return showLampiranTab;
+	}
+
+	public void setShowLampiranTab(boolean showLampiranTab) {
+		this.showLampiranTab = showLampiranTab;
+	}
+
+	public void openFormTab() {
+		showLampiranTab = false;
+	}
+
+	public void openLampiranTab() {
+		showLampiranTab = true;
+	}
+
+	public List<NotaryDocument> getLampiranList() {
+		return lampiranList;
+	}
+
+	public void setLampiranList(List<NotaryDocument> lampiranList) {
+		this.lampiranList = lampiranList;
+	}
 
 }

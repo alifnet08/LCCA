@@ -12,7 +12,7 @@
 	</ui:define>
 	<ui:define name="buttonAdd">
 		<ul class="action list-inline">
-			<li><h:commandLink action="#{notaryBean.getNavigateEdit()}" style="display:none"
+			<li><h:commandLink action="#{notaryBean.getNavigateEdit()}"
 					type="submit" process="@this" ajax="false" styleClass="tl-label">
 					<i class="fa fa-fw fa-plus" aria-hidden="true"></i>
 					<h:outputText value="#{msg.buttonAdd}" />
@@ -167,6 +167,26 @@
 								
 								<p:column headerText="#{msg.formNotaryNote}">
 									<h:outputLabel value="#{vo.note}" />
+								</p:column>
+
+								<p:column headerText="Status">
+									<h:outputLabel value="#{vo.status}" />
+								</p:column>
+
+								<p:column headerText="Tanggal Pensiun">
+									<h:outputLabel value="#{vo.tanggalPensiun}" style="text-align:center" >
+										<f:convertDateTime
+											pattern="dd-MMM-yyyy" locale="en" >
+										</f:convertDateTime>
+									</h:outputLabel>
+								</p:column>
+
+								<p:column headerText="Tanggal Berakhir Kerjasama">
+									<h:outputLabel value="#{vo.tanggalBerakhirPks}" style="text-align:center" >
+										<f:convertDateTime
+											pattern="dd-MMM-yyyy" locale="en" >
+										</f:convertDateTime>
+									</h:outputLabel>
 								</p:column>
 								
 								<p:column headerText="#{msg.formNotaryCreatedDate}">

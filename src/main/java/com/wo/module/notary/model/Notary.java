@@ -1,6 +1,9 @@
 package com.wo.module.notary.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
 import com.wo.module.parameter.model.ParameterDetail;
@@ -22,6 +25,10 @@ public class Notary extends BaseEntity implements Serializable {
 	private String workArea;
 	private String note;
 	private String notaryNo;
+	private String status;
+	private Date tanggalPensiun;
+	private Date tanggalBerakhirPks;
+	private List<NotaryDocument> notaryDocuments = new ArrayList<NotaryDocument>();
 	
 	public Long getNotaryId() {
 		return notaryId;
@@ -129,6 +136,38 @@ public class Notary extends BaseEntity implements Serializable {
 
 	public void setNotaryNo(String notaryNo) {
 		this.notaryNo = notaryNo;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getTanggalPensiun() {
+		return tanggalPensiun;
+	}
+
+	public void setTanggalPensiun(Date tanggalPensiun) {
+		this.tanggalPensiun = tanggalPensiun;
+	}
+
+	public Date getTanggalBerakhirPks() {
+		return tanggalBerakhirPks;
+	}
+
+	public void setTanggalBerakhirPks(Date tanggalBerakhirPks) {
+		this.tanggalBerakhirPks = tanggalBerakhirPks;
+	}
+
+	public List<NotaryDocument> getNotaryDocuments() {
+		return notaryDocuments;
+	}
+
+	public void setNotaryDocuments(List<NotaryDocument> notaryDocuments) {
+		this.notaryDocuments = notaryDocuments;
 	}
 
 }
