@@ -25,6 +25,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
@@ -283,8 +284,6 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			e.printStackTrace();
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}
-		PrimeFaces.current().executeScript(
-				"setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 250);");
 	}
 
 	public void openUpdateDokumen() {
@@ -296,13 +295,17 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			e.printStackTrace();
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}
-		PrimeFaces.current().executeScript(
-				"setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 250);");
+	}
+
+	public void onPickerRowSelect(SelectEvent event) {
+		if (event != null && event.getObject() instanceof Notary) {
+			selectedNotary = (Notary) event.getObject();
+		}
 	}
 
 	public String navigateTambahNotaris() {
 		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
-		return navigateEdit;
+		return navigateEdit + "?faces-redirect=true";
 	}
 
 	public void navigatePerpanjangan() {

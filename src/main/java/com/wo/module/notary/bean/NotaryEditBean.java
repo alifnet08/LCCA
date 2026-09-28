@@ -125,13 +125,18 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	
 	private void checkNewOrEdit() {
+		isViewOnly = false;
+		pengajuanPerpanjangan = false;
+		pengajuanUpdateDokumen = false;
+		if (notary == null) {
+			notary = new Notary();
+			notary.setNotaryCategory(new ParameterDetail());
+		}
 		try {
-			String editId = facesUtil.retrieveRequestParam("id");String token = facesUtil.retrieveRequestParam("token"); 
+			String editId = facesUtil.retrieveRequestParam("id");
+			String token = facesUtil.retrieveRequestParam("token"); 
 			
 			String viewId = facesUtil.retrieveRequestParam("viewId");
-			isViewOnly = false;
-			pengajuanPerpanjangan = false;
-			pengajuanUpdateDokumen = false;
 			String jenisPengajuanParam = facesUtil.retrieveRequestParam("jenisPengajuan");
 			if (StringUtils.isBlank(jenisPengajuanParam) && facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN) != null) {
 				jenisPengajuanParam = String.valueOf(facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN));
@@ -160,8 +165,14 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 							NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
 				}
 			}
+			if (notary != null && notary.getNotaryCategory() == null) {
+				notary.setNotaryCategory(new ParameterDetail());
+			}
 		} catch (Exception e) {
-
+			logger.error("Failed to initialize notary edit form", e);
+			if (notary == null) {
+				this.handleNew();
+			}
 		}
 
 	}

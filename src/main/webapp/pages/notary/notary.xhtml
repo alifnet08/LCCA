@@ -21,6 +21,13 @@
 	</ui:define>
 
 
+	<ui:define name="ajaxLoading">
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide();"
+			oncomplete="PF('statusDialog').hide();"
+			onerror="PF('statusDialog').hide();" />
+	</ui:define>
+
 	<ui:define name="content">
 		 <div class="box box-solid">
 			<div class="box-body">
@@ -243,22 +250,24 @@
 		<p:dialog id="dlgJenisPengajuan" widgetVar="dlgJenisPengajuan" header="Jenis Pengajuan"
 			modal="true" resizable="false" closable="true" width="400" appendTo="@form">
 			<div class="form-group">
-				<p:commandButton value="Tambah Notaris" process="@this" ajax="false"
-					action="#{notaryBean.navigateTambahNotaris}"
+				<p:commandLink value="Tambah Notaris" process="@this" ajax="false"
+					immediate="true" action="#{notaryBean.navigateTambahNotaris}"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 			<div class="form-group">
-				<p:commandButton value="Perpanjangan" process="@this"
+				<p:commandButton value="Perpanjangan" process="@this" global="false"
 					actionListener="#{notaryBean.openPerpanjangan}"
 					update="form:dlgPerpanjangan form:deletedMessage"
-					oncomplete="PF('dlgJenisPengajuan').hide();"
+					onclick="PF('dlgJenisPengajuan').hide(); PF('statusDialog').hide();"
+					oncomplete="PF('statusDialog').hide(); setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 50);"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 			<div class="form-group">
-				<p:commandButton value="Update Dokumen Pendukung" process="@this"
+				<p:commandButton value="Update Dokumen Pendukung" process="@this" global="false"
 					actionListener="#{notaryBean.openUpdateDokumen}"
 					update="form:dlgPerpanjangan form:deletedMessage"
-					oncomplete="PF('dlgJenisPengajuan').hide();"
+					onclick="PF('dlgJenisPengajuan').hide(); PF('statusDialog').hide();"
+					oncomplete="PF('statusDialog').hide(); setTimeout(function(){ PF('dlgPerpanjangan').show(); }, 50);"
 					styleClass="btn btn-default btn-block tl-label" />
 			</div>
 		</p:dialog>
@@ -271,14 +280,17 @@
 				selectionMode="single" rowKey="#{vo.notaryId}"
 				emptyMessage="#{msg.textNodata}"
 				paginator="true" rows="10">
-				<p:ajax event="rowSelect" global="false" process="@this" />
-				<p:ajax event="rowUnselect" global="false" process="@this" />
+				<p:ajax event="rowSelect" global="false"
+					listener="#{notaryBean.onPickerRowSelect}"
+					process="form:tablePerpanjangan" />
+				<p:ajax event="rowUnselect" global="false"
+					process="form:tablePerpanjangan" />
 				<p:column selectionMode="single" style="width:40px;text-align:center" />
 				<p:column headerText="Nama Notaris">
 					<h:outputLabel value="#{vo.notaryName}" />
 				</p:column>
 				<p:column headerText="Kategori">
-					<h:outputLabel value="#{vo.notaryCategory.nameIn}" />
+					<h:outputLabel value="#{vo.notaryCategory != null ? vo.notaryCategory.nameIn : ''}" />
 				</p:column>
 				<p:column headerText="Area">
 					<h:outputLabel value="#{vo.area}" />
