@@ -295,11 +295,11 @@
 		    <version>1.6</version>
 		</dependency>
 		
-		<!-- Oracle Dependency -->
+		<!-- Oracle JDBC. oracle:ojdbc6:11.2.0.3 is not published on Maven Central. -->
 		<dependency>
-		    <groupId>oracle</groupId>
-		    <artifactId>ojdbc6</artifactId>
-		    <version>11.2.0.3</version>
+		    <groupId>com.oracle.database.jdbc</groupId>
+		    <artifactId>ojdbc8</artifactId>
+		    <version>19.3.0.0</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -328,12 +328,6 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
 			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.whiteopen.web</groupId>
-			<artifactId>gzip-util</artifactId>
-			<version>0.0.1</version>
 		</dependency>
 		
 		<dependency>
@@ -402,7 +396,6 @@
 		 <resources>
 		 	<resource>
 				<directory>src/main/java/</directory>
-				<targetPath></targetPath>
 				<includes>
 					<include>*.cfg.xml</include>
 				</includes>
@@ -416,7 +409,6 @@
 			</resource>
 			<resource>
 				<directory>src/main/java/</directory>
-				<targetPath></targetPath>
 				<includes>
 					<include>*.properties</include>
 					<include>*.xml</include>
@@ -431,7 +423,6 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources/</directory>
-				<targetPath></targetPath>
 				<includes>
 					<include>**/*.*</include>
 				</includes>

@@ -9,7 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.whiteopen.web.util.gzip.GZIPResponseWrapper;
 
 import org.hibernate.FlushMode;
 import org.hibernate.SessionFactory;
@@ -155,7 +158,7 @@ public class HibernateRequestFilter implements Filter {
             
           //Check Multipart Request [ERNEST]
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            //HttpServletResponse responseServlet = (HttpServletResponse) response;
+            HttpServletResponse responseServlet = (HttpServletResponse) response;
 			boolean isMultipartContent = ServletFileUpload.isMultipartContent(httpRequest);
             System.out.println("isMultipartContent:"+isMultipartContent);
             if (!isMultipartContent) {
