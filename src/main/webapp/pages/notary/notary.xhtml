@@ -279,7 +279,8 @@
 				selection="#{notaryBean.selectedNotary}"
 				selectionMode="single" rowKey="#{vo.notaryId}"
 				emptyMessage="#{msg.textNodata}"
-				paginator="true" rows="10">
+				paginator="true" rows="10"
+				paginatorAlwaysVisible="false">
 				<p:ajax event="rowSelect" global="false"
 					listener="#{notaryBean.onPickerRowSelect}"
 					process="form:tablePerpanjangan" />

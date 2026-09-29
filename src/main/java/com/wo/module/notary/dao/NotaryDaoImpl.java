@@ -23,6 +23,7 @@ import com.wo.module.common.util.MathUtil;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.Notary;
 import com.wo.module.parameter.model.ParameterDetail;
+import com.wo.module.parameter.model.ParameterHeader;
 
 /**
  *
@@ -136,6 +137,7 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("        ct.NO_PENGAJUAN, ct.USER_PENGAJU, ct.TANGGAL_PENGAJUAN ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
+		sb.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
 		sb.append("  WHERE 1=1 ");
 		sb.append("        AND ct.ENABLED_FLAG = 'Y' ");
 
@@ -143,8 +145,11 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append(" ORDER BY NOTARY_ID DESC ");
 		
 		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("notaryCategoryHeader", ParameterHeader.PARAM_HEAD_NOTARY_CATEGORY);
 		query.setFirstResult(first);
-        query.setMaxResults(pageSize);
+		if (pageSize > 0 && pageSize < Integer.MAX_VALUE) {
+			query.setMaxResults(pageSize);
+		}
 
 		this.getQuerySetValue(query, searchCriteria);
 
@@ -197,9 +202,6 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				vo.add(data);
 			}
 		}
-
-		query.setFirstResult(first);
-		query.setMaxResults(pageSize);
 
 		return vo;
 	}

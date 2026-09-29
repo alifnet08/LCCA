@@ -248,11 +248,15 @@
 				</h:panelGroup>
 				<h:panelGroup layout="block" style="#{notaryEditBean.showLampiranTab ? '' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiran" update="notaryLampiranList"></p:remoteCommand>
-					<ui:repeat value="#{notaryEditBean.lampiranList}" var="doc" varStatus="st">
-						<div class="col-lg-12">
+					<p:dataTable id="lampiranUploadTable" var="doc"
+						value="#{notaryEditBean.lampiranList}"
+						rowKey="#{doc.attachmentType}"
+						emptyMessage=""
+						paginator="false">
+						<p:column headerText="Lampiran">
 							<div class="form-group">
 								<label class="tl-label">
-									<h:outputText value="#{st.index + 1}. #{doc.attachmentType}" />
+									<h:outputText value="#{doc.attachmentType}" />
 								</label>
 								<p:fileUpload rendered="#{!notaryEditBean.pengajuanPerpanjangan}"
 									fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
@@ -263,8 +267,8 @@
 									<f:attribute name="attachmentType" value="#{doc.attachmentType}" />
 								</p:fileUpload>
 							</div>
-						</div>
-					</ui:repeat>
+						</p:column>
+					</p:dataTable>
 					<div class="col-lg-12">
 						<p:dataList value="#{notaryEditBean.lampiranList}" var="vo"
 							id="notaryLampiranList" emptyMessage="" rowIndexVar="index">

@@ -187,6 +187,9 @@ public class NotaryServiceImpl implements NotaryService {
 		try {
 			List<NotaryDocument> existingList = notaryDocumentDao.getNotaryDocumentByNotaryId(entity.getNotaryId());
 			List<NotaryDocument> newList = entity.getNotaryDocuments();
+			if (newList == null || newList.isEmpty()) {
+				return;
+			}
 			if (existingList != null) {
 				for (int i = 0; i < existingList.size(); i++) {
 					NotaryDocument existing = existingList.get(i);

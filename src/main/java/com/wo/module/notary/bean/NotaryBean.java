@@ -276,25 +276,48 @@ public class NotaryBean extends CommonBean  implements Serializable {
 
 
 	public void openPerpanjangan() {
-		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+		loadPickerNotaries(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+	}
+
+	public void openUpdateDokumen() {
+		loadPickerNotaries(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+	}
+
+	private void loadPickerNotaries(String jenisPengajuan) {
+		pickerJenisPengajuan = jenisPengajuan;
 		selectedNotary = null;
+		perpanjanganList = new ArrayList<Notary>();
 		try {
-			perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
+			List<Notary> rawList = notaryService.searchData(new ArrayList<SearchObject>(), 0, 5000, null, null);
+			perpanjanganList = uniqueNotariesById(rawList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}
 	}
 
-	public void openUpdateDokumen() {
-		pickerJenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
-		selectedNotary = null;
-		try {
-			perpanjanganList = notaryService.searchData(new ArrayList<SearchObject>(), 0, Integer.MAX_VALUE, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			addErrMessage("Operation Failed : " + e.getMessage());
+	private List<Notary> uniqueNotariesById(List<Notary> source) {
+		List<Notary> unique = new ArrayList<Notary>();
+		if (source == null) {
+			return unique;
 		}
+		for (int i = 0; i < source.size(); i++) {
+			Notary notary = source.get(i);
+			if (notary == null || notary.getNotaryId() == null) {
+				continue;
+			}
+			boolean exists = false;
+			for (int j = 0; j < unique.size(); j++) {
+				if (notary.getNotaryId().equals(unique.get(j).getNotaryId())) {
+					exists = true;
+					break;
+				}
+			}
+			if (!exists) {
+				unique.add(notary);
+			}
+		}
+		return unique;
 	}
 
 	public void onPickerRowSelect(SelectEvent event) {
@@ -304,8 +327,15 @@ public class NotaryBean extends CommonBean  implements Serializable {
 	}
 
 	public String navigateTambahNotaris() {
-		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
-		return navigateEdit + "?faces-redirect=true";
+		try {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+					NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+			facesUtil.redirect("/pages/notary/notaryEdit.faces");
+		} catch (Exception e) {
+			e.printStackTrace();
+			addErrMessage("Operation Failed : " + e.getMessage());
+		}
+		return null;
 	}
 
 	public void navigatePerpanjangan() {
@@ -320,7 +350,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			}
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, jenisPengajuan);
 			facesUtil.redirect("/pages/notary/notaryEdit.faces?id=" + selectedNotary.getNotaryId()
-					+ "&jenisPengajuan=" + jenisPengajuan.replace(" ", "%20"));
+					+ "&jenisPengajuan=" + java.net.URLEncoder.encode(jenisPengajuan, "UTF-8"));
 		} catch (Exception e) {
 			addErrMessage("Operation Failed : " + e.getMessage());
 		}

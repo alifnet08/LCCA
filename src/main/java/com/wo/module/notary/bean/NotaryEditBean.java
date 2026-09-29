@@ -73,7 +73,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	private boolean showLampiranTab;
 
-	private List<NotaryDocument> lampiranList;
+	private List<NotaryDocument> lampiranList = new ArrayList<NotaryDocument>();
 
 	private boolean pengajuanPerpanjangan;
 	private boolean pengajuanUpdateDokumen;
@@ -108,11 +108,13 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					.getParameterDetailByParamCode(ParameterHeader.PARAM_HEAD_NOTARY_CATEGORY);
 		
 
+		if (listCategory != null) {
 		for (ParameterDetail vo : listCategory) {
 			SelectItem si = new SelectItem();
-			si.setLabel(vo.getName());
+			si.setLabel(vo.getNameIn());
 			si.setValue(vo.getParameterDtlCode());
 			categoryList.add(si);
+		}
 		}
 		
 		} catch (Exception e) {
@@ -184,7 +186,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
 		pengajuanPerpanjangan = false;
 		pengajuanUpdateDokumen = false;
-		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+				NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
 		lastSequenceOfDtl = 0;
 		actionMode = Constants.ACTION_ADD;
 		uploadFiles = new ArrayList<UploadedFileWO>();
@@ -201,8 +204,12 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		actionMode = Constants.ACTION_EDIT;
 		Long idLong = Long.parseLong(editId);
 		notary = notaryService.findById(idLong);
-		
-		
+		if (notary == null) {
+			throw new IllegalStateException("Notary not found: " + editId);
+		}
+		if (notary.getNotaryCategory() == null) {
+			notary.setNotaryCategory(new ParameterDetail());
+		}
 		lastSequenceOfDtl = 0;
 		initLampiranList();
 		
@@ -418,12 +425,21 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	
 	private void initLampiranList() {
 		lampiranList = new ArrayList<NotaryDocument>();
+		List<NotaryDocument> existingDocs = null;
+		try {
+			if (notary != null) {
+				existingDocs = notary.getNotaryDocuments();
+			}
+		} catch (Exception e) {
+			logger.error("Failed to read existing notary documents", e);
+			existingDocs = null;
+		}
 		for (int i = 0; i < NotaryConstants.NOTARY_DOCUMENT_TYPES.length; i++) {
 			String documentType = NotaryConstants.NOTARY_DOCUMENT_TYPES[i];
 			NotaryDocument slot = null;
-			if (notary != null && notary.getNotaryDocuments() != null) {
-				for (int j = 0; j < notary.getNotaryDocuments().size(); j++) {
-					NotaryDocument existing = notary.getNotaryDocuments().get(j);
+			if (existingDocs != null) {
+				for (int j = 0; j < existingDocs.size(); j++) {
+					NotaryDocument existing = existingDocs.get(j);
 					if (existing != null && StringUtils.equals(documentType, existing.getAttachmentType())) {
 						slot = existing;
 						break;
@@ -730,6 +746,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public List<NotaryDocument> getLampiranList() {
+		if (lampiranList == null) {
+			lampiranList = new ArrayList<NotaryDocument>();
+		}
 		return lampiranList;
 	}
 
