@@ -258,14 +258,17 @@
 								<label class="tl-label">
 									<h:outputText value="#{doc.attachmentType}" />
 								</label>
-								<p:fileUpload rendered="#{!notaryEditBean.pengajuanPerpanjangan}"
-									fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
-									oncomplete="onCompleteUploadLampiran()"
-									mode="advanced" auto="true" dragDropSupport="false" multiple="false"
-									sizeLimit="#{notaryEditBean.standardAttachmentSize}"
-									update="msgs">
-									<f:attribute name="attachmentType" value="#{doc.attachmentType}" />
-								</p:fileUpload>
+								<p:fileUpload
+    rendered="#{!notaryEditBean.pengajuanPerpanjangan}"
+    fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+    oncomplete="onCompleteUploadLampiran()"
+    mode="advanced"
+    auto="true"
+    dragDropSupport="false"
+    multiple="false"
+    sizeLimit="#{notaryEditBean.standardAttachmentSize}">
+    <f:attribute name="attachmentType" value="#{doc.attachmentType}" />
+</p:fileUpload>
 							</div>
 						</p:column>
 					</p:dataTable>
