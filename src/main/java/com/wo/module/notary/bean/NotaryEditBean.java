@@ -267,7 +267,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
-		if (StringUtils.isEmpty(notary.getAreaCode())) {
+		if (!isPengajuanNotarisBaru() && StringUtils.isEmpty(notary.getAreaCode())) {
 			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryAreaCode") 
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
@@ -330,8 +330,15 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	public void save() {
 		try {
 			if (!validate()) {
-				
-				
+				if (isPengajuanNotarisBaru()) {
+					if (notary.getAreaCode() == null) {
+						notary.setAreaCode("");
+					}
+					if (notary.getFaxNo() == null) {
+						notary.setFaxNo("");
+					}
+				}
+
 				ParameterDetail pd = parameterDetailService.getParameterDetailByParamDtlCode(notary.getNotaryCategory().getParameterDtlCode());
 				notary.setNotaryCategory(pd);
 
@@ -792,6 +799,14 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void setNotary(Notary notary) {
 		this.notary = notary;
+	}
+
+	public boolean isPengajuanNotarisBaru() {
+		return !pengajuanPerpanjangan && !pengajuanUpdateDokumen;
+	}
+
+	public boolean isPerpanjanganReadOnly() {
+		return pengajuanPerpanjangan;
 	}
 
 	public boolean isPengajuanPerpanjangan() {

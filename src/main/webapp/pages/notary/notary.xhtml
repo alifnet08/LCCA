@@ -7,6 +7,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="../templates/template.xhtml">
 
+	<ui:define name="head">
+		<style>
+			.notary-picker-table tr.ui-state-highlight,
+			.notary-picker-table tr.ui-state-highlight td,
+			.notary-picker-table tr.notary-selected-row,
+			.notary-picker-table tr.notary-selected-row td {
+				background: #9fd3ff !important;
+				background-color: #9fd3ff !important;
+				color: #1a1a1a !important;
+			}
+		</style>
+	</ui:define>
+
 	<ui:define name="menuName">
 		<h:outputText value="#{msg.formNotaryTitle}" />
 	</ui:define>
@@ -278,14 +291,18 @@
 				value="#{notaryBean.perpanjanganList}"
 				selection="#{notaryBean.selectedNotary}"
 				selectionMode="single" rowKey="#{vo.notaryId}"
+				styleClass="notary-picker-table"
+				rowStyleClass="#{notaryBean.selectedNotary != null and notaryBean.selectedNotary.notaryId eq vo.notaryId ? 'notary-selected-row' : null}"
 				emptyMessage="#{msg.textNodata}"
 				paginator="true" rows="10"
 				paginatorAlwaysVisible="false">
 				<p:ajax event="rowSelect" global="false"
 					listener="#{notaryBean.onPickerRowSelect}"
-					process="form:tablePerpanjangan" />
+					process="form:tablePerpanjangan"
+					update="form:tablePerpanjangan" />
 				<p:ajax event="rowUnselect" global="false"
-					process="form:tablePerpanjangan" />
+					process="form:tablePerpanjangan"
+					update="form:tablePerpanjangan" />
 				<p:column selectionMode="single" style="width:40px;text-align:center" />
 				<p:column headerText="Nama Notaris">
 					<h:outputLabel value="#{vo.notaryName}" />

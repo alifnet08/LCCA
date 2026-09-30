@@ -29,6 +29,29 @@
 			    margin-left: 0;
 			    margin-top: 0;
 			}
+		</style>
+		<script type="text/javascript">
+		//<![CDATA[
+		function notaryShowTab(tab) {
+			var ids = {
+				form: 'notaryFormPanel',
+				lampiran: 'notaryLampiranPanel',
+				perpanjangan: 'notaryPerpanjanganPanel'
+			};
+			for (var key in ids) {
+				if (!ids.hasOwnProperty(key)) {
+					continue;
+				}
+				var el = document.getElementById('form:' + ids[key]);
+				if (!el) {
+					continue;
+				}
+				el.style.display = (key === tab) ? 'block' : 'none';
+			}
+		}
+		//]]>
+		</script>
+		<style>
 			
 			
 			/* .ui-widget-content .ui-inputfield {
@@ -53,26 +76,30 @@
 			<p:growl id="messages" rendered="true" />
 				<div class="row">
 					<h:panelGroup id="notaryTabButtons" layout="block" styleClass="col-lg-12" style="margin-bottom:10px;">
-						<p:commandButton value="Form" process="@this" update="notaryTabButtons notaryTabContent"
+						<p:commandButton value="Form" process="notaryFormPanel" update="notaryTabButtons"
 							actionListener="#{notaryEditBean.openFormTab}"
+							oncomplete="notaryShowTab('form')"
 							styleClass="#{(not notaryEditBean.showLampiranTab and not notaryEditBean.showLampiranPerpanjanganTab) ? 'btn btn-primary' : 'btn btn-default'}" />
-						<p:commandButton value="Lampiran" process="@this" update="notaryTabButtons notaryTabContent"
+						<p:commandButton value="Lampiran" process="notaryFormPanel" update="notaryTabButtons"
 							actionListener="#{notaryEditBean.openLampiranTab}"
+							oncomplete="notaryShowTab('lampiran')"
 							styleClass="#{notaryEditBean.showLampiranTab ? 'btn btn-primary' : 'btn btn-default'}" />
-						<p:commandButton value="Lampiran Perpanjangan" process="@this" update="notaryTabButtons notaryTabContent"
+						<p:commandButton value="Lampiran Perpanjangan" process="notaryFormPanel" update="notaryTabButtons"
+							rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
 							actionListener="#{notaryEditBean.openLampiranPerpanjanganTab}"
+							oncomplete="notaryShowTab('perpanjangan')"
 							styleClass="#{notaryEditBean.showLampiranPerpanjanganTab ? 'btn btn-primary' : 'btn btn-default'}" />
 					</h:panelGroup>
 				</div>
 				<p:outputPanel id="notaryTabContent">
 				<div class="row" rendered="true">
-				<h:panelGroup layout="block" style="#{(notaryEditBean.showLampiranTab or notaryEditBean.showLampiranPerpanjanganTab) ? 'display:none' : ''}">
+				<h:panelGroup id="notaryFormPanel" layout="block" style="#{(notaryEditBean.showLampiranTab or notaryEditBean.showLampiranPerpanjanganTab) ? 'display:none' : 'display:block'}">
 				
 				<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="category"><p:outputLabel
 									value="#{msg.formNotaryCategory}" for="category" /></label>								
-							<h:selectOneMenu id="category" required="true" requiredMessage="#{msg.formNotaryCategory} #{msg.validateRequired}"
+							<h:selectOneMenu id="category" disabled="#{notaryEditBean.perpanjanganReadOnly}"
 								styleClass="form-control s2"
 								value="#{notaryEditBean.notary.notaryCategory.parameterDtlCode}">
 								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
@@ -87,7 +114,7 @@
 						<div class="form-group required">
 							<label class="control-label tl-label" tl="area"><p:outputLabel
 									value="#{msg.formNotaryArea}" for="area" /></label>								
-							<p:inputText style="width:100%" styleClass="form-control" id="area" value="#{notaryEditBean.notary.area}"  required="true" requiredMessage="#{msg.formNotaryArea} #{msg.validateRequired}"/>
+							<p:inputText style="width:100%" styleClass="form-control" id="area" value="#{notaryEditBean.notary.area}" readonly="#{notaryEditBean.perpanjanganReadOnly}"/>
 							<p:message for="area"/>
 						</div>
 					</div>
@@ -99,7 +126,7 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="notaryName"><p:outputLabel
 									value="#{msg.formNotaryNotarisName}" for="notaryName" /></label>								
-							<p:inputText id="notaryName" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryNotarisName} #{msg.validateRequired}"
+							<p:inputText id="notaryName" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.notaryName}" />
 							<p:message for="notaryName"/>
 						</div>
@@ -109,47 +136,47 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="address"><p:outputLabel
 									value="#{msg.formNotaryOfficeAddr}" for="address" /></label>								
-							<p:inputTextarea id="address" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryOfficeAddr} #{msg.validateRequired}"
+							<p:inputTextarea id="address" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.address}" />
 							<p:message for="address"/>
 						</div>
 					</div>
 				
-					<div class="col-lg-12">
-						<div class="form-group required">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
+						<div class="form-group">
 							<label class="tl-label" tl="areaCode"><p:outputLabel
 									value="#{msg.formNotaryAreaCode}" for="areaCode" /></label>								
-							<p:inputText id="areaCode" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryAreaCode} #{msg.validateRequired}"
+							<p:inputText id="areaCode" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.areaCode}" />
 							<p:message for="areaCode"/>
 						</div>
-					</div>
+					</h:panelGroup>
 					
 					<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="telpNo"><p:outputLabel
 									value="#{msg.formNotaryTelpNo}" for="telpNo" /></label>								
-							<p:inputText id="telpNo" maxlength="20" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryTelpNo} #{msg.validateRequired}"
+							<p:inputText id="telpNo" maxlength="20" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.phoneNo}" />
 							<p:message for="telpNo"/>
 						</div>
 					</div>
 					
-					<div class="col-lg-12">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
 						<div class="form-group">
 							<label class="tl-label" tl="faxNo"><p:outputLabel
 									value="#{msg.formNotaryFaxNo}" for="faxNo" /></label>								
-							<p:inputText id="faxNo" styleClass="form-control" 
+							<p:inputText id="faxNo" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.faxNo}" />
 							<p:message for="faxNo"/>
 						</div>
-					</div>
+					</h:panelGroup>
 					
 					<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="email"><p:outputLabel
 									value="#{msg.formNotaryEmail}" for="email" /></label>								
-							<p:inputText id="email" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryEmail} #{msg.validateRequired}"
+							<p:inputText id="email" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.email}" />
 							<p:message for="email"/>
 						</div>
@@ -159,7 +186,7 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="mobileNo"><p:outputLabel
 									value="#{msg.formNotaryHPNo}" for="mobileNo" /></label>								
-							<p:inputText id="mobileNo" styleClass="form-control" maxlength="20" required="true" requiredMessage="#{msg.formNotaryHPNo} #{msg.validateRequired}"
+							<p:inputText id="mobileNo" styleClass="form-control" maxlength="20" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.mobileNo}" />
 							<p:message for="mobileNo"/>
 						</div>
@@ -169,7 +196,7 @@
 						<div class="form-group">
 							<label class="tl-label" tl="workArea"><p:outputLabel
 									value="#{msg.formNotaryWorkingArea}" for="workArea" /></label>								
-							<p:inputText id="workArea" styleClass="form-control" 
+							<p:inputText id="workArea" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.workArea}" />
 							<p:message for="workArea"/>
 						</div>
@@ -179,7 +206,7 @@
 						<div class="form-group">
 							<label class="tl-label" tl="note"><p:outputLabel
 									value="#{msg.formNotaryNote}" for="note" /></label>								
-							<p:inputTextarea id="note" styleClass="form-control" 
+							<p:inputTextarea id="note" styleClass="form-control" readonly="#{notaryEditBean.perpanjanganReadOnly}"
 							value="#{notaryEditBean.notary.note}" />
 							<p:message for="note"/>
 						</div>
@@ -193,7 +220,7 @@
 								value="#{notaryEditBean.notary.tanggalPensiun}" autocomplete="off"
 								pattern="#{notaryEditBean.inputDateFormat}"
 								locale="#{notaryEditBean.inputDateLocale}"
-								required="true" requiredMessage="Tanggal Pensiun #{msg.validateRequired}" />
+								disabled="#{notaryEditBean.perpanjanganReadOnly}" />
 							<p:message for="tanggalPensiun"/>
 							<div class="help-block">Diisi berdasarkan tanggal pensiun pada SK PPAT</div>
 						</div>
@@ -206,8 +233,7 @@
 							<p:calendar id="tanggalBerakhirPks" styleClass="form-control-datepicker-wrap" maxlength="11"
 								value="#{notaryEditBean.notary.tanggalBerakhirPks}" autocomplete="off"
 								pattern="#{notaryEditBean.inputDateFormat}"
-								locale="#{notaryEditBean.inputDateLocale}"
-								required="true" requiredMessage="Tanggal Berakhir Kerjasama #{msg.validateRequired}" />
+								locale="#{notaryEditBean.inputDateLocale}" />
 							<p:message for="tanggalBerakhirPks"/>
 						</div>
 					</div>
@@ -260,7 +286,7 @@
 					</div>
 					
 				</h:panelGroup>
-				<h:panelGroup layout="block" style="#{notaryEditBean.showLampiranTab ? '' : 'display:none'}">
+				<h:panelGroup id="notaryLampiranPanel" layout="block" style="#{notaryEditBean.showLampiranTab ? 'display:block' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiran" update="notaryLampiranList"></p:remoteCommand>
 					<p:dataTable id="lampiranUploadTable" var="doc"
 						value="#{notaryEditBean.lampiranList}"
@@ -310,8 +336,9 @@
 						</p:dataList>
 					</div>
 				</h:panelGroup>
-				<h:panelGroup id="lampiranPerpanjanganPanel" layout="block" styleClass="notary-upload-panel"
-					rendered="#{notaryEditBean.showLampiranPerpanjanganTab}">
+				<h:panelGroup id="notaryPerpanjanganPanel" layout="block" styleClass="notary-upload-panel"
+					rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
+					style="#{notaryEditBean.showLampiranPerpanjanganTab ? 'display:block' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiranPerpanjangan" update="notaryLampiranPerpanjanganList"></p:remoteCommand>
 					<div class="col-lg-12" style="margin-bottom:10px;">
 						<h4 class="tl-label">Kelengkapan Dokumen Rekanan Notaris/PPAT</h4>
@@ -431,11 +458,6 @@
 
 			<div class="box-footer">
 				<h:commandButton value="Submit" type="submit"
-					rendered="#{notaryEditBean.revisionSubmit}"
-					styleClass="btn btn-primary pull-left"
-					actionListener="#{notaryEditBean.save()}"></h:commandButton>
-				<h:commandButton value="#{msg.buttonSave}" type="submit"
-					rendered="#{not notaryEditBean.revisionSubmit}"
 					styleClass="btn btn-primary pull-left"
 					actionListener="#{notaryEditBean.save()}"></h:commandButton>
 				<h:commandLink value="#{msg.buttonCancel}"
