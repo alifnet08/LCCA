@@ -95,6 +95,10 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		return null;
 	}
 
+	public boolean isCduMaker() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName);
+	}
+
 	public void search(ActionEvent actionEvent) {
 		List<SearchObject> searchCriteria = new ArrayList<SearchObject>();
 		if (StringUtils.isNotBlank(area)) {
@@ -109,6 +113,13 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		} else {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_INBOX__"));
 		}
+		if (isCduMaker()) {
+			String login = facesUtil != null ? facesUtil.retrieveUserLogin() : null;
+			if (StringUtils.isBlank(login)) {
+				login = "__NO_USER__";
+			}
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_USER_PENGAJU, login));
+		}
 		tableModel.setSearchCriteria(searchCriteria);
 	}
 
@@ -120,6 +131,10 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 
 	public String openTask() {
 		return NotaryConstants.NAVIGATE_TASK_EDIT;
+	}
+
+	public String openMakerSubmit() {
+		return NotaryConstants.NAVIGATE_EDIT;
 	}
 
 	public void openHistory(Notary notary) {

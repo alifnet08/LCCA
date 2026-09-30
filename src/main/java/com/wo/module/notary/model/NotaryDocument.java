@@ -14,6 +14,7 @@ public class NotaryDocument extends BaseEntity implements Serializable {
 	private String attachmentFile;
 	private String fileId;
 	private Long fileSize;
+	private Integer documentNo;
 
 	public Long getNotaryDocumentId() {
 		return notaryDocumentId;
@@ -61,6 +62,14 @@ public class NotaryDocument extends BaseEntity implements Serializable {
 
 	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	public Integer getDocumentNo() {
+		return documentNo;
+	}
+
+	public void setDocumentNo(Integer documentNo) {
+		this.documentNo = documentNo;
 	}
 
 }

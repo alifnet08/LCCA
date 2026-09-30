@@ -52,8 +52,11 @@
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
 								<p:column headerText="Nomor Pengajuan">
+									<h:outputText value="#{vo.notaryNo}"
+										rendered="#{notaryTaskBean.cduMaker}" />
 									<p:commandLink action="#{notaryTaskBean.openTask}" ajax="false"
-										styleClass="tl-label">
+										styleClass="tl-label"
+										rendered="#{not notaryTaskBean.cduMaker}">
 										<f:param name="id" value="#{vo.notaryId}" />
 										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
@@ -77,6 +80,14 @@
 								</p:column>
 								<p:column headerText="Status Pengajuan">
 									<h:outputLabel value="#{vo.status}" />
+								</p:column>
+								<p:column headerText="#{msg.formAction}" style="text-align:center;width:12%;">
+									<p:commandLink value="Submit" ajax="false"
+										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision'}"
+										action="#{notaryTaskBean.openMakerSubmit}"
+										styleClass="btn btn-primary tl-label">
+										<f:param name="id" value="#{vo.notaryId}" />
+									</p:commandLink>
 								</p:column>
 								<p:column headerText="History">
 									<p:commandButton value="History" process="@this"

@@ -45,6 +45,7 @@ public abstract class NotaryConstants {
 	public final static String NAVIGATE_TASK = "notaryTask.faces";
 	public final static String NAVIGATE_TASK_EDIT = "notaryTaskEdit.faces";
 	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
+	public final static String SEARCH_BY_USER_PENGAJU = "SEARCH_BY_USER_PENGAJU";
 	public final static String REVISI_TARGET_MAKER = "MAKER";
 	public final static String REVISI_TARGET_LEGAL = "LEGAL";
 	public final static String PREFIX_NO_PENGAJUAN_BARU = "NB";
@@ -54,6 +55,17 @@ public abstract class NotaryConstants {
 	public final static String JENIS_PENGAJUAN_PERPANJANGAN = "Perpanjangan";
 	public final static String JENIS_PENGAJUAN_UPDATE_DOKUMEN = "Update Dokumen";
 	public final static String SESSION_JENIS_PENGAJUAN = "notaryJenisPengajuan";
+
+	public final static String[] NOTARY_PERPANJANGAN_DOCUMENT_TYPES = {
+			"Perjanjian Kerjasama (PKS)",
+			"Lampiran 1-Surat Pernyataan",
+			"Formulir Penilaian Notaris",
+			"Formulir AP Assessment",
+			"Formulir Third Party Assessment Checklist (aspek PDP)",
+			"Hasil SLIK 1 (satu) bulan terakhir sebelum tanggal pengajuan dengan hasil kolektibilitas lancar"
+	};
+
+	public final static int[] NOTARY_PERPANJANGAN_DOCUMENT_NOS = { 1, 2, 4, 5, 6, 7 };
 
 	public final static String[] NOTARY_DOCUMENT_TYPES = {
 			"Surat Permohonan Rekanan Notaris",

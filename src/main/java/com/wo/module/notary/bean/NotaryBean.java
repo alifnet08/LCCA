@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -91,12 +90,12 @@ public class NotaryBean extends CommonBean  implements Serializable {
 	public StreamedContent getDataPostProcessXLS() {
 		StreamedContent downloadExcelSc = null;
 		try {
-			List<Notary> listDataXls = notaryService.searchData(
-					Arrays.asList(
-							new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA, area),
-							new DefaultSearchObject(NotaryConstants.SEARCH_BY_NOTARY_NAME, notaryName),
-							new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA_CODE, areaCode)),
-					0, Integer.MAX_VALUE, null, null);
+			List<SearchObject> exportCriteria = new ArrayList<SearchObject>();
+			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA, area));
+			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_NOTARY_NAME, notaryName));
+			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA_CODE, areaCode));
+			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_COMPLETE));
+			List<Notary> listDataXls = notaryService.searchData(exportCriteria, 0, Integer.MAX_VALUE, null, null);
 			
 			downloadExcelSc = notaryService.generateDataExcel(listDataXls, categoryList);
 		}catch (Exception e) {
@@ -113,6 +112,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		paging = Constants.DEFAULT_PAGING_NUMBER;
 		tableModel = new DBLazyDataModel<Notary>(notaryService, paging);
 		flagError = false;
+		search(null);
 	}
 	
 	public void initList(){
@@ -150,6 +150,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		if (areaCode != null && !areaCode.isEmpty()) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA_CODE, areaCode));
 		}
+		searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_COMPLETE));
 
 		tableModel.setSearchCriteria(searchCriteria);
 		
@@ -288,7 +289,9 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		selectedNotary = null;
 		perpanjanganList = new ArrayList<Notary>();
 		try {
-			List<Notary> rawList = notaryService.searchData(new ArrayList<SearchObject>(), 0, 5000, null, null);
+			List<SearchObject> pickerCriteria = new ArrayList<SearchObject>();
+			pickerCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_COMPLETE));
+			List<Notary> rawList = notaryService.searchData(pickerCriteria, 0, 5000, null, null);
 			perpanjanganList = uniqueNotariesById(rawList);
 		} catch (Exception e) {
 			e.printStackTrace();

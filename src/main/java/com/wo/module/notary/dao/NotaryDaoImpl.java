@@ -58,6 +58,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						sb.append(" and ct.STATUS = :status ");
 					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_USER_PENGAJU, col)) {
+						sb.append(" and UPPER(ct.USER_PENGAJU) = UPPER(:userPengaju) ");
+					}
 				}
 			}
 		}
@@ -83,6 +86,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						query.setParameter("status", val);
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_USER_PENGAJU, col)) {
+						query.setParameter("userPengaju", val);
 					}
 				}
 			}
