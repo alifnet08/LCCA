@@ -605,23 +605,46 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public void handleLampiranPerpanjanganFileUpload(FileUploadEvent event) {
-		if (!pengajuanPerpanjangan || Boolean.TRUE.equals(isViewOnly)) {
+		if (!isPerpanjanganUploadEnabled()) {
+			facesUtil.addErrMessage("Upload dokumen perpanjangan hanya untuk jenis pengajuan Perpanjangan");
 			return;
 		}
 		try {
-			String attachmentType = (String) event.getComponent().getAttributes().get("attachmentType");
+			if (fileUtil == null) {
+				fileUtil = FileUtil.getInstance();
+			}
+			String attachmentType = null;
+			if (event.getComponent() != null) {
+				Object attribute = event.getComponent().getAttributes().get("attachmentType");
+				if (attribute != null) {
+					attachmentType = attribute.toString();
+				}
+				if (StringUtils.isBlank(attachmentType)) {
+					attachmentType = attachmentTypeFromUploadId(event.getComponent().getId());
+				}
+			}
+			if (StringUtils.isBlank(attachmentType)) {
+				facesUtil.addErrMessage("Jenis dokumen perpanjangan tidak dikenali");
+				return;
+			}
 			String fileId = CallApiManager.callUploadAPI(event.getFile(), Constants.ARTICLE, parameterDetailService,
 					false, fileUtil);
-			if (lampiranPerpanjanganList != null) {
-				for (int i = 0; i < lampiranPerpanjanganList.size(); i++) {
-					NotaryDocument doc = lampiranPerpanjanganList.get(i);
-					if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
-						doc.setFileId(fileId);
-						doc.setAttachmentFile(event.getFile().getFileName());
-						doc.setFileSize(event.getFile().getSize());
-						break;
-					}
+			boolean stored = false;
+			if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+				initLampiranPerpanjanganList();
+			}
+			for (int i = 0; i < lampiranPerpanjanganList.size(); i++) {
+				NotaryDocument doc = lampiranPerpanjanganList.get(i);
+				if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
+					doc.setFileId(fileId);
+					doc.setAttachmentFile(event.getFile().getFileName());
+					doc.setFileSize(event.getFile().getSize());
+					stored = true;
+					break;
 				}
+			}
+			if (!stored) {
+				facesUtil.addErrMessage("Dokumen " + attachmentType + " tidak ditemukan pada daftar lampiran");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -629,8 +652,28 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		}
 	}
 
+	private String attachmentTypeFromUploadId(String componentId) {
+		if (StringUtils.isBlank(componentId)) {
+			return null;
+		}
+		int number = -1;
+		if (componentId.startsWith("perpUpload")) {
+			try {
+				number = Integer.parseInt(componentId.substring("perpUpload".length()));
+			} catch (NumberFormatException e) {
+				number = -1;
+			}
+		}
+		for (int i = 0; i < NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS.length; i++) {
+			if (NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS[i] == number) {
+				return NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_TYPES[i];
+			}
+		}
+		return null;
+	}
+
 	public void deleteLampiranPerpanjanganAttachment(String fileId, String attachmentType) throws Exception {
-		if (!pengajuanPerpanjangan || Boolean.TRUE.equals(isViewOnly)) {
+		if (!isPerpanjanganUploadEnabled()) {
 			return;
 		}
 		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
