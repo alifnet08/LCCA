@@ -154,21 +154,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 			} else {
 				this.handleEdit(editId);
-				if (notary != null
-						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, jenisPengajuanParam)) {
-					pengajuanPerpanjangan = true;
-					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
-					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
-							NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
-				} else if (notary != null
-						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, jenisPengajuanParam)) {
-					pengajuanUpdateDokumen = true;
-					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
-					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
-							NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
-				} else if (notary != null) {
-					applyJenisPengajuanFromEntity();
-				}
+				applyRequestedJenisPengajuan(jenisPengajuanParam);
 			}
 			if (notary != null && notary.getNotaryCategory() == null) {
 				notary.setNotaryCategory(new ParameterDetail());
@@ -217,6 +203,34 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		lastSequenceOfDtl = 0;
 		initLampiranList();
 		initLampiranPerpanjanganList();
+	}
+
+	private void applyRequestedJenisPengajuan(String jenisPengajuanParam) {
+		if (notary == null) {
+			return;
+		}
+		String jenis = jenisPengajuanParam;
+		if (StringUtils.isBlank(jenis) && facesUtil != null) {
+			Object sessionJenis = facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN);
+			if (sessionJenis != null) {
+				jenis = sessionJenis.toString();
+			}
+		}
+		if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, jenis)) {
+			pengajuanPerpanjangan = true;
+			pengajuanUpdateDokumen = false;
+			notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+					NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+		} else if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, jenis)) {
+			pengajuanPerpanjangan = false;
+			pengajuanUpdateDokumen = true;
+			notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+					NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+		} else {
+			applyJenisPengajuanFromEntity();
+		}
 	}
 
 	private void applyJenisPengajuanFromEntity() {
@@ -881,6 +895,20 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	public void openLampiranPerpanjanganTab() {
 		showLampiranTab = false;
 		showLampiranPerpanjanganTab = true;
+		if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+			initLampiranPerpanjanganList();
+		}
+	}
+
+	public boolean isPerpanjanganUploadEnabled() {
+		if (Boolean.TRUE.equals(isViewOnly)) {
+			return false;
+		}
+		if (pengajuanPerpanjangan) {
+			return true;
+		}
+		return notary != null && StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN,
+				notary.getJenisPengajuan());
 	}
 
 	public boolean isShowLampiranPerpanjanganTab() {
@@ -892,8 +920,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public List<NotaryDocument> getLampiranPerpanjanganList() {
-		if (lampiranPerpanjanganList == null) {
-			lampiranPerpanjanganList = new ArrayList<NotaryDocument>();
+		if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+			initLampiranPerpanjanganList();
 		}
 		return lampiranPerpanjanganList;
 	}

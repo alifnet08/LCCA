@@ -18,6 +18,24 @@
 			    margin-left: 200px;
     			margin-top: -37px;
 			}
+			.notary-upload-panel .ui-inputfield,
+			.notary-upload-panel .ui-widget-content .ui-inputfield,
+			.notary-upload-panel .ui-fileupload-choose input,
+			.notary-upload-panel .ui-fileupload input {
+			    margin-left: 0;
+			    margin-top: 0;
+			    height: 100%;
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    font-size: 100px;
+			    opacity: 0;
+			}
+			.notary-upload-panel .wo-fileupload-wrap {
+			    display: block;
+			    margin-top: 6px;
+			    clear: both;
+			}
 			
 			
 			/* .ui-widget-content .ui-inputfield {
@@ -41,17 +59,17 @@
 			<div class="box-body">
 			<p:growl id="messages" rendered="true" />
 				<div class="row">
-					<div class="col-lg-12" style="margin-bottom:10px;">
-						<p:commandButton value="Form" process="@this" update="notaryTabContent"
+					<h:panelGroup id="notaryTabButtons" layout="block" styleClass="col-lg-12" style="margin-bottom:10px;">
+						<p:commandButton value="Form" process="@this" update="notaryTabButtons notaryTabContent"
 							actionListener="#{notaryEditBean.openFormTab}"
 							styleClass="#{(not notaryEditBean.showLampiranTab and not notaryEditBean.showLampiranPerpanjanganTab) ? 'btn btn-primary' : 'btn btn-default'}" />
-						<p:commandButton value="Lampiran" process="@this" update="notaryTabContent"
+						<p:commandButton value="Lampiran" process="@this" update="notaryTabButtons notaryTabContent"
 							actionListener="#{notaryEditBean.openLampiranTab}"
 							styleClass="#{notaryEditBean.showLampiranTab ? 'btn btn-primary' : 'btn btn-default'}" />
-						<p:commandButton value="Lampiran Perpanjangan" process="@this" update="notaryTabContent"
+						<p:commandButton value="Lampiran Perpanjangan" process="@this" update="notaryTabButtons notaryTabContent"
 							actionListener="#{notaryEditBean.openLampiranPerpanjanganTab}"
 							styleClass="#{notaryEditBean.showLampiranPerpanjanganTab ? 'btn btn-primary' : 'btn btn-default'}" />
-					</div>
+					</h:panelGroup>
 				</div>
 				<p:outputPanel id="notaryTabContent">
 				<div class="row" rendered="true">
@@ -299,39 +317,37 @@
 						</p:dataList>
 					</div>
 				</h:panelGroup>
-				<h:panelGroup layout="block" style="#{notaryEditBean.showLampiranPerpanjanganTab ? '' : 'display:none'}">
+				<h:panelGroup id="lampiranPerpanjanganPanel" layout="block" styleClass="notary-upload-panel"
+					rendered="#{notaryEditBean.showLampiranPerpanjanganTab}">
 					<p:remoteCommand name="onCompleteUploadLampiranPerpanjangan" update="notaryLampiranPerpanjanganList"></p:remoteCommand>
 					<div class="col-lg-12" style="margin-bottom:10px;">
 						<h4 class="tl-label">Kelengkapan Dokumen Rekanan Notaris/PPAT</h4>
 						<p>Dokumen berikut wajib diupload pada jenis pengajuan Perpanjangan. Pada jenis pengajuan lain tab ini hanya dapat dilihat.</p>
 					</div>
-					<p:dataTable id="lampiranPerpanjanganTable" var="doc"
-						value="#{notaryEditBean.lampiranPerpanjanganList}"
-						rowKey="#{doc.attachmentType}"
-						emptyMessage="#{msg.textNodata}"
-						paginator="false">
-						<p:column headerText="No." style="width:60px;text-align:center;">
-							<h:outputText value="#{doc.documentNo}" />
-						</p:column>
-						<p:column headerText="Kelengkapan Dokumen Rekanan Notaris/PPAT">
-							<h:outputText value="#{doc.attachmentType}" />
-						</p:column>
-						<p:column headerText="Upload" style="width:280px;">
-							<p:fileUpload
-								rendered="#{notaryEditBean.pengajuanPerpanjangan and not notaryEditBean.isViewOnly}"
-								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
-								oncomplete="onCompleteUploadLampiranPerpanjangan()"
-								mode="advanced"
-								auto="true"
-								dragDropSupport="false"
-								multiple="false"
-								sizeLimit="#{notaryEditBean.standardAttachmentSize}">
-								<f:attribute name="attachmentType" value="#{doc.attachmentType}" />
-							</p:fileUpload>
-							<h:outputText value="Read only"
-								rendered="#{not notaryEditBean.pengajuanPerpanjangan or notaryEditBean.isViewOnly}" />
-						</p:column>
-					</p:dataTable>
+					<ui:repeat id="perpDocs" value="#{notaryEditBean.lampiranPerpanjanganList}" var="doc">
+						<div class="col-lg-12">
+							<div class="form-group">
+								<label class="tl-label">
+									<h:outputText value="#{doc.documentNo}" />. <h:outputText value="#{doc.attachmentType}" />
+								</label>
+								<p:fileUpload id="perpUpload" label="Upload"
+									rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+									fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+									oncomplete="onCompleteUploadLampiranPerpanjangan()"
+									mode="advanced"
+									auto="true"
+									dragDropSupport="false"
+									multiple="false"
+									styleClass="wo-fileupload-wrap"
+									sizeLimit="10485760"
+									update="notaryLampiranPerpanjanganList msgs">
+									<f:attribute name="attachmentType" value="#{doc.attachmentType}" />
+								</p:fileUpload>
+								<h:outputText value="Read only"
+									rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							</div>
+						</div>
+					</ui:repeat>
 					<div class="col-lg-12">
 						<p:dataList value="#{notaryEditBean.lampiranPerpanjanganList}" var="vo"
 							id="notaryLampiranPerpanjanganList" emptyMessage="" rowIndexVar="index">
@@ -350,7 +366,7 @@
 										<h:outputText rendered="#{empty vo.fileId}" value="-" />
 									</td>
 									<td>
-										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.pengajuanPerpanjangan and not notaryEditBean.isViewOnly}"
+										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.perpanjanganUploadEnabled}"
 											immediate="true"
 											actionListener="#{notaryEditBean.deleteLampiranPerpanjanganAttachment(vo.fileId, vo.attachmentType)}"
 											update="notaryLampiranPerpanjanganList">#{msg.buttonDelete}</p:commandLink>
