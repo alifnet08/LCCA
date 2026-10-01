@@ -18,6 +18,40 @@
 			    margin-left: 200px;
     			margin-top: -37px;
 			}
+			.notary-upload-panel .wo-fileupload-wrap {
+			    display: block;
+			    margin-top: 6px;
+			    margin-bottom: 12px;
+			    clear: both;
+			    position: relative;
+			}
+			.notary-upload-panel .ui-fileupload-choose input {
+			    margin-left: 0;
+			    margin-top: 0;
+			}
+		</style>
+		<script type="text/javascript">
+		//<![CDATA[
+		function notaryShowTab(tab) {
+			var ids = {
+				form: 'notaryFormPanel',
+				lampiran: 'notaryLampiranPanel',
+				perpanjangan: 'notaryPerpanjanganPanel'
+			};
+			for (var key in ids) {
+				if (!ids.hasOwnProperty(key)) {
+					continue;
+				}
+				var el = document.getElementById('form:' + ids[key]);
+				if (!el) {
+					continue;
+				}
+				el.style.display = (key === tab) ? 'block' : 'none';
+			}
+		}
+		//]]>
+		</script>
+		<style>
 			
 			
 			/* .ui-widget-content .ui-inputfield {
@@ -41,24 +75,31 @@
 			<div class="box-body">
 			<p:growl id="messages" rendered="true" />
 				<div class="row">
-					<div class="col-lg-12" style="margin-bottom:10px;">
-						<p:commandButton value="Form" process="@this" update="notaryTabContent"
+					<h:panelGroup id="notaryTabButtons" layout="block" styleClass="col-lg-12" style="margin-bottom:10px;">
+						<p:commandButton value="Form" process="notaryFormPanel" update="notaryTabButtons"
 							actionListener="#{notaryEditBean.openFormTab}"
-							styleClass="#{notaryEditBean.showLampiranTab ? 'btn btn-default' : 'btn btn-primary'}" />
-						<p:commandButton value="Lampiran" process="@this" update="notaryTabContent"
+							oncomplete="notaryShowTab('form')"
+							styleClass="#{(not notaryEditBean.showLampiranTab and not notaryEditBean.showLampiranPerpanjanganTab) ? 'btn btn-primary' : 'btn btn-default'}" />
+						<p:commandButton value="Lampiran" process="notaryFormPanel" update="notaryTabButtons"
 							actionListener="#{notaryEditBean.openLampiranTab}"
+							oncomplete="notaryShowTab('lampiran')"
 							styleClass="#{notaryEditBean.showLampiranTab ? 'btn btn-primary' : 'btn btn-default'}" />
-					</div>
+						<p:commandButton value="Lampiran Perpanjangan" process="notaryFormPanel" update="notaryTabButtons"
+							rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
+							actionListener="#{notaryEditBean.openLampiranPerpanjanganTab}"
+							oncomplete="notaryShowTab('perpanjangan')"
+							styleClass="#{notaryEditBean.showLampiranPerpanjanganTab ? 'btn btn-primary' : 'btn btn-default'}" />
+					</h:panelGroup>
 				</div>
 				<p:outputPanel id="notaryTabContent">
 				<div class="row" rendered="true">
-				<h:panelGroup layout="block" style="#{notaryEditBean.showLampiranTab ? 'display:none' : ''}">
+				<h:panelGroup id="notaryFormPanel" layout="block" style="#{(notaryEditBean.showLampiranTab or notaryEditBean.showLampiranPerpanjanganTab) ? 'display:none' : 'display:block'}">
 				
 				<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="category"><p:outputLabel
 									value="#{msg.formNotaryCategory}" for="category" /></label>								
-							<h:selectOneMenu id="category" required="true" requiredMessage="#{msg.formNotaryCategory} #{msg.validateRequired}"
+							<h:selectOneMenu id="category" disabled="#{notaryEditBean.fieldReadOnly}"
 								styleClass="form-control s2"
 								value="#{notaryEditBean.notary.notaryCategory.parameterDtlCode}">
 								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
@@ -73,7 +114,7 @@
 						<div class="form-group required">
 							<label class="control-label tl-label" tl="area"><p:outputLabel
 									value="#{msg.formNotaryArea}" for="area" /></label>								
-							<p:inputText style="width:100%" styleClass="form-control" id="area" value="#{notaryEditBean.notary.area}"  required="true" requiredMessage="#{msg.formNotaryArea} #{msg.validateRequired}"/>
+							<p:inputText style="width:100%" styleClass="form-control" id="area" value="#{notaryEditBean.notary.area}" readonly="#{notaryEditBean.fieldReadOnly}"/>
 							<p:message for="area"/>
 						</div>
 					</div>
@@ -85,7 +126,7 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="notaryName"><p:outputLabel
 									value="#{msg.formNotaryNotarisName}" for="notaryName" /></label>								
-							<p:inputText id="notaryName" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryNotarisName} #{msg.validateRequired}"
+							<p:inputText id="notaryName" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.notaryName}" />
 							<p:message for="notaryName"/>
 						</div>
@@ -95,47 +136,47 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="address"><p:outputLabel
 									value="#{msg.formNotaryOfficeAddr}" for="address" /></label>								
-							<p:inputTextarea id="address" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryOfficeAddr} #{msg.validateRequired}"
+							<p:inputTextarea id="address" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.address}" />
 							<p:message for="address"/>
 						</div>
 					</div>
 				
-					<div class="col-lg-12">
-						<div class="form-group required">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
+						<div class="form-group">
 							<label class="tl-label" tl="areaCode"><p:outputLabel
 									value="#{msg.formNotaryAreaCode}" for="areaCode" /></label>								
-							<p:inputText id="areaCode" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryAreaCode} #{msg.validateRequired}"
+							<p:inputText id="areaCode" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.areaCode}" />
 							<p:message for="areaCode"/>
 						</div>
-					</div>
+					</h:panelGroup>
 					
 					<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="telpNo"><p:outputLabel
 									value="#{msg.formNotaryTelpNo}" for="telpNo" /></label>								
-							<p:inputText id="telpNo" maxlength="20" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryTelpNo} #{msg.validateRequired}"
+							<p:inputText id="telpNo" maxlength="20" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.phoneNo}" />
 							<p:message for="telpNo"/>
 						</div>
 					</div>
 					
-					<div class="col-lg-12">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
 						<div class="form-group">
 							<label class="tl-label" tl="faxNo"><p:outputLabel
 									value="#{msg.formNotaryFaxNo}" for="faxNo" /></label>								
-							<p:inputText id="faxNo" styleClass="form-control" 
+							<p:inputText id="faxNo" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.faxNo}" />
 							<p:message for="faxNo"/>
 						</div>
-					</div>
+					</h:panelGroup>
 					
 					<div class="col-lg-12">
 						<div class="form-group required">
 							<label class="tl-label" tl="email"><p:outputLabel
 									value="#{msg.formNotaryEmail}" for="email" /></label>								
-							<p:inputText id="email" styleClass="form-control" required="true" requiredMessage="#{msg.formNotaryEmail} #{msg.validateRequired}"
+							<p:inputText id="email" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.email}" />
 							<p:message for="email"/>
 						</div>
@@ -145,7 +186,7 @@
 						<div class="form-group required">
 							<label class="tl-label" tl="mobileNo"><p:outputLabel
 									value="#{msg.formNotaryHPNo}" for="mobileNo" /></label>								
-							<p:inputText id="mobileNo" styleClass="form-control" maxlength="20" required="true" requiredMessage="#{msg.formNotaryHPNo} #{msg.validateRequired}"
+							<p:inputText id="mobileNo" styleClass="form-control" maxlength="20" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.mobileNo}" />
 							<p:message for="mobileNo"/>
 						</div>
@@ -155,7 +196,7 @@
 						<div class="form-group">
 							<label class="tl-label" tl="workArea"><p:outputLabel
 									value="#{msg.formNotaryWorkingArea}" for="workArea" /></label>								
-							<p:inputText id="workArea" styleClass="form-control" 
+							<p:inputText id="workArea" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.workArea}" />
 							<p:message for="workArea"/>
 						</div>
@@ -165,7 +206,7 @@
 						<div class="form-group">
 							<label class="tl-label" tl="note"><p:outputLabel
 									value="#{msg.formNotaryNote}" for="note" /></label>								
-							<p:inputTextarea id="note" styleClass="form-control" 
+							<p:inputTextarea id="note" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
 							value="#{notaryEditBean.notary.note}" />
 							<p:message for="note"/>
 						</div>
@@ -179,7 +220,7 @@
 								value="#{notaryEditBean.notary.tanggalPensiun}" autocomplete="off"
 								pattern="#{notaryEditBean.inputDateFormat}"
 								locale="#{notaryEditBean.inputDateLocale}"
-								required="true" requiredMessage="Tanggal Pensiun #{msg.validateRequired}" />
+								disabled="#{notaryEditBean.fieldReadOnly}" />
 							<p:message for="tanggalPensiun"/>
 							<div class="help-block">Diisi berdasarkan tanggal pensiun pada SK PPAT</div>
 						</div>
@@ -193,7 +234,7 @@
 								value="#{notaryEditBean.notary.tanggalBerakhirPks}" autocomplete="off"
 								pattern="#{notaryEditBean.inputDateFormat}"
 								locale="#{notaryEditBean.inputDateLocale}"
-								required="true" requiredMessage="Tanggal Berakhir Kerjasama #{msg.validateRequired}" />
+								disabled="#{notaryEditBean.isViewOnly}" />
 							<p:message for="tanggalBerakhirPks"/>
 						</div>
 					</div>
@@ -246,32 +287,257 @@
 					</div>
 					
 				</h:panelGroup>
-				<h:panelGroup layout="block" style="#{notaryEditBean.showLampiranTab ? '' : 'display:none'}">
+				<h:panelGroup id="notaryLampiranPanel" layout="block" styleClass="notary-upload-panel" style="#{notaryEditBean.showLampiranTab ? 'display:block' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiran" update="notaryLampiranList"></p:remoteCommand>
-					<p:dataTable id="lampiranUploadTable" var="doc"
-						value="#{notaryEditBean.lampiranList}"
-						rowKey="#{doc.attachmentType}"
-						emptyMessage=""
-						paginator="false">
-						<p:column headerText="Lampiran">
-							<div class="form-group">
-								<label class="tl-label">
-									<h:outputText value="#{doc.attachmentType}" />
-								</label>
-								<p:fileUpload
-    rendered="#{!notaryEditBean.pengajuanPerpanjangan}"
-    fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
-    oncomplete="onCompleteUploadLampiran()"
-    mode="advanced"
-    auto="true"
-    dragDropSupport="false"
-    multiple="false"
-    sizeLimit="#{notaryEditBean.standardAttachmentSize}">
-    <f:attribute name="attachmentType" value="#{doc.attachmentType}" />
-</p:fileUpload>
-							</div>
-						</p:column>
-					</p:dataTable>
+					<h:panelGroup id="lampiranSlots" layout="block" styleClass="col-lg-12">
+						<p:outputPanel id="lampSlot1" styleClass="form-group">
+							<label class="tl-label">Surat Permohonan Rekanan Notaris</label>
+							<p:fileUpload id="lampUpload1" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot1 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Surat Permohonan Rekanan Notaris" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[0].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[0].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot2" styleClass="form-group">
+							<label class="tl-label">SK Pengangkatan Notaris</label>
+							<p:fileUpload id="lampUpload2" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot2 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="SK Pengangkatan Notaris" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[1].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[1].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot3" styleClass="form-group">
+							<label class="tl-label">Berita acara sumpah jabatan Notaris</label>
+							<p:fileUpload id="lampUpload3" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot3 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Berita acara sumpah jabatan Notaris" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[2].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[2].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot4" styleClass="form-group">
+							<label class="tl-label">SK Pengangkatan PPAT</label>
+							<p:fileUpload id="lampUpload4" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot4 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="SK Pengangkatan PPAT" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[3].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[3].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot5" styleClass="form-group">
+							<label class="tl-label">Berita acara sumpah jabatan PPAT</label>
+							<p:fileUpload id="lampUpload5" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot5 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Berita acara sumpah jabatan PPAT" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[4].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[4].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot6" styleClass="form-group">
+							<label class="tl-label">Bukti Kerjasama dengan Bank</label>
+							<p:fileUpload id="lampUpload6" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot6 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Bukti Kerjasama dengan Bank" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[5].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[5].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot7" styleClass="form-group">
+							<label class="tl-label">Surat Pernyataan pernyataan tidak sedang tersangkut pelanggaran kode etik Notaris/PPAT (draft MBI)</label>
+							<p:fileUpload id="lampUpload7" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot7 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Surat Pernyataan pernyataan tidak sedang tersangkut pelanggaran kode etik Notaris/PPAT (draft MBI)" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[6].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[6].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot8" styleClass="form-group">
+							<label class="tl-label">Curriculum Vitae (CV)</label>
+							<p:fileUpload id="lampUpload8" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot8 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Curriculum Vitae (CV)" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[7].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[7].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot9" styleClass="form-group">
+							<label class="tl-label">Bukti kepemilikan kantor</label>
+							<p:fileUpload id="lampUpload9" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot9 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Bukti kepemilikan kantor" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[8].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[8].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot10" styleClass="form-group">
+							<label class="tl-label">Foto Kantor (tampak depan, dalam dan filling cabinet)</label>
+							<p:fileUpload id="lampUpload10" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot10 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Foto Kantor (tampak depan, dalam dan filling cabinet)" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[9].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[9].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot11" styleClass="form-group">
+							<label class="tl-label">Lampiran tarif biaya Notaris</label>
+							<p:fileUpload id="lampUpload11" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot11 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Lampiran tarif biaya Notaris" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[10].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[10].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot12" styleClass="form-group">
+							<label class="tl-label">Surat keterangan dari ikatan Notaris dan PPAT memiliki rekam jejak yang baik</label>
+							<p:fileUpload id="lampUpload12" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot12 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Surat keterangan dari ikatan Notaris dan PPAT memiliki rekam jejak yang baik" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[11].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[11].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot13" styleClass="form-group">
+							<label class="tl-label">GoAML</label>
+							<p:fileUpload id="lampUpload13" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot13 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="GoAML" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[12].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[12].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot14" styleClass="form-group">
+							<label class="tl-label">Form AP Assessment Notaris/PPAT</label>
+							<p:fileUpload id="lampUpload14" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot14 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Form AP Assessment Notaris/PPAT" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[13].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[13].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot15" styleClass="form-group">
+							<label class="tl-label">Bukti kepemilikan rekening di Maybank Indonesia</label>
+							<p:fileUpload id="lampUpload15" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot15 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Bukti kepemilikan rekening di Maybank Indonesia" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[14].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[14].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot16" styleClass="form-group">
+							<label class="tl-label">Hasil screening melalui sistem SironKYC Tidak terdapat catatan negative atau lolos screening melalui system Pandawa</label>
+							<p:fileUpload id="lampUpload16" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot16 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Hasil screening melalui sistem SironKYC Tidak terdapat catatan negative atau lolos screening melalui system Pandawa" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[15].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[15].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot17" styleClass="form-group">
+							<label class="tl-label">SLIK 1 bulan terakhir sebelum pengajuan dengan hasil kolektibilitas lancar</label>
+							<p:fileUpload id="lampUpload17" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot17 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="SLIK 1 bulan terakhir sebelum pengajuan dengan hasil kolektibilitas lancar" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[16].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[16].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot18" styleClass="form-group">
+							<label class="tl-label">Formulir Third Party Assessment Checklist (aspek PDP) yang lengkap diisi secara benar dan telah ditandatangani notaris</label>
+							<p:fileUpload id="lampUpload18" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot18 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Formulir Third Party Assessment Checklist (aspek PDP) yang lengkap diisi secara benar dan telah ditandatangani notaris" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[17].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[17].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+						<p:outputPanel id="lampSlot19" styleClass="form-group">
+							<label class="tl-label">Lampiran Kesepakatan Kerjasama Ketentuan Pelindungan Data Pribadi (PDP) antara Pengendali Data Pribadi dengan Prosesor Data Pribadi</label>
+							<p:fileUpload id="lampUpload19" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.lampiranUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="lampSlot19 notaryLampiranList msgs">
+								<f:attribute name="attachmentType" value="Lampiran Kesepakatan Kerjasama Ketentuan Pelindungan Data Pribadi (PDP) antara Pengendali Data Pribadi dengan Prosesor Data Pribadi" />
+							</p:fileUpload>
+							<h:outputText value="#{notaryEditBean.lampiranList[18].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranList[18].fileId}"
+								style="display:block; margin-top:6px;" />
+						</p:outputPanel>
+					</h:panelGroup>
 					<div class="col-lg-12">
 						<p:dataList value="#{notaryEditBean.lampiranList}" var="vo"
 							id="notaryLampiranList" emptyMessage="" rowIndexVar="index">
@@ -287,9 +553,125 @@
 										<h:outputText rendered="#{empty vo.fileId}" value="-" />
 									</td>
 									<td>
-										<p:commandLink rendered="#{not empty vo.fileId and !notaryEditBean.pengajuanPerpanjangan}" immediate="true"
+										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.lampiranUploadEnabled}" immediate="true"
 											actionListener="#{notaryEditBean.deleteLampiranAttachment(vo.fileId, vo.attachmentType)}"
-											update="notaryLampiranList">#{msg.buttonDelete}</p:commandLink>
+											update="lampiranSlots notaryLampiranList">#{msg.buttonDelete}</p:commandLink>
+									</td>
+								</tr>
+							</table>
+						</p:dataList>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup id="notaryPerpanjanganPanel" layout="block" styleClass="notary-upload-panel"
+					rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
+					style="#{notaryEditBean.showLampiranPerpanjanganTab ? 'display:block' : 'display:none'}">
+					<p:remoteCommand name="onCompleteUploadLampiranPerpanjangan" update="notaryLampiranPerpanjanganList"></p:remoteCommand>
+					<div class="col-lg-12" style="margin-bottom:10px;">
+						<h4 class="tl-label">Kelengkapan Dokumen Rekanan Notaris/PPAT</h4>
+						<p>Dokumen berikut wajib diupload pada jenis pengajuan Perpanjangan. Pada jenis pengajuan lain tab ini hanya dapat dilihat.</p>
+					</div>
+					<div class="col-lg-12">
+						<p:outputPanel id="perpSlot1" styleClass="form-group">
+							<label class="tl-label">1. Perjanjian Kerjasama (PKS)</label>
+							<p:fileUpload id="perpUpload1" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot1 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Perjanjian Kerjasama (PKS)" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[0].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[0].fileId}" />
+						</p:outputPanel>
+						<p:outputPanel id="perpSlot2" styleClass="form-group">
+							<label class="tl-label">2. Lampiran 1-Surat Pernyataan</label>
+							<p:fileUpload id="perpUpload2" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot2 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Lampiran 1-Surat Pernyataan" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[1].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[1].fileId}" />
+						</p:outputPanel>
+						<p:outputPanel id="perpSlot4" styleClass="form-group">
+							<label class="tl-label">4. Formulir Penilaian Notaris</label>
+							<p:fileUpload id="perpUpload4" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot4 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Formulir Penilaian Notaris" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[2].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[2].fileId}" />
+						</p:outputPanel>
+						<p:outputPanel id="perpSlot5" styleClass="form-group">
+							<label class="tl-label">5. Formulir AP Assessment</label>
+							<p:fileUpload id="perpUpload5" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot5 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Formulir AP Assessment" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[3].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[3].fileId}" />
+						</p:outputPanel>
+						<p:outputPanel id="perpSlot6" styleClass="form-group">
+							<label class="tl-label">6. Formulir Third Party Assessment Checklist (aspek PDP)</label>
+							<p:fileUpload id="perpUpload6" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot6 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Formulir Third Party Assessment Checklist (aspek PDP)" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[4].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[4].fileId}" />
+						</p:outputPanel>
+						<p:outputPanel id="perpSlot7" styleClass="form-group">
+							<label class="tl-label">7. Hasil SLIK 1 (satu) bulan terakhir sebelum tanggal pengajuan dengan hasil kolektibilitas lancar</label>
+							<p:fileUpload id="perpUpload7" label="Upload" styleClass="wo-fileupload-wrap"
+								rendered="#{notaryEditBean.perpanjanganUploadEnabled}"
+								fileUploadListener="#{notaryEditBean.handleLampiranPerpanjanganFileUpload}"
+								mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+								sizeLimit="10485760" update="perpSlot7 notaryLampiranPerpanjanganList msgs">
+								<f:attribute name="attachmentType" value="Hasil SLIK 1 (satu) bulan terakhir sebelum tanggal pengajuan dengan hasil kolektibilitas lancar" />
+							</p:fileUpload>
+							<h:outputText value="Read only" rendered="#{not notaryEditBean.perpanjanganUploadEnabled}" />
+							<h:outputText value="#{notaryEditBean.lampiranPerpanjanganList[5].attachmentFile}"
+								rendered="#{not empty notaryEditBean.lampiranPerpanjanganList[5].fileId}" />
+						</p:outputPanel>
+					</div>
+					<div class="col-lg-12">
+						<p:dataList value="#{notaryEditBean.lampiranPerpanjanganList}" var="vo"
+							id="notaryLampiranPerpanjanganList" emptyMessage="" rowIndexVar="index">
+							<table>
+								<tr>
+									<td style="width:40px; text-align:center;">
+										<h:outputText value="#{vo.documentNo}" />
+									</td>
+									<td style="width:70%; padding-right: 10px;">
+										<h:outputText value="#{vo.attachmentType}" />
+										<h:outputText value=" : " />
+										<p:commandLink rendered="#{not empty vo.fileId}"
+											title="#{vo.attachmentFile}" ajax="false" immediate="true"
+											actionListener="#{notaryEditBean.downloadFile(vo.fileId,vo.attachmentFile,null)}"
+											target="_blank">#{vo.attachmentFile}</p:commandLink>
+										<h:outputText rendered="#{empty vo.fileId}" value="-" />
+									</td>
+									<td>
+										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.perpanjanganUploadEnabled}"
+											immediate="true"
+											actionListener="#{notaryEditBean.deleteLampiranPerpanjanganAttachment(vo.fileId, vo.attachmentType)}"
+											update="notaryLampiranPerpanjanganList">#{msg.buttonDelete}</p:commandLink>
 									</td>
 								</tr>
 							</table>
@@ -301,7 +683,8 @@
 			</div>
 
 			<div class="box-footer">
-				<h:commandButton value="#{msg.buttonSave}" type="submit"
+				<h:commandButton value="Submit" type="submit"
+					rendered="#{not notaryEditBean.isViewOnly}"
 					styleClass="btn btn-primary pull-left"
 					actionListener="#{notaryEditBean.save()}"></h:commandButton>
 				<h:commandLink value="#{msg.buttonCancel}"

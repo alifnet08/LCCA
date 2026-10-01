@@ -73,7 +73,11 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	private boolean showLampiranTab;
 
+	private boolean showLampiranPerpanjanganTab;
+
 	private List<NotaryDocument> lampiranList = new ArrayList<NotaryDocument>();
+
+	private List<NotaryDocument> lampiranPerpanjanganList = new ArrayList<NotaryDocument>();
 
 	private boolean pengajuanPerpanjangan;
 	private boolean pengajuanUpdateDokumen;
@@ -140,9 +144,6 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			
 			String viewId = facesUtil.retrieveRequestParam("viewId");
 			String jenisPengajuanParam = facesUtil.retrieveRequestParam("jenisPengajuan");
-			if (StringUtils.isBlank(jenisPengajuanParam) && facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN) != null) {
-				jenisPengajuanParam = String.valueOf(facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN));
-			}
 			if (viewId != null && !viewId.isEmpty()) {
 				if (viewId.trim().equalsIgnoreCase("true")) {
 					isViewOnly = true;
@@ -153,19 +154,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 			} else {
 				this.handleEdit(editId);
-				if (notary != null
-						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, jenisPengajuanParam)) {
-					pengajuanPerpanjangan = true;
-					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
-					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
-							NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
-				} else if (notary != null
-						&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, jenisPengajuanParam)) {
-					pengajuanUpdateDokumen = true;
-					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
-					facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
-							NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
-				}
+				applyRequestedJenisPengajuan(jenisPengajuanParam);
 			}
 			if (notary != null && notary.getNotaryCategory() == null) {
 				notary.setNotaryCategory(new ParameterDetail());
@@ -193,6 +182,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		uploadFiles = new ArrayList<UploadedFileWO>();
 		facesUtil.setSessionAttribute("token", null);
 		initLampiranList();
+		initLampiranPerpanjanganList();
 	}
 
 	private void handleEdit(String editId) {
@@ -212,8 +202,46 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		}
 		lastSequenceOfDtl = 0;
 		initLampiranList();
-		
-		
+		initLampiranPerpanjanganList();
+	}
+
+	private void applyRequestedJenisPengajuan(String jenisPengajuanParam) {
+		if (notary == null) {
+			return;
+		}
+		String jenis = jenisPengajuanParam;
+		if (StringUtils.isBlank(jenis) && facesUtil != null) {
+			Object sessionJenis = facesUtil.getSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN);
+			if (sessionJenis != null) {
+				jenis = sessionJenis.toString();
+			}
+		}
+		if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, jenis)) {
+			pengajuanPerpanjangan = true;
+			pengajuanUpdateDokumen = false;
+			notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+					NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
+		} else if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, jenis)) {
+			pengajuanPerpanjangan = false;
+			pengajuanUpdateDokumen = true;
+			notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
+					NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
+		} else {
+			applyJenisPengajuanFromEntity();
+		}
+	}
+
+	private void applyJenisPengajuanFromEntity() {
+		if (notary == null) {
+			return;
+		}
+		if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, notary.getJenisPengajuan())) {
+			pengajuanPerpanjangan = true;
+		} else if (StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, notary.getJenisPengajuan())) {
+			pengajuanUpdateDokumen = true;
+		}
 	}
 
 	public Boolean validate() {
@@ -239,7 +267,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
-		if (StringUtils.isEmpty(notary.getAreaCode())) {
+		if (!isPengajuanNotarisBaru() && StringUtils.isEmpty(notary.getAreaCode())) {
 			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryAreaCode") 
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
@@ -269,16 +297,52 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
+		if (pengajuanPerpanjangan && !hasAllPerpanjanganDocuments()) {
+			flag = true;
+		}
 
 
 		return flag;
 	}
 
+	private boolean hasAllPerpanjanganDocuments() {
+		boolean complete = true;
+		if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+			facesUtil.addErrMessage("Kelengkapan Dokumen Perpanjangan wajib diupload");
+			return false;
+		}
+		for (int i = 0; i < lampiranPerpanjanganList.size(); i++) {
+			NotaryDocument doc = lampiranPerpanjanganList.get(i);
+			if (doc == null || StringUtils.isBlank(doc.getFileId())) {
+				String label = doc != null ? doc.getAttachmentType() : "Dokumen Perpanjangan";
+				facesUtil.addErrMessage(label + " wajib diupload");
+				complete = false;
+			}
+		}
+		return complete;
+	}
+
+	public boolean isRevisionSubmit() {
+		return notary != null && notary.getNotaryId() != null
+				&& StringUtils.equals(NotaryConstants.STATUS_REVISION, notary.getStatus());
+	}
+
 	public void save() {
 		try {
+			if (Boolean.TRUE.equals(isViewOnly)) {
+				facesUtil.addErrMessage("Pengajuan ini hanya dapat dilihat.");
+				return;
+			}
 			if (!validate()) {
-				
-				
+				if (isPengajuanNotarisBaru()) {
+					if (notary.getAreaCode() == null) {
+						notary.setAreaCode("");
+					}
+					if (notary.getFaxNo() == null) {
+						notary.setFaxNo("");
+					}
+				}
+
 				ParameterDetail pd = parameterDetailService.getParameterDetailByParamDtlCode(notary.getNotaryCategory().getParameterDtlCode());
 				notary.setNotaryCategory(pd);
 
@@ -288,17 +352,19 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				if (isNewPengajuan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+				} else if (isResubmitRevisi) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 				} else if (pengajuanPerpanjangan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN);
 				} else if (pengajuanUpdateDokumen) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN);
-				} else if (isResubmitRevisi) {
-					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 				}
 
-				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen) {
+				boolean startNewFlow = isNewPengajuan
+						|| ((pengajuanPerpanjangan || pengajuanUpdateDokumen) && !isResubmitRevisi);
+				if (startNewFlow) {
 					String login = facesUtil.retrieveUserLogin();
 					notary.setUserPengaju(login);
 					notary.setTanggalPengajuan(new Timestamp(new Date().getTime()));
@@ -334,7 +400,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen || isResubmitRevisi) {
 					sendNotificationToCduChecker();
 					String historyStatus = "Submit by CDU Maker";
-					if (pengajuanPerpanjangan) {
+					if (isResubmitRevisi) {
+						historyStatus = "Submit by CDU Maker";
+					} else if (pengajuanPerpanjangan) {
 						historyStatus = "Submit Perpanjangan by CDU Maker";
 					} else if (pengajuanUpdateDokumen) {
 						historyStatus = "Submit Update Dokumen by CDU Maker";
@@ -351,7 +419,11 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					}
 				}
 
-				facesUtil.redirect("/pages/notary/notary.faces");
+				if (isResubmitRevisi) {
+					facesUtil.redirect("/pages/notary/notaryTask.faces");
+				} else {
+					facesUtil.redirect("/pages/notary/notary.faces");
+				}
 			}
 
 		} catch (Exception ex) {
@@ -454,34 +526,72 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		}
 	}
 
+	private void initLampiranPerpanjanganList() {
+		lampiranPerpanjanganList = new ArrayList<NotaryDocument>();
+		List<NotaryDocument> existingDocs = null;
+		try {
+			if (notary != null) {
+				existingDocs = notary.getNotaryDocuments();
+			}
+		} catch (Exception e) {
+			logger.error("Failed to read perpanjangan documents", e);
+			existingDocs = null;
+		}
+		for (int i = 0; i < NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_TYPES.length; i++) {
+			String documentType = NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_TYPES[i];
+			NotaryDocument slot = null;
+			if (existingDocs != null) {
+				for (int j = 0; j < existingDocs.size(); j++) {
+					NotaryDocument existing = existingDocs.get(j);
+					if (existing != null && StringUtils.equals(documentType, existing.getAttachmentType())) {
+						slot = existing;
+						break;
+					}
+				}
+			}
+			if (slot == null) {
+				slot = new NotaryDocument();
+				slot.setAttachmentType(documentType);
+			}
+			slot.setDocumentNo(NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS[i]);
+			lampiranPerpanjanganList.add(slot);
+		}
+	}
+
 	private void prepareNotaryDocuments() {
 		if (notary.getNotaryDocuments() == null) {
 			notary.setNotaryDocuments(new ArrayList<NotaryDocument>());
 		}
 		notary.getNotaryDocuments().clear();
-		if (lampiranList != null) {
-			for (int i = 0; i < lampiranList.size(); i++) {
-				NotaryDocument doc = lampiranList.get(i);
-				if (doc == null || StringUtils.isBlank(doc.getFileId())) {
-					continue;
-				}
-				doc.setNotary(notary);
-				if (doc.getNotaryDocumentId() == null) {
-					doc.setCreatedBy(facesUtil.retrieveUserLogin());
-					doc.setCreationDate(new Timestamp(new Date().getTime()));
-				} else {
-					doc.setLastUpdateBy(facesUtil.retrieveUserLogin());
-					doc.setLastUpdateDate(new Timestamp(new Date().getTime()));
-				}
-				doc.setDelId(new Long(0));
-				doc.setEnabledFlag(Constants.CONSTANT_YES);
-				notary.getNotaryDocuments().add(doc);
+		appendPreparedDocuments(lampiranList);
+		appendPreparedDocuments(lampiranPerpanjanganList);
+	}
+
+	private void appendPreparedDocuments(List<NotaryDocument> source) {
+		if (source == null) {
+			return;
+		}
+		for (int i = 0; i < source.size(); i++) {
+			NotaryDocument doc = source.get(i);
+			if (doc == null || StringUtils.isBlank(doc.getFileId())) {
+				continue;
 			}
+			doc.setNotary(notary);
+			if (doc.getNotaryDocumentId() == null) {
+				doc.setCreatedBy(facesUtil.retrieveUserLogin());
+				doc.setCreationDate(new Timestamp(new Date().getTime()));
+			} else {
+				doc.setLastUpdateBy(facesUtil.retrieveUserLogin());
+				doc.setLastUpdateDate(new Timestamp(new Date().getTime()));
+			}
+			doc.setDelId(new Long(0));
+			doc.setEnabledFlag(Constants.CONSTANT_YES);
+			notary.getNotaryDocuments().add(doc);
 		}
 	}
 
 	public void handleLampiranFileUpload(FileUploadEvent event) {
-		if (pengajuanPerpanjangan) {
+		if (!isLampiranUploadEnabled()) {
 			return;
 		}
 		try {
@@ -505,8 +615,97 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		}
 	}
 
+	public void handleLampiranPerpanjanganFileUpload(FileUploadEvent event) {
+		if (!isPerpanjanganUploadEnabled()) {
+			facesUtil.addErrMessage("Upload dokumen perpanjangan hanya untuk jenis pengajuan Perpanjangan");
+			return;
+		}
+		try {
+			if (fileUtil == null) {
+				fileUtil = FileUtil.getInstance();
+			}
+			String attachmentType = null;
+			if (event.getComponent() != null) {
+				Object attribute = event.getComponent().getAttributes().get("attachmentType");
+				if (attribute != null) {
+					attachmentType = attribute.toString();
+				}
+				if (StringUtils.isBlank(attachmentType)) {
+					attachmentType = attachmentTypeFromUploadId(event.getComponent().getId());
+				}
+			}
+			if (StringUtils.isBlank(attachmentType)) {
+				facesUtil.addErrMessage("Jenis dokumen perpanjangan tidak dikenali");
+				return;
+			}
+			String fileId = CallApiManager.callUploadAPI(event.getFile(), Constants.ARTICLE, parameterDetailService,
+					false, fileUtil);
+			boolean stored = false;
+			if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+				initLampiranPerpanjanganList();
+			}
+			for (int i = 0; i < lampiranPerpanjanganList.size(); i++) {
+				NotaryDocument doc = lampiranPerpanjanganList.get(i);
+				if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
+					doc.setFileId(fileId);
+					doc.setAttachmentFile(event.getFile().getFileName());
+					doc.setFileSize(event.getFile().getSize());
+					stored = true;
+					break;
+				}
+			}
+			if (!stored) {
+				facesUtil.addErrMessage("Dokumen " + attachmentType + " tidak ditemukan pada daftar lampiran");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			facesUtil.addErrMessage(e.getMessage());
+		}
+	}
+
+	private String attachmentTypeFromUploadId(String componentId) {
+		if (StringUtils.isBlank(componentId)) {
+			return null;
+		}
+		int number = -1;
+		if (componentId.startsWith("perpUpload")) {
+			try {
+				number = Integer.parseInt(componentId.substring("perpUpload".length()));
+			} catch (NumberFormatException e) {
+				number = -1;
+			}
+		}
+		for (int i = 0; i < NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS.length; i++) {
+			if (NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS[i] == number) {
+				return NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_TYPES[i];
+			}
+		}
+		return null;
+	}
+
+	public void deleteLampiranPerpanjanganAttachment(String fileId, String attachmentType) throws Exception {
+		if (!isPerpanjanganUploadEnabled()) {
+			return;
+		}
+		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
+		if (StringUtils.isNotBlank(fileId)) {
+			deleteFiles.add(new UploadedFileWO(fileId, null, null, null));
+		}
+		if (lampiranPerpanjanganList != null) {
+			for (int i = 0; i < lampiranPerpanjanganList.size(); i++) {
+				NotaryDocument doc = lampiranPerpanjanganList.get(i);
+				if (doc != null && StringUtils.equals(attachmentType, doc.getAttachmentType())) {
+					doc.setFileId(null);
+					doc.setAttachmentFile(null);
+					doc.setFileSize(null);
+					break;
+				}
+			}
+		}
+	}
+
 	public void deleteLampiranAttachment(String fileId, String attachmentType) throws Exception {
-		if (pengajuanPerpanjangan) {
+		if (!isLampiranUploadEnabled()) {
 			return;
 		}
 		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
@@ -604,6 +803,22 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void setNotary(Notary notary) {
 		this.notary = notary;
+	}
+
+	public boolean isPengajuanNotarisBaru() {
+		return !pengajuanPerpanjangan && !pengajuanUpdateDokumen;
+	}
+
+	public boolean isPerpanjanganReadOnly() {
+		return pengajuanPerpanjangan;
+	}
+
+	public boolean isFieldReadOnly() {
+		return Boolean.TRUE.equals(isViewOnly) || isPerpanjanganReadOnly();
+	}
+
+	public boolean isLampiranUploadEnabled() {
+		return !Boolean.TRUE.equals(isViewOnly) && !pengajuanPerpanjangan;
 	}
 
 	public boolean isPengajuanPerpanjangan() {
@@ -739,15 +954,55 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void openFormTab() {
 		showLampiranTab = false;
+		showLampiranPerpanjanganTab = false;
 	}
 
 	public void openLampiranTab() {
 		showLampiranTab = true;
+		showLampiranPerpanjanganTab = false;
+	}
+
+	public void openLampiranPerpanjanganTab() {
+		showLampiranTab = false;
+		showLampiranPerpanjanganTab = true;
+		if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+			initLampiranPerpanjanganList();
+		}
+	}
+
+	public boolean isPerpanjanganUploadEnabled() {
+		if (Boolean.TRUE.equals(isViewOnly)) {
+			return false;
+		}
+		if (pengajuanPerpanjangan) {
+			return true;
+		}
+		return notary != null && StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN,
+				notary.getJenisPengajuan());
+	}
+
+	public boolean isShowLampiranPerpanjanganTab() {
+		return showLampiranPerpanjanganTab;
+	}
+
+	public void setShowLampiranPerpanjanganTab(boolean showLampiranPerpanjanganTab) {
+		this.showLampiranPerpanjanganTab = showLampiranPerpanjanganTab;
+	}
+
+	public List<NotaryDocument> getLampiranPerpanjanganList() {
+		if (lampiranPerpanjanganList == null || lampiranPerpanjanganList.isEmpty()) {
+			initLampiranPerpanjanganList();
+		}
+		return lampiranPerpanjanganList;
+	}
+
+	public void setLampiranPerpanjanganList(List<NotaryDocument> lampiranPerpanjanganList) {
+		this.lampiranPerpanjanganList = lampiranPerpanjanganList;
 	}
 
 	public List<NotaryDocument> getLampiranList() {
-		if (lampiranList == null) {
-			lampiranList = new ArrayList<NotaryDocument>();
+		if (lampiranList == null || lampiranList.isEmpty()) {
+			initLampiranList();
 		}
 		return lampiranList;
 	}

@@ -58,6 +58,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						sb.append(" and ct.STATUS = :status ");
 					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_USER_PENGAJU, col)) {
+						sb.append(" and UPPER(ct.USER_PENGAJU) = UPPER(:userPengaju) ");
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_MAKER_TASK, col)) {
+						sb.append(" and ct.STATUS in ('revision', 'waiting approval CDU Checker', ");
+						sb.append("'waiting approval Legal', 'waiting approval SPV Legal', 'rejected') ");
+					}
 				}
 			}
 		}
@@ -83,6 +90,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						query.setParameter("status", val);
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_USER_PENGAJU, col)) {
+						query.setParameter("userPengaju", val);
 					}
 				}
 			}
@@ -134,7 +144,12 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("        ct.EMAIL, ct.MOBILE_NO, ct.WORK_AREA, ct.NOTE, ct.CREATED_BY, ct.CREATION_DATE, ");
 		sb.append("        ct.LAST_UPDATE_BY, ct.LAST_UPDATE_DATE, ct.ENABLED_FLAG, ");
 		sb.append("        ct.STATUS, ct.TANGGAL_PENSIUN, ct.TANGGAL_BERAKHIR_PKS, ct.JENIS_PENGAJUAN, ");
-		sb.append("        ct.NO_PENGAJUAN, ct.USER_PENGAJU, ct.TANGGAL_PENGAJUAN ");
+		sb.append("        ct.NO_PENGAJUAN, ct.USER_PENGAJU, ct.TANGGAL_PENGAJUAN, ");
+		sb.append("        (SELECT h.CATATAN_REVISI FROM WO_MST_NOTARY_HISTORY h ");
+		sb.append("          WHERE h.NOTARY_HISTORY_ID = (SELECT MAX(h2.NOTARY_HISTORY_ID) ");
+		sb.append("            FROM WO_MST_NOTARY_HISTORY h2 ");
+		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y' ");
+		sb.append("             AND h2.CATATAN_REVISI IS NOT NULL)) ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
@@ -195,6 +210,7 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				if (obj[24] != null) {
 					data.setTanggalPengajuan((Date) obj[24]);
 				}
+				data.setCatatanRevisi(obj[25] != null ? obj[25].toString() : null);
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);
 				//data = findById(notaryId);

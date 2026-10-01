@@ -95,6 +95,10 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		return null;
 	}
 
+	public boolean isCduMaker() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName);
+	}
+
 	public void search(ActionEvent actionEvent) {
 		List<SearchObject> searchCriteria = new ArrayList<SearchObject>();
 		if (StringUtils.isNotBlank(area)) {
@@ -103,11 +107,20 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		if (StringUtils.isNotBlank(notaryName)) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_NOTARY_NAME, notaryName));
 		}
-		String inbox = inboxStatus();
-		if (StringUtils.isNotBlank(inbox)) {
-			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, inbox));
+		if (isCduMaker()) {
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_MAKER_TASK, "Y"));
+			String login = facesUtil != null ? facesUtil.retrieveUserLogin() : null;
+			if (StringUtils.isBlank(login)) {
+				login = "__NO_USER__";
+			}
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_USER_PENGAJU, login));
 		} else {
-			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_INBOX__"));
+			String inbox = inboxStatus();
+			if (StringUtils.isNotBlank(inbox)) {
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, inbox));
+			} else {
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_INBOX__"));
+			}
 		}
 		tableModel.setSearchCriteria(searchCriteria);
 	}
@@ -120,6 +133,20 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 
 	public String openTask() {
 		return NotaryConstants.NAVIGATE_TASK_EDIT;
+	}
+
+	public String openMakerSubmit() {
+		if (facesUtil != null) {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+		}
+		return NotaryConstants.NAVIGATE_EDIT;
+	}
+
+	public String openMakerView() {
+		if (facesUtil != null) {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+		}
+		return NotaryConstants.NAVIGATE_EDIT;
 	}
 
 	public void openHistory(Notary notary) {
