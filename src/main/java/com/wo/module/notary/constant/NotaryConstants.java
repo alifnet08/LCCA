@@ -46,6 +46,7 @@ public abstract class NotaryConstants {
 	public final static String NAVIGATE_TASK_EDIT = "notaryTaskEdit.faces";
 	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
 	public final static String SEARCH_BY_USER_PENGAJU = "SEARCH_BY_USER_PENGAJU";
+	public final static String SEARCH_BY_MAKER_TASK = "SEARCH_BY_MAKER_TASK";
 	public final static String REVISI_TARGET_MAKER = "MAKER";
 	public final static String REVISI_TARGET_LEGAL = "LEGAL";
 	public final static String PREFIX_NO_PENGAJUAN_BARU = "NB";

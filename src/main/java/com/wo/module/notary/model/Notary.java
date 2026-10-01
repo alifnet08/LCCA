@@ -31,6 +31,7 @@ public class Notary extends BaseEntity implements Serializable {
 	private String jenisPengajuan;
 	private Date tanggalPensiun;
 	private Date tanggalBerakhirPks;
+	private String catatanRevisi;
 	private List<NotaryDocument> notaryDocuments = new ArrayList<NotaryDocument>();
 	
 	public Long getNotaryId() {
@@ -187,6 +188,14 @@ public class Notary extends BaseEntity implements Serializable {
 
 	public void setTanggalBerakhirPks(Date tanggalBerakhirPks) {
 		this.tanggalBerakhirPks = tanggalBerakhirPks;
+	}
+
+	public String getCatatanRevisi() {
+		return catatanRevisi;
+	}
+
+	public void setCatatanRevisi(String catatanRevisi) {
+		this.catatanRevisi = catatanRevisi;
 	}
 
 	public List<NotaryDocument> getNotaryDocuments() {

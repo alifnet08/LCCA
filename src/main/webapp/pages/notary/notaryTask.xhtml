@@ -81,12 +81,23 @@
 								<p:column headerText="Status Pengajuan">
 									<h:outputLabel value="#{vo.status}" />
 								</p:column>
+								<p:column headerText="Catatan Revisi" rendered="#{notaryTaskBean.cduMaker}">
+									<p:inputTextarea value="#{vo.catatanRevisi}" readonly="true"
+										styleClass="form-control" rows="2" autoResize="false" />
+								</p:column>
 								<p:column headerText="#{msg.formAction}" style="text-align:center;width:12%;">
 									<p:commandLink value="Submit" ajax="false"
 										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision'}"
 										action="#{notaryTaskBean.openMakerSubmit}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
+									</p:commandLink>
+									<p:commandLink value="View" ajax="false"
+										rendered="#{notaryTaskBean.cduMaker and vo.status ne 'revision' and vo.status ne 'complete'}"
+										action="#{notaryTaskBean.openMakerView}"
+										styleClass="btn btn-default tl-label">
+										<f:param name="id" value="#{vo.notaryId}" />
+										<f:param name="viewId" value="true" />
 									</p:commandLink>
 								</p:column>
 								<p:column headerText="History">

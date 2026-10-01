@@ -329,6 +329,10 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void save() {
 		try {
+			if (Boolean.TRUE.equals(isViewOnly)) {
+				facesUtil.addErrMessage("Pengajuan ini hanya dapat dilihat.");
+				return;
+			}
 			if (!validate()) {
 				if (isPengajuanNotarisBaru()) {
 					if (notary.getAreaCode() == null) {
@@ -587,7 +591,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public void handleLampiranFileUpload(FileUploadEvent event) {
-		if (pengajuanPerpanjangan) {
+		if (!isLampiranUploadEnabled()) {
 			return;
 		}
 		try {
@@ -701,7 +705,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public void deleteLampiranAttachment(String fileId, String attachmentType) throws Exception {
-		if (pengajuanPerpanjangan) {
+		if (!isLampiranUploadEnabled()) {
 			return;
 		}
 		deleteFiles = deleteFiles != null ? deleteFiles : new ArrayList<UploadedFileWO>();
@@ -807,6 +811,14 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public boolean isPerpanjanganReadOnly() {
 		return pengajuanPerpanjangan;
+	}
+
+	public boolean isFieldReadOnly() {
+		return Boolean.TRUE.equals(isViewOnly) || isPerpanjanganReadOnly();
+	}
+
+	public boolean isLampiranUploadEnabled() {
+		return !Boolean.TRUE.equals(isViewOnly) && !pengajuanPerpanjangan;
 	}
 
 	public boolean isPengajuanPerpanjangan() {
@@ -989,8 +1001,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	public List<NotaryDocument> getLampiranList() {
-		if (lampiranList == null) {
-			lampiranList = new ArrayList<NotaryDocument>();
+		if (lampiranList == null || lampiranList.isEmpty()) {
+			initLampiranList();
 		}
 		return lampiranList;
 	}
