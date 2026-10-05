@@ -5269,6 +5269,37 @@
 		</managed-property>
 	</managed-bean>
 	<!-- Notary History -->
+	<!-- Notary Document -->
+	 <managed-bean>
+		<managed-bean-name>notaryDocumentBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.notary.bean.NotaryDocumentBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>notaryService</property-name>
+			<value>#{notaryService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- Notary Document -->
 	<!-- aboutUs -->
 	 <managed-bean>
 		<managed-bean-name>aboutUsBean</managed-bean-name>

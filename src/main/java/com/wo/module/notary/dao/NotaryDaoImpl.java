@@ -55,6 +55,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 						sb.append(" and UPPER(area_code) like UPPER(:areaCode) ");
 					
 				}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_CATEGORY, col)) {
+						sb.append(" and UPPER(dtl.NAME_IN) like UPPER(:categoryName) ");
+					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						sb.append(" and ct.STATUS = :status ");
 					}
@@ -88,6 +91,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_AREA_CODE, col)) {
 						query.setParameter("areaCode", "%" + val + "%");
 					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_CATEGORY, col)) {
+						query.setParameter("categoryName", "%" + val + "%");
+					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						query.setParameter("status", val);
 					}
@@ -115,12 +121,15 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select count(1) ");
 		sb.append(" from wo_mst_notary ct ");
+		sb.append(" inner join wo_mst_parameter_dtl dtl on ct.notary_category = dtl.parameter_dtl_code ");
+		sb.append(" and dtl.parameter_code = :notaryCategoryHeader ");
 		sb.append(" where 1=1 ");
 		sb.append(" and ct.enabled_flag = 'Y' ");
 
 		this.getQueryWhereString(sb, searchCriteria);
 
 		Query query = getSession().createSQLQuery(sb.toString());
+		query.setParameter("notaryCategoryHeader", ParameterHeader.PARAM_HEAD_NOTARY_CATEGORY);
 
 		this.getQuerySetValue(query, searchCriteria);
 

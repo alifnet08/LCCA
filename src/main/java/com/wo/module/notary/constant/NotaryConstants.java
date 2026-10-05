@@ -14,6 +14,7 @@ public abstract class NotaryConstants {
 	public final static String SEARCH_BY_AREA = "SEARCH_BY_AREA";
 	public final static String SEARCH_BY_NOTARY_NAME = "SEARCH_BY_NOTARY_NAME";
 	public final static String SEARCH_BY_AREA_CODE = "SEARCH_BY_AREA_CODE";
+	public final static String SEARCH_BY_CATEGORY = "SEARCH_BY_CATEGORY";
 	
 	public final static String SIGN_MINUS = "-";
 	public final static String SIGN_PLUS = "+";
