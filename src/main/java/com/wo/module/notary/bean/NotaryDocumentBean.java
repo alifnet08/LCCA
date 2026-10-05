@@ -21,9 +21,7 @@ import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.Notary;
 import com.wo.module.notary.model.NotaryDocument;
 import com.wo.module.notary.service.NotaryService;
-import com.wo.module.responsibility.model.Responsibility;
 import com.wo.module.responsibility.service.ResponsibilityService;
-import com.wo.module.user.model.User;
 import com.wo.module.user.service.UserService;
 import com.wo.module.common.utility.CallApiManager;
 
@@ -40,8 +38,9 @@ public class NotaryDocumentBean extends CommonBean implements Serializable {
 	private ResponsibilityService responsibilityService;
 	public FacesUtil facesUtil;
 	private DBLazyDataModel<Notary> tableModel;
-	private String currentResponsibilityName;
 	private List<NotaryDocument> lampiranList;
+	private List<NotaryDocument> lampiranPerpanjanganList;
+	private boolean showLampiranPerpanjanganTab;
 	private Notary selectedNotary;
 
 	public void addErrMessage(String summary) {
@@ -55,45 +54,13 @@ public class NotaryDocumentBean extends CommonBean implements Serializable {
 		paging = Constants.DEFAULT_PAGING_NUMBER;
 		tableModel = new DBLazyDataModel<Notary>(notaryService, paging);
 		lampiranList = new ArrayList<NotaryDocument>();
-		resolveCurrentResponsibility();
+		lampiranPerpanjanganList = new ArrayList<NotaryDocument>();
+		showLampiranPerpanjanganTab = false;
 		search(null);
-	}
-
-	private void resolveCurrentResponsibility() {
-		currentResponsibilityName = "";
-		try {
-			if (userService == null || responsibilityService == null || facesUtil == null) {
-				return;
-			}
-			String nik = facesUtil.retrieveUserLogin();
-			if (StringUtils.isBlank(nik)) {
-				return;
-			}
-			User user = userService.getUserByNik(nik);
-			if (user == null || user.getResponsibilityId() == null) {
-				return;
-			}
-			Responsibility responsibility = responsibilityService.findById(user.getResponsibilityId());
-			if (responsibility != null) {
-				currentResponsibilityName = responsibility.getName();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public boolean isLegalAccess() {
-		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_LEGAL, currentResponsibilityName)
-				|| StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_SPV_LEGAL, currentResponsibilityName);
 	}
 
 	public void search(ActionEvent actionEvent) {
 		List<SearchObject> searchCriteria = new ArrayList<SearchObject>();
-		if (!isLegalAccess()) {
-			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_ACCESS__"));
-			tableModel.setSearchCriteria(searchCriteria);
-			return;
-		}
 		if (StringUtils.isNotBlank(area)) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA, area));
 		}
@@ -108,15 +75,55 @@ public class NotaryDocumentBean extends CommonBean implements Serializable {
 	}
 
 	public void openLampiran(Notary notary) {
-		lampiranList = new ArrayList<NotaryDocument>();
 		selectedNotary = notary;
-		if (notary == null || notary.getNotaryId() == null || !isLegalAccess()) {
-			return;
+		showLampiranPerpanjanganTab = false;
+		List<NotaryDocument> existingDocs = null;
+		if (notary != null && notary.getNotaryId() != null) {
+			Notary loaded = notaryService.findById(notary.getNotaryId());
+			if (loaded != null) {
+				existingDocs = loaded.getNotaryDocuments();
+			}
 		}
-		Notary loaded = notaryService.findById(notary.getNotaryId());
-		if (loaded != null && loaded.getNotaryDocuments() != null) {
-			lampiranList = loaded.getNotaryDocuments();
+		lampiranList = fillDocumentSlots(NotaryConstants.NOTARY_DOCUMENT_TYPES, null, existingDocs);
+		lampiranPerpanjanganList = fillDocumentSlots(NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_TYPES,
+				NotaryConstants.NOTARY_PERPANJANGAN_DOCUMENT_NOS, existingDocs);
+	}
+
+	public void openLampiranTab() {
+		showLampiranPerpanjanganTab = false;
+	}
+
+	public void openLampiranPerpanjanganTab() {
+		showLampiranPerpanjanganTab = true;
+	}
+
+	private List<NotaryDocument> fillDocumentSlots(String[] types, int[] documentNos, List<NotaryDocument> existingDocs) {
+		List<NotaryDocument> slots = new ArrayList<NotaryDocument>();
+		if (types == null) {
+			return slots;
 		}
+		for (int i = 0; i < types.length; i++) {
+			String documentType = types[i];
+			NotaryDocument slot = null;
+			if (existingDocs != null) {
+				for (int j = 0; j < existingDocs.size(); j++) {
+					NotaryDocument existing = existingDocs.get(j);
+					if (existing != null && StringUtils.equals(documentType, existing.getAttachmentType())) {
+						slot = existing;
+						break;
+					}
+				}
+			}
+			if (slot == null) {
+				slot = new NotaryDocument();
+				slot.setAttachmentType(documentType);
+			}
+			if (documentNos != null && i < documentNos.length) {
+				slot.setDocumentNo(documentNos[i]);
+			}
+			slots.add(slot);
+		}
+		return slots;
 	}
 
 	public void downloadFile(String fileId, String fileName, byte[] content) throws Exception {
@@ -169,6 +176,22 @@ public class NotaryDocumentBean extends CommonBean implements Serializable {
 
 	public void setLampiranList(List<NotaryDocument> lampiranList) {
 		this.lampiranList = lampiranList;
+	}
+
+	public List<NotaryDocument> getLampiranPerpanjanganList() {
+		return lampiranPerpanjanganList;
+	}
+
+	public void setLampiranPerpanjanganList(List<NotaryDocument> lampiranPerpanjanganList) {
+		this.lampiranPerpanjanganList = lampiranPerpanjanganList;
+	}
+
+	public boolean isShowLampiranPerpanjanganTab() {
+		return showLampiranPerpanjanganTab;
+	}
+
+	public void setShowLampiranPerpanjanganTab(boolean showLampiranPerpanjanganTab) {
+		this.showLampiranPerpanjanganTab = showLampiranPerpanjanganTab;
 	}
 
 	public Notary getSelectedNotary() {
