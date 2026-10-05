@@ -203,4 +203,12 @@ public class NotaryDocumentBean extends CommonBean implements Serializable {
 		this.responsibilityService = responsibilityService;
 	}
 
+	public FacesUtil getFacesUtil() {
+		return facesUtil;
+	}
+
+	public void setFacesUtil(FacesUtil facesUtil) {
+		this.facesUtil = facesUtil;
+	}
+
 }

@@ -115,4 +115,12 @@ public class NotaryHistoryBean extends CommonBean implements Serializable {
 		this.notaryService = notaryService;
 	}
 
+	public FacesUtil getFacesUtil() {
+		return facesUtil;
+	}
+
+	public void setFacesUtil(FacesUtil facesUtil) {
+		this.facesUtil = facesUtil;
+	}
+
 }
