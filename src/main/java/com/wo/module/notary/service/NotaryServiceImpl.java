@@ -158,6 +158,62 @@ public class NotaryServiceImpl implements NotaryService {
 		}
 	}
 
+	public List<NotaryHistory> searchHistory(String notaryName, Date tanggalDari, Date tanggalSampai) {
+		try {
+			List<NotaryHistory> list = notaryHistoryDao.searchHistory(notaryName);
+			fillPerubahan(list);
+			List<NotaryHistory> filtered = new ArrayList<NotaryHistory>();
+			for (int i = 0; i < list.size(); i++) {
+				NotaryHistory hist = list.get(i);
+				if (hist == null || hist.getCreationDate() == null) {
+					continue;
+				}
+				if (tanggalDari != null && hist.getCreationDate().before(tanggalDari)) {
+					continue;
+				}
+				if (tanggalSampai != null && hist.getCreationDate().after(tanggalSampai)) {
+					continue;
+				}
+				filtered.add(hist);
+			}
+			java.util.Collections.sort(filtered, new java.util.Comparator<NotaryHistory>() {
+				public int compare(NotaryHistory a, NotaryHistory b) {
+					if (a.getCreationDate() == null || b.getCreationDate() == null) {
+						return 0;
+					}
+					return b.getCreationDate().compareTo(a.getCreationDate());
+				}
+			});
+			return filtered;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<NotaryHistory>();
+		}
+	}
+
+	private void fillPerubahan(List<NotaryHistory> list) {
+		Long currentNotaryId = null;
+		String previousStatus = null;
+		for (int i = 0; i < list.size(); i++) {
+			NotaryHistory hist = list.get(i);
+			if (hist == null || hist.getNotary() == null) {
+				continue;
+			}
+			Long notaryId = hist.getNotary().getNotaryId();
+			if (currentNotaryId == null || !currentNotaryId.equals(notaryId)) {
+				currentNotaryId = notaryId;
+				previousStatus = null;
+			}
+			String currentStatus = hist.getStatus() != null ? hist.getStatus() : "";
+			if (previousStatus != null) {
+				hist.setPerubahan("\"" + previousStatus + "\" to \"" + currentStatus + "\"");
+			} else {
+				hist.setPerubahan(currentStatus);
+			}
+			previousStatus = currentStatus;
+		}
+	}
+
 	public String generateNoPengajuan(String prefix) {
 		Date now = new Date();
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MM");

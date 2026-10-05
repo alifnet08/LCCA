@@ -5246,7 +5246,29 @@
 			<value>#{logAccessService}</value>
 		</managed-property>
 	</managed-bean>
-	<!-- Notary Task -->
+	<!-- Notary History -->
+	 <managed-bean>
+		<managed-bean-name>notaryHistoryBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.notary.bean.NotaryHistoryBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>notaryService</property-name>
+			<value>#{notaryService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- Notary History -->
 	<!-- aboutUs -->
 	 <managed-bean>
 		<managed-bean-name>aboutUsBean</managed-bean-name>

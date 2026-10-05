@@ -12,6 +12,7 @@ public class NotaryHistory extends BaseEntity implements Serializable {
 	private Notary notary;
 	private String status;
 	private String catatanRevisi;
+	private String perubahan;
 
 	public Long getNotaryHistoryId() {
 		return notaryHistoryId;
@@ -43,6 +44,14 @@ public class NotaryHistory extends BaseEntity implements Serializable {
 
 	public void setCatatanRevisi(String catatanRevisi) {
 		this.catatanRevisi = catatanRevisi;
+	}
+
+	public String getPerubahan() {
+		return perubahan;
+	}
+
+	public void setPerubahan(String perubahan) {
+		this.perubahan = perubahan;
 	}
 
 }

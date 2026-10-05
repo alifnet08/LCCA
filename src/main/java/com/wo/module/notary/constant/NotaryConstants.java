@@ -44,6 +44,7 @@ public abstract class NotaryConstants {
 	public final static String RESPONSIBILITY_SPV_LEGAL = "SPV Legal";
 	public final static String NAVIGATE_TASK = "notaryTask.faces";
 	public final static String NAVIGATE_TASK_EDIT = "notaryTaskEdit.faces";
+	public final static String NAVIGATE_HISTORY = "notaryHistory.faces";
 	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
 	public final static String SEARCH_BY_USER_PENGAJU = "SEARCH_BY_USER_PENGAJU";
 	public final static String SEARCH_BY_MAKER_TASK = "SEARCH_BY_MAKER_TASK";

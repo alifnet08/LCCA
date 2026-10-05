@@ -9,4 +9,6 @@ public interface NotaryHistoryDao extends GenericDAO<NotaryHistory, Long> {
 
 	public List<NotaryHistory> getNotaryHistoryByNotaryId(Long notaryId) throws Exception;
 
+	public List<NotaryHistory> searchHistory(String notaryName) throws Exception;
+
 }
