@@ -14,6 +14,7 @@ public abstract class NotaryConstants {
 	public final static String SEARCH_BY_AREA = "SEARCH_BY_AREA";
 	public final static String SEARCH_BY_NOTARY_NAME = "SEARCH_BY_NOTARY_NAME";
 	public final static String SEARCH_BY_AREA_CODE = "SEARCH_BY_AREA_CODE";
+	public final static String SEARCH_BY_CATEGORY = "SEARCH_BY_CATEGORY";
 	
 	public final static String SIGN_MINUS = "-";
 	public final static String SIGN_PLUS = "+";
@@ -44,6 +45,7 @@ public abstract class NotaryConstants {
 	public final static String RESPONSIBILITY_SPV_LEGAL = "SPV Legal";
 	public final static String NAVIGATE_TASK = "notaryTask.faces";
 	public final static String NAVIGATE_TASK_EDIT = "notaryTaskEdit.faces";
+	public final static String NAVIGATE_HISTORY = "notaryHistory.faces";
 	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
 	public final static String SEARCH_BY_USER_PENGAJU = "SEARCH_BY_USER_PENGAJU";
 	public final static String SEARCH_BY_MAKER_TASK = "SEARCH_BY_MAKER_TASK";

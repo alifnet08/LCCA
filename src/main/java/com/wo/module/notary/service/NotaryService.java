@@ -4,6 +4,7 @@
  */
 package com.wo.module.notary.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -30,6 +31,8 @@ public interface NotaryService extends RetrieverDataPage<Notary> {
 	public void saveHistory(Notary notary, String historyStatus, String catatanRevisi, String userLogin);
 	
 	public List<NotaryHistory> getHistoryByNotaryId(Long notaryId);
+
+	public List<NotaryHistory> searchHistory(String notaryName, Date tanggalDari, Date tanggalSampai);
 
 	public String generateNoPengajuan(String prefix);
 	

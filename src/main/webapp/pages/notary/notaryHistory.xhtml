@@ -1,0 +1,95 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="History Notaris" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="msgs" globalOnly="true" />
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Nama Notaris" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryHistoryBean.notaryName}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Tanggal Perubahan Dari" /></label>
+							<p:calendar value="#{notaryHistoryBean.tanggalDari}" autocomplete="off"
+								styleClass="form-control-datepicker-wrap" pattern="#{notaryHistoryBean.inputDateFormat}"
+								locale="#{notaryHistoryBean.inputDateLocale}" />
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Tanggal Perubahan Sampai" /></label>
+							<p:calendar value="#{notaryHistoryBean.tanggalSampai}" autocomplete="off"
+								styleClass="form-control-datepicker-wrap" pattern="#{notaryHistoryBean.inputDateFormat}"
+								locale="#{notaryHistoryBean.inputDateLocale}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}" ajax="true"
+										update="tableSearch" styleClass="btn btn-success tl-label"
+										actionListener="#{notaryHistoryBean.search}"></p:commandButton></li>
+								<li><p:commandButton value="Export" ajax="false"
+										styleClass="btn btn-success tl-label">
+										<p:dataExporter type="xls" target="tableSearch" fileName="HistoryNotaris" />
+									</p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{notaryHistoryBean.historyList}"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{notaryHistoryBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Nama Notaris">
+									<h:outputText value="#{vo.notary.notaryName}" />
+								</p:column>
+								<p:column headerText="Alamat Notaris">
+									<h:outputText value="#{vo.notary.address}" />
+								</p:column>
+								<p:column headerText="Region">
+									<h:outputText value="#{vo.notary.area}" />
+								</p:column>
+								<p:column headerText="Kategori">
+									<h:outputText value="#{vo.notary.notaryCategory != null ? vo.notary.notaryCategory.nameIn : ''}" />
+								</p:column>
+								<p:column headerText="Perubahan">
+									<h:outputText value="#{vo.perubahan}" />
+								</p:column>
+								<p:column headerText="Tanggal Perubahan">
+									<h:outputText value="#{vo.creationDate}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Remarks">
+									<h:outputText value="#{vo.catatanRevisi}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

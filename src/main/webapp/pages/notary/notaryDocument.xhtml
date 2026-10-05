@@ -1,0 +1,123 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="menuName">
+		<h:outputText value="Dokumen Notaris" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="msgs" globalOnly="true" />
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Area" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryDocumentBean.area}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Nama Notaris" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryDocumentBean.notaryName}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Kategori" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryDocumentBean.categoryName}"></p:inputText>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="#{msg.buttonSearch}" ajax="true"
+										update="tableSearch" styleClass="btn btn-success tl-label"
+										actionListener="#{notaryDocumentBean.search}"></p:commandButton></li>
+							</ul>
+							<ul class="no-margin no-padding pull-right">
+								<li><p:commandButton value="Export Excel" ajax="false"
+										styleClass="btn btn-success tl-label">
+										<p:dataExporter type="xls" target="tableSearch" fileName="DokumenNotaris" />
+									</p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{notaryDocumentBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}"
+								rows="#{notaryDocumentBean.paging}" rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Kategori">
+									<h:outputText value="#{vo.notaryCategory.nameIn}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{vo.area}" />
+								</p:column>
+								<p:column headerText="Nama Notaris">
+									<h:outputText value="#{vo.notaryName}" />
+								</p:column>
+								<p:column headerText="Alamat Kantor">
+									<h:outputText value="#{vo.address}" />
+								</p:column>
+								<p:column headerText="No Handphone">
+									<h:outputText value="#{vo.mobileNo}" />
+								</p:column>
+								<p:column headerText="Status Notaris">
+									<h:outputText value="#{vo.status}" />
+								</p:column>
+								<p:column headerText="Tanggal Dibuat">
+									<h:outputText value="#{vo.creationDate}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Tanggal Berakhir Kerjasama">
+									<h:outputText value="#{vo.tanggalBerakhirPks}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Dokumen Pendukung" exportable="false">
+									<p:commandButton value="Lampiran" process="@this"
+										actionListener="#{notaryDocumentBean.openLampiran(vo)}"
+										update="form:dlgDokumenPendukung"
+										oncomplete="PF('dlgDokumenPendukung').show();"
+										styleClass="btn btn-link" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:dialog id="dlgDokumenPendukung" widgetVar="dlgDokumenPendukung"
+			header="Dokumen Pendukung" modal="true" resizable="false" width="600"
+			appendTo="@form">
+			<p:dataList value="#{notaryDocumentBean.lampiranList}" var="doc"
+				emptyMessage="#{msg.textNodata}">
+				<h:outputText value="#{doc.attachmentType}" />
+				<h:outputText value=" : " rendered="#{not empty doc.fileId}" />
+				<p:commandLink rendered="#{not empty doc.fileId}" ajax="false" immediate="true"
+					actionListener="#{notaryDocumentBean.downloadFile(doc.fileId,doc.attachmentFile,null)}"
+					target="_blank">#{doc.attachmentFile}</p:commandLink>
+			</p:dataList>
+			<p:commandButton value="OK" type="button" process="@this"
+				onclick="PF('dlgDokumenPendukung').hide();"
+				styleClass="btn btn-success" />
+		</p:dialog>
+	</ui:define>
+</ui:composition>

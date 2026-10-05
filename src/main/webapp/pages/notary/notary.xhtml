@@ -17,6 +17,21 @@
 				background-color: #9fd3ff !important;
 				color: #1a1a1a !important;
 			}
+			.notary-list-scroll {
+				overflow-x: auto;
+				width: 100%;
+			}
+			.notary-list-scroll .ui-datatable-tablewrapper {
+				overflow-x: auto;
+			}
+			.notary-list-scroll .ui-datatable table {
+				width: max-content;
+				min-width: 100%;
+			}
+			.notary-list-scroll .ui-datatable th,
+			.notary-list-scroll .ui-datatable td {
+				white-space: nowrap;
+			}
 		</style>
 	</ui:define>
 
@@ -115,27 +130,44 @@
 					</div>
 					<div class="col-lg-12">&nbsp;</div>
 					<div class="col-lg-12">
-						<div class="table-responsive">
+						<div class="table-responsive notary-list-scroll">
 							<p:dataTable id="tableSearch" paginator="true" var="vo"
 								value="#{notaryBean.tableModel}" dynamic="true" lazy="true"
 								emptyMessage="#{msg.textNodata}"
 								rows="#{notaryBean.paging}" rowIndexVar="statIndex"
 								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								tableStyle="width:max-content;min-width:100%;"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
-								<p:column style="text-align:center;width:10%;"
-									headerText="#{msg.formAction}">
-
-									<h:outputLabel value="&#160;" />
-									<p:commandLink id="edit" value="#{msg.buttonEdit}" style="display:none"
-										action="#{notaryBean.getNavigateEdit()}" type="submit"
-										ajax="false" styleClass="tl-label">
+								<p:column headerText="Kategori">
+									<h:outputLabel value="#{vo.notaryCategory.nameIn}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputLabel value="#{vo.area}" />
+								</p:column>
+								<p:column headerText="Nama Notaris">
+									<h:outputLabel value="#{vo.notaryName}" />
+								</p:column>
+								<p:column headerText="No Telepon">
+									<h:outputLabel value="#{vo.phoneNo}" />
+								</p:column>
+								<p:column headerText="Email">
+									<h:outputLabel value="#{vo.email}" />
+								</p:column>
+								<p:column headerText="No Handphone">
+									<h:outputLabel value="#{vo.mobileNo}" />
+								</p:column>
+								<p:column headerText="Alamat Kantor">
+									<h:outputLabel value="#{vo.address}" />
+								</p:column>
+								<p:column headerText="#{msg.formAction}" style="text-align:center;white-space:nowrap;">
+									<p:commandLink id="view" value="View" ajax="false"
+										action="#{notaryBean.getNavigateEdit()}"
+										styleClass="btn btn-default tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
+										<f:param name="viewId" value="true" />
 									</p:commandLink>
-
-									<h:outputText style="display:none; padding-left:4px; color:grey;'"
-										value=" | " />
-									<h:outputLabel value="&#160;" />
+									<h:outputText value=" " />
 									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
 										styleClass="tl-label" update="tableSearch form:deletedMessage"
 										action="#{notaryBean.delete(vo.notaryId)}">
@@ -143,106 +175,6 @@
 											message="#{msg.formDeleteMessage}"
 											icon="pi pi-exclamation-triangle" />
 									</p:commandLink>
-
-								</p:column>
-
-								<p:column headerText="#{msg.formNotaryCategory}" style="text-align:center;width:15%;">
-									<h:outputLabel value="#{vo.notaryCategory.nameIn}" />
-								</p:column>
-								<p:column headerText="#{msg.formNotaryArea}">
-									<h:outputLabel value="#{vo.area}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryNotarisName}">
-									<h:outputLabel value="#{vo.notaryName}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryOfficeAddr}">
-									<h:outputLabel value="#{vo.address}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryAreaCode}">
-									<h:outputLabel value="#{vo.areaCode}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryTelpNo}">
-									<h:outputLabel value="#{vo.phoneNo}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryFaxNo}">
-									<h:outputLabel value="#{vo.faxNo}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryEmail}">
-									<h:outputLabel value="#{vo.email}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryHPNo}">
-									<h:outputLabel value="#{vo.mobileNo}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryWorkingArea}">
-									<h:outputLabel value="#{vo.workArea}" />
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryNote}">
-									<h:outputLabel value="#{vo.note}" />
-								</p:column>
-
-								<p:column headerText="No Pengajuan">
-									<h:outputLabel value="#{vo.notaryNo}" />
-								</p:column>
-
-								<p:column headerText="User Pengaju">
-									<h:outputLabel value="#{vo.userPengaju}" />
-								</p:column>
-
-								<p:column headerText="Tanggal Pengajuan">
-									<h:outputLabel value="#{vo.tanggalPengajuan}" style="text-align:center" >
-										<f:convertDateTime
-											pattern="dd-MMM-yyyy" locale="en" >
-										</f:convertDateTime>
-									</h:outputLabel>
-								</p:column>
-
-								<p:column headerText="Jenis Pengajuan">
-									<h:outputLabel value="#{vo.jenisPengajuan}" />
-								</p:column>
-
-								<p:column headerText="Status">
-									<h:outputLabel value="#{vo.status}" />
-								</p:column>
-
-								<p:column headerText="Tanggal Pensiun">
-									<h:outputLabel value="#{vo.tanggalPensiun}" style="text-align:center" >
-										<f:convertDateTime
-											pattern="dd-MMM-yyyy" locale="en" >
-										</f:convertDateTime>
-									</h:outputLabel>
-								</p:column>
-
-								<p:column headerText="Tanggal Berakhir Kerjasama">
-									<h:outputLabel value="#{vo.tanggalBerakhirPks}" style="text-align:center" >
-										<f:convertDateTime
-											pattern="dd-MMM-yyyy" locale="en" >
-										</f:convertDateTime>
-									</h:outputLabel>
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryCreatedDate}">
-								<h:outputLabel value="#{vo.creationDate}" style="text-align:center" >
-										<f:convertDateTime
-											pattern="dd-MMM-yyyy" locale="en" >
-										</f:convertDateTime>
-									</h:outputLabel>		
-								</p:column>
-								
-								<p:column headerText="#{msg.formNotaryLastUpdated}">
-								<h:outputLabel value="#{vo.lastUpdateDate}" style="text-align:center" >
-										<f:convertDateTime
-											pattern="dd-MMM-yyyy" locale="en" >
-										</f:convertDateTime>
-									</h:outputLabel>		
 								</p:column>
 								
 							</p:dataTable>

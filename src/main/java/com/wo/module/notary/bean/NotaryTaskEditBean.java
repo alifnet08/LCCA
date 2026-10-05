@@ -38,6 +38,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	private FileUtil fileUtil;
 	private String currentResponsibilityName;
 	private String catatanRevisi;
+	private String catatanRevisiError;
 	private String revisiTarget;
 	private List<String> selectedRevisiDocuments;
 	private boolean showLampiranTab;
@@ -116,13 +117,20 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	private void processAction(String actionType) {
+		catatanRevisiError = null;
 		try {
 			if (notary == null || !isActionEnabled()) {
 				addErr("Pengajuan tidak dapat diproses.");
 				return;
 			}
-			if (("REJECT".equals(actionType) || "REVISI".equals(actionType)) && StringUtils.isBlank(catatanRevisi)) {
-				addErr("Catatan revisi wajib diisi.");
+			if ("REVISI".equals(actionType) && StringUtils.isBlank(catatanRevisi)) {
+				catatanRevisiError = "Catatan revisi harus diisi.";
+				addErr(catatanRevisiError);
+				return;
+			}
+			if ("REJECT".equals(actionType) && StringUtils.isBlank(catatanRevisi)) {
+				catatanRevisiError = "Catatan revisi harus diisi.";
+				addErr(catatanRevisiError);
 				return;
 			}
 			String userLogin = facesUtil.retrieveUserLogin();
@@ -317,6 +325,14 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 
 	public void setCatatanRevisi(String catatanRevisi) {
 		this.catatanRevisi = catatanRevisi;
+	}
+
+	public String getCatatanRevisiError() {
+		return catatanRevisiError;
+	}
+
+	public void setCatatanRevisiError(String catatanRevisiError) {
+		this.catatanRevisiError = catatanRevisiError;
 	}
 
 	public String getRevisiTarget() {

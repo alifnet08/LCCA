@@ -85,7 +85,7 @@
 							oncomplete="notaryShowTab('lampiran')"
 							styleClass="#{notaryEditBean.showLampiranTab ? 'btn btn-primary' : 'btn btn-default'}" />
 						<p:commandButton value="Lampiran Perpanjangan" process="notaryFormPanel" update="notaryTabButtons"
-							rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
+							rendered="#{notaryEditBean.isViewOnly or not notaryEditBean.pengajuanNotarisBaru}"
 							actionListener="#{notaryEditBean.openLampiranPerpanjanganTab}"
 							oncomplete="notaryShowTab('perpanjangan')"
 							styleClass="#{notaryEditBean.showLampiranPerpanjanganTab ? 'btn btn-primary' : 'btn btn-default'}" />
@@ -142,7 +142,7 @@
 						</div>
 					</div>
 				
-					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{notaryEditBean.isViewOnly or not notaryEditBean.pengajuanNotarisBaru}">
 						<div class="form-group">
 							<label class="tl-label" tl="areaCode"><p:outputLabel
 									value="#{msg.formNotaryAreaCode}" for="areaCode" /></label>								
@@ -162,7 +162,7 @@
 						</div>
 					</div>
 					
-					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{not notaryEditBean.pengajuanNotarisBaru}">
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{notaryEditBean.isViewOnly or not notaryEditBean.pengajuanNotarisBaru}">
 						<div class="form-group">
 							<label class="tl-label" tl="faxNo"><p:outputLabel
 									value="#{msg.formNotaryFaxNo}" for="faxNo" /></label>								
@@ -555,7 +555,7 @@
 									<td>
 										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.lampiranUploadEnabled}" immediate="true"
 											actionListener="#{notaryEditBean.deleteLampiranAttachment(vo.fileId, vo.attachmentType)}"
-											update="lampiranSlots notaryLampiranList">#{msg.buttonDelete}</p:commandLink>
+											update=":form:lampiranSlots :form:notaryLampiranList">#{msg.buttonDelete}</p:commandLink>
 									</td>
 								</tr>
 							</table>
@@ -563,7 +563,7 @@
 					</div>
 				</h:panelGroup>
 				<h:panelGroup id="notaryPerpanjanganPanel" layout="block" styleClass="notary-upload-panel"
-					rendered="#{not notaryEditBean.pengajuanNotarisBaru}"
+					rendered="#{notaryEditBean.isViewOnly or not notaryEditBean.pengajuanNotarisBaru}"
 					style="#{notaryEditBean.showLampiranPerpanjanganTab ? 'display:block' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiranPerpanjangan" update="notaryLampiranPerpanjanganList"></p:remoteCommand>
 					<div class="col-lg-12" style="margin-bottom:10px;">
@@ -671,7 +671,7 @@
 										<p:commandLink rendered="#{not empty vo.fileId and notaryEditBean.perpanjanganUploadEnabled}"
 											immediate="true"
 											actionListener="#{notaryEditBean.deleteLampiranPerpanjanganAttachment(vo.fileId, vo.attachmentType)}"
-											update="notaryLampiranPerpanjanganList">#{msg.buttonDelete}</p:commandLink>
+											update=":form:notaryLampiranPerpanjanganList">#{msg.buttonDelete}</p:commandLink>
 									</td>
 								</tr>
 							</table>
