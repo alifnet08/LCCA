@@ -9,11 +9,18 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.wo.module.common.bean.CommonBean;
 import com.wo.module.common.constant.Constants;
 import com.wo.module.lov.bean.FacesUtil;
+import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.NotaryHistory;
 import com.wo.module.notary.service.NotaryService;
+import com.wo.module.responsibility.model.Responsibility;
+import com.wo.module.responsibility.service.ResponsibilityService;
+import com.wo.module.user.model.User;
+import com.wo.module.user.service.UserService;
 
 public class NotaryHistoryBean extends CommonBean implements Serializable {
 
@@ -25,14 +32,46 @@ public class NotaryHistoryBean extends CommonBean implements Serializable {
 	private int paging;
 	private List<NotaryHistory> historyList;
 	private NotaryService notaryService;
+	private UserService userService;
+	private ResponsibilityService responsibilityService;
 	public FacesUtil facesUtil;
+	private String currentResponsibilityName;
 
 	@PostConstruct
 	public void init() {
 		super.init();
 		paging = Constants.DEFAULT_PAGING_NUMBER;
 		historyList = new ArrayList<NotaryHistory>();
+		resolveCurrentResponsibility();
 		search(null);
+	}
+
+	private void resolveCurrentResponsibility() {
+		currentResponsibilityName = "";
+		try {
+			if (userService == null || responsibilityService == null || facesUtil == null) {
+				return;
+			}
+			String nik = facesUtil.retrieveUserLogin();
+			if (StringUtils.isBlank(nik)) {
+				return;
+			}
+			User user = userService.getUserByNik(nik);
+			if (user == null || user.getResponsibilityId() == null) {
+				return;
+			}
+			Responsibility responsibility = responsibilityService.findById(user.getResponsibilityId());
+			if (responsibility != null) {
+				currentResponsibilityName = responsibility.getName();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isExportAllowed() {
+		return !StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName)
+				&& !StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_CHECKER, currentResponsibilityName);
 	}
 
 	public void search(ActionEvent actionEvent) {
@@ -113,6 +152,22 @@ public class NotaryHistoryBean extends CommonBean implements Serializable {
 
 	public void setNotaryService(NotaryService notaryService) {
 		this.notaryService = notaryService;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public ResponsibilityService getResponsibilityService() {
+		return responsibilityService;
+	}
+
+	public void setResponsibilityService(ResponsibilityService responsibilityService) {
+		this.responsibilityService = responsibilityService;
 	}
 
 	public FacesUtil getFacesUtil() {

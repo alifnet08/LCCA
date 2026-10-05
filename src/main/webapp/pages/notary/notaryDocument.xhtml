@@ -93,7 +93,7 @@
 								<p:column headerText="Dokumen Pendukung" exportable="false">
 									<p:commandButton value="Lampiran" process="@this"
 										actionListener="#{notaryDocumentBean.openLampiran(vo)}"
-										update="form:dlgDokumenPendukung"
+										update="form:dlgDokumenPendukung form:dlgDokumenPendukungContent"
 										oncomplete="PF('dlgDokumenPendukung').show();"
 										styleClass="btn btn-link" />
 								</p:column>
@@ -106,13 +106,18 @@
 
 		<p:dialog id="dlgDokumenPendukung" widgetVar="dlgDokumenPendukung"
 			header="Dokumen Pendukung" modal="true" resizable="false" width="700"
-			appendTo="@form">
+			appendTo="@form" closable="true">
+			<p:outputPanel id="dlgDokumenPendukungContent">
 			<div style="margin-bottom:10px;">
-				<p:commandButton value="Lampiran" process="@this" update="dlgDokumenPendukung"
+				<p:commandButton value="Lampiran" process="@this" ajax="true" global="false"
+					update="form:dlgDokumenPendukungContent"
 					actionListener="#{notaryDocumentBean.openLampiranTab}"
+					oncomplete="PF('dlgDokumenPendukung').show();"
 					styleClass="#{notaryDocumentBean.showLampiranPerpanjanganTab ? 'btn btn-default' : 'btn btn-primary'}" />
-				<p:commandButton value="Lampiran Perpanjangan" process="@this" update="dlgDokumenPendukung"
+				<p:commandButton value="Lampiran Perpanjangan" process="@this" ajax="true" global="false"
+					update="form:dlgDokumenPendukungContent"
 					actionListener="#{notaryDocumentBean.openLampiranPerpanjanganTab}"
+					oncomplete="PF('dlgDokumenPendukung').show();"
 					styleClass="#{notaryDocumentBean.showLampiranPerpanjanganTab ? 'btn btn-primary' : 'btn btn-default'}" />
 			</div>
 			<p:dataList value="#{notaryDocumentBean.lampiranList}" var="doc"
@@ -140,6 +145,7 @@
 			<p:commandButton value="OK" type="button" process="@this"
 				onclick="PF('dlgDokumenPendukung').hide();"
 				styleClass="btn btn-success" />
+			</p:outputPanel>
 		</p:dialog>
 	</ui:define>
 </ui:composition>

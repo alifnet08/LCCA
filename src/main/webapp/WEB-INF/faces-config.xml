@@ -5260,6 +5260,14 @@
 			<value>#{notaryService}</value>
 		</managed-property>
 		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
 			<property-name>parameterDetailService</property-name>
 			<value>#{parameterDetailService}</value>
 		</managed-property>

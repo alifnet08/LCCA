@@ -46,6 +46,7 @@
 										update="tableSearch" styleClass="btn btn-success tl-label"
 										actionListener="#{notaryHistoryBean.search}"></p:commandButton></li>
 								<li><p:commandButton value="Export" ajax="false"
+										rendered="#{notaryHistoryBean.exportAllowed}"
 										styleClass="btn btn-success tl-label">
 										<p:dataExporter type="xls" target="tableSearch" fileName="HistoryNotaris" />
 									</p:commandButton></li>
