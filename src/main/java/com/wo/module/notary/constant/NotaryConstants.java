@@ -49,8 +49,11 @@ public abstract class NotaryConstants {
 	public final static String SEARCH_BY_STATUS = "SEARCH_BY_STATUS";
 	public final static String SEARCH_BY_USER_PENGAJU = "SEARCH_BY_USER_PENGAJU";
 	public final static String SEARCH_BY_MAKER_TASK = "SEARCH_BY_MAKER_TASK";
+	public final static String SEARCH_BY_INBOX_OR_REJECTED = "SEARCH_BY_INBOX_OR_REJECTED";
+	public final static String SEARCH_BY_LEGAL_TASK = "SEARCH_BY_LEGAL_TASK";
 	public final static String REVISI_TARGET_MAKER = "MAKER";
 	public final static String REVISI_TARGET_LEGAL = "LEGAL";
+	public final static String HISTORY_REVISION_SPV_TO_LEGAL = "Revision by SPV Legal to Legal";
 	public final static String PREFIX_NO_PENGAJUAN_BARU = "NB";
 	public final static String PREFIX_NO_PENGAJUAN_PERPANJANGAN = "NP";
 	public final static String PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN = "NU";

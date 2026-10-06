@@ -89,7 +89,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	public boolean isActionEnabled() {
-		if (notary == null) {
+		if (notary == null || StringUtils.equals(NotaryConstants.STATUS_REJECTED, notary.getStatus())) {
 			return false;
 		}
 		if (isChecker() && StringUtils.equals(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER, notary.getStatus())) {
@@ -154,16 +154,14 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 				nextStatus = NotaryConstants.STATUS_REJECTED;
 				historyStatus = "Reject";
 			} else {
+				nextStatus = NotaryConstants.STATUS_REVISION;
 				if (isSpvLegal() && StringUtils.equals(NotaryConstants.REVISI_TARGET_LEGAL, revisiTarget)) {
-					nextStatus = NotaryConstants.STATUS_WAITING_APPROVAL_LEGAL;
-					historyStatus = "Revision by SPV Legal";
+					historyStatus = NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL;
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_LEGAL;
 				} else if (isLegal()) {
-					nextStatus = NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER;
 					historyStatus = "Revision by Legal";
-					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_CHECKER;
+					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_MAKER;
 				} else {
-					nextStatus = NotaryConstants.STATUS_REVISION;
 					historyStatus = isSpvLegal() ? "Revision by SPV Legal" : "Revision by CDU Checker";
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_MAKER;
 				}

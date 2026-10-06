@@ -99,6 +99,10 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName);
 	}
 
+	public boolean isLegal() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_LEGAL, currentResponsibilityName);
+	}
+
 	public void search(ActionEvent actionEvent) {
 		List<SearchObject> searchCriteria = new ArrayList<SearchObject>();
 		if (StringUtils.isNotBlank(area)) {
@@ -114,12 +118,14 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 				login = "__NO_USER__";
 			}
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_USER_PENGAJU, login));
+		} else if (isLegal()) {
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_LEGAL_TASK, "Y"));
 		} else {
 			String inbox = inboxStatus();
 			if (StringUtils.isNotBlank(inbox)) {
-				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, inbox));
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_INBOX_OR_REJECTED, inbox));
 			} else {
-				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_INBOX__"));
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_REJECTED));
 			}
 		}
 		tableModel.setSearchCriteria(searchCriteria);

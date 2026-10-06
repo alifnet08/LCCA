@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
+import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.parameter.model.ParameterDetail;
 
 public class Notary extends BaseEntity implements Serializable {
@@ -32,6 +33,7 @@ public class Notary extends BaseEntity implements Serializable {
 	private Date tanggalPensiun;
 	private Date tanggalBerakhirPks;
 	private String catatanRevisi;
+	private String latestHistoryStatus;
 	private List<NotaryDocument> notaryDocuments = new ArrayList<NotaryDocument>();
 	
 	public Long getNotaryId() {
@@ -196,6 +198,19 @@ public class Notary extends BaseEntity implements Serializable {
 
 	public void setCatatanRevisi(String catatanRevisi) {
 		this.catatanRevisi = catatanRevisi;
+	}
+
+	public String getLatestHistoryStatus() {
+		return latestHistoryStatus;
+	}
+
+	public void setLatestHistoryStatus(String latestHistoryStatus) {
+		this.latestHistoryStatus = latestHistoryStatus;
+	}
+
+	public boolean isRevisionForLegal() {
+		return NotaryConstants.STATUS_REVISION.equals(status)
+				&& NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL.equals(latestHistoryStatus);
 	}
 
 	public List<NotaryDocument> getNotaryDocuments() {
