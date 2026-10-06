@@ -857,7 +857,17 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void cancel() {
 		try {
-			facesUtil.redirect("/pages/notary/notary.faces");
+			boolean fromTask = false;
+			if (facesUtil != null) {
+				Object marker = facesUtil.getSessionAttribute(NotaryConstants.SESSION_FROM_TASK);
+				fromTask = marker != null && "Y".equalsIgnoreCase(marker.toString());
+				facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, null);
+			}
+			if (fromTask) {
+				facesUtil.redirect("/pages/notary/notaryTask.faces");
+			} else {
+				facesUtil.redirect("/pages/notary/notary.faces");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

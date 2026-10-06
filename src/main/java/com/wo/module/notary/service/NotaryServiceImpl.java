@@ -165,23 +165,31 @@ public class NotaryServiceImpl implements NotaryService {
 			List<NotaryHistory> filtered = new ArrayList<NotaryHistory>();
 			for (int i = 0; i < list.size(); i++) {
 				NotaryHistory hist = list.get(i);
-				if (hist == null || hist.getCreationDate() == null) {
+				if (hist == null) {
 					continue;
 				}
-				if (tanggalDari != null && hist.getCreationDate().before(tanggalDari)) {
+				if (hist.getCreationDate() != null && tanggalDari != null
+						&& hist.getCreationDate().getTime() < tanggalDari.getTime()) {
 					continue;
 				}
-				if (tanggalSampai != null && hist.getCreationDate().after(tanggalSampai)) {
+				if (hist.getCreationDate() != null && tanggalSampai != null
+						&& hist.getCreationDate().getTime() > tanggalSampai.getTime()) {
 					continue;
 				}
 				filtered.add(hist);
 			}
 			java.util.Collections.sort(filtered, new java.util.Comparator<NotaryHistory>() {
 				public int compare(NotaryHistory a, NotaryHistory b) {
-					if (a.getCreationDate() == null || b.getCreationDate() == null) {
+					if (a.getCreationDate() == null && b.getCreationDate() == null) {
 						return 0;
 					}
-					return b.getCreationDate().compareTo(a.getCreationDate());
+					if (a.getCreationDate() == null) {
+						return 1;
+					}
+					if (b.getCreationDate() == null) {
+						return -1;
+					}
+					return Long.compare(b.getCreationDate().getTime(), a.getCreationDate().getTime());
 				}
 			});
 			return filtered;

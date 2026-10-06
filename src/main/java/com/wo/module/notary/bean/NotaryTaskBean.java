@@ -144,6 +144,7 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 	public String openMakerSubmit() {
 		if (facesUtil != null) {
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
 		}
 		return NotaryConstants.NAVIGATE_EDIT;
 	}
@@ -151,6 +152,7 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 	public String openMakerView() {
 		if (facesUtil != null) {
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
 		}
 		return NotaryConstants.NAVIGATE_EDIT;
 	}

@@ -61,6 +61,7 @@ public abstract class NotaryConstants {
 	public final static String JENIS_PENGAJUAN_PERPANJANGAN = "Perpanjangan";
 	public final static String JENIS_PENGAJUAN_UPDATE_DOKUMEN = "Update Dokumen";
 	public final static String SESSION_JENIS_PENGAJUAN = "notaryJenisPengajuan";
+	public final static String SESSION_FROM_TASK = "notaryFromTask";
 
 	public final static String[] NOTARY_PERPANJANGAN_DOCUMENT_TYPES = {
 			"Perjanjian Kerjasama (PKS)",

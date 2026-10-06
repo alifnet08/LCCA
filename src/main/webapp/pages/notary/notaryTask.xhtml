@@ -94,7 +94,7 @@
 								<p:column headerText="Status Pengajuan">
 									<h:outputLabel value="#{vo.status}" />
 								</p:column>
-								<p:column headerText="Catatan Revisi">
+								<p:column headerText="Catatan Revisi/Reject">
 									<p:inputTextarea value="#{vo.catatanRevisi}" readonly="true"
 										styleClass="form-control" rows="2" autoResize="false" />
 								</p:column>
@@ -150,7 +150,7 @@
 						<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="Catatan Revisi">
+				<p:column headerText="Catatan Revisi/Reject">
 					<h:outputText value="#{hist.catatanRevisi}" />
 				</p:column>
 			</p:dataTable>
