@@ -110,21 +110,21 @@
 
 								<p:column headerText="Status" style="width:180px;">
 									<h:outputText value="#{vo.listingStatusLabel}" styleClass="status-pill" />
-									<p:commandButton value="Active" process="@this" update="dlgCatatan"
+									<p:commandButton value="Active" process="@this" update=":form:dlgCatatan"
 										rendered="#{notaryCatatanKhususBean.canChangeStatus and vo.listingStatus eq 'Freeze'}"
 										actionListener="#{notaryCatatanKhususBean.openActive}"
 										oncomplete="PF('dlgCatatan').show();"
 										styleClass="btn btn-default btn-sm">
 										<f:attribute name="notaryId" value="#{vo.notaryId}" />
 									</p:commandButton>
-									<p:commandButton value="Freeze" process="@this" update="dlgCatatan"
+									<p:commandButton value="Freeze" process="@this" update=":form:dlgCatatan"
 										rendered="#{notaryCatatanKhususBean.canChangeStatus and (empty vo.listingStatus or vo.listingStatus eq 'Active')}"
 										actionListener="#{notaryCatatanKhususBean.openFreeze}"
 										oncomplete="PF('dlgCatatan').show();"
 										styleClass="btn btn-default btn-sm">
 										<f:attribute name="notaryId" value="#{vo.notaryId}" />
 									</p:commandButton>
-									<p:commandButton value="Delisting" process="@this" update="dlgCatatan"
+									<p:commandButton value="Delisting" process="@this" update=":form:dlgCatatan"
 										rendered="#{notaryCatatanKhususBean.canChangeStatus and vo.listingStatus ne 'Delisting'}"
 										actionListener="#{notaryCatatanKhususBean.openDelisting}"
 										oncomplete="PF('dlgCatatan').show();"
@@ -222,13 +222,13 @@
 						label="Lampiran" styleClass="wo-fileupload-wrap"
 						sizeLimit="2097152"
 						fileUploadListener="#{notaryCatatanKhususBean.handleUpload}"
-						update="catatanUploadInfo" />
+						update=":form:dlgCatatan:catatanUploadInfo" />
 				</div>
 				<div style="text-align:center; margin-top:16px;">
 					<p:commandButton value="Cancel" type="button" styleClass="btn btn-danger"
 						style="min-width:110px; margin-right:12px;" onclick="PF('dlgCatatan').hide();" />
 					<p:commandButton value="Submit" styleClass="btn btn-success" style="min-width:110px;"
-						process="@this dlgCatatan" update="dlgCatatanBody tableSearch"
+						process="@this :form:dlgCatatan" update=":form:dlgCatatan:dlgCatatanBody :form:tableSearch"
 						actionListener="#{notaryCatatanKhususBean.submit}"
 						oncomplete="if (args &amp;&amp; args.catatanSaved) { PF('dlgCatatan').hide(); PF('dlgCatatanSuccess').show(); }" />
 				</div>
