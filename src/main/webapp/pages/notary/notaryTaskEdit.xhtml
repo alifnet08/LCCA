@@ -105,6 +105,32 @@
 								value="#{notaryTaskEditBean.notary.status}" />
 						</div>
 					</div>
+					<h:panelGroup layout="block" styleClass="col-lg-12" rendered="#{notaryTaskEditBean.catatanKhusus}">
+						<div class="form-group">
+							<label>Status Listing Saat Ini</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.listingStatusLabel}" />
+						</div>
+						<div class="form-group">
+							<label>Status Diajukan</label>
+							<p:inputText readonly="true" styleClass="form-control"
+								value="#{notaryTaskEditBean.notary.pendingListingStatus}" />
+						</div>
+						<div class="form-group">
+							<label>Catatan Khusus</label>
+							<p:inputTextarea readonly="true" styleClass="form-control" rows="3"
+								value="#{notaryTaskEditBean.notary.catatanKhusus}" />
+						</div>
+						<div class="form-group">
+							<label>Lampiran</label>
+							<p:commandLink rendered="#{not empty notaryTaskEditBean.notary.catatanKhususFileId}"
+								ajax="false" immediate="true"
+								actionListener="#{notaryTaskEditBean.downloadFile(notaryTaskEditBean.notary.catatanKhususFileId, notaryTaskEditBean.notary.catatanKhususFileName, null)}">
+								<h:outputText value="#{notaryTaskEditBean.notary.catatanKhususFileName}" />
+							</p:commandLink>
+							<h:outputText value="-" rendered="#{empty notaryTaskEditBean.notary.catatanKhususFileId}" />
+						</div>
+					</h:panelGroup>
 				</h:panelGroup>
 				<h:panelGroup layout="block" style="#{notaryTaskEditBean.showLampiranTab ? '' : 'display:none'}">
 					<p:dataList value="#{notaryTaskEditBean.notary.notaryDocuments}" var="vo"
@@ -138,7 +164,7 @@
 						</div>
 					</h:panelGroup>
 					<h:panelGroup layout="block" styleClass="col-lg-12"
-						rendered="#{notaryTaskEditBean.actionEnabled and notaryTaskEditBean.spvLegal}">
+						rendered="#{notaryTaskEditBean.actionEnabled and notaryTaskEditBean.spvLegal and not notaryTaskEditBean.catatanKhususFromLegal}">
 						<div class="form-group">
 							<label>Revisi ditujukan ke</label>
 							<h:selectOneMenu styleClass="form-control" value="#{notaryTaskEditBean.revisiTarget}">

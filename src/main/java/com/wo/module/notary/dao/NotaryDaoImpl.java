@@ -185,7 +185,10 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("        (SELECT h.STATUS FROM WO_MST_NOTARY_HISTORY h ");
 		sb.append("          WHERE h.NOTARY_HISTORY_ID = (SELECT MAX(h2.NOTARY_HISTORY_ID) ");
 		sb.append("            FROM WO_MST_NOTARY_HISTORY h2 ");
-		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y')) ");
+		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y')), ");
+		sb.append("        NVL(ct.LISTING_STATUS, 'Active'), ct.PENDING_LISTING_STATUS, ct.CATATAN_KHUSUS, ");
+		sb.append("        ct.CATATAN_KHUSUS_FILE_ID, ct.CATATAN_KHUSUS_FILE_NAME, ct.CATATAN_KHUSUS_ROLE, ");
+		sb.append("        ct.JENIS_BEFORE_CATATAN ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
@@ -249,6 +252,27 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				data.setCatatanRevisi(obj[25] != null ? obj[25].toString() : null);
 				if (obj.length > 26 && obj[26] != null) {
 					data.setLatestHistoryStatus(obj[26].toString().trim());
+				}
+				if (obj.length > 27 && obj[27] != null) {
+					data.setListingStatus(obj[27].toString());
+				}
+				if (obj.length > 28 && obj[28] != null) {
+					data.setPendingListingStatus(obj[28].toString());
+				}
+				if (obj.length > 29 && obj[29] != null) {
+					data.setCatatanKhusus(obj[29].toString());
+				}
+				if (obj.length > 30 && obj[30] != null) {
+					data.setCatatanKhususFileId(obj[30].toString());
+				}
+				if (obj.length > 31 && obj[31] != null) {
+					data.setCatatanKhususFileName(obj[31].toString());
+				}
+				if (obj.length > 32 && obj[32] != null) {
+					data.setCatatanKhususRole(obj[32].toString());
+				}
+				if (obj.length > 33 && obj[33] != null) {
+					data.setJenisBeforeCatatan(obj[33].toString());
 				}
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);

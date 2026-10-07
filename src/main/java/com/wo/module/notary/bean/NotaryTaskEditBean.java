@@ -147,14 +147,26 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 					historyStatus = "Approve by Legal";
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_SPV_LEGAL;
 				} else {
+					if (isCatatanKhususRequest()) {
+						applyCatatanKhusus(true);
+					}
 					nextStatus = NotaryConstants.STATUS_COMPLETE;
 					historyStatus = "Approve by SPV Legal";
 				}
 			} else if ("REJECT".equals(actionType)) {
-				nextStatus = NotaryConstants.STATUS_REJECTED;
+				if (isCatatanKhususRequest()) {
+					applyCatatanKhusus(false);
+					nextStatus = NotaryConstants.STATUS_COMPLETE;
+				} else {
+					nextStatus = NotaryConstants.STATUS_REJECTED;
+				}
 				historyStatus = "Reject";
 			} else {
 				nextStatus = NotaryConstants.STATUS_REVISION;
+				if (isCatatanKhususRequest() && isSpvLegal()
+						&& StringUtils.equals(NotaryConstants.CATATAN_ROLE_LEGAL, notary.getCatatanKhususRole())) {
+					revisiTarget = NotaryConstants.REVISI_TARGET_LEGAL;
+				}
 				if (isSpvLegal() && StringUtils.equals(NotaryConstants.REVISI_TARGET_LEGAL, revisiTarget)) {
 					historyStatus = NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL;
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_LEGAL;
@@ -179,6 +191,30 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 		} catch (Exception e) {
 			addErr("Operation Failed : " + e.getMessage());
 		}
+	}
+
+	private boolean isCatatanKhususRequest() {
+		return notary != null && StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, notary.getJenisPengajuan());
+	}
+
+	public boolean isCatatanKhusus() {
+		return isCatatanKhususRequest();
+	}
+
+	public boolean isCatatanKhususFromLegal() {
+		return isCatatanKhususRequest()
+				&& StringUtils.equals(NotaryConstants.CATATAN_ROLE_LEGAL, notary.getCatatanKhususRole());
+	}
+
+	private void applyCatatanKhusus(boolean approved) {
+		if (approved && StringUtils.isNotBlank(notary.getPendingListingStatus())) {
+			notary.setListingStatus(notary.getPendingListingStatus());
+		}
+		notary.setPendingListingStatus(null);
+		if (StringUtils.isNotBlank(notary.getJenisBeforeCatatan())) {
+			notary.setJenisPengajuan(notary.getJenisBeforeCatatan());
+		}
+		notary.setJenisBeforeCatatan(null);
 	}
 
 	private String buildCatatan() {

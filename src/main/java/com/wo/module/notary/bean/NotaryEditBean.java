@@ -177,6 +177,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		ParameterDetail pd = new ParameterDetail();
 		notary.setNotaryCategory(pd);
 		notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+		notary.setListingStatus(NotaryConstants.LISTING_STATUS_ACTIVE);
 		pengajuanPerpanjangan = false;
 		pengajuanUpdateDokumen = false;
 		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,

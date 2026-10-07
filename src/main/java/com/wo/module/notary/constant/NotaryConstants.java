@@ -57,9 +57,18 @@ public abstract class NotaryConstants {
 	public final static String PREFIX_NO_PENGAJUAN_BARU = "NB";
 	public final static String PREFIX_NO_PENGAJUAN_PERPANJANGAN = "NP";
 	public final static String PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN = "NU";
+	public final static String PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS = "NK";
 	public final static String JENIS_PENGAJUAN_NOTARIS_BARU = "Notaris Baru";
 	public final static String JENIS_PENGAJUAN_PERPANJANGAN = "Perpanjangan";
 	public final static String JENIS_PENGAJUAN_UPDATE_DOKUMEN = "Update Dokumen";
+	public final static String JENIS_PENGAJUAN_CATATAN_KHUSUS = "Catatan Khusus";
+	public final static String LISTING_STATUS_ACTIVE = "Active";
+	public final static String LISTING_STATUS_FREEZE = "Freeze";
+	public final static String LISTING_STATUS_DELISTING = "Delisting";
+	public final static String CATATAN_ROLE_LEGAL = "LEGAL";
+	public final static String CATATAN_ROLE_MAKER = "MAKER";
+	public final static String NAVIGATE_CATATAN_KHUSUS = "notaryCatatanKhusus.faces";
+	public final static int CATATAN_KHUSUS_MAX_FILE_BYTES = 2097152;
 	public final static String SESSION_JENIS_PENGAJUAN = "notaryJenisPengajuan";
 	public final static String SESSION_FROM_TASK = "notaryFromTask";
 

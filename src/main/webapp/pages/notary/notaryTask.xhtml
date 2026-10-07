@@ -61,9 +61,15 @@
 										<f:param name="viewId" value="true" />
 										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
+									<p:commandLink action="#{notaryTaskBean.openCatatanKhusus}" ajax="false"
+										styleClass="tl-label"
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}">
+										<f:param name="id" value="#{vo.notaryId}" />
+										<h:outputText value="#{vo.notaryNo}" />
+									</p:commandLink>
 									<p:commandLink action="#{notaryTaskBean.openMakerSubmit}" ajax="false"
 										styleClass="tl-label"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal}">
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}">
 										<f:param name="id" value="#{vo.notaryId}" />
 										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
@@ -100,13 +106,25 @@
 								</p:column>
 								<p:column headerText="#{msg.formAction}" style="text-align:center;width:12%;">
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal}"
+										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}"
+										action="#{notaryTaskBean.openCatatanKhusus}"
+										styleClass="btn btn-primary tl-label">
+										<f:param name="id" value="#{vo.notaryId}" />
+									</p:commandLink>
+									<p:commandLink value="Edit" ajax="false"
+										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}"
 										action="#{notaryTaskBean.openMakerSubmit}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
 									</p:commandLink>
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal}"
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}"
+										action="#{notaryTaskBean.openCatatanKhusus}"
+										styleClass="btn btn-primary tl-label">
+										<f:param name="id" value="#{vo.notaryId}" />
+									</p:commandLink>
+									<p:commandLink value="Edit" ajax="false"
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}"
 										action="#{notaryTaskBean.openMakerSubmit}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />

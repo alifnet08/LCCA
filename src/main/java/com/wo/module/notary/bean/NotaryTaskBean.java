@@ -157,6 +157,14 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		return NotaryConstants.NAVIGATE_EDIT;
 	}
 
+	public String openCatatanKhusus() {
+		if (facesUtil != null) {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
+		}
+		return NotaryConstants.NAVIGATE_CATATAN_KHUSUS;
+	}
+
 	public void openHistory(Notary notary) {
 		selectedHistoryNotary = notary;
 		historyList = new ArrayList<NotaryHistory>();

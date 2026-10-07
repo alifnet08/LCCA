@@ -5308,6 +5308,37 @@
 		</managed-property>
 	</managed-bean>
 	<!-- Notary Document -->
+	<!-- Catatan Khusus Notaris -->
+	 <managed-bean>
+		<managed-bean-name>notaryCatatanKhususBean</managed-bean-name>
+		<managed-bean-class>com.wo.module.notary.bean.NotaryCatatanKhususBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>facesUtil</property-name>
+			<value>#{facesUtil}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>notaryService</property-name>
+			<value>#{notaryService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>userService</property-name>
+			<value>#{userService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>responsibilityService</property-name>
+			<value>#{responsibilityService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>parameterDetailService</property-name>
+			<value>#{parameterDetailService}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>logAccessService</property-name>
+			<value>#{logAccessService}</value>
+		</managed-property>
+	</managed-bean>
+	<!-- Catatan Khusus Notaris -->
 	<!-- aboutUs -->
 	 <managed-bean>
 		<managed-bean-name>aboutUsBean</managed-bean-name>

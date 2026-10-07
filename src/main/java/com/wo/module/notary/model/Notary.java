@@ -34,6 +34,13 @@ public class Notary extends BaseEntity implements Serializable {
 	private Date tanggalBerakhirPks;
 	private String catatanRevisi;
 	private String latestHistoryStatus;
+	private String listingStatus;
+	private String pendingListingStatus;
+	private String catatanKhusus;
+	private String catatanKhususFileId;
+	private String catatanKhususFileName;
+	private String catatanKhususRole;
+	private String jenisBeforeCatatan;
 	private List<NotaryDocument> notaryDocuments = new ArrayList<NotaryDocument>();
 	
 	public Long getNotaryId() {
@@ -211,6 +218,69 @@ public class Notary extends BaseEntity implements Serializable {
 	public boolean isRevisionForLegal() {
 		return NotaryConstants.STATUS_REVISION.equals(status)
 				&& NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL.equals(latestHistoryStatus);
+	}
+
+	public String getListingStatus() {
+		return listingStatus;
+	}
+
+	public void setListingStatus(String listingStatus) {
+		this.listingStatus = listingStatus;
+	}
+
+	public String getListingStatusLabel() {
+		if (listingStatus == null || listingStatus.trim().length() == 0) {
+			return NotaryConstants.LISTING_STATUS_ACTIVE;
+		}
+		return listingStatus;
+	}
+
+	public String getPendingListingStatus() {
+		return pendingListingStatus;
+	}
+
+	public void setPendingListingStatus(String pendingListingStatus) {
+		this.pendingListingStatus = pendingListingStatus;
+	}
+
+	public String getCatatanKhusus() {
+		return catatanKhusus;
+	}
+
+	public void setCatatanKhusus(String catatanKhusus) {
+		this.catatanKhusus = catatanKhusus;
+	}
+
+	public String getCatatanKhususFileId() {
+		return catatanKhususFileId;
+	}
+
+	public void setCatatanKhususFileId(String catatanKhususFileId) {
+		this.catatanKhususFileId = catatanKhususFileId;
+	}
+
+	public String getCatatanKhususFileName() {
+		return catatanKhususFileName;
+	}
+
+	public void setCatatanKhususFileName(String catatanKhususFileName) {
+		this.catatanKhususFileName = catatanKhususFileName;
+	}
+
+	public String getCatatanKhususRole() {
+		return catatanKhususRole;
+	}
+
+	public void setCatatanKhususRole(String catatanKhususRole) {
+		this.catatanKhususRole = catatanKhususRole;
+	}
+
+	public String getJenisBeforeCatatan() {
+		return jenisBeforeCatatan;
+	}
+
+	public void setJenisBeforeCatatan(String jenisBeforeCatatan) {
+		this.jenisBeforeCatatan = jenisBeforeCatatan;
 	}
 
 	public List<NotaryDocument> getNotaryDocuments() {
