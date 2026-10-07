@@ -5,8 +5,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.StringUtils;
@@ -130,19 +132,12 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 		search(actionEvent);
 	}
 
-	public void openActive(ActionEvent event) {
-		openDialog(event, NotaryConstants.LISTING_STATUS_ACTIVE);
+	public void openFromRequest() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		openDialog(params.get("notaryId"), params.get("targetStatus"));
 	}
 
-	public void openFreeze(ActionEvent event) {
-		openDialog(event, NotaryConstants.LISTING_STATUS_FREEZE);
-	}
-
-	public void openDelisting(ActionEvent event) {
-		openDialog(event, NotaryConstants.LISTING_STATUS_DELISTING);
-	}
-
-	private void openDialog(ActionEvent event, String target) {
+	private void openDialog(String rawId, String target) {
 		errorMessage = null;
 		pendingFileId = null;
 		pendingFileName = null;
@@ -150,12 +145,18 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 		targetStatus = target;
 		selectedNotary = null;
 		selectedNotaryId = null;
-		Object rawId = event.getComponent().getAttributes().get("notaryId");
-		if (rawId == null) {
+		if (StringUtils.isBlank(rawId) || !isKnownTarget(target)) {
+			errorMessage = "Notaris tidak ditemukan.";
+			targetStatus = null;
+			return;
+		}
+		Long id;
+		try {
+			id = Long.valueOf(rawId);
+		} catch (NumberFormatException e) {
 			errorMessage = "Notaris tidak ditemukan.";
 			return;
 		}
-		Long id = Long.valueOf(rawId.toString());
 		Notary entity = notaryService.findById(id);
 		if (entity == null) {
 			errorMessage = "Notaris tidak ditemukan.";
@@ -319,6 +320,12 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 			return false;
 		}
 		return StringUtils.equals(NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL, historyList.get(0).getStatus());
+	}
+
+	private boolean isKnownTarget(String target) {
+		return StringUtils.equals(NotaryConstants.LISTING_STATUS_ACTIVE, target)
+				|| StringUtils.equals(NotaryConstants.LISTING_STATUS_FREEZE, target)
+				|| StringUtils.equals(NotaryConstants.LISTING_STATUS_DELISTING, target);
 	}
 
 	private boolean isTransitionAllowed(String currentStatus, String target) {
