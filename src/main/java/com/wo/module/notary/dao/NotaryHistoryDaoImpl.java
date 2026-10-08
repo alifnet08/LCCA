@@ -35,7 +35,7 @@ public class NotaryHistoryDaoImpl extends GenericDAOHibernate<NotaryHistory, Lon
 	public List<NotaryHistory> searchHistory(String notaryName) throws Exception {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT h.NOTARY_HISTORY_ID, h.STATUS, h.CATATAN_REVISI, h.CREATION_DATE, ");
-		sql.append("        n.NOTARY_ID, n.NOTARY_NAME, n.ADDRESS, n.AREA, dtl.NAME_IN ");
+		sql.append("        n.NOTARY_ID, n.NOTARY_NAME, n.ADDRESS, n.AREA, dtl.NAME_IN, h.JENIS_PENGAJUAN ");
 		sql.append("   FROM WO_MST_NOTARY_HISTORY h ");
 		sql.append("   LEFT JOIN WO_MST_NOTARY n ON n.NOTARY_ID = h.NOTARY_ID ");
 		sql.append("   LEFT JOIN WO_MST_PARAMETER_DTL dtl ON n.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
@@ -77,6 +77,9 @@ public class NotaryHistoryDaoImpl extends GenericDAOHibernate<NotaryHistory, Lon
 			category.setNameIn(obj[8] != null ? obj[8].toString() : null);
 			notary.setNotaryCategory(category);
 			data.setNotary(notary);
+			if (obj.length > 9) {
+				data.setJenisPengajuan(obj[9] != null ? obj[9].toString() : null);
+			}
 			histories.add(data);
 		}
 		return histories;

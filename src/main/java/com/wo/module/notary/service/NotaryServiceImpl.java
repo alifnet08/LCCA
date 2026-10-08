@@ -142,6 +142,7 @@ public class NotaryServiceImpl implements NotaryService {
 		history.setNotary(notary);
 		history.setStatus(historyStatus);
 		history.setCatatanRevisi(catatanRevisi);
+		history.setJenisPengajuan(notary.getJenisPengajuan());
 		history.setCreatedBy(userLogin);
 		history.setCreationDate(new Timestamp(new Date().getTime()));
 		history.setDelId(new Long(0));
@@ -161,22 +162,48 @@ public class NotaryServiceImpl implements NotaryService {
 	public List<NotaryHistory> searchHistory(String notaryName, Date tanggalDari, Date tanggalSampai) {
 		try {
 			List<NotaryHistory> list = notaryHistoryDao.searchHistory(notaryName);
-			fillPerubahan(list);
 			List<NotaryHistory> filtered = new ArrayList<NotaryHistory>();
-			for (int i = 0; i < list.size(); i++) {
-				NotaryHistory hist = list.get(i);
-				if (hist == null) {
-					continue;
+			Long currentNotaryId = null;
+			String previousJenis = null;
+			String inferredJenis = null;
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					NotaryHistory hist = list.get(i);
+					if (hist == null || hist.getNotary() == null) {
+						continue;
+					}
+					Long notaryId = hist.getNotary().getNotaryId();
+					if (currentNotaryId == null || !currentNotaryId.equals(notaryId)) {
+						currentNotaryId = notaryId;
+						previousJenis = null;
+						inferredJenis = null;
+					}
+					inferredJenis = inferJenisFromStatus(hist.getStatus(), inferredJenis);
+					if (!StringUtils.equals(NotaryConstants.HISTORY_APPROVE_SPV_LEGAL, hist.getStatus())) {
+						continue;
+					}
+					String jenis = StringUtils.defaultIfBlank(hist.getJenisPengajuan(), inferredJenis);
+					jenis = StringUtils.defaultIfBlank(jenis, NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+					inferredJenis = null;
+					if (previousJenis != null && StringUtils.equals(previousJenis, jenis)) {
+						continue;
+					}
+					if (previousJenis == null) {
+						hist.setPerubahan(jenis);
+					} else {
+						hist.setPerubahan("\"" + previousJenis + "\" to \"" + jenis + "\"");
+					}
+					previousJenis = jenis;
+					if (hist.getCreationDate() != null && tanggalDari != null
+							&& hist.getCreationDate().getTime() < tanggalDari.getTime()) {
+						continue;
+					}
+					if (hist.getCreationDate() != null && tanggalSampai != null
+							&& hist.getCreationDate().getTime() > tanggalSampai.getTime()) {
+						continue;
+					}
+					filtered.add(hist);
 				}
-				if (hist.getCreationDate() != null && tanggalDari != null
-						&& hist.getCreationDate().getTime() < tanggalDari.getTime()) {
-					continue;
-				}
-				if (hist.getCreationDate() != null && tanggalSampai != null
-						&& hist.getCreationDate().getTime() > tanggalSampai.getTime()) {
-					continue;
-				}
-				filtered.add(hist);
 			}
 			java.util.Collections.sort(filtered, new java.util.Comparator<NotaryHistory>() {
 				public int compare(NotaryHistory a, NotaryHistory b) {
@@ -199,27 +226,23 @@ public class NotaryServiceImpl implements NotaryService {
 		}
 	}
 
-	private void fillPerubahan(List<NotaryHistory> list) {
-		Long currentNotaryId = null;
-		String previousStatus = null;
-		for (int i = 0; i < list.size(); i++) {
-			NotaryHistory hist = list.get(i);
-			if (hist == null || hist.getNotary() == null) {
-				continue;
-			}
-			Long notaryId = hist.getNotary().getNotaryId();
-			if (currentNotaryId == null || !currentNotaryId.equals(notaryId)) {
-				currentNotaryId = notaryId;
-				previousStatus = null;
-			}
-			String currentStatus = hist.getStatus() != null ? hist.getStatus() : "";
-			if (previousStatus != null) {
-				hist.setPerubahan("\"" + previousStatus + "\" to \"" + currentStatus + "\"");
-			} else {
-				hist.setPerubahan(currentStatus);
-			}
-			previousStatus = currentStatus;
+	private String inferJenisFromStatus(String status, String current) {
+		if (StringUtils.isBlank(status)) {
+			return current;
 		}
+		if (status.indexOf("Perpanjangan") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+		}
+		if (status.indexOf("Update Dokumen") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
+		}
+		if (status.indexOf("Catatan Khusus") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS;
+		}
+		if ("Submit by CDU Maker".equals(status)) {
+			return NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU;
+		}
+		return current;
 	}
 
 	public String generateNoPengajuan(String prefix) {

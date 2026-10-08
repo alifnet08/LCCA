@@ -2,7 +2,9 @@ package com.wo.module.notary.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -171,6 +173,48 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		if (notary != null && notary.getNotaryId() != null) {
 			historyList = notaryService.getHistoryByNotaryId(notary.getNotaryId());
 		}
+		Map<String, String> actorCache = new HashMap<String, String>();
+		if (historyList == null) {
+			historyList = new ArrayList<NotaryHistory>();
+			return;
+		}
+		for (int i = 0; i < historyList.size(); i++) {
+			NotaryHistory hist = historyList.get(i);
+			if (hist == null || !isDecisionHistory(hist.getStatus())) {
+				continue;
+			}
+			hist.setActorLabel(resolveActorLabel(hist.getCreatedBy(), actorCache));
+		}
+	}
+
+	private boolean isDecisionHistory(String status) {
+		if (StringUtils.isBlank(status)) {
+			return false;
+		}
+		String normalized = status.toLowerCase();
+		return normalized.contains("approve") || normalized.contains("revision") || normalized.contains("reject");
+	}
+
+	private String resolveActorLabel(String nik, Map<String, String> actorCache) {
+		if (StringUtils.isBlank(nik)) {
+			return "";
+		}
+		if (actorCache.containsKey(nik)) {
+			return actorCache.get(nik);
+		}
+		String label = nik;
+		try {
+			if (userService != null) {
+				User user = userService.getUserByNik(nik);
+				if (user != null && StringUtils.isNotBlank(user.getName())) {
+					label = nik + "-" + user.getName();
+				}
+			}
+		} catch (Exception e) {
+			label = nik;
+		}
+		actorCache.put(nik, label);
+		return label;
 	}
 
 	public String getArea() {

@@ -63,13 +63,13 @@
 									</p:commandLink>
 									<p:commandLink action="#{notaryTaskBean.openCatatanKhusus}" ajax="false"
 										styleClass="tl-label"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}">
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.catatanKhususPengajuan}">
 										<f:param name="id" value="#{vo.notaryId}" />
 										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
 									<p:commandLink action="#{notaryTaskBean.openMakerSubmit}" ajax="false"
 										styleClass="tl-label"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}">
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and not vo.catatanKhususPengajuan}">
 										<f:param name="id" value="#{vo.notaryId}" />
 										<h:outputText value="#{vo.notaryNo}" />
 									</p:commandLink>
@@ -84,7 +84,7 @@
 									<h:outputLabel value="#{vo.userPengaju}" />
 								</p:column>
 								<p:column headerText="Jenis Pengajuan">
-									<h:outputLabel value="#{vo.jenisPengajuan}" />
+									<h:outputLabel value="#{vo.jenisPengajuanTampil}" />
 								</p:column>
 								<p:column headerText="Region">
 									<h:outputLabel value="#{vo.area}" />
@@ -106,25 +106,25 @@
 								</p:column>
 								<p:column headerText="#{msg.formAction}" style="text-align:center;width:12%;">
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}"
+										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and vo.catatanKhususPengajuan}"
 										action="#{notaryTaskBean.openCatatanKhusus}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
 									</p:commandLink>
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}"
+										rendered="#{notaryTaskBean.cduMaker and vo.status eq 'revision' and not vo.revisionForLegal and not vo.catatanKhususPengajuan}"
 										action="#{notaryTaskBean.openMakerSubmit}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
 									</p:commandLink>
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan eq 'Catatan Khusus'}"
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.catatanKhususPengajuan}"
 										action="#{notaryTaskBean.openCatatanKhusus}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
 									</p:commandLink>
 									<p:commandLink value="Edit" ajax="false"
-										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and vo.jenisPengajuan ne 'Catatan Khusus'}"
+										rendered="#{notaryTaskBean.legal and vo.revisionForLegal and not vo.catatanKhususPengajuan}"
 										action="#{notaryTaskBean.openMakerSubmit}"
 										styleClass="btn btn-primary tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
@@ -151,13 +151,14 @@
 		</div>
 
 		<p:dialog id="dlgHistory" widgetVar="dlgHistory" header="History Pengajuan"
-			modal="true" resizable="false" width="700" appendTo="@form">
+			modal="true" resizable="false" width="920" appendTo="@form">
 			<div class="form-group">
 				<label>Nomor Pengajuan</label>
 				<p:inputText readonly="true" styleClass="form-control"
 					rendered="#{notaryTaskBean.selectedHistoryNotary != null}"
 					value="#{notaryTaskBean.selectedHistoryNotary.notaryNo}" />
 			</div>
+			<div style="max-height:360px; overflow-y:auto;">
 			<p:dataTable value="#{notaryTaskBean.historyList}" var="hist"
 				emptyMessage="#{msg.textNodata}">
 				<p:column headerText="Status">
@@ -168,10 +169,14 @@
 						<f:convertDateTime pattern="dd-MMM-yyyy" locale="en" />
 					</h:outputText>
 				</p:column>
+				<p:column headerText="NPK - Nama Lengkap" style="width:220px;">
+					<h:outputText value="#{hist.actorLabel}" />
+				</p:column>
 				<p:column headerText="Catatan Revisi/Reject">
 					<h:outputText value="#{hist.catatanRevisi}" />
 				</p:column>
 			</p:dataTable>
+			</div>
 			<p:commandButton value="Close" type="button" process="@this"
 				onclick="PF('dlgHistory').hide();" styleClass="btn btn-default" />
 		</p:dialog>

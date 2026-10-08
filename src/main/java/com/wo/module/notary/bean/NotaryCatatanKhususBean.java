@@ -173,7 +173,7 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 	private void prepareResubmit(String editId) {
 		try {
 			Notary entity = notaryService.findById(Long.valueOf(editId));
-			if (entity == null || !StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, entity.getJenisPengajuan())
+			if (entity == null || !entity.isCatatanKhususPengajuan()
 					|| !StringUtils.equals(NotaryConstants.STATUS_REVISION, entity.getStatus())) {
 				return;
 			}
@@ -233,7 +233,7 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 				return;
 			}
 			boolean resubmit = StringUtils.equals(NotaryConstants.STATUS_REVISION, entity.getStatus())
-					&& StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, entity.getJenisPengajuan());
+					&& entity.isCatatanKhususPengajuan();
 			boolean revisionForLegal = isRevisionForLegal(entity);
 			if (resubmit) {
 				if (!canResubmit(entity)) {
@@ -260,8 +260,10 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 				entity.setListingStatus(NotaryConstants.LISTING_STATUS_ACTIVE);
 			}
 			if (!resubmit && !StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, entity.getJenisPengajuan())) {
-				entity.setJenisBeforeCatatan(entity.getJenisPengajuan());
-				entity.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS);
+				if (!isFreezeOrDelisting(targetStatus)) {
+					entity.setJenisBeforeCatatan(entity.getJenisPengajuan());
+					entity.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS);
+				}
 				entity.setNotaryNo(notaryService.generateNoPengajuan(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS));
 				entity.setTanggalPengajuan(new Date());
 			}
@@ -320,6 +322,11 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 			return false;
 		}
 		return StringUtils.equals(NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL, historyList.get(0).getStatus());
+	}
+
+	private boolean isFreezeOrDelisting(String listingStatus) {
+		return StringUtils.equals(NotaryConstants.LISTING_STATUS_FREEZE, listingStatus)
+				|| StringUtils.equals(NotaryConstants.LISTING_STATUS_DELISTING, listingStatus);
 	}
 
 	private boolean isKnownTarget(String target) {

@@ -151,7 +151,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 						applyCatatanKhusus(true);
 					}
 					nextStatus = NotaryConstants.STATUS_COMPLETE;
-					historyStatus = "Approve by SPV Legal";
+					historyStatus = NotaryConstants.HISTORY_APPROVE_SPV_LEGAL;
 				}
 			} else if ("REJECT".equals(actionType)) {
 				if (isCatatanKhususRequest()) {
@@ -194,7 +194,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	private boolean isCatatanKhususRequest() {
-		return notary != null && StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, notary.getJenisPengajuan());
+		return notary != null && notary.isCatatanKhususPengajuan();
 	}
 
 	public boolean isCatatanKhusus() {

@@ -275,6 +275,26 @@ public class Notary extends BaseEntity implements Serializable {
 		this.catatanKhususRole = catatanKhususRole;
 	}
 
+	public boolean isCatatanKhususPengajuan() {
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS.equals(jenisPengajuan)) {
+			return true;
+		}
+		return pendingListingStatus != null && pendingListingStatus.trim().length() > 0;
+	}
+
+	public String getJenisPengajuanTampil() {
+		if (isFreezeOrDelisting(pendingListingStatus) && jenisBeforeCatatan != null
+				&& jenisBeforeCatatan.trim().length() > 0) {
+			return jenisBeforeCatatan;
+		}
+		return jenisPengajuan;
+	}
+
+	private boolean isFreezeOrDelisting(String listingStatus) {
+		return NotaryConstants.LISTING_STATUS_FREEZE.equals(listingStatus)
+				|| NotaryConstants.LISTING_STATUS_DELISTING.equals(listingStatus);
+	}
+
 	public String getJenisBeforeCatatan() {
 		return jenisBeforeCatatan;
 	}

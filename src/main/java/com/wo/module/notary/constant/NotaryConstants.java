@@ -54,6 +54,7 @@ public abstract class NotaryConstants {
 	public final static String REVISI_TARGET_MAKER = "MAKER";
 	public final static String REVISI_TARGET_LEGAL = "LEGAL";
 	public final static String HISTORY_REVISION_SPV_TO_LEGAL = "Revision by SPV Legal to Legal";
+	public final static String HISTORY_APPROVE_SPV_LEGAL = "Approve by SPV Legal";
 	public final static String PREFIX_NO_PENGAJUAN_BARU = "NB";
 	public final static String PREFIX_NO_PENGAJUAN_PERPANJANGAN = "NP";
 	public final static String PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN = "NU";
