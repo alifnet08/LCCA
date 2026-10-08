@@ -18,6 +18,7 @@
 		<property name="status" column="STATUS" type="string" />
 		<property name="catatanRevisi" column="CATATAN_REVISI" type="string" />
 		<property name="jenisPengajuan" column="JENIS_PENGAJUAN" type="string" />
+		<property name="notaryNo" column="NO_PENGAJUAN" type="string" />
 
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />

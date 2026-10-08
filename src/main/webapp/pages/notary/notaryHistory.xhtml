@@ -75,6 +75,9 @@
 								<p:column headerText="Kategori">
 									<h:outputText value="#{vo.notary.notaryCategory != null ? vo.notary.notaryCategory.nameIn : ''}" />
 								</p:column>
+								<p:column headerText="No Pengajuan">
+									<h:outputText value="#{vo.notaryNo}" />
+								</p:column>
 								<p:column headerText="Perubahan">
 									<h:outputText value="#{vo.perubahan}" />
 								</p:column>
