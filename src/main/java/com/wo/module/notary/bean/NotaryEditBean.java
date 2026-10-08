@@ -272,11 +272,6 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
-		if (!isPengajuanNotarisBaru() && StringUtils.isEmpty(notary.getAreaCode())) {
-			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryAreaCode") 
-					+ facesUtil.retrieveMessage("validateRequired"));
-			flag = true;
-		}
 		if (StringUtils.isEmpty(notary.getPhoneNo())) {
 			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryTelpNo") 
 					+ facesUtil.retrieveMessage("validateRequired"));
