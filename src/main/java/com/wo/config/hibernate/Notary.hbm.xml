@@ -33,6 +33,13 @@
 		<property name="jenisPengajuan" column="JENIS_PENGAJUAN" type="string" />
 		<property name="tanggalPensiun" column="TANGGAL_PENSIUN" type="date" />
 		<property name="tanggalBerakhirPks" column="TANGGAL_BERAKHIR_PKS" type="date" />
+		<property name="listingStatus" column="LISTING_STATUS" type="string" />
+		<property name="pendingListingStatus" column="PENDING_LISTING_STATUS" type="string" />
+		<property name="catatanKhusus" column="CATATAN_KHUSUS" type="string" />
+		<property name="catatanKhususFileId" column="CATATAN_KHUSUS_FILE_ID" type="string" />
+		<property name="catatanKhususFileName" column="CATATAN_KHUSUS_FILE_NAME" type="string" />
+		<property name="catatanKhususRole" column="CATATAN_KHUSUS_ROLE" type="string" />
+		<property name="jenisBeforeCatatan" column="JENIS_BEFORE_CATATAN" type="string" />
 		
 		<property name="enabledFlag" column="ENABLED_FLAG" type="string" />
 		<property name="creationDate" column="CREATION_DATE" type="timestamp" />

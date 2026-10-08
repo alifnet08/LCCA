@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.wo.module.common.model.BaseEntity;
+import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.parameter.model.ParameterDetail;
 
 public class Notary extends BaseEntity implements Serializable {
@@ -32,6 +33,14 @@ public class Notary extends BaseEntity implements Serializable {
 	private Date tanggalPensiun;
 	private Date tanggalBerakhirPks;
 	private String catatanRevisi;
+	private String latestHistoryStatus;
+	private String listingStatus;
+	private String pendingListingStatus;
+	private String catatanKhusus;
+	private String catatanKhususFileId;
+	private String catatanKhususFileName;
+	private String catatanKhususRole;
+	private String jenisBeforeCatatan;
 	private List<NotaryDocument> notaryDocuments = new ArrayList<NotaryDocument>();
 	
 	public Long getNotaryId() {
@@ -196,6 +205,102 @@ public class Notary extends BaseEntity implements Serializable {
 
 	public void setCatatanRevisi(String catatanRevisi) {
 		this.catatanRevisi = catatanRevisi;
+	}
+
+	public String getLatestHistoryStatus() {
+		return latestHistoryStatus;
+	}
+
+	public void setLatestHistoryStatus(String latestHistoryStatus) {
+		this.latestHistoryStatus = latestHistoryStatus;
+	}
+
+	public boolean isRevisionForLegal() {
+		return NotaryConstants.STATUS_REVISION.equals(status)
+				&& NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL.equals(latestHistoryStatus);
+	}
+
+	public String getListingStatus() {
+		return listingStatus;
+	}
+
+	public void setListingStatus(String listingStatus) {
+		this.listingStatus = listingStatus;
+	}
+
+	public String getListingStatusLabel() {
+		if (listingStatus == null || listingStatus.trim().length() == 0) {
+			return NotaryConstants.LISTING_STATUS_ACTIVE;
+		}
+		return listingStatus;
+	}
+
+	public String getPendingListingStatus() {
+		return pendingListingStatus;
+	}
+
+	public void setPendingListingStatus(String pendingListingStatus) {
+		this.pendingListingStatus = pendingListingStatus;
+	}
+
+	public String getCatatanKhusus() {
+		return catatanKhusus;
+	}
+
+	public void setCatatanKhusus(String catatanKhusus) {
+		this.catatanKhusus = catatanKhusus;
+	}
+
+	public String getCatatanKhususFileId() {
+		return catatanKhususFileId;
+	}
+
+	public void setCatatanKhususFileId(String catatanKhususFileId) {
+		this.catatanKhususFileId = catatanKhususFileId;
+	}
+
+	public String getCatatanKhususFileName() {
+		return catatanKhususFileName;
+	}
+
+	public void setCatatanKhususFileName(String catatanKhususFileName) {
+		this.catatanKhususFileName = catatanKhususFileName;
+	}
+
+	public String getCatatanKhususRole() {
+		return catatanKhususRole;
+	}
+
+	public void setCatatanKhususRole(String catatanKhususRole) {
+		this.catatanKhususRole = catatanKhususRole;
+	}
+
+	public boolean isCatatanKhususPengajuan() {
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS.equals(jenisPengajuan)) {
+			return true;
+		}
+		return pendingListingStatus != null && pendingListingStatus.trim().length() > 0;
+	}
+
+	public String getJenisPengajuanTampil() {
+		if (isFreezeOrDelisting(pendingListingStatus) && jenisBeforeCatatan != null
+				&& jenisBeforeCatatan.trim().length() > 0) {
+			return jenisBeforeCatatan;
+		}
+		return jenisPengajuan;
+	}
+
+	private boolean isFreezeOrDelisting(String listingStatus) {
+		return NotaryConstants.LISTING_STATUS_FREEZE.equals(listingStatus)
+				|| NotaryConstants.LISTING_STATUS_DELISTING.equals(listingStatus);
+	}
+
+	public String getJenisBeforeCatatan() {
+		return jenisBeforeCatatan;
+	}
+
+	public void setJenisBeforeCatatan(String jenisBeforeCatatan) {
+		this.jenisBeforeCatatan = jenisBeforeCatatan;
 	}
 
 	public List<NotaryDocument> getNotaryDocuments() {

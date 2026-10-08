@@ -25,6 +25,7 @@ import com.wo.module.common.utility.CallApiManager;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.Notary;
 import com.wo.module.notary.model.NotaryDocument;
+import com.wo.module.notary.model.NotaryHistory;
 import com.wo.module.notary.service.NotaryService;
 import com.wo.module.lov.bean.FacesUtil;
 import com.wo.module.outgoingLetter.constant.OutgoingLetterConstants;
@@ -83,6 +84,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	private boolean pengajuanUpdateDokumen;
 
 	private String navigateSeanotaryh = NotaryConstants.NAVIGATE_SEARCH;
+
+	private String currentResponsibilityName;
 
 	public void addMessage(String summary) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
@@ -159,6 +162,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			if (notary != null && notary.getNotaryCategory() == null) {
 				notary.setNotaryCategory(new ParameterDetail());
 			}
+			applyTaskAccess();
 		} catch (Exception e) {
 			logger.error("Failed to initialize notary edit form", e);
 			if (notary == null) {
@@ -173,6 +177,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		ParameterDetail pd = new ParameterDetail();
 		notary.setNotaryCategory(pd);
 		notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+		notary.setListingStatus(NotaryConstants.LISTING_STATUS_ACTIVE);
 		pengajuanPerpanjangan = false;
 		pengajuanUpdateDokumen = false;
 		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
@@ -267,11 +272,6 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
 		}
-		if (!isPengajuanNotarisBaru() && StringUtils.isEmpty(notary.getAreaCode())) {
-			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryAreaCode") 
-					+ facesUtil.retrieveMessage("validateRequired"));
-			flag = true;
-		}
 		if (StringUtils.isEmpty(notary.getPhoneNo())) {
 			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryTelpNo") 
 					+ facesUtil.retrieveMessage("validateRequired"));
@@ -327,11 +327,94 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				&& StringUtils.equals(NotaryConstants.STATUS_REVISION, notary.getStatus());
 	}
 
+	private void resolveCurrentResponsibility() {
+		currentResponsibilityName = "";
+		try {
+			if (facesUtil == null || userService == null || responsibilityService == null) {
+				return;
+			}
+			String nik = facesUtil.retrieveUserLogin();
+			if (StringUtils.isBlank(nik)) {
+				return;
+			}
+			User user = userService.getUserByNik(nik);
+			if (user == null || user.getResponsibilityId() == null) {
+				return;
+			}
+			Responsibility responsibility = responsibilityService.findById(user.getResponsibilityId());
+			if (responsibility != null) {
+				currentResponsibilityName = responsibility.getName();
+			}
+		} catch (Exception e) {
+			logger.error("Failed to resolve notary responsibility", e);
+		}
+	}
+
+	private boolean isMakerRole() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName);
+	}
+
+	private boolean isLegalRole() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_LEGAL, currentResponsibilityName);
+	}
+
+	private boolean isRevisionForLegal(Notary target) {
+		if (target == null || target.getNotaryId() == null || notaryService == null) {
+			return false;
+		}
+		if (!StringUtils.equals(NotaryConstants.STATUS_REVISION, target.getStatus())) {
+			return false;
+		}
+		List<NotaryHistory> historyList = notaryService.getHistoryByNotaryId(target.getNotaryId());
+		if (historyList == null || historyList.isEmpty() || historyList.get(0) == null) {
+			return false;
+		}
+		return StringUtils.equals(NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL, historyList.get(0).getStatus());
+	}
+
+	private void applyTaskAccess() {
+		if (notary == null || notary.getNotaryId() == null) {
+			return;
+		}
+		if (StringUtils.equals(NotaryConstants.STATUS_REJECTED, notary.getStatus())) {
+			isViewOnly = true;
+			return;
+		}
+		if (!StringUtils.equals(NotaryConstants.STATUS_REVISION, notary.getStatus())
+				|| Boolean.TRUE.equals(isViewOnly)) {
+			return;
+		}
+		resolveCurrentResponsibility();
+		if (isRevisionForLegal(notary)) {
+			if (!isLegalRole()) {
+				isViewOnly = true;
+			}
+		} else if (!isMakerRole()) {
+			isViewOnly = true;
+		}
+	}
+
 	public void save() {
 		try {
 			if (Boolean.TRUE.equals(isViewOnly)) {
 				facesUtil.addErrMessage("Pengajuan ini hanya dapat dilihat.");
 				return;
+			}
+			boolean revisionForLegal = isRevisionForLegal(notary);
+			if (notary != null && StringUtils.equals(NotaryConstants.STATUS_REJECTED, notary.getStatus())) {
+				facesUtil.addErrMessage("Pengajuan yang ditolak hanya dapat dilihat.");
+				return;
+			}
+			if (notary != null && StringUtils.equals(NotaryConstants.STATUS_REVISION, notary.getStatus())) {
+				resolveCurrentResponsibility();
+				if (revisionForLegal && !isLegalRole()) {
+					facesUtil.addErrMessage("Revisi ini hanya dapat diubah oleh Legal.");
+					return;
+				}
+				if (!revisionForLegal && !isMakerRole()) {
+					facesUtil.addErrMessage("Revisi ini hanya dapat diubah oleh CDU Maker.");
+					return;
+				}
 			}
 			if (!validate()) {
 				if (isPengajuanNotarisBaru()) {
@@ -352,6 +435,8 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				if (isNewPengajuan) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 					notary.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+				} else if (isResubmitRevisi && revisionForLegal) {
+					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_SPV_LEGAL);
 				} else if (isResubmitRevisi) {
 					notary.setStatus(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER);
 				} else if (pengajuanPerpanjangan) {
@@ -376,7 +461,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					}
 					notary.setNotaryNo(notaryService.generateNoPengajuan(prefix));
 				} else if (isResubmitRevisi) {
-					notary.setUserPengaju(facesUtil.retrieveUserLogin());
+					if (!revisionForLegal) {
+						notary.setUserPengaju(facesUtil.retrieveUserLogin());
+					}
 					notary.setTanggalPengajuan(new Timestamp(new Date().getTime()));
 				}
 
@@ -398,14 +485,17 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 				}
 
 				if (isNewPengajuan || pengajuanPerpanjangan || pengajuanUpdateDokumen || isResubmitRevisi) {
-					sendNotificationToCduChecker();
 					String historyStatus = "Submit by CDU Maker";
-					if (isResubmitRevisi) {
-						historyStatus = "Submit by CDU Maker";
-					} else if (pengajuanPerpanjangan) {
-						historyStatus = "Submit Perpanjangan by CDU Maker";
-					} else if (pengajuanUpdateDokumen) {
-						historyStatus = "Submit Update Dokumen by CDU Maker";
+					if (isResubmitRevisi && revisionForLegal) {
+						historyStatus = "Submit by Legal";
+						sendNotificationToSpvLegal();
+					} else {
+						sendNotificationToCduChecker();
+						if (pengajuanPerpanjangan && !isResubmitRevisi) {
+							historyStatus = "Submit Perpanjangan by CDU Maker";
+						} else if (pengajuanUpdateDokumen && !isResubmitRevisi) {
+							historyStatus = "Submit Update Dokumen by CDU Maker";
+						}
 					}
 					notaryService.saveHistory(notary, historyStatus, null, facesUtil.retrieveUserLogin());
 				}
@@ -433,23 +523,47 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	}
 
 	private void sendNotificationToCduChecker() {
+		String subject = "Pengajuan Penambahan Notaris";
+		String content = "Pengajuan Penambahan Notaris Anda telah berhasil disubmit.";
+		if (pengajuanPerpanjangan) {
+			subject = "Pengajuan Perpanjangan Notaris";
+			content = "Pengajuan Perpanjangan Notaris Anda telah berhasil disubmit.";
+		} else if (pengajuanUpdateDokumen) {
+			subject = "Pengajuan Update Dokumen Notaris";
+			content = "Pengajuan Update Dokumen Notaris Anda telah berhasil disubmit.";
+		}
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
+			content = content + " Nama Notaris: " + notary.getNotaryName();
+		}
+		sendNotification(NotaryConstants.RESPONSIBILITY_CDU_CHECKER, subject, content);
+	}
+
+	private void sendNotificationToSpvLegal() {
+		String subject = "Revisi Notaris dari Legal";
+		String content = "Revisi pengajuan notaris telah disubmit oleh Legal.";
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
+			content = content + " Nama Notaris: " + notary.getNotaryName();
+		}
+		sendNotification(NotaryConstants.RESPONSIBILITY_SPV_LEGAL, subject, content);
+	}
+
+	private void sendNotification(String responsibilityName, String subject, String content) {
 		try {
 			if (userService == null || responsibilityService == null || parameterDetailService == null) {
 				return;
 			}
 			List<Responsibility> responsibilityList = responsibilityService.getAllResponsibility();
-			Long cduCheckerResponsibilityId = null;
+			Long responsibilityId = null;
 			if (responsibilityList != null) {
 				for (Responsibility responsibility : responsibilityList) {
 					if (responsibility != null
-							&& StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_CHECKER,
-									responsibility.getName())) {
-						cduCheckerResponsibilityId = responsibility.getResponsibilityId();
+							&& StringUtils.equalsIgnoreCase(responsibilityName, responsibility.getName())) {
+						responsibilityId = responsibility.getResponsibilityId();
 						break;
 					}
 				}
 			}
-			if (cduCheckerResponsibilityId == null) {
+			if (responsibilityId == null) {
 				return;
 			}
 			List<User> userList = userService.getAllUser();
@@ -460,7 +574,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 							|| StringUtils.isBlank(user.getEmail())) {
 						continue;
 					}
-					if (!cduCheckerResponsibilityId.equals(user.getResponsibilityId())) {
+					if (!responsibilityId.equals(user.getResponsibilityId())) {
 						continue;
 					}
 					if (StringUtils.isNotBlank(user.getEnabledFlag())
@@ -475,18 +589,6 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			}
 			if (to.length() == 0) {
 				return;
-			}
-			String subject = "Pengajuan Penambahan Notaris";
-			String content = "Pengajuan Penambahan Notaris Anda telah berhasil disubmit.";
-			if (pengajuanPerpanjangan) {
-				subject = "Pengajuan Perpanjangan Notaris";
-				content = "Pengajuan Perpanjangan Notaris Anda telah berhasil disubmit.";
-			} else if (pengajuanUpdateDokumen) {
-				subject = "Pengajuan Update Dokumen Notaris";
-				content = "Pengajuan Update Dokumen Notaris Anda telah berhasil disubmit.";
-			}
-			if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-				content = content + " Nama Notaris: " + notary.getNotaryName();
 			}
 			CallApiManager.sendEmailAPI(to.toString(), "", subject, content, "NOTARY", "true",
 					parameterDetailService);
@@ -751,7 +853,17 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public void cancel() {
 		try {
-			facesUtil.redirect("/pages/notary/notary.faces");
+			boolean fromTask = false;
+			if (facesUtil != null) {
+				Object marker = facesUtil.getSessionAttribute(NotaryConstants.SESSION_FROM_TASK);
+				fromTask = marker != null && "Y".equalsIgnoreCase(marker.toString());
+				facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, null);
+			}
+			if (fromTask) {
+				facesUtil.redirect("/pages/notary/notaryTask.faces");
+			} else {
+				facesUtil.redirect("/pages/notary/notary.faces");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

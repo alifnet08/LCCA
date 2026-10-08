@@ -78,14 +78,6 @@
 								autocomplete="off" value="#{notaryBean.notaryName}"></p:inputText>
 						</div>
 					</div>
-					<div class="col-lg-4">
-						<div class="form-group">
-							<label class="tl-label"><h:outputText
-									value="#{msg.formNotaryAreaCode}" /></label>
-							<p:inputText id="areaCode" styleClass="form-control"
-								autocomplete="off" value="#{notaryBean.areaCode}"></p:inputText>
-						</div>
-					</div>
 
 					<div class="col-lg-12">
 						<div class="filter-tools">
@@ -108,14 +100,6 @@
 									  </h:commandLink>
 									</p:outputPanel>   
 								</li>
-								<li>								
-							    <p:fileUpload
-										fileUploadListener="#{notaryBean.handleFileUpload}"
-										value="#{notaryBean.uploadedFiles}"
-										mode="advanced" auto="true" adragDropSupport="false"
-										multiple="false" update="deletedMessage"
-										 />
-							    </li>
 								<p:remoteCommand name="onclickDownload" update="@form form:outputPanelError"></p:remoteCommand>
 								<li><h:commandLink styleClass="btn btn-warning tl-label" onclick="onclickDownload();PF('statusDialog').hide();">
 									   <i class="fa fa-table"></i> &nbsp;
@@ -166,14 +150,6 @@
 										styleClass="btn btn-default tl-label">
 										<f:param name="id" value="#{vo.notaryId}" />
 										<f:param name="viewId" value="true" />
-									</p:commandLink>
-									<h:outputText value=" " />
-									<p:commandLink id="Delete" value="#{msg.buttonDelete}"
-										styleClass="tl-label" update="tableSearch form:deletedMessage"
-										action="#{notaryBean.delete(vo.notaryId)}">
-										<p:confirm header="Konfirmasi"
-											message="#{msg.formDeleteMessage}"
-											icon="pi pi-exclamation-triangle" />
 									</p:commandLink>
 								</p:column>
 								

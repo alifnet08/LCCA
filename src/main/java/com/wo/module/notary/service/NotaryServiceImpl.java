@@ -142,6 +142,8 @@ public class NotaryServiceImpl implements NotaryService {
 		history.setNotary(notary);
 		history.setStatus(historyStatus);
 		history.setCatatanRevisi(catatanRevisi);
+		history.setJenisPengajuan(notary.getJenisPengajuan());
+		history.setNotaryNo(notary.getNotaryNo());
 		history.setCreatedBy(userLogin);
 		history.setCreationDate(new Timestamp(new Date().getTime()));
 		history.setDelId(new Long(0));
@@ -161,27 +163,62 @@ public class NotaryServiceImpl implements NotaryService {
 	public List<NotaryHistory> searchHistory(String notaryName, Date tanggalDari, Date tanggalSampai) {
 		try {
 			List<NotaryHistory> list = notaryHistoryDao.searchHistory(notaryName);
-			fillPerubahan(list);
 			List<NotaryHistory> filtered = new ArrayList<NotaryHistory>();
-			for (int i = 0; i < list.size(); i++) {
-				NotaryHistory hist = list.get(i);
-				if (hist == null || hist.getCreationDate() == null) {
-					continue;
+			Long currentNotaryId = null;
+			String previousJenis = null;
+			String inferredJenis = null;
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					NotaryHistory hist = list.get(i);
+					if (hist == null || hist.getNotary() == null) {
+						continue;
+					}
+					Long notaryId = hist.getNotary().getNotaryId();
+					if (currentNotaryId == null || !currentNotaryId.equals(notaryId)) {
+						currentNotaryId = notaryId;
+						previousJenis = null;
+						inferredJenis = null;
+					}
+					inferredJenis = inferJenisFromStatus(hist.getStatus(), inferredJenis);
+					if (!StringUtils.equals(NotaryConstants.HISTORY_APPROVE_SPV_LEGAL, hist.getStatus())) {
+						continue;
+					}
+					String jenis = StringUtils.defaultIfBlank(hist.getJenisPengajuan(), inferredJenis);
+					jenis = StringUtils.defaultIfBlank(jenis, NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+					hist.setJenisPengajuan(jenis);
+					inferredJenis = null;
+					if (previousJenis != null && StringUtils.equals(previousJenis, jenis)) {
+						continue;
+					}
+					if (previousJenis == null) {
+						hist.setPerubahan(jenis);
+					} else {
+						hist.setPerubahan("\"" + previousJenis + "\" to \"" + jenis + "\"");
+					}
+					previousJenis = jenis;
+					if (hist.getCreationDate() != null && tanggalDari != null
+							&& hist.getCreationDate().getTime() < tanggalDari.getTime()) {
+						continue;
+					}
+					if (hist.getCreationDate() != null && tanggalSampai != null
+							&& hist.getCreationDate().getTime() > tanggalSampai.getTime()) {
+						continue;
+					}
+					filtered.add(hist);
 				}
-				if (tanggalDari != null && hist.getCreationDate().before(tanggalDari)) {
-					continue;
-				}
-				if (tanggalSampai != null && hist.getCreationDate().after(tanggalSampai)) {
-					continue;
-				}
-				filtered.add(hist);
 			}
 			java.util.Collections.sort(filtered, new java.util.Comparator<NotaryHistory>() {
 				public int compare(NotaryHistory a, NotaryHistory b) {
-					if (a.getCreationDate() == null || b.getCreationDate() == null) {
+					if (a.getCreationDate() == null && b.getCreationDate() == null) {
 						return 0;
 					}
-					return b.getCreationDate().compareTo(a.getCreationDate());
+					if (a.getCreationDate() == null) {
+						return 1;
+					}
+					if (b.getCreationDate() == null) {
+						return -1;
+					}
+					return Long.compare(b.getCreationDate().getTime(), a.getCreationDate().getTime());
 				}
 			});
 			return filtered;
@@ -191,27 +228,23 @@ public class NotaryServiceImpl implements NotaryService {
 		}
 	}
 
-	private void fillPerubahan(List<NotaryHistory> list) {
-		Long currentNotaryId = null;
-		String previousStatus = null;
-		for (int i = 0; i < list.size(); i++) {
-			NotaryHistory hist = list.get(i);
-			if (hist == null || hist.getNotary() == null) {
-				continue;
-			}
-			Long notaryId = hist.getNotary().getNotaryId();
-			if (currentNotaryId == null || !currentNotaryId.equals(notaryId)) {
-				currentNotaryId = notaryId;
-				previousStatus = null;
-			}
-			String currentStatus = hist.getStatus() != null ? hist.getStatus() : "";
-			if (previousStatus != null) {
-				hist.setPerubahan("\"" + previousStatus + "\" to \"" + currentStatus + "\"");
-			} else {
-				hist.setPerubahan(currentStatus);
-			}
-			previousStatus = currentStatus;
+	private String inferJenisFromStatus(String status, String current) {
+		if (StringUtils.isBlank(status)) {
+			return current;
 		}
+		if (status.indexOf("Perpanjangan") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+		}
+		if (status.indexOf("Update Dokumen") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
+		}
+		if (status.indexOf("Catatan Khusus") >= 0) {
+			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS;
+		}
+		if ("Submit by CDU Maker".equals(status)) {
+			return NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU;
+		}
+		return current;
 	}
 
 	public String generateNoPengajuan(String prefix) {
@@ -221,19 +254,37 @@ public class NotaryServiceImpl implements NotaryService {
 		String bulan = monthFormat.format(now);
 		String tahun = yearFormat.format(now);
 		String numberPrefix = prefix + "." + bulan + "." + tahun + ".";
-		int nextSeq = 1;
-		try {
-			String lastNo = notaryDao.getLastNoPengajuan(numberPrefix + "%");
-			if (StringUtils.isNotBlank(lastNo) && lastNo.startsWith(numberPrefix)
-					&& lastNo.length() > numberPrefix.length()) {
-				String seqPart = lastNo.substring(numberPrefix.length());
-				nextSeq = Integer.parseInt(seqPart) + 1;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		int nextSeq = countHistoryByJenis(jenisForPrefix(prefix)) + 1;
 		DecimalFormat seqFormat = new DecimalFormat("0000");
 		return numberPrefix + seqFormat.format(nextSeq);
+	}
+
+	private String jenisForPrefix(String prefix) {
+		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_PERPANJANGAN, prefix)) {
+			return NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
+		}
+		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN, prefix)) {
+			return NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
+		}
+		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS, prefix)) {
+			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS;
+		}
+		return NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU;
+	}
+
+	private int countHistoryByJenis(String jenisPengajuan) {
+		List<NotaryHistory> rows = searchHistory(null, null, null);
+		int count = 0;
+		if (rows == null) {
+			return count;
+		}
+		for (int i = 0; i < rows.size(); i++) {
+			NotaryHistory row = rows.get(i);
+			if (row != null && StringUtils.equals(jenisPengajuan, row.getJenisPengajuan())) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	private void persistNotaryDocuments(Notary entity) {
