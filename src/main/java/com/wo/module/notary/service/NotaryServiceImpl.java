@@ -266,6 +266,12 @@ public class NotaryServiceImpl implements NotaryService {
 		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN, prefix)) {
 			return NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN;
 		}
+		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_FREEZE, prefix)) {
+			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE;
+		}
+		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_DELISTING, prefix)) {
+			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING;
+		}
 		if (StringUtils.equals(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS, prefix)) {
 			return NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS;
 		}

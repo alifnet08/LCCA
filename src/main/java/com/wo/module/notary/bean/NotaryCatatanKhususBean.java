@@ -259,13 +259,17 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 			if (StringUtils.isBlank(entity.getListingStatus())) {
 				entity.setListingStatus(NotaryConstants.LISTING_STATUS_ACTIVE);
 			}
-			if (!resubmit && !StringUtils.equals(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, entity.getJenisPengajuan())) {
-				if (!isFreezeOrDelisting(targetStatus)) {
-					entity.setJenisBeforeCatatan(entity.getJenisPengajuan());
-					entity.setJenisPengajuan(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS);
-				}
-				entity.setNotaryNo(notaryService.generateNoPengajuan(NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS));
+			if (!resubmit) {
+				entity.setJenisPengajuan(NotaryConstants.jenisCatatanKhusus(targetStatus));
+				entity.setJenisBeforeCatatan(null);
 				entity.setTanggalPengajuan(new Date());
+				if (StringUtils.equals(NotaryConstants.LISTING_STATUS_FREEZE, targetStatus)) {
+					entity.setNotaryNo(notaryService.generateNoPengajuan(
+							NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_FREEZE));
+				} else if (StringUtils.equals(NotaryConstants.LISTING_STATUS_DELISTING, targetStatus)) {
+					entity.setNotaryNo(notaryService.generateNoPengajuan(
+							NotaryConstants.PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_DELISTING));
+				}
 			}
 			if (!resubmit) {
 				entity.setUserPengaju(login);
@@ -322,11 +326,6 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 			return false;
 		}
 		return StringUtils.equals(NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL, historyList.get(0).getStatus());
-	}
-
-	private boolean isFreezeOrDelisting(String listingStatus) {
-		return StringUtils.equals(NotaryConstants.LISTING_STATUS_FREEZE, listingStatus)
-				|| StringUtils.equals(NotaryConstants.LISTING_STATUS_DELISTING, listingStatus);
 	}
 
 	private boolean isKnownTarget(String target) {

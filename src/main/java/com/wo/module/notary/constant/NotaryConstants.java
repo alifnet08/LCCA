@@ -59,10 +59,33 @@ public abstract class NotaryConstants {
 	public final static String PREFIX_NO_PENGAJUAN_PERPANJANGAN = "NP";
 	public final static String PREFIX_NO_PENGAJUAN_UPDATE_DOKUMEN = "NU";
 	public final static String PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS = "NK";
+	public final static String PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_FREEZE = "NF";
+	public final static String PREFIX_NO_PENGAJUAN_CATATAN_KHUSUS_DELISTING = "D";
 	public final static String JENIS_PENGAJUAN_NOTARIS_BARU = "Notaris Baru";
 	public final static String JENIS_PENGAJUAN_PERPANJANGAN = "Perpanjangan";
 	public final static String JENIS_PENGAJUAN_UPDATE_DOKUMEN = "Update Dokumen";
 	public final static String JENIS_PENGAJUAN_CATATAN_KHUSUS = "Catatan Khusus";
+	public final static String JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE = "Catatan Khusus - Active";
+	public final static String JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE = "Catatan Khusus - Freeze";
+	public final static String JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING = "Catatan Khusus - Delisting";
+
+	public static boolean isCatatanKhususJenis(String jenisPengajuan) {
+		if (jenisPengajuan == null) {
+			return false;
+		}
+		return JENIS_PENGAJUAN_CATATAN_KHUSUS.equals(jenisPengajuan)
+				|| jenisPengajuan.startsWith(JENIS_PENGAJUAN_CATATAN_KHUSUS + " -");
+	}
+
+	public static String jenisCatatanKhusus(String listingStatus) {
+		if (LISTING_STATUS_FREEZE.equals(listingStatus)) {
+			return JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE;
+		}
+		if (LISTING_STATUS_DELISTING.equals(listingStatus)) {
+			return JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING;
+		}
+		return JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE;
+	}
 	public final static String LISTING_STATUS_ACTIVE = "Active";
 	public final static String LISTING_STATUS_FREEZE = "Freeze";
 	public final static String LISTING_STATUS_DELISTING = "Delisting";

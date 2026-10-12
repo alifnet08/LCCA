@@ -133,6 +133,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 				addErr(catatanRevisiError);
 				return;
 			}
+			preserveCatatanKhususJenis();
 			String userLogin = facesUtil.retrieveUserLogin();
 			String historyStatus;
 			String nextStatus;
@@ -206,14 +207,23 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 				&& StringUtils.equals(NotaryConstants.CATATAN_ROLE_LEGAL, notary.getCatatanKhususRole());
 	}
 
+	private void preserveCatatanKhususJenis() {
+		if (notary == null || !notary.isCatatanKhususPengajuan()) {
+			return;
+		}
+		if (NotaryConstants.isCatatanKhususJenis(notary.getJenisPengajuan())) {
+			return;
+		}
+		if (StringUtils.isNotBlank(notary.getPendingListingStatus())) {
+			notary.setJenisPengajuan(NotaryConstants.jenisCatatanKhusus(notary.getPendingListingStatus()));
+		}
+	}
+
 	private void applyCatatanKhusus(boolean approved) {
 		if (approved && StringUtils.isNotBlank(notary.getPendingListingStatus())) {
 			notary.setListingStatus(notary.getPendingListingStatus());
 		}
 		notary.setPendingListingStatus(null);
-		if (StringUtils.isNotBlank(notary.getJenisBeforeCatatan())) {
-			notary.setJenisPengajuan(notary.getJenisBeforeCatatan());
-		}
 		notary.setJenisBeforeCatatan(null);
 	}
 
