@@ -249,53 +249,15 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	private void sendEmail(String responsibilityName, String subject) {
-		try {
-			List<Responsibility> responsibilityList = responsibilityService.getAllResponsibility();
-			Long responsibilityId = null;
-			if (responsibilityList != null) {
-				for (Responsibility responsibility : responsibilityList) {
-					if (responsibility != null
-							&& StringUtils.equalsIgnoreCase(responsibilityName, responsibility.getName())) {
-						responsibilityId = responsibility.getResponsibilityId();
-						break;
-					}
-				}
-			}
-			if (responsibilityId == null) {
-				return;
-			}
-			List<User> userList = userService.getAllUser();
-			StringBuilder to = new StringBuilder();
-			if (userList != null) {
-				for (User user : userList) {
-					if (user == null || user.getResponsibilityId() == null || StringUtils.isBlank(user.getEmail())) {
-						continue;
-					}
-					if (!responsibilityId.equals(user.getResponsibilityId())) {
-						continue;
-					}
-					if (StringUtils.isNotBlank(user.getEnabledFlag())
-							&& !StringUtils.equalsIgnoreCase(Constants.CONSTANT_YES, user.getEnabledFlag())) {
-						continue;
-					}
-					if (to.length() > 0) {
-						to.append(";");
-					}
-					to.append(user.getEmail());
-				}
-			}
-			if (to.length() == 0) {
-				return;
-			}
-			String content = subject;
-			if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-				content = content + ". Nama Notaris: " + notary.getNotaryName();
-			}
-			CallApiManager.sendEmailAPI(to.toString(), "", subject, content, "NOTARY", "true",
-					parameterDetailService);
-		} catch (Exception e) {
-			e.printStackTrace();
+		String content = subject;
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
+			content = content + ". Nama Notaris: " + notary.getNotaryName();
 		}
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryNo())) {
+			content = content + ". No Pengajuan: " + notary.getNotaryNo();
+		}
+		NotaryMailSender.sendToRole(userService, responsibilityService, parameterDetailService, responsibilityName,
+				subject, content);
 	}
 
 	private void addErr(String summary) {
