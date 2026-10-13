@@ -2,7 +2,9 @@ package com.wo.module.notary.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -99,6 +101,10 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_CDU_MAKER, currentResponsibilityName);
 	}
 
+	public boolean isLegal() {
+		return StringUtils.equalsIgnoreCase(NotaryConstants.RESPONSIBILITY_LEGAL, currentResponsibilityName);
+	}
+
 	public void search(ActionEvent actionEvent) {
 		List<SearchObject> searchCriteria = new ArrayList<SearchObject>();
 		if (StringUtils.isNotBlank(area)) {
@@ -114,12 +120,14 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 				login = "__NO_USER__";
 			}
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_USER_PENGAJU, login));
+		} else if (isLegal()) {
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_LEGAL_TASK, "Y"));
 		} else {
 			String inbox = inboxStatus();
 			if (StringUtils.isNotBlank(inbox)) {
-				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, inbox));
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_INBOX_OR_REJECTED, inbox));
 			} else {
-				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, "__NO_INBOX__"));
+				searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_REJECTED));
 			}
 		}
 		tableModel.setSearchCriteria(searchCriteria);
@@ -138,6 +146,7 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 	public String openMakerSubmit() {
 		if (facesUtil != null) {
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
 		}
 		return NotaryConstants.NAVIGATE_EDIT;
 	}
@@ -145,8 +154,17 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 	public String openMakerView() {
 		if (facesUtil != null) {
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
 		}
 		return NotaryConstants.NAVIGATE_EDIT;
+	}
+
+	public String openCatatanKhusus() {
+		if (facesUtil != null) {
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, "Y");
+		}
+		return NotaryConstants.NAVIGATE_CATATAN_KHUSUS;
 	}
 
 	public void openHistory(Notary notary) {
@@ -155,6 +173,48 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		if (notary != null && notary.getNotaryId() != null) {
 			historyList = notaryService.getHistoryByNotaryId(notary.getNotaryId());
 		}
+		Map<String, String> actorCache = new HashMap<String, String>();
+		if (historyList == null) {
+			historyList = new ArrayList<NotaryHistory>();
+			return;
+		}
+		for (int i = 0; i < historyList.size(); i++) {
+			NotaryHistory hist = historyList.get(i);
+			if (hist == null || !isDecisionHistory(hist.getStatus())) {
+				continue;
+			}
+			hist.setActorLabel(resolveActorLabel(hist.getCreatedBy(), actorCache));
+		}
+	}
+
+	private boolean isDecisionHistory(String status) {
+		if (StringUtils.isBlank(status)) {
+			return false;
+		}
+		String normalized = status.toLowerCase();
+		return normalized.contains("approve") || normalized.contains("revision") || normalized.contains("reject");
+	}
+
+	private String resolveActorLabel(String nik, Map<String, String> actorCache) {
+		if (StringUtils.isBlank(nik)) {
+			return "";
+		}
+		if (actorCache.containsKey(nik)) {
+			return actorCache.get(nik);
+		}
+		String label = nik;
+		try {
+			if (userService != null) {
+				User user = userService.getUserByNik(nik);
+				if (user != null && StringUtils.isNotBlank(user.getName())) {
+					label = nik + "-" + user.getName();
+				}
+			}
+		} catch (Exception e) {
+			label = nik;
+		}
+		actorCache.put(nik, label);
+		return label;
 	}
 
 	public String getArea() {

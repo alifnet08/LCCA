@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../templates/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+			.status-pill {
+				display: inline-block;
+				background: #8d8d8d;
+				color: #fff;
+				border-radius: 8px;
+				padding: 4px 12px;
+				font-size: 12px;
+				margin: 2px 4px 2px 0;
+			}
+			.catatan-dialog .readonly-label {
+				color: #888;
+				font-size: 12px;
+				margin-bottom: 2px;
+			}
+			.catatan-dialog .readonly-value {
+				font-weight: 600;
+				margin-bottom: 12px;
+			}
+			.catatan-success-text {
+				text-align: center;
+				font-weight: 700;
+				font-size: 18px;
+				margin: 24px 12px;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="menuName">
+		<h:outputText value="Catatan Khusus" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="box box-solid">
+			<div class="box-body">
+				<p:growl id="msgs" globalOnly="true" />
+				<p:remoteCommand name="rcOpenCatatan" process="@this" update="dlgCatatan"
+					actionListener="#{notaryCatatanKhususBean.openFromRequest}"
+					oncomplete="PF('dlgCatatan').show();" />
+				<p:remoteCommand autoRun="true" rendered="#{notaryCatatanKhususBean.openDialogOnLoad}"
+					oncomplete="PF('dlgCatatan').show();" />
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Kategori" /></label>
+							<h:selectOneMenu styleClass="form-control" value="#{notaryCatatanKhususBean.categoryName}">
+								<f:selectItem itemLabel="Semua" itemValue="" />
+								<f:selectItem itemLabel="Syariah" itemValue="Syariah" />
+								<f:selectItem itemLabel="CFS" itemValue="CFS" />
+								<f:selectItem itemLabel="Consumer" itemValue="Consumer" />
+								<f:selectItem itemLabel="Global Banking" itemValue="Global Banking" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Nama Notaris" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryCatatanKhususBean.notaryName}" />
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Area" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryCatatanKhususBean.area}" />
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Kode Area" /></label>
+							<p:inputText styleClass="form-control" autocomplete="off"
+								value="#{notaryCatatanKhususBean.areaCode}" />
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div class="filter-tools">
+							<ul class="no-margin no-padding">
+								<li><p:commandButton value="Cari" ajax="true" update="tableSearch"
+										styleClass="btn btn-success tl-label"
+										actionListener="#{notaryCatatanKhususBean.search}" /></li>
+								<li><p:commandButton value="Reset" ajax="true" update="tableSearch"
+										styleClass="btn btn-default btn-flat tl-label"
+										actionListener="#{notaryCatatanKhususBean.reset}" /></li>
+							</ul>
+							<ul class="no-margin no-padding pull-right">
+								<li><p:commandButton value="Export Excel" ajax="false"
+										styleClass="btn btn-success">
+										<p:dataExporter type="xls" target="tableSearch" fileName="CatatanKhusus"
+											pageOnly="false" />
+									</p:commandButton></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-12">&nbsp;</div>
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<p:dataTable id="tableSearch" paginator="true" var="vo"
+								value="#{notaryCatatanKhususBean.tableModel}" dynamic="true" lazy="true"
+								emptyMessage="#{msg.textNodata}" rows="#{notaryCatatanKhususBean.paging}"
+								rowIndexVar="statIndex"
+								rowStyleClass="#{statIndex%2 == 1 ? 'odd' : null}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Status" style="width:180px;">
+									<h:outputText value="#{vo.listingStatusLabel}" styleClass="status-pill" />
+									<p:commandButton value="Active" type="button"
+										rendered="#{notaryCatatanKhususBean.canChangeStatus and vo.listingStatus eq 'Freeze'}"
+										onclick="rcOpenCatatan([{name:'notaryId',value:'#{vo.notaryId}'},{name:'targetStatus',value:'Active'}]); return false;"
+										styleClass="btn btn-default btn-sm" />
+									<p:commandButton value="Freeze" type="button"
+										rendered="#{notaryCatatanKhususBean.canChangeStatus and (empty vo.listingStatus or vo.listingStatus eq 'Active')}"
+										onclick="rcOpenCatatan([{name:'notaryId',value:'#{vo.notaryId}'},{name:'targetStatus',value:'Freeze'}]); return false;"
+										styleClass="btn btn-default btn-sm" />
+									<p:commandButton value="Delisting" type="button"
+										rendered="#{notaryCatatanKhususBean.canChangeStatus and vo.listingStatus ne 'Delisting'}"
+										onclick="rcOpenCatatan([{name:'notaryId',value:'#{vo.notaryId}'},{name:'targetStatus',value:'Delisting'}]); return false;"
+										styleClass="btn btn-default btn-sm" />
+								</p:column>
+								<p:column headerText="Kategori">
+									<h:outputText value="#{vo.notaryCategory.nameIn}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{vo.area}" />
+								</p:column>
+								<p:column headerText="Nama Notaris">
+									<h:outputText value="#{vo.notaryName}" />
+								</p:column>
+								<p:column headerText="Kode Area">
+									<h:outputText value="#{vo.areaCode}" />
+								</p:column>
+								<p:column headerText="No Telepon">
+									<h:outputText value="#{vo.phoneNo}" />
+								</p:column>
+								<p:column headerText="Email">
+									<h:outputText value="#{vo.email}" />
+								</p:column>
+								<p:column headerText="No Handphone">
+									<h:outputText value="#{vo.mobileNo}" />
+								</p:column>
+								<p:column headerText="Keterangan">
+									<h:outputText value="#{vo.note}" />
+								</p:column>
+								<p:column headerText="Tanggal Dibuat">
+									<h:outputText value="#{vo.creationDate}">
+										<f:convertDateTime pattern="dd MMM yyyy" locale="in" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Tanggal Terakhir Diubah">
+									<h:outputText value="#{vo.lastUpdateDate}">
+										<f:convertDateTime pattern="dd MMM yyyy" locale="in" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p:dialog id="dlgCatatan" widgetVar="dlgCatatan" styleClass="catatan-dialog"
+			header="Silakan isi Catatan Khusus untuk ubah status menjadi #{notaryCatatanKhususBean.targetStatus}"
+			modal="true" resizable="false" width="560" appendTo="@form">
+			<h:panelGroup id="dlgCatatanBody" layout="block">
+				<h:panelGroup id="catatanUploadInfo" layout="block">
+					<h:outputText value="#{notaryCatatanKhususBean.errorMessage}"
+						rendered="#{not empty notaryCatatanKhususBean.errorMessage}"
+						style="color:#dd4b39; display:block; margin-bottom:10px;" />
+					<h:outputText value="#{notaryCatatanKhususBean.pendingFileName}"
+						rendered="#{not empty notaryCatatanKhususBean.pendingFileName}"
+						style="display:block; margin-bottom:8px;" />
+				</h:panelGroup>
+				<h:panelGroup layout="block" rendered="#{notaryCatatanKhususBean.selectedNotary != null}">
+				<div class="row" style="margin:0;">
+					<div class="col-lg-6">
+						<div class="readonly-label">Nama Notaris</div>
+						<div class="readonly-value">
+							<h:outputText value="#{notaryCatatanKhususBean.selectedNotary.notaryName}" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="readonly-label">Kategori</div>
+						<div class="readonly-value">
+							<h:outputText value="#{notaryCatatanKhususBean.selectedNotary.notaryCategory != null ? notaryCatatanKhususBean.selectedNotary.notaryCategory.nameIn : ''}" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="readonly-label">Area</div>
+						<div class="readonly-value">
+							<h:outputText value="#{notaryCatatanKhususBean.selectedNotary.area}" />
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="readonly-label">Email</div>
+						<div class="readonly-value">
+							<h:outputText value="#{notaryCatatanKhususBean.selectedNotary.email}" />
+						</div>
+					</div>
+				</div>
+				</h:panelGroup>
+				<div class="form-group required">
+					<label>Catatan Khusus</label>
+					<p:inputText id="catatanKhususInput" styleClass="form-control"
+						value="#{notaryCatatanKhususBean.catatanKhususInput}" />
+				</div>
+				<div class="form-group">
+					<p:fileUpload mode="advanced" auto="true" dragDropSupport="false" multiple="false"
+						label="Lampiran" styleClass="wo-fileupload-wrap"
+						sizeLimit="2097152"
+						fileUploadListener="#{notaryCatatanKhususBean.handleUpload}"
+						process="@this" update="catatanUploadInfo" />
+				</div>
+				<div style="text-align:center; margin-top:16px;">
+					<p:commandButton value="Cancel" type="button" styleClass="btn btn-danger"
+						style="min-width:110px; margin-right:12px;" onclick="PF('dlgCatatan').hide();" />
+					<p:commandButton value="Submit" styleClass="btn btn-success" style="min-width:110px;"
+						process="@this catatanKhususInput" update="dlgCatatanBody tableSearch"
+						actionListener="#{notaryCatatanKhususBean.submit}"
+						oncomplete="if (args &amp;&amp; args.catatanSaved) { PF('dlgCatatan').hide(); PF('dlgCatatanSuccess').show(); } else { PF('dlgCatatan').show(); }" />
+				</div>
+			</h:panelGroup>
+		</p:dialog>
+
+		<p:dialog id="dlgCatatanSuccess" widgetVar="dlgCatatanSuccess" header=" " modal="true"
+			resizable="false" width="460" appendTo="@form">
+			<div class="catatan-success-text">Pengajuan Catatan Khusus Anda telah berhasil disubmit.</div>
+			<div style="text-align:center; margin-bottom:12px;">
+				<p:commandButton value="OK" type="button" styleClass="btn btn-primary"
+					onclick="PF('dlgCatatanSuccess').hide();" />
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

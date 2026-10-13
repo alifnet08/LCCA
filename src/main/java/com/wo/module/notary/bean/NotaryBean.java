@@ -333,6 +333,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		try {
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN,
 					NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, null);
 			facesUtil.redirect("/pages/notary/notaryEdit.faces");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -352,6 +353,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 				jenisPengajuan = NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN;
 			}
 			facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, jenisPengajuan);
+			facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, null);
 			facesUtil.redirect("/pages/notary/notaryEdit.faces?id=" + selectedNotary.getNotaryId()
 					+ "&jenisPengajuan=" + java.net.URLEncoder.encode(jenisPengajuan, "UTF-8"));
 		} catch (Exception e) {
@@ -361,6 +363,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 
 	public String getNavigateEdit() {
 		facesUtil.setSessionAttribute(NotaryConstants.SESSION_JENIS_PENGAJUAN, null);
+		facesUtil.setSessionAttribute(NotaryConstants.SESSION_FROM_TASK, null);
 		return navigateEdit;
 	}
 

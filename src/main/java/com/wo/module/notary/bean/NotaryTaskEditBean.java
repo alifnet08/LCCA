@@ -89,7 +89,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	public boolean isActionEnabled() {
-		if (notary == null) {
+		if (notary == null || StringUtils.equals(NotaryConstants.STATUS_REJECTED, notary.getStatus())) {
 			return false;
 		}
 		if (isChecker() && StringUtils.equals(NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER, notary.getStatus())) {
@@ -133,6 +133,7 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 				addErr(catatanRevisiError);
 				return;
 			}
+			preserveCatatanKhususJenis();
 			String userLogin = facesUtil.retrieveUserLogin();
 			String historyStatus;
 			String nextStatus;
@@ -147,23 +148,33 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 					historyStatus = "Approve by Legal";
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_SPV_LEGAL;
 				} else {
+					if (isCatatanKhususRequest()) {
+						applyCatatanKhusus(true);
+					}
 					nextStatus = NotaryConstants.STATUS_COMPLETE;
-					historyStatus = "Approve by SPV Legal";
+					historyStatus = NotaryConstants.HISTORY_APPROVE_SPV_LEGAL;
 				}
 			} else if ("REJECT".equals(actionType)) {
-				nextStatus = NotaryConstants.STATUS_REJECTED;
+				if (isCatatanKhususRequest()) {
+					applyCatatanKhusus(false);
+					nextStatus = NotaryConstants.STATUS_COMPLETE;
+				} else {
+					nextStatus = NotaryConstants.STATUS_REJECTED;
+				}
 				historyStatus = "Reject";
 			} else {
+				nextStatus = NotaryConstants.STATUS_REVISION;
+				if (isCatatanKhususRequest() && isSpvLegal()
+						&& StringUtils.equals(NotaryConstants.CATATAN_ROLE_LEGAL, notary.getCatatanKhususRole())) {
+					revisiTarget = NotaryConstants.REVISI_TARGET_LEGAL;
+				}
 				if (isSpvLegal() && StringUtils.equals(NotaryConstants.REVISI_TARGET_LEGAL, revisiTarget)) {
-					nextStatus = NotaryConstants.STATUS_WAITING_APPROVAL_LEGAL;
-					historyStatus = "Revision by SPV Legal";
+					historyStatus = NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL;
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_LEGAL;
 				} else if (isLegal()) {
-					nextStatus = NotaryConstants.STATUS_WAITING_APPROVAL_CDU_CHECKER;
 					historyStatus = "Revision by Legal";
-					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_CHECKER;
+					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_MAKER;
 				} else {
-					nextStatus = NotaryConstants.STATUS_REVISION;
 					historyStatus = isSpvLegal() ? "Revision by SPV Legal" : "Revision by CDU Checker";
 					emailResponsibility = NotaryConstants.RESPONSIBILITY_CDU_MAKER;
 				}
@@ -181,6 +192,39 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 		} catch (Exception e) {
 			addErr("Operation Failed : " + e.getMessage());
 		}
+	}
+
+	private boolean isCatatanKhususRequest() {
+		return notary != null && notary.isCatatanKhususPengajuan();
+	}
+
+	public boolean isCatatanKhusus() {
+		return isCatatanKhususRequest();
+	}
+
+	public boolean isCatatanKhususFromLegal() {
+		return isCatatanKhususRequest()
+				&& StringUtils.equals(NotaryConstants.CATATAN_ROLE_LEGAL, notary.getCatatanKhususRole());
+	}
+
+	private void preserveCatatanKhususJenis() {
+		if (notary == null || !notary.isCatatanKhususPengajuan()) {
+			return;
+		}
+		if (NotaryConstants.isCatatanKhususJenis(notary.getJenisPengajuan())) {
+			return;
+		}
+		if (StringUtils.isNotBlank(notary.getPendingListingStatus())) {
+			notary.setJenisPengajuan(NotaryConstants.jenisCatatanKhusus(notary.getPendingListingStatus()));
+		}
+	}
+
+	private void applyCatatanKhusus(boolean approved) {
+		if (approved && StringUtils.isNotBlank(notary.getPendingListingStatus())) {
+			notary.setListingStatus(notary.getPendingListingStatus());
+		}
+		notary.setPendingListingStatus(null);
+		notary.setJenisBeforeCatatan(null);
 	}
 
 	private String buildCatatan() {
@@ -205,53 +249,15 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	private void sendEmail(String responsibilityName, String subject) {
-		try {
-			List<Responsibility> responsibilityList = responsibilityService.getAllResponsibility();
-			Long responsibilityId = null;
-			if (responsibilityList != null) {
-				for (Responsibility responsibility : responsibilityList) {
-					if (responsibility != null
-							&& StringUtils.equalsIgnoreCase(responsibilityName, responsibility.getName())) {
-						responsibilityId = responsibility.getResponsibilityId();
-						break;
-					}
-				}
-			}
-			if (responsibilityId == null) {
-				return;
-			}
-			List<User> userList = userService.getAllUser();
-			StringBuilder to = new StringBuilder();
-			if (userList != null) {
-				for (User user : userList) {
-					if (user == null || user.getResponsibilityId() == null || StringUtils.isBlank(user.getEmail())) {
-						continue;
-					}
-					if (!responsibilityId.equals(user.getResponsibilityId())) {
-						continue;
-					}
-					if (StringUtils.isNotBlank(user.getEnabledFlag())
-							&& !StringUtils.equalsIgnoreCase(Constants.CONSTANT_YES, user.getEnabledFlag())) {
-						continue;
-					}
-					if (to.length() > 0) {
-						to.append(";");
-					}
-					to.append(user.getEmail());
-				}
-			}
-			if (to.length() == 0) {
-				return;
-			}
-			String content = subject;
-			if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-				content = content + ". Nama Notaris: " + notary.getNotaryName();
-			}
-			CallApiManager.sendEmailAPI(to.toString(), "", subject, content, "NOTARY", "true",
-					parameterDetailService);
-		} catch (Exception e) {
-			e.printStackTrace();
+		String content = subject;
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
+			content = content + ". Nama Notaris: " + notary.getNotaryName();
 		}
+		if (notary != null && StringUtils.isNotBlank(notary.getNotaryNo())) {
+			content = content + ". No Pengajuan: " + notary.getNotaryNo();
+		}
+		NotaryMailSender.sendToRole(userService, responsibilityService, parameterDetailService, responsibilityName,
+				subject, content);
 	}
 
 	private void addErr(String summary) {

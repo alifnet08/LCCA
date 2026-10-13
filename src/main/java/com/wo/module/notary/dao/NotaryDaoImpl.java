@@ -68,6 +68,26 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 						sb.append(" and ct.STATUS in ('revision', 'waiting approval CDU Checker', ");
 						sb.append("'waiting approval Legal', 'waiting approval SPV Legal', 'rejected') ");
 					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_INBOX_OR_REJECTED, col)) {
+						sb.append(" and (ct.STATUS = :inboxStatus or ct.STATUS = '");
+						sb.append(NotaryConstants.STATUS_REJECTED);
+						sb.append("') ");
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_LEGAL_TASK, col)) {
+						sb.append(" and (ct.STATUS = '");
+						sb.append(NotaryConstants.STATUS_WAITING_APPROVAL_LEGAL);
+						sb.append("' or ct.STATUS = '");
+						sb.append(NotaryConstants.STATUS_REJECTED);
+						sb.append("' or (ct.STATUS = '");
+						sb.append(NotaryConstants.STATUS_REVISION);
+						sb.append("' and exists (select 1 from WO_MST_NOTARY_HISTORY h ");
+						sb.append(" where h.NOTARY_ID = ct.NOTARY_ID and h.ENABLED_FLAG = 'Y' ");
+						sb.append(" and h.STATUS = '");
+						sb.append(NotaryConstants.HISTORY_REVISION_SPV_TO_LEGAL);
+						sb.append("' and h.NOTARY_HISTORY_ID = (select max(h2.NOTARY_HISTORY_ID) ");
+						sb.append(" from WO_MST_NOTARY_HISTORY h2 where h2.NOTARY_ID = ct.NOTARY_ID ");
+						sb.append(" and h2.ENABLED_FLAG = 'Y')))) ");
+					}
 				}
 			}
 		}
@@ -99,6 +119,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_USER_PENGAJU, col)) {
 						query.setParameter("userPengaju", val);
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_INBOX_OR_REJECTED, col)) {
+						query.setParameter("inboxStatus", val);
 					}
 				}
 			}
@@ -158,7 +181,14 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("          WHERE h.NOTARY_HISTORY_ID = (SELECT MAX(h2.NOTARY_HISTORY_ID) ");
 		sb.append("            FROM WO_MST_NOTARY_HISTORY h2 ");
 		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y' ");
-		sb.append("             AND h2.CATATAN_REVISI IS NOT NULL)) ");
+		sb.append("             AND h2.CATATAN_REVISI IS NOT NULL)), ");
+		sb.append("        (SELECT h.STATUS FROM WO_MST_NOTARY_HISTORY h ");
+		sb.append("          WHERE h.NOTARY_HISTORY_ID = (SELECT MAX(h2.NOTARY_HISTORY_ID) ");
+		sb.append("            FROM WO_MST_NOTARY_HISTORY h2 ");
+		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y')), ");
+		sb.append("        NVL(ct.LISTING_STATUS, 'Active'), ct.PENDING_LISTING_STATUS, ct.CATATAN_KHUSUS, ");
+		sb.append("        ct.CATATAN_KHUSUS_FILE_ID, ct.CATATAN_KHUSUS_FILE_NAME, ct.CATATAN_KHUSUS_ROLE, ");
+		sb.append("        ct.JENIS_BEFORE_CATATAN ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
@@ -220,6 +250,30 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					data.setTanggalPengajuan((Date) obj[24]);
 				}
 				data.setCatatanRevisi(obj[25] != null ? obj[25].toString() : null);
+				if (obj.length > 26 && obj[26] != null) {
+					data.setLatestHistoryStatus(obj[26].toString().trim());
+				}
+				if (obj.length > 27 && obj[27] != null) {
+					data.setListingStatus(obj[27].toString());
+				}
+				if (obj.length > 28 && obj[28] != null) {
+					data.setPendingListingStatus(obj[28].toString());
+				}
+				if (obj.length > 29 && obj[29] != null) {
+					data.setCatatanKhusus(obj[29].toString());
+				}
+				if (obj.length > 30 && obj[30] != null) {
+					data.setCatatanKhususFileId(obj[30].toString());
+				}
+				if (obj.length > 31 && obj[31] != null) {
+					data.setCatatanKhususFileName(obj[31].toString());
+				}
+				if (obj.length > 32 && obj[32] != null) {
+					data.setCatatanKhususRole(obj[32].toString());
+				}
+				if (obj.length > 33 && obj[33] != null) {
+					data.setJenisBeforeCatatan(obj[33].toString());
+				}
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);
 				//data = findById(notaryId);
