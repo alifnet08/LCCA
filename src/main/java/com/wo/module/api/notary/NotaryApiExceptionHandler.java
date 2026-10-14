@@ -44,7 +44,7 @@ public class NotaryApiExceptionHandler {
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ApiErrorResponse> methodNotAllowed(HttpRequestMethodNotSupportedException exception) {
-		return error(HttpStatus.METHOD_NOT_ALLOWED, "Use HTTP PUT");
+		return error(HttpStatus.METHOD_NOT_ALLOWED, "Use HTTP POST");
 	}
 
 	@ExceptionHandler(Exception.class)

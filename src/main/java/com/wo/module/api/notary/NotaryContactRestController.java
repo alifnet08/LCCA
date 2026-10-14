@@ -22,7 +22,7 @@ public class NotaryContactRestController {
 		this.notaryService = notaryService;
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = { RequestMethod.POST, RequestMethod.PUT }, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public NotaryContactResponse updateContact(@RequestBody NotaryContactUpdateRequest request) {
 		String validationMessage = NotaryContactValidator.validate(request);
 		if (validationMessage != null) {

@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Notary contact API",
-    "description": "PUT /compliance/api/notary/contact finds a notary by Telp No and updates Email.",
+    "description": "POST /compliance/api/notary/contact finds a notary by Telp No and updates Email.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -22,7 +22,7 @@
     {
       "name": "Update notary phone and email",
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "header": [
           {
             "key": "Accept",

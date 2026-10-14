@@ -5,7 +5,7 @@ Endpoint ini mencari notaris dari **Telp No** (`PHONE_NO`), lalu mengganti **Ema
 ## Alamat
 
 ```
-PUT http://localhost:8060/compliance/api/notary/contact
+POST http://localhost:8060/compliance/api/notary/contact
 ```
 
 `8060` adalah port Jetty di `pom.xml`. Context aplikasi adalah `/compliance`.
@@ -53,7 +53,7 @@ Tunggu sampai Jetty siap di port 8060. Aplikasi ini memakai database Oracle yang
 ## Postman
 
 1. Buka Postman, pilih **New**, lalu **HTTP Request**.
-2. Method: **PUT**.
+2. Method: **POST**.
 3. URL: `http://localhost:8060/compliance/api/notary/contact`
 4. Tab **Authorization**:
    - Type: **Bearer Token**
@@ -69,7 +69,7 @@ Collection siap import ada di `docs/notary-contact-api.postman_collection.json`.
 ## curl
 
 ```bash
-curl -i -X PUT "http://localhost:8060/compliance/api/notary/contact" \
+curl -i -X POST "http://localhost:8060/compliance/api/notary/contact" \
   -H "Authorization: Bearer 8c1f0a7e5b2d49c6a3e87104f6d9b258" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
@@ -111,7 +111,7 @@ Semua error memakai bentuk yang sama:
 | 400 | JSON rusak, `phoneNo` kosong atau lebih dari 20 karakter, email kosong atau formatnya salah. |
 | 404 | Tidak ada notaris aktif dengan Telp No itu. |
 | 409 | Lebih dari satu notaris aktif memakai Telp No yang sama, jadi tidak ada baris yang diubah. |
-| 405 | Method bukan PUT. |
+| 405 | Method bukan POST atau PUT. |
 | 415 | `Content-Type` bukan `application/json`. |
 | 500 | Penyimpanan ke database gagal. Detail error hanya tertulis di log server. |
 
