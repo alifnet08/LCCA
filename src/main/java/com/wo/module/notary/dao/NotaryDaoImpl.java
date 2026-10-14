@@ -294,4 +294,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		return result != null ? result.toString() : null;
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Notary> findActiveByPhoneNo(String phoneNo) {
+		return getSession().createQuery(
+				"from Notary where phoneNo = :phoneNo and enabledFlag = 'Y' and (delId is null or delId = 0)")
+				.setParameter("phoneNo", phoneNo)
+				.list();
+	}
+
 }

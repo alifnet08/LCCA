@@ -1,6 +1,6 @@
-# Update kontak notaris (REST JSON)
+# Update email notaris berdasarkan nomor telepon
 
-Endpoint ini mengubah **Telp No** (`PHONE_NO`) dan **Email** (`EMAIL`) pada satu data notaris. Kunci pencariannya adalah `notaryId`. Field lain, termasuk HP (`MOBILE_NO`), dokumen, dan status pengajuan, tidak diubah.
+Endpoint ini mencari notaris dari **Telp No** (`PHONE_NO`), lalu mengganti **Email** (`EMAIL`). Nomor telepon adalah kunci pencarian dan tidak diubah. HP (`MOBILE_NO`), dokumen, dan status pengajuan juga tidak diubah.
 
 ## Alamat
 
@@ -28,7 +28,6 @@ Ganti token ini sebelum API dipakai di luar uji lokal.
 
 ```json
 {
-  "notaryId": 15,
   "phoneNo": "0215550101",
   "email": "notaris@example.com"
 }
@@ -36,9 +35,10 @@ Ganti token ini sebelum API dipakai di luar uji lokal.
 
 | Field | Wajib | Aturan |
 | --- | --- | --- |
-| `notaryId` | ya | Angka positif. Nilai kolom `NOTARY_ID`. |
-| `phoneNo` | ya | Telp No, paling panjang 20 karakter, minimal memuat satu angka. |
-| `email` | ya | Harus berbentuk email, paling panjang 100 karakter, tanpa spasi. |
+| `phoneNo` | ya | Kunci pencarian. Harus sama persis dengan Telp No di data notaris, paling panjang 20 karakter, dan memuat minimal satu angka. |
+| `email` | ya | Email baru. Paling panjang 100 karakter, tanpa spasi. |
+
+`phoneNo` harus sama dengan nilai yang tersimpan, termasuk tanda hubung atau spasi. Contoh: data `021-5550101` tidak cocok dengan request `0215550101`.
 
 ## Menjalankan aplikasi
 
@@ -48,7 +48,7 @@ Dari root project:
 mvn jetty:run
 ```
 
-Tunggu sampai Jetty siap di port 8060. Aplikasi ini memakai database Oracle yang diatur di `src/main/java/login.properties`. `notaryId` harus sudah ada di tabel `wo_mst_notary` dan belum dihapus (`DEL_ID` kosong atau `0`).
+Tunggu sampai Jetty siap di port 8060. Aplikasi ini memakai database Oracle yang diatur di `src/main/java/login.properties`. Nomor telepon harus milik satu notaris yang masih aktif (`ENABLED_FLAG = Y`, `DEL_ID` kosong atau `0`).
 
 ## Postman
 
@@ -61,10 +61,10 @@ Tunggu sampai Jetty siap di port 8060. Aplikasi ini memakai database Oracle yang
 5. Tab **Headers**:
    - `Content-Type` = `application/json`
    - `Accept` = `application/json`
-6. Tab **Body**: pilih **raw** dan **JSON**, lalu isi contoh body di atas. Ganti `notaryId` dengan ID yang ada di database.
+6. Tab **Body**: pilih **raw** dan **JSON**, lalu isi contoh body di atas. `phoneNo` diisi Telp No yang sudah ada di database.
 7. Klik **Send**.
 
-Collection siap import ada di `docs/notary-contact-api.postman_collection.json`. Di Postman pilih **Import**, lalu file itu. Isi variable `notaryId` dengan ID yang nyata sebelum menekan Send.
+Collection siap import ada di `docs/notary-contact-api.postman_collection.json`. Di Postman pilih **Import**, lalu file itu. Isi variable `phoneNo` dengan nomor yang nyata sebelum menekan Send.
 
 ## curl
 
@@ -73,7 +73,7 @@ curl -i -X PUT "http://localhost:8060/compliance/api/notary/contact" \
   -H "Authorization: Bearer 8c1f0a7e5b2d49c6a3e87104f6d9b258" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
-  -d "{\"notaryId\":15,\"phoneNo\":\"0215550101\",\"email\":\"notaris@example.com\"}"
+  -d "{\"phoneNo\":\"0215550101\",\"email\":\"notaris@example.com\"}"
 ```
 
 Di Windows PowerShell, pakai `curl.exe` supaya PowerShell tidak mengganti `curl` dengan `Invoke-WebRequest`.
@@ -87,11 +87,11 @@ Di Windows PowerShell, pakai `curl.exe` supaya PowerShell tidak mengganti `curl`
   "phoneNo": "0215550101",
   "email": "notaris@example.com",
   "lastUpdateBy": "API",
-  "lastUpdateDate": "2026-10-14T13:52:00+07:00"
+  "lastUpdateDate": "2026-10-14T14:30:00+07:00"
 }
 ```
 
-`lastUpdateBy` diisi `API`. `lastUpdateDate` memakai zona waktu server.
+`notaryId` dan `notaryName` hanya dikembalikan supaya baris yang terpilih bisa dicek. `lastUpdateBy` diisi `API`. `lastUpdateDate` memakai zona waktu server.
 
 ## Response gagal
 
@@ -108,12 +108,13 @@ Semua error memakai bentuk yang sama:
 | HTTP | Penyebab |
 | --- | --- |
 | 401 | Header `Authorization` tidak ada, bukan `Bearer`, atau token salah. |
-| 400 | JSON rusak, `notaryId` kosong atau bukan angka positif, `phoneNo` kosong atau lebih dari 20 karakter, email kosong atau formatnya salah. |
-| 404 | `notaryId` tidak ada, atau baris itu sudah dihapus. |
+| 400 | JSON rusak, `phoneNo` kosong atau lebih dari 20 karakter, email kosong atau formatnya salah. |
+| 404 | Tidak ada notaris aktif dengan Telp No itu. |
+| 409 | Lebih dari satu notaris aktif memakai Telp No yang sama, jadi tidak ada baris yang diubah. |
 | 405 | Method bukan PUT. |
 | 415 | `Content-Type` bukan `application/json`. |
 | 500 | Penyimpanan ke database gagal. Detail error hanya tertulis di log server. |
 
 ## Cek hasil di halaman
 
-Buka data notaris yang sama di halaman Notary. Field **Telp No** dan **Email** mengikuti nilai yang baru dikirim. **HP No** tetap seperti semula.
+Buka data notaris yang sama di halaman Notary. Field **Email** mengikuti nilai yang baru dikirim. **Telp No** dan **HP No** tetap seperti semula.

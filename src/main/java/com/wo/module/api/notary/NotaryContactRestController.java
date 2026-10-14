@@ -28,9 +28,9 @@ public class NotaryContactRestController {
 		if (validationMessage != null) {
 			throw new NotaryContactValidationException(validationMessage);
 		}
-		Notary updated = notaryService.updateContact(request.getNotaryId(), request.getPhoneNo(), request.getEmail());
+		Notary updated = notaryService.updateEmailByPhone(request.getPhoneNo(), request.getEmail());
 		if (updated == null) {
-			throw new NotaryContactNotFoundException(request.getNotaryId());
+			throw new NotaryContactNotFoundException(request.getPhoneNo());
 		}
 		return NotaryContactResponse.from(updated);
 	}

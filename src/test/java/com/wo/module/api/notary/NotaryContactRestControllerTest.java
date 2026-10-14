@@ -36,7 +36,7 @@ public class NotaryContactRestControllerTest {
 				NotaryService.class.getClassLoader(),
 				new Class<?>[] { NotaryService.class },
 				(proxy, method, args) -> {
-					if ("updateContact".equals(method.getName())) {
+					if ("updateEmailByPhone".equals(method.getName())) {
 						updateCalls.add(args);
 						return contactResult;
 					}
@@ -60,8 +60,7 @@ public class NotaryContactRestControllerTest {
 		notary.setLastUpdateDate(new Timestamp(new Date().getTime()));
 		contactResult = notary;
 
-		NotaryContactUpdateRequest request = request(15L, "0215550101", "notaris@example.com");
-		NotaryContactResponse body = controller.updateContact(request);
+		NotaryContactResponse body = controller.updateContact(request("0215550101", "notaris@example.com"));
 
 		Assert.assertEquals(Long.valueOf(15L), body.getNotaryId());
 		Assert.assertEquals("Notaris Contoh", body.getNotaryName());
@@ -70,7 +69,8 @@ public class NotaryContactRestControllerTest {
 		Assert.assertEquals("API", body.getLastUpdateBy());
 		Assert.assertNotNull(body.getLastUpdateDate());
 		Assert.assertEquals(1, updateCalls.size());
-		Assert.assertEquals(15L, updateCalls.get(0)[0]);
+		Assert.assertEquals("0215550101", updateCalls.get(0)[0]);
+		Assert.assertEquals("notaris@example.com", updateCalls.get(0)[1]);
 	}
 
 	@Test
@@ -91,19 +91,19 @@ public class NotaryContactRestControllerTest {
 	}
 
 	@Test
-	public void returnsNotFoundWhenNotaryDoesNotExist() {
+	public void returnsNotFoundWhenPhoneDoesNotMatch() {
 		try {
-			controller.updateContact(request(99L, "0215550101", "notaris@example.com"));
+			controller.updateContact(request("0210000000", "notaris@example.com"));
 			Assert.fail("Expected notary to be missing");
 		} catch (NotaryContactNotFoundException exception) {
-			Assert.assertEquals("Notary 99 was not found", exception.getMessage());
+			Assert.assertEquals("No notary was found for phone number 0210000000", exception.getMessage());
 		}
 	}
 
 	@Test
 	public void rejectsInvalidEmail() {
 		try {
-			controller.updateContact(request(15L, "0215550101", "bukan-email"));
+			controller.updateContact(request("0215550101", "bukan-email"));
 			Assert.fail("Expected invalid email");
 		} catch (NotaryContactValidationException exception) {
 			Assert.assertEquals("email format is invalid", exception.getMessage());
@@ -113,16 +113,15 @@ public class NotaryContactRestControllerTest {
 
 	@Test
 	public void validatorTrimsContactFields() {
-		NotaryContactUpdateRequest request = request(7L, " 021-555 ", " Notaris@Example.com ");
+		NotaryContactUpdateRequest request = request(" 021-555 ", " Notaris@Example.com ");
 
 		Assert.assertNull(NotaryContactValidator.validate(request));
 		Assert.assertEquals("021-555", request.getPhoneNo());
 		Assert.assertEquals("Notaris@Example.com", request.getEmail());
 	}
 
-	private static NotaryContactUpdateRequest request(Long notaryId, String phoneNo, String email) {
+	private static NotaryContactUpdateRequest request(String phoneNo, String email) {
 		NotaryContactUpdateRequest request = new NotaryContactUpdateRequest();
-		request.setNotaryId(notaryId);
 		request.setPhoneNo(phoneNo);
 		request.setEmail(email);
 		return request;

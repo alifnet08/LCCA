@@ -119,20 +119,19 @@ public class NotaryServiceImpl implements NotaryService {
 	}
 
 	@Override
-	public Notary updateContact(Long notaryId, String phoneNo, String email) {
-		Notary notary = notaryDao.getById(notaryId);
-		if (notary == null || isDeleted(notary)) {
+	public Notary updateEmailByPhone(String phoneNo, String email) {
+		List<Notary> matches = notaryDao.findActiveByPhoneNo(phoneNo);
+		if (matches == null || matches.isEmpty()) {
 			return null;
 		}
-		notary.setPhoneNo(phoneNo);
+		if (matches.size() > 1) {
+			throw new DuplicateNotaryPhoneException(phoneNo);
+		}
+		Notary notary = matches.get(0);
 		notary.setEmail(email);
 		notary.setLastUpdateBy("API");
 		notary.setLastUpdateDate(new Timestamp(new Date().getTime()));
 		return notary;
-	}
-
-	private boolean isDeleted(Notary notary) {
-		return notary.getDelId() != null && notary.getDelId().longValue() != 0L;
 	}
 	
 	public void delete(Notary entity) {

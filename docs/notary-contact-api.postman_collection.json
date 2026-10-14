@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Notary contact API",
-    "description": "PUT /compliance/api/notary/contact updates Telp No and Email for one notary.",
+    "description": "PUT /compliance/api/notary/contact finds a notary by Telp No and updates Email.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -14,8 +14,8 @@
       "value": "8c1f0a7e5b2d49c6a3e87104f6d9b258"
     },
     {
-      "key": "notaryId",
-      "value": "15"
+      "key": "phoneNo",
+      "value": "0215550101"
     }
   ],
   "item": [
@@ -45,7 +45,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"notaryId\": {{notaryId}},\n  \"phoneNo\": \"0215550101\",\n  \"email\": \"notaris@example.com\"\n}",
+          "raw": "{\n  \"phoneNo\": \"{{phoneNo}}\",\n  \"email\": \"notaris@example.com\"\n}",
           "options": {
             "raw": {
               "language": "json"

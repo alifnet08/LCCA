@@ -10,6 +10,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.wo.module.notary.service.DuplicateNotaryPhoneException;
+
 @ControllerAdvice(basePackages = "com.wo.module.api")
 public class NotaryApiExceptionHandler {
 
@@ -25,9 +27,14 @@ public class NotaryApiExceptionHandler {
 		return error(HttpStatus.NOT_FOUND, exception.getMessage());
 	}
 
+	@ExceptionHandler(DuplicateNotaryPhoneException.class)
+	public ResponseEntity<ApiErrorResponse> duplicatePhone(DuplicateNotaryPhoneException exception) {
+		return error(HttpStatus.CONFLICT, exception.getMessage());
+	}
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiErrorResponse> unreadable(HttpMessageNotReadableException exception) {
-		return error(HttpStatus.BAD_REQUEST, "Request body must be JSON with notaryId, phoneNo, and email");
+		return error(HttpStatus.BAD_REQUEST, "Request body must be JSON with phoneNo and email");
 	}
 
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)

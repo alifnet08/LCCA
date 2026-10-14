@@ -14,9 +14,6 @@ public final class NotaryContactValidator {
 		if (request == null) {
 			return "Request body is required";
 		}
-		if (request.getNotaryId() == null || request.getNotaryId().longValue() <= 0L) {
-			return "notaryId must be a positive number";
-		}
 		String phoneNo = StringUtils.trimToEmpty(request.getPhoneNo());
 		if (phoneNo.isEmpty()) {
 			return "phoneNo is required";
