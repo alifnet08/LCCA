@@ -24,6 +24,8 @@ public interface NotaryService extends RetrieverDataPage<Notary> {
 
 	public void update(Notary entity);
 
+	public Notary updateContact(Long notaryId, String phoneNo, String email);
+
 	public void delete(Notary entity);
 
 	public Notary findById(Long id);

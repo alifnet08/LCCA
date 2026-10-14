@@ -1,0 +1,59 @@
+{
+  "info": {
+    "name": "Notary contact API",
+    "description": "PUT /compliance/api/notary/contact updates Telp No and Email for one notary.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8060/compliance"
+    },
+    {
+      "key": "token",
+      "value": "8c1f0a7e5b2d49c6a3e87104f6d9b258"
+    },
+    {
+      "key": "notaryId",
+      "value": "15"
+    }
+  ],
+  "item": [
+    {
+      "name": "Update notary phone and email",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"notaryId\": {{notaryId}},\n  \"phoneNo\": \"0215550101\",\n  \"email\": \"notaris@example.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/notary/contact"
+      }
+    }
+  ]
+}
