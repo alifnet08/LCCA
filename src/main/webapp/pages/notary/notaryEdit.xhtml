@@ -18,6 +18,11 @@
 			    margin-left: 200px;
     			margin-top: -37px;
 			}
+			#form\:workArea.ui-inputfield,
+			#form\:note.ui-inputfield {
+			    background: rgba(245, 131, 34, 0.25) !important;
+			    background-color: rgba(245, 131, 34, 0.25) !important;
+			}
 			.notary-upload-panel .wo-fileupload-wrap {
 			    display: block;
 			    margin-top: 6px;
@@ -183,7 +188,7 @@
 					</div>
 					
 					<div class="col-lg-12">
-						<div class="form-group">
+						<div class="form-group required">
 							<label class="tl-label" tl="workArea"><p:outputLabel
 									value="#{msg.formNotaryWorkingArea}" for="workArea" /></label>								
 							<p:inputText id="workArea" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"
@@ -193,7 +198,7 @@
 					</div>
 					
 					<div class="col-lg-12">
-						<div class="form-group">
+						<div class="form-group required">
 							<label class="tl-label" tl="note"><p:outputLabel
 									value="#{msg.formNotaryNote}" for="note" /></label>								
 							<p:inputTextarea id="note" styleClass="form-control" readonly="#{notaryEditBean.fieldReadOnly}"

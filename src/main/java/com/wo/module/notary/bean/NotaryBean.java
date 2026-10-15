@@ -51,6 +51,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 	private String area;	
 	private String notaryName;	
 	private String areaCode;
+	private String jenisPengajuan;
 
 	private int paging;
 
@@ -94,6 +95,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA, area));
 			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_NOTARY_NAME, notaryName));
 			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA_CODE, areaCode));
+			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_JENIS_PENGAJUAN, jenisPengajuan));
 			exportCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_COMPLETE));
 			List<Notary> listDataXls = notaryService.searchData(exportCriteria, 0, Integer.MAX_VALUE, null, null);
 			
@@ -150,6 +152,9 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		if (areaCode != null && !areaCode.isEmpty()) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_AREA_CODE, areaCode));
 		}
+		if (jenisPengajuan != null && !jenisPengajuan.isEmpty()) {
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_JENIS_PENGAJUAN, jenisPengajuan));
+		}
 		searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_STATUS, NotaryConstants.STATUS_COMPLETE));
 
 		tableModel.setSearchCriteria(searchCriteria);
@@ -160,6 +165,7 @@ public class NotaryBean extends CommonBean  implements Serializable {
 		area = "";
 		notaryName = "";
 		areaCode = "";
+		jenisPengajuan = "";
 		
 		search(actionEvent);
 	}
@@ -423,6 +429,27 @@ public class NotaryBean extends CommonBean  implements Serializable {
 
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
+	}
+
+	public String getJenisPengajuan() {
+		return jenisPengajuan;
+	}
+
+	public void setJenisPengajuan(String jenisPengajuan) {
+		this.jenisPengajuan = jenisPengajuan;
+	}
+
+	public List<SelectItem> getJenisPengajuanOptions() {
+		List<SelectItem> options = new ArrayList<SelectItem>();
+		options.add(new SelectItem("", ""));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU, NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING));
+		return options;
 	}
 
 	public List<UploadedFileWO> getUploadedFilesAttachment() {

@@ -73,6 +73,9 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 						sb.append(NotaryConstants.STATUS_REJECTED);
 						sb.append("') ");
 					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_JENIS_PENGAJUAN, col)) {
+						appendJenisPengajuanFilter(sb, val);
+					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_LEGAL_TASK, col)) {
 						sb.append(" and (ct.STATUS = '");
 						sb.append(NotaryConstants.STATUS_WAITING_APPROVAL_LEGAL);
@@ -122,6 +125,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_INBOX_OR_REJECTED, col)) {
 						query.setParameter("inboxStatus", val);
+					}
+					if (StringUtils.equals(NotaryConstants.SEARCH_BY_JENIS_PENGAJUAN, col)) {
+						if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS.equals(val)) {
+							query.setParameter("jenisPengajuan", val + "%");
+						} else {
+							query.setParameter("jenisPengajuan", val);
+						}
 					}
 				}
 			}
@@ -283,6 +293,32 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		}
 
 		return vo;
+	}
+
+	private void appendJenisPengajuanFilter(StringBuilder sb, String val) {
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS.equals(val)) {
+			sb.append(" and (ct.JENIS_PENGAJUAN like :jenisPengajuan or ct.PENDING_LISTING_STATUS is not null) ");
+			return;
+		}
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE.equals(val)) {
+			sb.append(" and (ct.JENIS_PENGAJUAN = :jenisPengajuan or ct.PENDING_LISTING_STATUS = '");
+			sb.append(NotaryConstants.LISTING_STATUS_FREEZE);
+			sb.append("') ");
+			return;
+		}
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING.equals(val)) {
+			sb.append(" and (ct.JENIS_PENGAJUAN = :jenisPengajuan or ct.PENDING_LISTING_STATUS = '");
+			sb.append(NotaryConstants.LISTING_STATUS_DELISTING);
+			sb.append("') ");
+			return;
+		}
+		if (NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE.equals(val)) {
+			sb.append(" and (ct.JENIS_PENGAJUAN = :jenisPengajuan or ct.PENDING_LISTING_STATUS = '");
+			sb.append(NotaryConstants.LISTING_STATUS_ACTIVE);
+			sb.append("') ");
+			return;
+		}
+		sb.append(" and ct.JENIS_PENGAJUAN = :jenisPengajuan ");
 	}
 
 	@Override
