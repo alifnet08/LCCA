@@ -117,6 +117,22 @@ public class NotaryServiceImpl implements NotaryService {
 		notaryDao.update(entity);
 		persistNotaryDocuments(entity);
 	}
+
+	@Override
+	public Notary updateEmailByPhone(String phoneNo, String email) {
+		List<Notary> matches = notaryDao.findActiveByPhoneNo(phoneNo);
+		if (matches == null || matches.isEmpty()) {
+			return null;
+		}
+		if (matches.size() > 1) {
+			throw new DuplicateNotaryPhoneException(phoneNo);
+		}
+		Notary notary = matches.get(0);
+		notary.setEmail(email);
+		notary.setLastUpdateBy("API");
+		notary.setLastUpdateDate(new Timestamp(new Date().getTime()));
+		return notary;
+	}
 	
 	public void delete(Notary entity) {
 		notaryDao.delete(entity);

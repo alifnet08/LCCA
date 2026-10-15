@@ -29,6 +29,15 @@
 								value="#{notaryTaskBean.notaryName}"></p:inputText>
 						</div>
 					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Jenis Pengajuan" /></label>
+							<h:selectOneMenu id="jenisPengajuanFilter" styleClass="form-control"
+								value="#{notaryTaskBean.jenisPengajuan}">
+								<f:selectItems value="#{notaryTaskBean.jenisPengajuanOptions}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
 					<div class="col-lg-12">
 						<div class="filter-tools">
 							<ul class="no-margin no-padding">
@@ -36,7 +45,7 @@
 										update="tableSearch" styleClass="btn btn-success tl-label"
 										actionListener="#{notaryTaskBean.search}"></p:commandButton></li>
 								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
-										update="tableSearch" styleClass="btn btn-default btn-flat tl-label"
+										update="tableSearch jenisPengajuanFilter" styleClass="btn btn-default btn-flat tl-label"
 										actionListener="#{notaryTaskBean.reset}"></p:commandButton></li>
 							</ul>
 						</div>
@@ -86,7 +95,7 @@
 								<p:column headerText="Jenis Pengajuan">
 									<h:outputLabel value="#{vo.jenisPengajuanTampil}" />
 								</p:column>
-								<p:column headerText="Region">
+								<p:column headerText="Area">
 									<h:outputLabel value="#{vo.area}" />
 								</p:column>
 								<p:column headerText="Kategori">

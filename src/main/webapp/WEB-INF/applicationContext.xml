@@ -415,6 +415,8 @@
     
     <tx:annotation-driven  />
     <!-- <tx:annotation-driven transaction-manager="transactionManagerOrcl"  /> -->
-	<context:component-scan base-package="com.wo.module"/>
+	<context:component-scan base-package="com.wo.module">
+		<context:exclude-filter type="regex" expression="com\.wo\.module\.api\..*"/>
+	</context:component-scan>
 
 </beans>

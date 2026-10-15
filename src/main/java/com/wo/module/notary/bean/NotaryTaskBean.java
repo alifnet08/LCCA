@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +35,7 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 
 	private String area;
 	private String notaryName;
+	private String jenisPengajuan;
 	private int paging;
 	private NotaryService notaryService;
 	private UserService userService;
@@ -113,6 +115,9 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 		if (StringUtils.isNotBlank(notaryName)) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_NOTARY_NAME, notaryName));
 		}
+		if (StringUtils.isNotBlank(jenisPengajuan)) {
+			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_JENIS_PENGAJUAN, jenisPengajuan));
+		}
 		if (isCduMaker()) {
 			searchCriteria.add(new DefaultSearchObject(NotaryConstants.SEARCH_BY_MAKER_TASK, "Y"));
 			String login = facesUtil != null ? facesUtil.retrieveUserLogin() : null;
@@ -136,6 +141,7 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 	public void reset(ActionEvent actionEvent) {
 		area = "";
 		notaryName = "";
+		jenisPengajuan = "";
 		search(actionEvent);
 	}
 
@@ -231,6 +237,27 @@ public class NotaryTaskBean extends CommonBean implements Serializable {
 
 	public void setNotaryName(String notaryName) {
 		this.notaryName = notaryName;
+	}
+
+	public String getJenisPengajuan() {
+		return jenisPengajuan;
+	}
+
+	public void setJenisPengajuan(String jenisPengajuan) {
+		this.jenisPengajuan = jenisPengajuan;
+	}
+
+	public List<SelectItem> getJenisPengajuanOptions() {
+		List<SelectItem> options = new ArrayList<SelectItem>();
+		options.add(new SelectItem("", ""));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU, NotaryConstants.JENIS_PENGAJUAN_NOTARIS_BARU));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN, NotaryConstants.JENIS_PENGAJUAN_PERPANJANGAN));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN, NotaryConstants.JENIS_PENGAJUAN_UPDATE_DOKUMEN));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_ACTIVE));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_FREEZE));
+		options.add(new SelectItem(NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING, NotaryConstants.JENIS_PENGAJUAN_CATATAN_KHUSUS_DELISTING));
+		return options;
 	}
 
 	public int getPaging() {
