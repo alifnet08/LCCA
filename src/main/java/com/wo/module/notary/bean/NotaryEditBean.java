@@ -524,27 +524,39 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	private void sendNotificationToCduChecker() {
 		String subject = "Pengajuan Penambahan Notaris";
-		String content = "Pengajuan Penambahan Notaris Anda telah berhasil disubmit.";
+		String headline = "Pengajuan Penambahan Notaris.";
+		boolean includeNoPengajuan = true;
 		if (pengajuanPerpanjangan) {
 			subject = "Pengajuan Perpanjangan Notaris";
-			content = "Pengajuan Perpanjangan Notaris Anda telah berhasil disubmit.";
+			headline = "Pengajuan Perpanjangan Notaris.";
+			includeNoPengajuan = false;
 		} else if (pengajuanUpdateDokumen) {
 			subject = "Pengajuan Update Dokumen Notaris";
-			content = "Pengajuan Update Dokumen Notaris Anda telah berhasil disubmit.";
+			headline = "Pengajuan Update Dokumen Notaris.";
 		}
-		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-			content = content + " Nama Notaris: " + notary.getNotaryName();
-		}
+		String content = NotaryMailSender.requestApproval(headline, notaryNo(), notaryName(), currentActor(),
+				includeNoPengajuan);
 		sendNotification(NotaryConstants.RESPONSIBILITY_CDU_CHECKER, subject, content);
 	}
 
 	private void sendNotificationToSpvLegal() {
 		String subject = "Revisi Notaris dari Legal";
-		String content = "Revisi pengajuan notaris telah disubmit oleh Legal.";
-		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-			content = content + " Nama Notaris: " + notary.getNotaryName();
-		}
+		String content = NotaryMailSender.requestApproval("Revisi pengajuan notaris.", notaryNo(), notaryName(),
+				currentActor(), true);
 		sendNotification(NotaryConstants.RESPONSIBILITY_SPV_LEGAL, subject, content);
+	}
+
+	private String notaryNo() {
+		return notary == null ? "" : StringUtils.defaultString(notary.getNotaryNo());
+	}
+
+	private String notaryName() {
+		return notary == null ? "" : StringUtils.defaultString(notary.getNotaryName());
+	}
+
+	private String currentActor() {
+		String login = facesUtil == null ? "" : facesUtil.retrieveUserLogin();
+		return NotaryMailSender.actorLabel(userService, login);
 	}
 
 	private void sendNotification(String responsibilityName, String subject, String content) {

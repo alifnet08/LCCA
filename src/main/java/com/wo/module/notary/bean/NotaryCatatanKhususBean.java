@@ -292,8 +292,9 @@ public class NotaryCatatanKhususBean extends CommonBean implements Serializable 
 			notaryService.update(entity);
 			notaryService.saveHistory(entity, historyStatus, "Menjadi " + targetStatus + ". " + entity.getCatatanKhusus(),
 					login);
-			sendNotification(nextRole, "Pengajuan Catatan Khusus",
-					"Pengajuan Catatan Khusus untuk " + entity.getNotaryName() + " menjadi " + targetStatus + ".");
+			sendNotification(nextRole, "Pengajuan Catatan Khusus", NotaryMailSender.catatanKhususSubmit(
+					entity.getJenisPengajuan(), entity.getNotaryNo(), entity.getNotaryName(),
+					NotaryMailSender.actorLabel(userService, login), targetStatus));
 			PrimeFaces.current().ajax().addCallbackParam("catatanSaved", true);
 			openDialogOnLoad = false;
 			search(null);

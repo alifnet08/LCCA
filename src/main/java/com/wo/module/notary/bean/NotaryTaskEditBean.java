@@ -249,12 +249,16 @@ public class NotaryTaskEditBean extends CommonBean implements Serializable {
 	}
 
 	private void sendEmail(String responsibilityName, String subject) {
-		String content = subject;
-		if (notary != null && StringUtils.isNotBlank(notary.getNotaryName())) {
-			content = content + ". Nama Notaris: " + notary.getNotaryName();
-		}
-		if (notary != null && StringUtils.isNotBlank(notary.getNotaryNo())) {
-			content = content + ". No Pengajuan: " + notary.getNotaryNo();
+		String jenis = notary == null ? "" : StringUtils.defaultString(notary.getJenisPengajuan());
+		String noPengajuan = notary == null ? "" : StringUtils.defaultString(notary.getNotaryNo());
+		String notaryName = notary == null ? "" : StringUtils.defaultString(notary.getNotaryName());
+		String login = facesUtil == null ? "" : facesUtil.retrieveUserLogin();
+		String actor = NotaryMailSender.actorLabel(userService, login);
+		String content;
+		if (StringUtils.containsIgnoreCase(subject, "revision")) {
+			content = NotaryMailSender.needRevision(jenis, noPengajuan, notaryName, actor);
+		} else {
+			content = NotaryMailSender.requestApproval(jenis + " :", noPengajuan, notaryName, actor, true);
 		}
 		NotaryMailSender.sendToRole(userService, responsibilityService, parameterDetailService, responsibilityName,
 				subject, content);
