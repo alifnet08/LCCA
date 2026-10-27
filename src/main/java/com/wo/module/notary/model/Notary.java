@@ -18,6 +18,8 @@ public class Notary extends BaseEntity implements Serializable {
 	private String notaryName;
 	private String address;
 	private ParameterDetail notaryCategory;
+	private String notaryCategories;
+	private String notaryCategoryDisplay;
 	private String areaCode;
 	private String phoneNo;
 	private String faxNo;
@@ -81,6 +83,32 @@ public class Notary extends BaseEntity implements Serializable {
 
 	public void setNotaryCategory(ParameterDetail notaryCategory) {
 		this.notaryCategory = notaryCategory;
+	}
+
+	public String getNotaryCategories() {
+		return notaryCategories;
+	}
+
+	public void setNotaryCategories(String notaryCategories) {
+		this.notaryCategories = notaryCategories;
+	}
+
+	public String getNotaryCategoryDisplay() {
+		return notaryCategoryDisplay;
+	}
+
+	public void setNotaryCategoryDisplay(String notaryCategoryDisplay) {
+		this.notaryCategoryDisplay = notaryCategoryDisplay;
+	}
+
+	public String getNotaryCategoryLabel() {
+		if (notaryCategoryDisplay != null && notaryCategoryDisplay.trim().length() > 0) {
+			return notaryCategoryDisplay;
+		}
+		if (notaryCategory != null && notaryCategory.getNameIn() != null) {
+			return notaryCategory.getNameIn();
+		}
+		return "";
 	}
 
 	public String getAreaCode() {

@@ -56,7 +56,11 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 					
 				}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_CATEGORY, col)) {
-						sb.append(" and UPPER(dtl.NAME_IN) like UPPER(:categoryName) ");
+						sb.append(" and exists (select 1 from wo_mst_parameter_dtl dcat ");
+						sb.append(" where dcat.parameter_code = :notaryCategoryHeader ");
+						sb.append(" and UPPER(dcat.NAME_IN) like UPPER(:categoryName) ");
+						sb.append(" and INSTR(',' || NVL(ct.NOTARY_CATEGORIES, ct.NOTARY_CATEGORY) || ',', ");
+						sb.append(" ',' || dcat.PARAMETER_DTL_CODE || ',') > 0) ");
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_STATUS, col)) {
 						sb.append(" and ct.STATUS = :status ");
@@ -198,7 +202,13 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 		sb.append("           WHERE h2.NOTARY_ID = ct.NOTARY_ID AND h2.ENABLED_FLAG = 'Y')), ");
 		sb.append("        NVL(ct.LISTING_STATUS, 'Active'), ct.PENDING_LISTING_STATUS, ct.CATATAN_KHUSUS, ");
 		sb.append("        ct.CATATAN_KHUSUS_FILE_ID, ct.CATATAN_KHUSUS_FILE_NAME, ct.CATATAN_KHUSUS_ROLE, ");
-		sb.append("        ct.JENIS_BEFORE_CATATAN ");
+		sb.append("        ct.JENIS_BEFORE_CATATAN, ");
+		sb.append("        (SELECT LISTAGG(d2.NAME_IN, ', ') WITHIN GROUP (ORDER BY d2.NAME_IN) ");
+		sb.append("           FROM WO_MST_PARAMETER_DTL d2 ");
+		sb.append("          WHERE d2.PARAMETER_CODE = :notaryCategoryHeader ");
+		sb.append("            AND INSTR(',' || NVL(ct.NOTARY_CATEGORIES, ct.NOTARY_CATEGORY) || ',', ");
+		sb.append("                ',' || d2.PARAMETER_DTL_CODE || ',') > 0), ");
+		sb.append("        ct.NOTARY_CATEGORIES ");
 		sb.append("   FROM WO_MST_NOTARY ct ");
 		sb.append("        INNER JOIN WO_MST_PARAMETER_DTL dtl ON ct.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
 		sb.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
@@ -283,6 +293,15 @@ public class NotaryDaoImpl extends GenericDAOHibernate<Notary, Long> implements 
 				}
 				if (obj.length > 33 && obj[33] != null) {
 					data.setJenisBeforeCatatan(obj[33].toString());
+				}
+				if (obj.length > 34 && obj[34] != null && obj[34].toString().trim().length() > 0) {
+					data.setNotaryCategoryDisplay(obj[34].toString());
+					if (data.getNotaryCategory() != null) {
+						data.getNotaryCategory().setNameIn(obj[34].toString());
+					}
+				}
+				if (obj.length > 35 && obj[35] != null) {
+					data.setNotaryCategories(obj[35].toString());
 				}
 				
 				//Long notaryId = MathUtil.returnIdObjectToLong(obj[0]);

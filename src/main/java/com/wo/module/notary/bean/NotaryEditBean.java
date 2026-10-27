@@ -22,6 +22,7 @@ import com.wo.module.common.constant.Constants;
 import com.wo.module.common.model.UploadedFileWO;
 import com.wo.module.common.util.FileUtil;
 import com.wo.module.common.utility.CallApiManager;
+import com.wo.module.notary.NotaryCategories;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.model.Notary;
 import com.wo.module.notary.model.NotaryDocument;
@@ -64,6 +65,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	private List<SelectItem> nameList;
 	private List<SelectItem> slaTypeList;
 	private List<SelectItem> categoryList;
+	private String[] selectedCategoryCodes = new String[0];
 	
 	private List<UploadedFileWO> uploadFiles;
 	private List<UploadedFileWO> deleteFiles;
@@ -162,12 +164,14 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 			if (notary != null && notary.getNotaryCategory() == null) {
 				notary.setNotaryCategory(new ParameterDetail());
 			}
+			loadSelectedCategories();
 			applyTaskAccess();
 		} catch (Exception e) {
 			logger.error("Failed to initialize notary edit form", e);
 			if (notary == null) {
 				this.handleNew();
 			}
+			loadSelectedCategories();
 		}
 
 	}
@@ -252,7 +256,7 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 	public Boolean validate() {
 		Boolean flag = false;
 
-		if (StringUtils.isEmpty(notary.getNotaryCategory().getParameterDtlCode())) {
+		if (NotaryCategories.join(selectedCategoryCodes).length() == 0) {
 			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryCategory") 
 					+ facesUtil.retrieveMessage("validateRequired"));
 			flag = true;
@@ -426,8 +430,9 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 					}
 				}
 
-				ParameterDetail pd = parameterDetailService.getParameterDetailByParamDtlCode(notary.getNotaryCategory().getParameterDtlCode());
-				notary.setNotaryCategory(pd);
+				if (!applySelectedCategories()) {
+					return;
+				}
 
 				boolean isNewPengajuan = notary.getNotaryId() == null;
 				boolean isResubmitRevisi = !isNewPengajuan
@@ -894,6 +899,59 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 
 	public boolean isFieldReadOnly() {
 		return Boolean.TRUE.equals(isViewOnly) || isPerpanjanganReadOnly();
+	}
+
+	public boolean isCategoryReadOnly() {
+		return Boolean.TRUE.equals(isViewOnly);
+	}
+
+	public String[] getSelectedCategoryCodes() {
+		if (selectedCategoryCodes == null) {
+			selectedCategoryCodes = new String[0];
+		}
+		return selectedCategoryCodes;
+	}
+
+	public void setSelectedCategoryCodes(String[] selectedCategoryCodes) {
+		this.selectedCategoryCodes = selectedCategoryCodes == null ? new String[0] : selectedCategoryCodes;
+	}
+
+	private void loadSelectedCategories() {
+		String stored = notary == null ? "" : notary.getNotaryCategories();
+		if (StringUtils.isBlank(stored) && notary != null && notary.getNotaryCategory() != null) {
+			stored = notary.getNotaryCategory().getParameterDtlCode();
+		}
+		selectedCategoryCodes = NotaryCategories.split(stored);
+	}
+
+	private boolean applySelectedCategories() {
+		String joined = NotaryCategories.join(selectedCategoryCodes);
+		if (joined.length() == 0) {
+			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryCategory")
+					+ facesUtil.retrieveMessage("validateRequired"));
+			return false;
+		}
+		if (joined.length() > NotaryCategories.MAX_LENGTH) {
+			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryCategory") + " terlalu banyak.");
+			return false;
+		}
+		try {
+			ParameterDetail pd = parameterDetailService
+					.getParameterDetailByParamDtlCode(NotaryCategories.primary(joined));
+			if (pd == null || StringUtils.isBlank(pd.getParameterDtlCode())) {
+				facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryCategory")
+						+ facesUtil.retrieveMessage("validateRequired"));
+				return false;
+			}
+			notary.setNotaryCategories(joined);
+			notary.setNotaryCategory(pd);
+			return true;
+		} catch (Exception e) {
+			logger.error("Failed to resolve notary categories", e);
+			facesUtil.addErrMessage(facesUtil.retrieveMessage("formNotaryCategory")
+					+ facesUtil.retrieveMessage("validateRequired"));
+			return false;
+		}
 	}
 
 	public boolean isLampiranUploadEnabled() {

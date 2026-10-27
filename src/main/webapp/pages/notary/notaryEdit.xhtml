@@ -34,6 +34,13 @@
 			    margin-left: 0;
 			    margin-top: 0;
 			}
+			.notary-category .select2-container {
+			    width: 100% !important;
+			}
+			.notary-category .select2-container--default .select2-selection--multiple {
+			    min-height: 38px;
+			    border: 1px solid #ccc;
+			}
 		</style>
 		<script type="text/javascript">
 		//<![CDATA[
@@ -101,16 +108,15 @@
 				<h:panelGroup id="notaryFormPanel" layout="block" style="#{(notaryEditBean.showLampiranTab or notaryEditBean.showLampiranPerpanjanganTab) ? 'display:none' : 'display:block'}">
 				
 				<div class="col-lg-12">
-						<div class="form-group required">
+						<div class="form-group required notary-category">
 							<label class="tl-label" tl="category"><p:outputLabel
 									value="#{msg.formNotaryCategory}" for="category" /></label>								
-							<h:selectOneMenu id="category" disabled="#{notaryEditBean.fieldReadOnly}"
+							<h:selectManyMenu id="category" disabled="#{notaryEditBean.categoryReadOnly}"
 								styleClass="form-control s2"
-								value="#{notaryEditBean.notary.notaryCategory.parameterDtlCode}">
-								<f:selectItem itemLabel="#{msg.choose}" itemValue="" />
+								value="#{notaryEditBean.selectedCategoryCodes}">
 								<f:selectItems
 									value="#{notaryEditBean.categoryList}"/>
-							</h:selectOneMenu>
+							</h:selectManyMenu>
 							<p:message for="category"/>
 						</div>
 					</div>

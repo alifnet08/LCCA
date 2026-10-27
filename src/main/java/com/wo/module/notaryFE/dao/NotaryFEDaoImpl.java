@@ -39,7 +39,8 @@ public class NotaryFEDaoImpl extends GenericDAOHibernate<Notary, Long>
 						sb.append(" and upper(n.NOTARY_NAME) like upper(:notaryName) ");
 					}
 					if (StringUtils.equals(QAFEConstant.SEARCH_BY_CATEGORY, col)) {
-						sb.append(" and n.NOTARY_CATEGORY = :category ");
+						sb.append(" and INSTR(',' || NVL(n.NOTARY_CATEGORIES, n.NOTARY_CATEGORY) || ',', ");
+						sb.append(" ',' || :category || ',') > 0 ");
 					}
 					if (StringUtils.equals(NotaryConstants.SEARCH_BY_AREA, col)) {
 						sb.append(" and upper(n.AREA) like upper(:area) ");
@@ -85,8 +86,16 @@ public class NotaryFEDaoImpl extends GenericDAOHibernate<Notary, Long>
 		
 		sb.append(" SELECT n.NOTARY_ID ");
 		sb.append("       ,n.NOTARY_CATEGORY ");
-		sb.append("       ,pdCat.NAME_IN CAT_IN ");
-		sb.append("       ,pdCat.NAME_EN CAR_EN ");
+		sb.append("       ,(SELECT LISTAGG(d2.NAME_IN, ', ') WITHIN GROUP (ORDER BY d2.NAME_IN) ");
+		sb.append("           FROM WO_MST_PARAMETER_DTL d2 ");
+		sb.append("          WHERE d2.PARAMETER_CODE = 'NOTARY_CATEGORY' ");
+		sb.append("            AND INSTR(',' || NVL(n.NOTARY_CATEGORIES, n.NOTARY_CATEGORY) || ',', ");
+		sb.append("                ',' || d2.PARAMETER_DTL_CODE || ',') > 0) CAT_IN ");
+		sb.append("       ,(SELECT LISTAGG(NVL(d2.NAME_EN, d2.NAME_IN), ', ') WITHIN GROUP (ORDER BY d2.NAME_IN) ");
+		sb.append("           FROM WO_MST_PARAMETER_DTL d2 ");
+		sb.append("          WHERE d2.PARAMETER_CODE = 'NOTARY_CATEGORY' ");
+		sb.append("            AND INSTR(',' || NVL(n.NOTARY_CATEGORIES, n.NOTARY_CATEGORY) || ',', ");
+		sb.append("                ',' || d2.PARAMETER_DTL_CODE || ',') > 0) CAR_EN ");
 		sb.append("       ,n.AREA ");
 		sb.append("       ,n.ADDRESS ");
 		sb.append("       ,n.AREA_CODE ");
@@ -97,8 +106,6 @@ public class NotaryFEDaoImpl extends GenericDAOHibernate<Notary, Long>
 		sb.append("       ,n.NOTARY_NAME ");
 		sb.append("       ,n.NOTE ");
 		sb.append(" FROM WO_MST_NOTARY n ");
-		sb.append(" 	LEFT JOIN WO_MST_PARAMETER_DTL pdCat ");
-		sb.append(" 		ON pdCat.PARAMETER_DTL_CODE = n.NOTARY_CATEGORY ");
 		sb.append(" WHERE 1 = 1 ");
 		sb.append("     AND n.ENABLED_FLAG = 'Y' ");
 		
@@ -157,8 +164,6 @@ public class NotaryFEDaoImpl extends GenericDAOHibernate<Notary, Long>
 		
 		sb.append(" SELECT COUNT(1)");
 		sb.append(" FROM WO_MST_NOTARY n ");
-		sb.append(" 	LEFT JOIN WO_MST_PARAMETER_DTL pdCat ");
-		sb.append(" 		ON pdCat.PARAMETER_DTL_CODE = n.NOTARY_CATEGORY ");
 		sb.append(" WHERE 1 = 1 ");
 		sb.append("     AND n.ENABLED_FLAG = 'Y' ");
 		
