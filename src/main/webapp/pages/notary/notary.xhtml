@@ -78,6 +78,15 @@
 								autocomplete="off" value="#{notaryBean.notaryName}"></p:inputText>
 						</div>
 					</div>
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="tl-label"><h:outputText value="Jenis Pengajuan" /></label>
+							<h:selectOneMenu id="jenisPengajuanFilter" styleClass="form-control"
+								value="#{notaryBean.jenisPengajuan}">
+								<f:selectItems value="#{notaryBean.jenisPengajuanOptions}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
 
 					<div class="col-lg-12">
 						<div class="filter-tools">
@@ -87,7 +96,7 @@
 										styleClass="btn btn-success tl-label"
 										actionListener="#{notaryBean.search}"></p:commandButton></li>
 								<li><p:commandButton value="#{msg.buttonReset}" ajax="true"
-										update="tableSearch"
+										update="tableSearch jenisPengajuanFilter"
 										styleClass="btn btn-default btn-flat tl-label"
 										actionListener="#{notaryBean.reset}"></p:commandButton></li>
 							</ul>

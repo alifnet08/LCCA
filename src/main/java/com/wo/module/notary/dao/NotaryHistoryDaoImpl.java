@@ -35,12 +35,15 @@ public class NotaryHistoryDaoImpl extends GenericDAOHibernate<NotaryHistory, Lon
 	public List<NotaryHistory> searchHistory(String notaryName) throws Exception {
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT h.NOTARY_HISTORY_ID, h.STATUS, h.CATATAN_REVISI, h.CREATION_DATE, ");
-		sql.append("        n.NOTARY_ID, n.NOTARY_NAME, n.ADDRESS, n.AREA, dtl.NAME_IN, h.JENIS_PENGAJUAN, ");
+		sql.append("        n.NOTARY_ID, n.NOTARY_NAME, n.ADDRESS, n.AREA, ");
+		sql.append("        (SELECT LISTAGG(d2.NAME_IN, ', ') WITHIN GROUP (ORDER BY d2.NAME_IN) ");
+		sql.append("           FROM WO_MST_PARAMETER_DTL d2 ");
+		sql.append("          WHERE d2.PARAMETER_CODE = :notaryCategoryHeader ");
+		sql.append("            AND INSTR(',' || NVL(n.NOTARY_CATEGORIES, n.NOTARY_CATEGORY) || ',', ");
+		sql.append("                ',' || d2.PARAMETER_DTL_CODE || ',') > 0), h.JENIS_PENGAJUAN, ");
 		sql.append("        NVL(h.NO_PENGAJUAN, n.NO_PENGAJUAN) ");
 		sql.append("   FROM WO_MST_NOTARY_HISTORY h ");
 		sql.append("   LEFT JOIN WO_MST_NOTARY n ON n.NOTARY_ID = h.NOTARY_ID ");
-		sql.append("   LEFT JOIN WO_MST_PARAMETER_DTL dtl ON n.NOTARY_CATEGORY = dtl.PARAMETER_DTL_CODE ");
-		sql.append("        AND dtl.PARAMETER_CODE = :notaryCategoryHeader ");
 		sql.append("  WHERE (h.ENABLED_FLAG IS NULL OR UPPER(TRIM(h.ENABLED_FLAG)) <> 'N') ");
 		sql.append("    AND (h.DEL_ID IS NULL OR h.DEL_ID = 0) ");
 		boolean filterName = notaryName != null && notaryName.trim().length() > 0;

@@ -51,6 +51,7 @@ public abstract class NotaryConstants {
 	public final static String SEARCH_BY_MAKER_TASK = "SEARCH_BY_MAKER_TASK";
 	public final static String SEARCH_BY_INBOX_OR_REJECTED = "SEARCH_BY_INBOX_OR_REJECTED";
 	public final static String SEARCH_BY_LEGAL_TASK = "SEARCH_BY_LEGAL_TASK";
+	public final static String SEARCH_BY_JENIS_PENGAJUAN = "SEARCH_BY_JENIS_PENGAJUAN";
 	public final static String REVISI_TARGET_MAKER = "MAKER";
 	public final static String REVISI_TARGET_LEGAL = "LEGAL";
 	public final static String HISTORY_REVISION_SPV_TO_LEGAL = "Revision by SPV Legal to Legal";

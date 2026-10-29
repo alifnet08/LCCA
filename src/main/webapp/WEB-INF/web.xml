@@ -80,6 +80,20 @@
 	</servlet>
 	
 	<servlet>
+		<servlet-name>api</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/api-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>api</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
         <servlet-name>imgservlet</servlet-name>
         <servlet-class>com.wo.module.common.util.DisplayImage</servlet-class>
     </servlet>

@@ -55,6 +55,7 @@ import com.wo.module.common.constant.CommonConstants;
 import com.wo.module.common.paging.SearchObject;
 import com.wo.module.common.util.FileUtil;
 import com.wo.module.lov.bean.FacesUtil;
+import com.wo.module.notary.NotaryCategories;
 import com.wo.module.notary.constant.NotaryConstants;
 import com.wo.module.notary.dao.NotaryDao;
 import com.wo.module.notary.dao.NotaryDocumentDao;
@@ -64,6 +65,8 @@ import com.wo.module.notary.model.NotaryDocument;
 import com.wo.module.notary.model.NotaryHistory;
 import com.wo.module.notary.vo.NotaryVo;
 import com.wo.module.parameter.dao.ParameterDetailDao;
+import com.wo.module.parameter.model.ParameterDetail;
+import com.wo.module.parameter.model.ParameterHeader;
 
 @Transactional
 @Service("notaryService")
@@ -117,6 +120,22 @@ public class NotaryServiceImpl implements NotaryService {
 		notaryDao.update(entity);
 		persistNotaryDocuments(entity);
 	}
+
+	@Override
+	public Notary updateEmailByPhone(String phoneNo, String email) {
+		List<Notary> matches = notaryDao.findActiveByPhoneNo(phoneNo);
+		if (matches == null || matches.isEmpty()) {
+			return null;
+		}
+		if (matches.size() > 1) {
+			throw new DuplicateNotaryPhoneException(phoneNo);
+		}
+		Notary notary = matches.get(0);
+		notary.setEmail(email);
+		notary.setLastUpdateBy("API");
+		notary.setLastUpdateDate(new Timestamp(new Date().getTime()));
+		return notary;
+	}
 	
 	public void delete(Notary entity) {
 		notaryDao.delete(entity);
@@ -130,8 +149,61 @@ public class NotaryServiceImpl implements NotaryService {
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
+    		fillCategoryDisplay(entity);
     	}
     	return entity;
+    }
+
+    private boolean applyUploadedCategories(Notary notaryUpload, String categoryCell) throws Exception {
+    	String[] names = categoryCell.split(",");
+    	List<String> codes = new ArrayList<String>();
+    	ParameterDetail primary = null;
+    	for (int i = 0; i < names.length; i++) {
+    		String name = names[i] == null ? "" : names[i].trim();
+    		if (name.length() == 0) {
+    			continue;
+    		}
+    		ParameterDetail detail = parameterDetailDao.getParameterDetailByParamDtlNameIn(name);
+    		if (detail == null || StringUtils.isBlank(detail.getParameterDtlCode())) {
+    			return false;
+    		}
+    		if (!codes.contains(detail.getParameterDtlCode())) {
+    			codes.add(detail.getParameterDtlCode());
+    		}
+    		if (primary == null) {
+    			primary = detail;
+    		}
+    	}
+    	if (codes.isEmpty() || primary == null) {
+    		return false;
+    	}
+    	String joined = NotaryCategories.join(codes.toArray(new String[codes.size()]));
+    	if (joined.length() > NotaryCategories.MAX_LENGTH) {
+    		return false;
+    	}
+    	notaryUpload.setNotaryCategory(primary);
+    	notaryUpload.setNotaryCategories(joined);
+    	return true;
+    }
+
+    private void fillCategoryDisplay(Notary entity) {
+    	String stored = entity.getNotaryCategories();
+    	if (StringUtils.isBlank(stored) && entity.getNotaryCategory() != null) {
+    		stored = entity.getNotaryCategory().getParameterDtlCode();
+    	}
+    	if (StringUtils.isBlank(stored)) {
+    		return;
+    	}
+    	try {
+    		List<ParameterDetail> details = parameterDetailDao
+    				.getParameterDetailByParamCode(ParameterHeader.PARAM_HEAD_NOTARY_CATEGORY);
+    		String label = NotaryCategories.labels(details, stored);
+    		if (StringUtils.isNotBlank(label)) {
+    			entity.setNotaryCategoryDisplay(label);
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
 	public void saveHistory(Notary notary, String historyStatus, String catatanRevisi, String userLogin) {
@@ -394,7 +466,11 @@ public class NotaryServiceImpl implements NotaryService {
 										
 					//  Kategori*
 					if(category !=null && !category.equals(NotaryConstants.EMPTY)){
-						notaryUpload.setNotaryCategory(parameterDetailDao.getParameterDetailByParamDtlNameIn(category));
+						if (!applyUploadedCategories(notaryUpload, category)) {
+							errorData.setLabel(facesUtil.retrieveMessage("formNotaryRequiredValidateRow", indexRow+"", facesUtil.retrieveMessage("formNotaryCategory")));
+							errorData.setValue(rowNumber+".");
+							flagData = true;
+						}
 					}else {
 						errorData.setLabel(facesUtil.retrieveMessage("formNotaryRequiredValidateRow", indexRow+"", facesUtil.retrieveMessage("formNotaryCategory")));
 						errorData.setValue(rowNumber+".");
@@ -755,7 +831,7 @@ public class NotaryServiceImpl implements NotaryService {
 					
 					cell = row.createCell(1);
 					//cell.setCellStyle(this.buildStyleForDataDetail(wb));
-					cell.setCellValue(dataNotary.getNotaryCategory().getNameIn());
+					cell.setCellValue(dataNotary.getNotaryCategoryLabel());
 
 					cell = row.createCell(2);				
 					//cell.setCellStyle(this.buildStyleForDataDetail(wb));

@@ -14,6 +14,7 @@
 		<many-to-one name="notaryCategory" property-ref="parameterDtlCode"
 			column="NOTARY_CATEGORY" class="com.wo.module.parameter.model.ParameterDetail"
 			fetch="join" />
+		<property name="notaryCategories" column="NOTARY_CATEGORIES" type="string" />
 			
 		<property name="area" column="AREA" type="string" />
 		

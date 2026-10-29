@@ -139,4 +139,69 @@ public final class NotaryMailSender {
 		text = text.replace("\r\n", "\n").replace("\n", "<br/>");
 		return "<div>" + text + "</div>";
 	}
+
+	public static String actorLabel(UserService userService, String nik) {
+		String npk = StringUtils.trimToEmpty(nik);
+		String name = "";
+		try {
+			if (userService != null && StringUtils.isNotBlank(npk)) {
+				User user = userService.getUserByNik(npk);
+				if (user != null) {
+					name = StringUtils.trimToEmpty(user.getName());
+				}
+			}
+		} catch (Exception e) {
+			name = "";
+		}
+		if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(npk)) {
+			return name + " - (" + npk + ")";
+		}
+		if (StringUtils.isNotBlank(name)) {
+			return name;
+		}
+		return npk;
+	}
+
+	public static String requestApproval(String headline, String noPengajuan, String notaryName, String actor,
+			boolean includeNoPengajuan) {
+		StringBuilder body = new StringBuilder();
+		body.append("Request approval\n");
+		body.append(StringUtils.defaultString(headline));
+		if (includeNoPengajuan) {
+			appendField(body, "No Pengajuan", noPengajuan);
+		}
+		appendField(body, "Nama Notaris", notaryName);
+		appendField(body, "Di Submit oleh", actor);
+		return body.toString();
+	}
+
+	public static String needRevision(String jenisPengajuan, String noPengajuan, String notaryName, String actor) {
+		StringBuilder body = new StringBuilder();
+		body.append("Need Revision (").append(StringUtils.defaultString(jenisPengajuan)).append(").\n");
+		appendField(body, "Revision by", actor);
+		appendField(body, "No Pengajuan", noPengajuan);
+		appendField(body, "Nama Notaris", notaryName);
+		return body.toString();
+	}
+
+	public static String catatanKhususSubmit(String jenisPengajuan, String noPengajuan, String notaryName,
+			String actor, String targetStatus) {
+		StringBuilder body = new StringBuilder();
+		body.append("Request approval\n");
+		body.append("Pengajuan ").append(StringUtils.defaultString(jenisPengajuan)).append(".\n\n");
+		appendField(body, "No Pengajuan", noPengajuan);
+		appendField(body, "Nama Notaris", notaryName);
+		appendField(body, "Di Submit oleh", actor);
+		body.append("\nMenjadi\n");
+		body.append(StringUtils.defaultString(targetStatus)).append(".");
+		return body.toString();
+	}
+
+	private static void appendField(StringBuilder body, String label, String value) {
+		if (body.length() > 0 && body.charAt(body.length() - 1) != '\n') {
+			body.append('\n');
+		}
+		body.append(label).append(" :\n");
+		body.append(StringUtils.defaultString(value));
+	}
 }
