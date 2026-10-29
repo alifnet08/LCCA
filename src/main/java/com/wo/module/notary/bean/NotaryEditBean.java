@@ -304,9 +304,32 @@ public class NotaryEditBean extends CommonBean implements Serializable {
 		if (pengajuanPerpanjangan && !hasAllPerpanjanganDocuments()) {
 			flag = true;
 		}
+		if (isLampiranUploadEnabled() && !hasAllLampiranDocuments()) {
+			showLampiranTab = true;
+			showLampiranPerpanjanganTab = false;
+			flag = true;
+		}
 
 
 		return flag;
+	}
+
+	private boolean hasAllLampiranDocuments() {
+		boolean complete = true;
+		if (lampiranList == null || lampiranList.isEmpty()) {
+			facesUtil.addErrMessage("Semua dokumen pada tab Lampiran wajib diupload");
+			return false;
+		}
+		for (int i = 0; i < lampiranList.size(); i++) {
+			NotaryDocument doc = lampiranList.get(i);
+			if (doc == null || StringUtils.isBlank(doc.getFileId())) {
+				String label = doc != null && StringUtils.isNotBlank(doc.getAttachmentType())
+						? doc.getAttachmentType() : "Dokumen Lampiran";
+				facesUtil.addErrMessage(label + " wajib diupload");
+				complete = false;
+			}
+		}
+		return complete;
 	}
 
 	private boolean hasAllPerpanjanganDocuments() {

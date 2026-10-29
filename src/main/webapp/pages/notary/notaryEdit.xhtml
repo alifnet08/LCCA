@@ -41,6 +41,10 @@
 			    min-height: 38px;
 			    border: 1px solid #ccc;
 			}
+			#form\:notaryLampiranPanel .form-group.required > label:after {
+			    content: " *";
+			    color: #dd4b39;
+			}
 		</style>
 		<script type="text/javascript">
 		//<![CDATA[
@@ -290,8 +294,12 @@
 				</h:panelGroup>
 				<h:panelGroup id="notaryLampiranPanel" layout="block" styleClass="notary-upload-panel" style="#{notaryEditBean.showLampiranTab ? 'display:block' : 'display:none'}">
 					<p:remoteCommand name="onCompleteUploadLampiran" update="notaryLampiranList"></p:remoteCommand>
+					<h:panelGroup layout="block" styleClass="col-lg-12" style="margin-bottom:10px;"
+						rendered="#{notaryEditBean.lampiranUploadEnabled}">
+						<p>Semua dokumen pada tab Lampiran wajib diupload.</p>
+					</h:panelGroup>
 					<h:panelGroup id="lampiranSlots" layout="block" styleClass="col-lg-12">
-						<p:outputPanel id="lampSlot1" styleClass="form-group">
+						<p:outputPanel id="lampSlot1" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Surat Permohonan Rekanan Notaris</label>
 							<p:fileUpload id="lampUpload1" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -304,7 +312,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[0].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot2" styleClass="form-group">
+						<p:outputPanel id="lampSlot2" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">SK Pengangkatan Notaris</label>
 							<p:fileUpload id="lampUpload2" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -317,7 +325,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[1].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot3" styleClass="form-group">
+						<p:outputPanel id="lampSlot3" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Berita acara sumpah jabatan Notaris</label>
 							<p:fileUpload id="lampUpload3" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -330,7 +338,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[2].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot4" styleClass="form-group">
+						<p:outputPanel id="lampSlot4" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">SK Pengangkatan PPAT</label>
 							<p:fileUpload id="lampUpload4" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -343,7 +351,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[3].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot5" styleClass="form-group">
+						<p:outputPanel id="lampSlot5" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Berita acara sumpah jabatan PPAT</label>
 							<p:fileUpload id="lampUpload5" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -356,7 +364,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[4].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot6" styleClass="form-group">
+						<p:outputPanel id="lampSlot6" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Bukti Kerjasama dengan Bank</label>
 							<p:fileUpload id="lampUpload6" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -369,7 +377,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[5].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot7" styleClass="form-group">
+						<p:outputPanel id="lampSlot7" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Surat Pernyataan pernyataan tidak sedang tersangkut pelanggaran kode etik Notaris/PPAT (draft MBI)</label>
 							<p:fileUpload id="lampUpload7" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -382,7 +390,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[6].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot8" styleClass="form-group">
+						<p:outputPanel id="lampSlot8" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Curriculum Vitae (CV)</label>
 							<p:fileUpload id="lampUpload8" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -395,7 +403,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[7].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot9" styleClass="form-group">
+						<p:outputPanel id="lampSlot9" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Bukti kepemilikan kantor</label>
 							<p:fileUpload id="lampUpload9" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -408,7 +416,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[8].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot10" styleClass="form-group">
+						<p:outputPanel id="lampSlot10" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Foto Kantor (tampak depan, dalam dan filling cabinet)</label>
 							<p:fileUpload id="lampUpload10" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -421,7 +429,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[9].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot11" styleClass="form-group">
+						<p:outputPanel id="lampSlot11" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Lampiran tarif biaya Notaris</label>
 							<p:fileUpload id="lampUpload11" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -434,7 +442,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[10].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot12" styleClass="form-group">
+						<p:outputPanel id="lampSlot12" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Surat keterangan dari ikatan Notaris dan PPAT memiliki rekam jejak yang baik</label>
 							<p:fileUpload id="lampUpload12" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -447,7 +455,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[11].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot13" styleClass="form-group">
+						<p:outputPanel id="lampSlot13" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">GoAML</label>
 							<p:fileUpload id="lampUpload13" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -460,7 +468,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[12].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot14" styleClass="form-group">
+						<p:outputPanel id="lampSlot14" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Form AP Assessment Notaris/PPAT</label>
 							<p:fileUpload id="lampUpload14" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -473,7 +481,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[13].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot15" styleClass="form-group">
+						<p:outputPanel id="lampSlot15" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Bukti kepemilikan rekening di Maybank Indonesia</label>
 							<p:fileUpload id="lampUpload15" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -486,7 +494,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[14].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot16" styleClass="form-group">
+						<p:outputPanel id="lampSlot16" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Hasil screening melalui sistem SironKYC Tidak terdapat catatan negative atau lolos screening melalui system Pandawa</label>
 							<p:fileUpload id="lampUpload16" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -499,7 +507,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[15].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot17" styleClass="form-group">
+						<p:outputPanel id="lampSlot17" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">SLIK 1 bulan terakhir sebelum pengajuan dengan hasil kolektibilitas lancar</label>
 							<p:fileUpload id="lampUpload17" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -512,7 +520,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[16].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot18" styleClass="form-group">
+						<p:outputPanel id="lampSlot18" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Formulir Third Party Assessment Checklist (aspek PDP) yang lengkap diisi secara benar dan telah ditandatangani notaris</label>
 							<p:fileUpload id="lampUpload18" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
@@ -525,7 +533,7 @@
 								rendered="#{not empty notaryEditBean.lampiranList[17].fileId}"
 								style="display:block; margin-top:6px;" />
 						</p:outputPanel>
-						<p:outputPanel id="lampSlot19" styleClass="form-group">
+						<p:outputPanel id="lampSlot19" styleClass="form-group #{notaryEditBean.lampiranUploadEnabled ? 'required' : ''}">
 							<label class="tl-label">Lampiran Kesepakatan Kerjasama Ketentuan Pelindungan Data Pribadi (PDP) antara Pengendali Data Pribadi dengan Prosesor Data Pribadi</label>
 							<p:fileUpload id="lampUpload19" label="Upload" styleClass="wo-fileupload-wrap"
 								rendered="#{notaryEditBean.lampiranUploadEnabled}"
